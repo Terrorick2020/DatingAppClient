@@ -1,0 +1,90 @@
+.user-info {
+    width: 100%;
+    height: 100vh;
+    padding: 5vh 8vw 8vh 8vw;
+    overflow: auto;
+
+    &__ctx {
+        width: 100%;
+        margin-top: 3rem;
+
+        .headline {
+            width: 100%;
+            font-weight: 900;
+        }
+
+        .description {
+            width: 100%;
+            margin-top: 2rem;
+
+            .headline {
+                font-weight: 700;
+            }
+
+            .labels {
+                width: 100%;
+                margin-top: 1rem;
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+                align-items: center;
+                gap: 0.8rem;
+
+                .item {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: start;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.3rem 0.4rem;
+                    border-radius: 3rem;
+                    color: #000000;
+
+                    &:first-of-type {
+                        background: #D7FF81;
+                    }
+
+                    &:last-of-type {
+                        background: #BC96FF;
+                    }
+
+                    span {
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            .info {
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+    }
+
+    &__btns {
+        width: 100%;
+        display: flex;
+        margin-top: 3rem;
+        flex-direction: column;
+        gap: 1.3rem;
+
+        .link {
+            &__btn {
+                color: #FFFFFF !important;
+            }
+
+            .block {
+                background: #FF4365 !important;
+            }
+
+            .take-pro {
+                background: #bc96ff !important;
+            }
+
+            .take-away-pro {
+                background: transparent !important;
+                border: 2px solid #bc96ff;
+            }
+        }
+    }
+}

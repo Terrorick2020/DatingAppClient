@@ -1,0 +1,14 @@
+#root {
+    .MuiInputBase-root {
+        background: #2B2B2B;
+        border-radius: 3rem;
+        border: 1px solid #2B2B2B;
+        color: #FFFFFF;
+        caret-color: #BC96FF;
+
+        &.Mui-focused fieldset {
+            border-width: 1px;
+            border-color: #BC96FF;
+        }
+    }
+}

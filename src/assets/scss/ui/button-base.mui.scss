@@ -1,0 +1,51 @@
+#root {
+    --app-btn-bg: #BC96FF;
+    --app-btn-color: #121112;
+
+    .MuiButtonBase-root {
+        background: var(--app-btn-bg);
+        color: var(--app-btn-color);
+        font-weight: 700;
+
+        &.text-fon {
+            background: #2B2B2B;
+            color: #FFFFFF;
+            font-weight: 400;
+        }
+
+        &.text-block {
+            background: transparent;
+            color: #FFFFFF;
+            border: 1px solid #BC96FF;
+        }
+
+        &.rounded {
+            border-radius: 32px;
+        }
+
+        &.rounded-light {
+            border-radius: 8px;
+            height: 2.1rem;
+        }
+
+        &.icon {
+            padding: 0;
+            margin: 0;
+            min-width: 2.1rem !important;
+            height: 2.1rem;
+        }
+
+        &.poster-btn {
+            width: 170px;
+            border-radius: 60px;
+        }
+
+        &:active {
+            scale: 0.95;
+        }
+
+        &:hover {
+            box-shadow: 0 0 0.5rem #727272;
+        }
+    }
+}

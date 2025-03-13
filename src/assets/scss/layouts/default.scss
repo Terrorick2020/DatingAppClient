@@ -1,0 +1,51 @@
+.default-layout {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .box {
+        width: 100%;
+        height: 100vh;
+        max-width: 800px;
+        overflow: hidden;
+
+        .link {
+            height: 3rem;
+            width: 100%;
+            display: block;
+            border-radius: 3rem;
+        
+            .MuiButton-root {
+                width: 100%;
+                height: 100%;
+                border-radius: 3rem;
+            }
+        }
+
+        .desc-head-nav {
+            width: 100%;
+            max-width: 800px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            position: fixed;
+            background: transparent;
+            z-index: 5;
+        }
+
+        .logo-header {
+            width: 100%;
+            max-width: 800px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            margin-left: 0.4rem;
+            z-index: 4;
+            background: #000000;
+        }
+    }
+}
