@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
@@ -5,6 +6,14 @@ import SvgSearch from '@/assets/icon/search.svg?react'
 
 
 const UsersListContent = () => {
+    useEffect(
+        () => {
+            const langHtml = document.getElementById('users-list')
+            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards'
+        },
+        []
+    )
+
     return (
         <>
             <div className="users-list__ctx">

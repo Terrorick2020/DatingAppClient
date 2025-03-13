@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { appRoutes } from '@/config/routes.config'
 
@@ -12,7 +13,14 @@ const ChangeContent = () => {
     const adminGlobRoute      = appRoutes.admin.global
     const adminUsersListRoute = appRoutes.admin.inner.usersList
     const toUsersList         = `${adminGlobRoute}/${adminUsersListRoute}`
-    
+
+    useEffect(
+        () => {
+            const langHtml = document.getElementById('change')
+            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards'
+        },
+        []
+    )
 
     return (
         <>

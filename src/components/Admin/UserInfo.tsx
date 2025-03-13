@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import Button from '@mui/material/Button'
 import Photos from '@/components/UI/Photos'
 
@@ -5,6 +6,14 @@ import SvgMapPin from '@/assets/icon/map-pin.svg?react'
 
 
 const UserInfoContent = () => {
+    useEffect(
+        () => {
+            const langHtml = document.getElementById('user-info')
+            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards'
+        },
+        []
+    )
+
     return (
         <>
             <div className="user-info__ctx">

@@ -3,6 +3,7 @@
     height: 100vh;
     display: grid;
     grid-template-rows: 3fr 1fr;
+    opacity: 0;
 
     &__ctx {
         width: 100%;
