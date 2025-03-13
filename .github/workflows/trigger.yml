@@ -16,4 +16,4 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: token ${{ secrets.REPOSITORY_ACCESS_TOKEN }}" \
             https://api.github.com/repos/Terrorick2020/DatingApp/dispatches \
-            -d '{"event_type":"dispatch-event"}'
+            -d '{"event_type":"submodule-update"}'
