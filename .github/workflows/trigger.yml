@@ -14,6 +14,6 @@ jobs:
           curl -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token ${{ secrets.REPOSITORY_ACCESS_TOKEN }}" \
+            -H "Authorization: Bearer ${{ secrets.REPOSITORY_ACCESS_TOKEN }}" \
             https://api.github.com/repos/Terrorick2020/DatingApp/dispatches \
             -d '{"event_type":"submodule_update"}'
