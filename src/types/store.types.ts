@@ -1,3 +1,6 @@
+export interface AdminState {
+}
+
 export enum ELanguage {
     English   = 'en',
     Russian   = 'ru',
@@ -8,9 +11,6 @@ export enum ELanguage {
 export enum ETheme {
     light = 'light',
     dark  = 'dark',
-}
-
-export interface AdminState {
 }
 
 export interface SettingsState {
@@ -24,7 +24,14 @@ export interface ChatsState {
 export interface LikesState {
 }
 
+export enum EApiRes {
+    error   = 'error',
+    block   = 'block',
+    success = 'success'
+}
+
 export interface ProfileState {
+    apiRes: EApiRes
 }
 
 export interface QuestionnairesState {

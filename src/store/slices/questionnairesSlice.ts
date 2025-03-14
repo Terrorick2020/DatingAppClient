@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { type QuestionnairesState } from '@/types/store.types'
 
 
-const initialState = {
+const initialState: QuestionnairesState = {
 }
 
 const questionnairesSlice = createSlice({

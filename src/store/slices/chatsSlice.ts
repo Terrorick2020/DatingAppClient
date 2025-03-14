@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { type ChatsState } from '@/types/store.types'
 
 
-const initialState = {
+const initialState: ChatsState = {
 }
 
 const chatsSlice = createSlice({

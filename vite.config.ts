@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 
+import checker from 'vite-plugin-checker'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 import path from 'node:path'
@@ -9,6 +10,9 @@ export default defineConfig({
   plugins: [
     react(),
     svgr(),
+    checker({
+      typescript: true,
+    }),
   ],
   server: {
     https: {
@@ -28,9 +32,6 @@ export default defineConfig({
   //     protocol: 'wss',
   //   },
   // },
-  // preview: {
-  //   allowedHosts: ['cyberslavs.fun']
-  // },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
@@ -41,9 +42,8 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react')) return 'react';
-            if (id.includes('lodash')) return 'lodash';
-            return 'vendor';
+            if (id.includes('lodash')) return 'lodash'
+            return 'vendor'
           }
         }
       }

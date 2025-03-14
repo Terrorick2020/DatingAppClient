@@ -1,7 +1,10 @@
 .vscode/
+.github/
 node_modules/
 dist/
+ssl/
 
 .env.example
 .gitignore
+
 README.md

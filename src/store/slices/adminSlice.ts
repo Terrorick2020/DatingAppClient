@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { type AdminState } from '@/types/store.types'
 
 
-const initialState = {
+const initialState: AdminState = {
 }
 
 const adminSlice = createSlice({

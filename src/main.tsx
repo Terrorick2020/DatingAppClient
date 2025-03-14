@@ -5,7 +5,8 @@ import { Provider } from 'react-redux'
 import { viewport, init, isTMA } from '@telegram-apps/sdk'
 
 import store from './store'
-import App from './App.tsx'
+
+import AppSuspense from './AppSuspense'
 
 
 async function initTg() {
@@ -30,7 +31,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={ store }>
       <BrowserRouter>
-        <App />
+        <AppSuspense />
       </BrowserRouter>
     </Provider>
   </StrictMode>,

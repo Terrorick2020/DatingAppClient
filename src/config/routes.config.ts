@@ -1,6 +1,7 @@
 export const appRoutes = {
     notFound: '/not-found',
     blocked: '/blocked',
+    error: '/error',
     register: {
         global: '/register',
         inner: {
