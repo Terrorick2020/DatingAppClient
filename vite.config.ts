@@ -14,24 +14,24 @@ export default defineConfig({
       typescript: true,
     }),
   ],
-  server: {
-    https: {
-      // key: './ssl/selfsigned.key',
-      // cert: './ssl/selfsigned.crt',
-      key: './ssl/key.pem',
-      cert: './ssl/cert.pem',
-    },
-    host: '0.0.0.0',
-    // port: 5173,
-  },
   // server: {
-  //   host: '0.0.0.0',
-  //   allowedHosts: ['cyberslavs.fun'],
-  //   hmr: {
-  //     host: 'cyberslavs.fun',
-  //     protocol: 'wss',
+  //   https: {
+  //     key: './ssl/selfsigned.key',
+  //     cert: './ssl/selfsigned.crt',
+  //     key: './ssl/key.pem',
+  //     cert: './ssl/cert.pem',
   //   },
+  //   host: '0.0.0.0',
+  //   port: 5173,
   // },
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: ['cyberslavs.fun'],
+    hmr: {
+      host: 'cyberslavs.fun',
+      protocol: 'wss',
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
