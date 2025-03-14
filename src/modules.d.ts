@@ -7,3 +7,13 @@ declare module '*.svg' {
 }
 
 declare module '@telegram-apps/sdk'
+
+declare global {
+    interface Window {
+      Tg: {
+        close: () => void;
+      };
+    }
+}
+
+export {}

@@ -13,7 +13,7 @@ function delay(ms: number) {
 async function delayForLazy( promise: Promise<any> ) {
     await delay(2000)
 
-    await store.dispatch(initProfileAsync(window.location.href))
+    await store.dispatch( initProfileAsync( window.location.href ) )
 
     const resPromise = await promise
 
