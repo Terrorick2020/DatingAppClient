@@ -18,6 +18,7 @@ const DesctopHeadNav = () => {
 
     const closeWindow = () => {
         window.Tg.close()
+        window.close()
     }
 
     const isBack = Object.keys( window.history.state ).length > 1
