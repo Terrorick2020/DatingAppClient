@@ -1,11 +1,29 @@
-import { useEffect } from 'react'
+import {
+    useEffect,
+    useState,
+    ChangeEvent,
+    KeyboardEvent,
+} from 'react'
+import { useNavigate } from 'react-router-dom'
+import { appRoutes } from '@/config/routes.config'
+
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-
+import ClearBtn from '@/components/UI/ClearBtn'
 import SvgSearch from '@/assets/icon/search.svg?react'
 
 
+const idsList = [
+    '8148518',
+] 
+
 const UsersListContent = () => {
+    const [ searchQuery, setSearchQuery ] = useState<string>( '' )
+    const [ context, setContext ] = useState<string>( '' )
+    const [ showClear, setShowClear ] = useState<boolean>( false )
+    const [ showFindBtn, setShowFindBtn ] = useState<boolean>( true )
+    const [ showNotFound, setShowNotFound ] = useState<boolean>( false )
+
     useEffect(
         () => {
             const langHtml = document.getElementById('users-list')
@@ -13,6 +31,52 @@ const UsersListContent = () => {
         },
         []
     )
+
+    const handleInputChange = ( event: ChangeEvent<HTMLInputElement> ) => {
+        if ( context ) {
+            setShowFindBtn( event.target.value !== context )
+            setShowNotFound( event.target.value === context )
+            setContext( '' )
+        }
+
+        setShowClear( event.target.value !== '' )
+        setSearchQuery( event.target.value )
+    }
+
+    const handleClearInput = () => {
+        setSearchQuery( '' )
+        setContext( '' )
+        setShowFindBtn( true )
+        setShowNotFound( false )
+        setShowClear( false )
+    }
+
+    const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleSearchQuery();
+        }
+    }
+
+    const navigate = useNavigate()
+
+    const adminGlobRoute      = appRoutes.admin.global
+    const adminUserInfoRoute  = appRoutes.admin.inner.userInfo
+    const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`
+
+    const handleSearchQuery = () => {
+        if ( !searchQuery ) {
+            return 
+        }
+
+        setContext( searchQuery )
+
+        if ( idsList.includes( searchQuery ) ) {
+            navigate( toUserInfo )
+        } else {
+            setShowFindBtn( false )
+            setShowNotFound( true )
+        }
+    }
 
     return (
         <>
@@ -27,16 +91,31 @@ const UsersListContent = () => {
                           startAdornment: (
                             <SvgSearch />
                           ),
+                          endAdornment : (
+                            showClear ? <ClearBtn onClear={ handleClearInput } /> : <></>
+                          )
                         },
                       }}
                     placeholder="Поиск пользователя по ID..."
+                    value={ searchQuery }
+                    onChange={ handleInputChange }
+                    onKeyDown={ handleInputKeyDown }
                 />
+                {
+                    showNotFound &&
+                    <div className="not-found">
+                        <h2 className="text">Пользователь не найден</h2>
+                    </div>
+                }
             </div>
-            <div className="users-list__btn">
-                <div className="link">
-                    <Button className="link__btn" variant="contained">Найти</Button>
+            {
+                showFindBtn &&
+                <div className="users-list__btn">
+                    <div className="link">
+                        <Button className="link__btn" variant="contained" onClick={ handleSearchQuery }>Найти</Button>
+                    </div>
                 </div>
-            </div>
+            }
         </>
     )
 }
