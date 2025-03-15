@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
-// import { useEffect } from 'react'
-// import { backButton } from '@telegram-apps/sdk'
+import { useEffect } from 'react'
+import { backButton } from '@telegram-apps/sdk'
 
 import DesctopHeadNav from '@/components/Layouts/DesctopHeadNav'
 import LogoHeader from '@/components/Layouts/LogoHeader'
@@ -8,23 +8,23 @@ import LogoHeader from '@/components/Layouts/LogoHeader'
 
 const DefaultLayout = () => {
 
-    // useEffect(
-    //     () => {
-    //         backButton.show()
+    useEffect(
+        () => {
+            backButton.show()
 
-    //         const handleBackButtonClick = () => {
-    //             window.Telegram.WebApp.close()
-    //         }
+            const handleBackButtonClick = () => {
+                window.Telegram.WebApp.close()
+            }
 
-    //         const offClick = backButton.onClick(handleBackButtonClick)
+            const offClick = backButton.onClick(handleBackButtonClick)
 
-    //         return () => {
-    //             backButton.hide()
-    //             offClick()
-    //         }
-    //     },
-    //     [backButton]
-    // )
+            return () => {
+                backButton.hide()
+                offClick()
+            }
+        },
+        [backButton]
+    )
 
     const userAgent = navigator.userAgent.toLowerCase()
 
