@@ -9,11 +9,17 @@ declare module '*.svg' {
 declare module '@telegram-apps/sdk'
 
 declare global {
-    interface Window {
-      Tg: {
-        close: () => void;
-      };
+  interface Window {
+    Tg: {
+      close: () => void
     }
+    Telegram: {
+      WebApp: {
+        close: () => void
+        disableVerticalSwipes: () => void
+      }
+    }
+  }
 }
 
 export {}

@@ -21,6 +21,8 @@ async function initTg() {
     if (viewport.requestFullscreen.isAvailable()) {
       await viewport.requestFullscreen()
     }
+
+    window.Telegram.WebApp.disableVerticalSwipes()
   }
 }
 
