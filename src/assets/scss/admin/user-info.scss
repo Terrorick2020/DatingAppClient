@@ -1,7 +1,7 @@
 .user-info {
     width: 100%;
     height: 100vh;
-    padding: 5vh 8vw 8vh 8vw;
+    padding: 10vh 8vw 8vh 8vw;
     overflow: auto;
     opacity: 0;
 
@@ -47,6 +47,10 @@
 
                     &:last-of-type {
                         background: #BC96FF;
+                    }
+
+                    .text {
+                        text-align: center;
                     }
 
                     span {
