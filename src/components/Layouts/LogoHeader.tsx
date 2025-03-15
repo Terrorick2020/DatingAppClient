@@ -13,7 +13,7 @@ const LogoHeader = () => {
             <div className="logo-header" id="logo-header">
                 <SvgLogoTextColor
                     style={{
-                        marginTop: isMobile ? '8vh' : '0',
+                        marginTop: isMobile ? '3vh' : '0',
                     }}
                 />
             </div>
