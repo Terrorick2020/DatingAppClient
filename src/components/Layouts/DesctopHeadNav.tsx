@@ -17,7 +17,7 @@ const DesctopHeadNav = () => {
     }
 
     const closeWindow = () => {
-        window.Tg.close()
+        window.Telegram.WebApp.close()
         window.close()
     }
 
