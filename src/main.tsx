@@ -35,5 +35,5 @@ createRoot(document.getElementById('root')!).render(
         <AppSuspense />
       </BrowserRouter>
     </Provider>
-  </StrictMode>,
+  </StrictMode>
 )

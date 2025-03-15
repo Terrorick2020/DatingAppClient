@@ -23,6 +23,12 @@
     --preloader-loader-color: #BC96FF;
 }
 
+html, body {
+    width: 100%;
+    height: 100lvh;
+    overflow: hidden
+}
+
 body, p {
     font-family: 'Inter Regular', sans-serif;
     font-style: normal;
