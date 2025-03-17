@@ -1,22 +1,19 @@
-# Базовый образ с зависимостями
+# Этап зависимостей
 FROM node:20-alpine AS deps
 WORKDIR /client
 COPY package*.json ./
-RUN npm ci --legacy-peer-deps --prefer-offline
+RUN npm ci --legacy-peer-deps --prefer-offline --audit=false --fund=false
 
 # Этап сборки
 FROM node:20-alpine AS builder
 WORKDIR /client
 COPY --from=deps /client/node_modules ./node_modules
 COPY . .
-RUN npm run build
+ENV VITE_CACHE_DIR=/tmp/.vite
+RUN rm -rf ./dist && npm run build
 
 # Финальный образ
-FROM node:20-alpine
-WORKDIR /client
-COPY --from=builder /client/dist ./dist
-COPY --from=builder /client/node_modules ./node_modules
-COPY package.json .
-
-EXPOSE 4173
-CMD ["npm", "run", "preview"]
+FROM nginx:alpine
+COPY --from=builder /client/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+RUN sed -i 's/sendfile.*/sendfile on;\n\tadd_header Cache-Control "no-store, no-cache, must-revalidate";/' /etc/nginx/nginx.conf
