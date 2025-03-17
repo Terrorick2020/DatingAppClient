@@ -25,7 +25,7 @@ const ChangeContent = () => {
     return (
         <>
             <div className="change__ctx">
-                <h3 className="headline">Выбор режима!</h3>
+                <h3 className="headline">Выбор режима</h3>
                 <div className="links">
                     <NavLink className="link" to={ toPreview }>
                         <Button className="link__btn" variant="contained">Приложение</Button>
