@@ -1,15 +1,22 @@
-FROM node:20-alpine
-
+# Базовый образ с зависимостями
+FROM node:20-alpine AS deps
 WORKDIR /client
+COPY package*.json ./
+RUN npm ci --legacy-peer-deps --prefer-offline
 
-COPY package.json ./
-
-RUN npm i --legacy-peer-deps
-
+# Этап сборки
+FROM node:20-alpine AS builder
+WORKDIR /client
+COPY --from=deps /client/node_modules ./node_modules
 COPY . .
-
 RUN npm run build
 
-EXPOSE 4173
+# Финальный образ
+FROM node:20-alpine
+WORKDIR /client
+COPY --from=builder /client/dist ./dist
+COPY --from=builder /client/node_modules ./node_modules
+COPY package.json .
 
-CMD [ "npm", "run", "preview" ]
+EXPOSE 4173
+CMD ["npm", "run", "preview"]
