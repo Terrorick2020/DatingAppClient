@@ -84,57 +84,37 @@ body {
     width: 100%;
     height: 100vh;
     color: var(--preloader-ctx-color);
-    display: grid;
-    grid-template-rows: 1fr 1fr;
     opacity: 0;
+    display: flex;
+    justify-content: center;
     visibility: hidden;
     animation: fadeIn 2s ease-in-out forwards;
 }
 
-.preloader__ctx {
+.preloader__box {
     width: 100%;
+    max-width: 800px;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-rows: 1fr 2fr 1fr;
 }
 
-.preloader__text {
+.preloader__header,
+.preloader__main,
+.preloader__footer {
     width: 100%;
     height: 100%;
+}
+
+.preloader-img {
+    width: 100%;
+    height: 32.5vh;
+}
+
+.preloader__main {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
-}
-
-.loader {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    position: relative;
-    animation: rotate 1s linear infinite
-}
-
-.loader::before {
-    content: "";
-    box-sizing: border-box;
-    position: absolute;
-    inset: 0px;
-    border-radius: 50%;
-    border: 4px solid var(--preloader-loader-color);
-    animation: prixClipFix 2s linear infinite ;
-}
-
-@keyframes rotate {
-    100%   {transform: rotate(360deg)}
-}
-
-@keyframes prixClipFix {
-    0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
-    25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
-    50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
-    75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
-    100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+    gap: 2rem;
 }

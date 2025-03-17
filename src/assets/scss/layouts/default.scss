@@ -10,6 +10,17 @@
         max-width: 800px;
         overflow: hidden;
 
+        .btn-right {
+            width: 100%;
+            display: flex;
+            justify-content: end;
+
+            .link {
+                width: 20vw;
+                min-width: 12rem;
+            }
+        }
+
         .link {
             height: 3rem;
             width: 100%;
