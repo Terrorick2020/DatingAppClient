@@ -31,7 +31,7 @@ const ChangeContent = () => {
                         <Button className="link__btn" variant="contained">Приложение!</Button>
                     </NavLink>
                     <NavLink className="link" to={ toUsersList }>
-                        <Button className="link__btn text-block" variant="contained">Админd!</Button>
+                        <Button className="link__btn text-block" variant="contained">Админd!!</Button>
                     </NavLink>
                 </div>
             </div>
