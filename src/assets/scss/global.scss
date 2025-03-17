@@ -54,4 +54,5 @@ img, svg {
     color: var(--primary-color);
     overflow: hidden;
     @include mixins.fadeIn(1.2s, ease-in-out, 3s, forwards);
+    width: 100px;
 }
