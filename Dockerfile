@@ -1,10 +1,10 @@
-# Базовый образ с зависимостями
+# Используем Node.js 20 на Alpine Linux
 FROM node:20-alpine AS deps
 WORKDIR /client
 
 # Копируем package.json и устанавливаем зависимости
 COPY package*.json ./
-RUN npm ci --omit=dev --legacy-peer-deps --prefer-offline --audit=false --fund=false
+RUN npm install --omit=dev --prefer-offline
 
 # Этап сборки
 FROM node:20-alpine AS builder
@@ -12,7 +12,7 @@ WORKDIR /client
 COPY --from=deps /client/node_modules ./node_modules
 COPY . . 
 
-# Указываем кеш для Vite
+# Кешируем Vite
 ENV VITE_CACHE_DIR=/tmp/.vite
 RUN rm -rf ./dist && npm run build
 
