@@ -1,9 +1,13 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
-import TextField from '@mui/material/TextField'
-import FormControl from '@mui/material/FormControl'
-import MenuItem from '@mui/material/MenuItem'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import CustomSelIcon from '@/components/UI/CustomSelIcon';
+
+
 
 
 const FillingQuestInputs = () => {
@@ -24,19 +28,22 @@ const FillingQuestInputs = () => {
                     placeholder="Имя"
                 />
                 <h4>Ваш город</h4>
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <FormControl>
+                    <InputLabel htmlFor="city-input">Ваш город</InputLabel>
                     <Select
+                        IconComponent={CustomSelIcon}
+                        defaultValue=""
                         labelId="city-input"
                         id="city-input"
                         value={age}
                         onChange={handleChange}
                     >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={10}>Ten</MenuItem>
+                        <MenuItem value={20}>Twenty</MenuItem>
+                        <MenuItem value={30}>Thirty</MenuItem>
                     </Select>
                 </FormControl>
             </div>
