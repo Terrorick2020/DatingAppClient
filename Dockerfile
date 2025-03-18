@@ -2,7 +2,7 @@
 FROM node:20-alpine AS deps
 WORKDIR /client
 COPY package*.json ./
-RUN npm ci --legacy-peer-deps --prefer-offline --audit=false --fund=false
+RUN npm i --legacy-peer-deps --prefer-offline --audit=false --fund=false
 
 # Этап сборки
 FROM node:20-alpine AS builder
