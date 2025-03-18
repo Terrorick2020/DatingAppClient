@@ -14,6 +14,7 @@ COPY . .
 
 # Кешируем Vite
 ENV VITE_CACHE_DIR=/tmp/.vite
+RUN npm install -g typescript
 RUN rm -rf ./dist && npm run build
 
 # Финальный образ
