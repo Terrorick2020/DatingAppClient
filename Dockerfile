@@ -4,7 +4,7 @@ WORKDIR /client
 
 # Копируем package.json и устанавливаем зависимости
 COPY package*.json ./
-RUN npm install --omit=dev --prefer-offline
+RUN npm install --legacy-peer-deps --omit=dev --prefer-offline
 
 # Этап сборки
 FROM node:20-alpine AS builder
