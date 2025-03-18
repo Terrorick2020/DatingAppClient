@@ -13,7 +13,11 @@ ENV VITE_CACHE_DIR=/tmp/.vite
 RUN rm -rf ./dist && npm run build
 
 # Финальный образ
-FROM nginx:alpine
-COPY --from=builder /client/dist /usr/share/nginx/html
-COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
-RUN sed -i 's/sendfile.*/sendfile on;\n\tadd_header Cache-Control "no-store, no-cache, must-revalidate";/' /etc/nginx/nginx.conf
+FROM node:20-alpine
+WORKDIR /client
+COPY --from=builder /client/dist ./dist
+COPY --from=builder /client/node_modules ./node_modules
+COPY package.json .
+
+EXPOSE 4173
+CMD ["npm", "run", "preview"]
