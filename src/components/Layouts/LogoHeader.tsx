@@ -1,4 +1,4 @@
-import SvgLogoTextColor from '@/assets/icon/logo-text-color.svg?react'
+import SvgLogo from '@/assets/icon/logo.svg?react'
 
 
 const LogoHeader = () => {
@@ -11,7 +11,8 @@ const LogoHeader = () => {
     return (
         <>
             <div className="logo-header" id="logo-header">
-                <SvgLogoTextColor
+                <SvgLogo
+                    className="logo"
                     style={{
                         marginTop: isMobile ? '3.5vh' : '0',
                     }}

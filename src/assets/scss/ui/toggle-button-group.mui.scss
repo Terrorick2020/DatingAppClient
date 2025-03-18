@@ -1,5 +1,23 @@
 #root {
     .MuiToggleButtonGroup-root {
-        
+        .MuiIconButton-root {
+            height: 2.75rem;
+            min-width: 7.5rem;
+            border-radius: 3.75rem;
+            color: #D7FF81;
+            border-color: #D7FF81;
+            font-weight: 700;
+            transition: all 0.4s ease-in-out;
+
+            &[aria-pressed="true"] {
+                color: #121112;
+                background: #D7FF81;
+            }
+
+            &:hover {
+                color: #121112;
+                background: #D7FF81;
+            }
+        }
     }
 }
