@@ -6,10 +6,8 @@
 .photos {
     width: 100%;
     margin-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
     list-style: none;
 
@@ -24,6 +22,30 @@
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
+
+        &.add {
+            width: 26vw;
+            height: 28vw;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #D7FF81;
+
+            .btn {
+                cursor: pointer;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                z-index: 2;
+            }
+
+            img {
+                width: 5vw;
+                min-width: 2.4rem;
+            }
+        }
 
         .delete {
             position: absolute;

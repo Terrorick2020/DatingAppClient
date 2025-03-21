@@ -1,6 +1,7 @@
 #root {
-    --default-radio-color: #353535;
+    --default-radio-color: #494949;
     --checked-radio-color: #D7FF81;
+    --primary-radio-item-bg: #FFFFFF1F;
     --transition-time: .7s;
 
     .MuiRadioGroup-root {
@@ -11,8 +12,9 @@
 
         .MuiFormControlLabel-root {
             width: 100%;
-            border: 2px solid #353535;
-            border-radius: 1em;
+            border: 2px solid var(--primary-radio-item-bg);
+            background: var(--primary-radio-item-bg);
+            border-radius: 2rem;
             padding: 0.4em 1.4em;
             margin-left: 0px;
             display: flex;
@@ -22,6 +24,10 @@
 
             &:has(.Mui-checked) {
                 border-color: var(--checked-radio-color);
+            }
+
+            .MuiButtonBase-root {
+                box-shadow: none;
             }
         }
     }
