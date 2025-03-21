@@ -6,61 +6,55 @@
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 50vh 50vh;
     opacity: 0;
 
     &__logo {
-        margin-top: 3.5vh;
         width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .heart-in-hand {
-            width: 32.5vw;
-            height: 32.5vh;
-            transition: width 0.1s ease;
-        }
     }
 
     &__ctx {
         width: 100%;
-        height: 100%;
-        border-radius: 1.9rem 1.9rem 0rem 0rem;
-        padding: 8vh 8vw 5vh 8vw;
-        background: var(--preview-bg);
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 5vh;
+        display: grid;
+        padding-bottom: 6vh;
+        padding-inline: 5vw;
+        grid-template-rows: 7fr 3fr;
+        gap: 1rem;
 
-        .content {
+        .text {
             width: 100%;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 3vh;
+            align-items: start;
 
-            .logo {
-                position: absolute;
-                top: -12vh;
-                width: 30vw;
-                height: 30vh;
-                transition: width 0.1s ease;
-            }
-            
             .headline {
-                margin-top: 11vh;
                 width: 100%;
-                text-align: center;
+                font-weight: 900;
+                position: relative;
+
+                .relative {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                }
             }
 
             .description {
-                text-align: center;
+                width: 100%;
+                font-weight: 400;
+                margin-top: 3vh;
+            }
+        }
+
+        .btn {
+            width: 100%;
+            align-items: end;
+            display: flex;
+            justify-content: right;
+            
+            .link {
+                width: 20vw;
+                min-width: 5rem;
+                width: 20vw;
+                min-width: 15rem;
             }
         }
     }

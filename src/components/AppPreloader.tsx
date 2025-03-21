@@ -1,16 +1,16 @@
-import SvgPreloaderLogo from '@/assets/icon/preloader-logo.svg'
+import SvgLogo from '@/assets/icon/logo.svg';
 
 
 const AppPreloader = () => {
     return (
         <>
-            <div id="preloader">
-                <div className="preloader__ctx">
-                    <img src={ SvgPreloaderLogo } alt="PreloaderLogo" />
-                </div>
-                <div className="preloader__text">
-                    <span className="loader"></span>
-                    <h6>Загрузка...</h6>
+            <div className='preloader' id="preloader">
+                <div className="preloader__box">
+                    <header className='pteloader__header'></header>
+                    <main className='pteloader__main'>
+                        <img src={ SvgLogo } alt="logo" />
+                    </main>
+                    <footer className='pteloader__footer'></footer>
                 </div>
             </div>
         </>

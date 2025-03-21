@@ -1,40 +1,44 @@
-import { useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
-import { appRoutes } from '@/config/routes.config'
+import { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import { appRoutes } from '@/config/routes.config';
 
-import Button from '@mui/material/Button'
-
-import SvgHeartInHand from '@/assets/icon/heart-in-hand.svg'
-import SvgLogo from '@/assets/icon/logo.svg'
+import Button from '@mui/material/Button';
+import SvgWhiteHeart from '@/assets/icon/white-heart.svg';
+import SvgTriangle from '@/assets/icon/triangle.svg?react';
 
 
 const PreviewContent = () => {
-    const regGlobRoute = appRoutes.register.global
-    const regLangRoute = appRoutes.register.inner.lang
-    const toLang = `${regGlobRoute}/${regLangRoute}`
+    const regGlobRoute = appRoutes.register.global;
+    const regLangRoute = appRoutes.register.inner.lang;
+    const toLang = `${regGlobRoute}/${regLangRoute}`;
 
     useEffect(
         () => {
-            const langHtml = document.getElementById('preview')
-            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards'
+            const langHtml = document.getElementById('preview');
+            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+
+            const logoHeader = document.getElementById('logo-header');
+            if( logoHeader ) logoHeader.style.display = 'none';
         },
         [] 
     )
 
     return (
         <>
-            <div className="preview__logo">
-                <img className="heart-in-hand" src={ SvgHeartInHand } alt="heart-in-hand" />
-            </div>
+            <div className="preview__logo"></div>
             <div className="preview__ctx">
-                <div className="content">
-                    <img className="logo" src={ SvgLogo } alt="logo" />
-                    <h3 className="headline">Привет!</h3>
-                    <p className="description">Мы верим, что настоящие связи устанавливаются лицом к лицу. Вот почему наша главная цель — помочь вам встретиться с людьми лично, создавая значимые моменты и впечатления.</p>
+                <div className="text">
+                    <h1 className="headline">
+                        Настоящие встречи начинаются здесь
+                        <img className="relative" src={ SvgWhiteHeart } alt="white-heart" />
+                    </h1>
+                    <h6 className="description">Мы верим, что крепкие связи устанавливаются лицом к лицу. Наша цель — помочь вам встретить новых людей офлайн, создавая значимые моменты и впечатления.</h6>
                 </div>
-                <NavLink className="link" to={ toLang }>
-                    <Button variant="contained">Создать профиль</Button>
-                </NavLink>
+                <div className="btn">
+                    <NavLink className="link" to={ toLang }>
+                        <Button variant="contained" endIcon={<SvgTriangle />}>Далее</Button>
+                    </NavLink>
+                </div>
             </div>
         </>
     )

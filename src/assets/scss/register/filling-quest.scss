@@ -5,20 +5,33 @@
     overflow: auto;
     opacity: 0;
 
-    &__text {
+    &__header {
         width: 100%;
         margin-top: 3.5rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
 
-        .headline {
-            width: 100%;
-            text-align: center;
+        .text {
+            .headline {
+                width: 100%;
+                text-align: start;
+                font-weight: 900;
+            }
+
+            .description {
+                width: 100%;
+                margin-top: 0.5rem;
+                text-align: start;
+                font-weight: 100;
+                opacity: 0.5;
+            }
         }
-        .description {
-            width: 100%;
-            margin-top: 0.5rem;
-            text-align: center;
-            font-weight: 100;
-            opacity: 0.5;
+
+        .video {
+            cursor: pointer;
         }
     }
 
@@ -44,46 +57,8 @@
 
                 .items {
                     width: 100%;
-                    min-height: 13.5rem;
                     margin-top: 1rem;
-                    display: grid;
-                    grid-template-columns: 1.8fr 1fr;
-                    grid-template-areas:
-                        "first second"
-                        "first third";
-                    gap: 0.8em;
-
-                    .item {
-                        width: 100%;
-                        height: 100%;
-                        background: #ffffff33;
-                        border-radius: 1rem;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                    }
-
-                    &__1 {
-                        grid-area: first;
-                    }
-
-                    &__2 {
-                        grid-area: second;
-                    }
-
-
-                    &__loading {
-                        position: relative;
-                        grid-area: third;
-
-                        .btn {
-                            position: absolute;
-                            width: 100%;
-                            height: 100%;
-                            opacity: 0;
-                            z-index: 2;
-                        }
-                    }
+                    border-radius: 1.3rem;
                 }
             }
 
