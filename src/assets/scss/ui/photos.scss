@@ -3,64 +3,67 @@
     --photos-btn-bg: #FF4365;
 }
 
-.photos {
-    width: 100%;
-    margin-top: 1rem;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-    list-style: none;
-
-    &__item {
-        position: relative;
-        width: 26vw;
-        height: 28vw;
-        background: var(--photos-bg);
-        border-radius: 1.2rem;
-        max-height: 200px;
-        max-width: 180px;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-
-        &.add {
+#root{
+    .photos {
+        width: 100%;
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        list-style: none;
+    
+        &__item {
+            position: relative;
             width: 26vw;
             height: 28vw;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px dashed #D7FF81;
-
-            .btn {
-                cursor: pointer;
+            background: var(--photos-bg);
+            border-radius: 1.2rem;
+            max-height: 200px;
+            max-width: 180px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+    
+            &.add {
+                width: 26vw;
+                height: 28vw;
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 2px dashed #D7FF81;
+    
+                .btn {
+                    cursor: pointer;
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    z-index: 2;
+                }
+    
+                img {
+                    width: 5vw;
+                    min-width: 2.4rem;
+                }
+            }
+    
+            .delete {
                 position: absolute;
-                width: 100%;
-                height: 100%;
-                opacity: 0;
-                z-index: 2;
+                width: 6vw;
+                height: 6vw;
+                background: var(--photos-btn-bg);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                bottom: 1rem;
+                right: 1rem;
+                cursor: pointer;
+                max-width: 20px;
+                max-height: 20px;
             }
-
-            img {
-                width: 5vw;
-                min-width: 2.4rem;
-            }
-        }
-
-        .delete {
-            position: absolute;
-            width: 6vw;
-            height: 6vw;
-            background: var(--photos-btn-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            bottom: 1rem;
-            right: 1rem;
-            cursor: pointer;
-            max-width: 20px;
-            max-height: 20px;
         }
     }
 }
+

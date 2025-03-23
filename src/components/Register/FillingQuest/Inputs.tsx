@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, MouseEvent } from 'react';
 
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
@@ -8,13 +8,19 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import CustomSelIcon from '@/components/UI/CustomSelIcon';
 
 
-
+const districtsList = [
+    { id: 0, value: 'piter', label: 'Санкт-Петербург' },
+    { id: 1, value: 'moscow', label: 'Москва' },
+    { id: 2, value: 'kazan', label: 'Казань' },
+    { id: 3, value: 'novosibirsk', label: 'Новосибирск' },
+    { id: 4, value: 'ekb', label: 'Екатеринбург' }
+];
 
 const FillingQuestInputs = () => {
-    const [age, setAge] = useState('')
+    const [city, setCity] = useState('');
 
     const handleChange = (event: SelectChangeEvent) => {
-        setAge(event.target.value)
+        setCity(event.target.value)
     }
 
     return (
@@ -29,21 +35,36 @@ const FillingQuestInputs = () => {
                 />
                 <h4>Ваш город</h4>
                 <FormControl>
-                    <InputLabel htmlFor="city-input">Ваш город</InputLabel>
+                    <InputLabel className="sel-label" htmlFor="city-input">Выбирите город</InputLabel>
                     <Select
-                        IconComponent={CustomSelIcon}
+                        IconComponent={(props) => (
+                            <CustomSelIcon {...props}/>
+                        )}
                         defaultValue=""
                         labelId="city-input"
                         id="city-input"
-                        value={age}
+                        MenuProps={{
+                            PaperProps: {
+                              sx: {
+                                backgroundColor: '#2B2B2B',
+                                color: '#FFFFFF',
+                                borderRadius: 2,
+                                '& .MuiMenuItem-root.Mui-selected': {
+                                    backgroundColor: '#D7FF81',
+                                    color: '#121112',
+                                },
+                              },
+                            },
+                        }}
+                        value={city}
                         onChange={handleChange}
                     >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        {districtsList.map(item => (
+                            <MenuItem
+                                key={`menu-city-item-${item.id}`}
+                                value={item.value}
+                            >{item.label}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
             </div>

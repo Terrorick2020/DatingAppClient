@@ -121,7 +121,7 @@
 
                 .headline {
                     width: 100%;
-                    text-align: center;
+                    text-align: start;
                 }
 
                 .select {
@@ -139,22 +139,21 @@
 
                 .headline {
                     width: 100%;
-                    text-align: center;
+                    text-align: start;
                 }
 
                 .select {
                     width: 100%;
                     margin-top: 1rem;
                     display: grid;
-                    grid-template-columns: 1fr 1fr 1fr;
+                    grid-template-areas: "first second third";
                     gap: 1rem;
 
-                    &:first-of-type {
-                        justify-self: start;
-                    }
-
-                    &:last-of-type {
-                        justify-self: end;
+                    @media (max-width: 460px) {
+                        grid-template-areas:
+                            "first second"
+                            "third third";
+                        grid-template-columns: 1fr 1fr;
                     }
                 }
             }

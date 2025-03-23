@@ -1,12 +1,27 @@
-.outlet-quest {
+:root {
+    --quest-outlet-h: 85vh;
+    --nav-bar-h: 15vh;
+}
+
+.quest-layout {
     width: 100%;
-    overflow: auto;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: var(--quest-outlet-h) var(--nav-bar-h);
 
     &::-webkit-scrollbar {
         display: none;
     }
-}
 
-.MuiBox-root.nav-bar {
-    width: 100%;
+    .quest-outlet {
+        align-self: start;
+        width: 100%;
+        height: var(--quest-outlet-h);
+    }
+
+    .nav-bar {
+        align-self: end;
+        width: 100%;
+        height: var(--nav-bar-h);
+    }
 }

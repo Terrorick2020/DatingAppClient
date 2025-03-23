@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
 
 import Button from '@mui/material/Button';
 
+import GeoConfirmation from './GeoConfirmation';
 import FillingQuestHeader from './Header';
 import FillingQuestPhotos from './Photos';
 import FillingQuestInputs from './Inputs';
@@ -15,20 +16,33 @@ import FillingQuestSelectionSex from './SelectionSex';
 
 
 const FillingQuestContent = () => {
-    const regGlobRoute = appRoutes.register.global
-    const regFillQuestRoute = appRoutes.register.inner.geo
-    const toGeo = `${regGlobRoute}/${regFillQuestRoute}`
+    const [_confirmation, setConfirmation] = useState<boolean>(false);
+
+    // const regGlobRoute = appRoutes.register.global;
+    // const regFillQuestRoute = appRoutes.register.inner.geo;
+    // const toGeo = `${regGlobRoute}/${regFillQuestRoute}`;
+    const questionnairesGlobRoute = appRoutes.questionnaires.global;
+    const questionnairesSliderRoute = appRoutes.questionnaires.inner.slider;
+    const toSlider = `${questionnairesGlobRoute}/${questionnairesSliderRoute}`;
 
     useEffect(
         () => {
-            const langHtml = document.getElementById('filling-quest')
-            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards'
+            const langHtml = document.getElementById('filling-quest');
+            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+
+            // const geoModalHtml = document.getElementById('geo-modal');
+            // if ( geoModalHtml ) {
+            //     geoModalHtml.style.animationDelay = '1s';
+            //     geoModalHtml.style.animation = 'slideModalDown 1s ease-in-out forwards';
+            // }
         },
         []
     )
 
+
     return (
         <>
+            <GeoConfirmation setConfirmation={setConfirmation} />
             <div className="filling-quest__header">
                 <FillingQuestHeader />
             </div>
@@ -42,7 +56,7 @@ const FillingQuestContent = () => {
                     <FillingQuestInterests />
                     <FillingQuestSelectionSex />
                 </div>
-                <NavLink className="link" to={ toGeo }>
+                <NavLink className="link" to={ toSlider }>
                     <Button variant="contained">Продолжить</Button>
                 </NavLink>
             </div>

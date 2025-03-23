@@ -1,4 +1,4 @@
-import DetailsContent from '@/components/Questionnaires/Details'
+import DetailsContent from '@/components/Details'
 
 const QuestDetailsPage = () => {
     return (

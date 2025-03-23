@@ -11,34 +11,32 @@
             background: #2B2B2B;
             color: #FFFFFF;
             font-weight: 400;
-            width: 95px;
+            width: 5.95rem;
+        }
+
+        &.nav-btn {
+            height: 3.05rem;
+            max-height: 3.05rem;
+            border-radius: 3.5rem;
+            background: #FFFFFF1F;
+            color: #FFFFFF;
+            font-size: 0.75rem;
+        }
+
+        &.icon-btn {
+            border-radius: 50%;
+            min-width: 2.2rem !important;
+            padding-inline: 0.8rem;
+        }
+
+        &.rounded {
+            border-radius: 2rem;
         }
 
         &.text-block {
             background: transparent;
             color: #FFFFFF;
-            border: 1px solid #BC96FF;
-        }
-
-        &.rounded {
-            border-radius: 32px;
-        }
-
-        &.rounded-light {
-            border-radius: 8px;
-            height: 2.1rem;
-        }
-
-        &.icon {
-            padding: 0;
-            margin: 0;
-            min-width: 2.1rem !important;
-            height: 2.1rem;
-        }
-
-        &.poster-btn {
-            width: 170px;
-            border-radius: 60px;
+            border: 1px solid var(--app-btn-bg);
         }
 
         &:active {

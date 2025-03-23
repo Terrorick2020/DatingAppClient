@@ -10,15 +10,18 @@
 @use "./ui/clear-btn.scss";
 @use "./ui/radio-group.mui.scss";
 @use "./ui/toggle-button-group.mui.scss";
+@use "./ui/custom-sel-icon.scss";
+@use "./ui//modal.mui.scss";
 
 @use "./admin/change.scss";
 @use "./admin/users-list.scss";
 @use "./admin/user-info.scss";
-@use "./questionnaires/details.scss";
+
 @use "./questionnaires/slider.scss";
 @use "./register/lang.scss";
 @use "./register/preview.scss";
 @use "./register/filling-quest.scss";
 
+@use "./details.scss";
 @use "./error.scss";
 @use "./global.scss";

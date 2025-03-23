@@ -11,8 +11,15 @@ import RegPreviewPage from './pages/Register/Preview'
 import RegFillingQuestPage from './pages/Register/FillingQuest'
 import RegGeoPage from './pages/Register/Geo'
 import RegEveningPlansPage from './pages/Register/EveningPlans'
+
+import QuestChatsPage from './pages/Questionnaires/Chats'
+import QuestLikesPage from './pages/Questionnaires/Likes'
+import QuestProfilePage from './pages/Questionnaires/Profile'
+import QuestPsychologistsPage from './pages/Questionnaires/Psychologists'
 import QuestSliderPage from './pages/Questionnaires/Slider'
-import QuestDetailsPage from './pages/Questionnaires/Details'
+
+import DetailsPage from './pages/Details'
+
 import AdminChangePage from './pages/Admin/Change'
 import AdminUsersListPage from './pages/Admin/UsersList'
 import AdminUserInfoPage from './pages/Admin/UserInfo'
@@ -43,9 +50,14 @@ const App = () => {
           </Route>
 
           <Route path={ questRoutes.global } element={ <QuestLayout /> } >
+            <Route path={ questRoutes.inner.chats } element={ <QuestChatsPage /> } />
+            <Route path={ questRoutes.inner.likes } element={ <QuestLikesPage /> } />
+            <Route path={ questRoutes.inner.profile } element={ <QuestProfilePage /> } />
+            <Route path={ questRoutes.inner.psychologists } element={ <QuestPsychologistsPage /> } />
             <Route path={ questRoutes.inner.slider } element={ <QuestSliderPage /> } />
-            <Route path={ questRoutes.inner.details } element={ <QuestDetailsPage /> } />
           </Route>
+
+          <Route path={ appRoutes.details } element={ <DetailsPage /> } />
 
           <Route path={ adminRoutes.global } element={ <AdminLayout /> } >
             <Route path={ adminRoutes.inner.nav } element={ <AdminChangePage /> } />

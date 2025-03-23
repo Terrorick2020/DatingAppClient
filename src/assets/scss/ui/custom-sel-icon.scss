@@ -1,0 +1,54 @@
+#root {
+
+    .MuiFormControl-root {
+        .MuiFormLabel-root {
+            color: #848484f4;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: -0.5px;
+
+            &.Mui-focused {
+                margin-top: 1.7rem;
+            }
+
+            &.MuiFormLabel-filled {
+                display: none;
+            }
+        }
+        // .MuiFormLabel-root {
+        //     color: red;
+        // }
+
+        // &:has(.MuiFormLabel-filled) {
+        //     .MuiFormLabel-filled {
+        //         display: none;
+        //     }
+        // }
+    }
+
+    .MuiSelect-icon {
+        cursor: pointer;
+        position: relative;
+        top: 0;
+
+        &.MuiSelect-iconOpen {
+            rotate: 180deg;
+        }
+    }
+
+    .custom-sel-icon {
+        cursor: pointer;
+        background: #D7FF81;
+        padding: 8px 6px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-right: 0.5rem;
+        gap: 0.5rem;
+        border-radius: 50px;
+
+        .text {
+            color: #121112;
+        }
+    }
+}

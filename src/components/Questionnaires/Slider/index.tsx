@@ -1,4 +1,4 @@
-import SliderNav from './SliderNav'
+import SliderNav from './Nav'
 import SliderPoster from './SliderPoster'
 
 
@@ -9,7 +9,7 @@ const SliderContent = () => {
                 <SliderNav />
             </nav>
             <div className="slider__poster">
-                <SliderPoster />
+                
             </div>
         </>
     )

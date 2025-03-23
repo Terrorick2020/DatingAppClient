@@ -15,10 +15,14 @@ export const appRoutes = {
     questionnaires: {
         global: '/questionnaires',
         inner: {
-            slider: '',
-            details: 'details',
+            chats: 'chats',
+            likes: 'likes',
+            profile: 'profile',
+            psychologists: 'psychologists',
+            slider: 'slider',
         },
     },
+    details: '/details',
     admin: {
         global: '/admin',
         inner: {

@@ -12,7 +12,9 @@ const EveningPlansContent = () => {
 
     return (
         <>
-            <div className="geo__ctx"></div>
+            <div className="geo__ctx">
+                EveningPlansContent
+            </div>
             <div className="geo__btn">
                 <NavLink className="link" to={ '' }>
                     <Button variant="contained">Применить</Button>
