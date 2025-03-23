@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
-import IconButton from '@mui/joy/IconButton'
-import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup'
+import IconButton from '@mui/joy/IconButton';
+import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 
 
 const FillingQuestMySex = () => {
-    const [value, setValue] = useState('male')
+    const [value, setValue] = useState('male');
 
     return (
         <>

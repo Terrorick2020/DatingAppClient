@@ -11,13 +11,27 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import ClearBtn from '@/components/UI/ClearBtn'
 import SvgSearch from '@/assets/icon/search.svg?react'
+import IconButton from '@mui/joy/IconButton'
+import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup'
 
+
+interface PersonType {
+    id: number,
+    value: string,
+    label : string,
+}
+
+const personType: PersonType[] = [
+    { id: 0, value: 'users', label: 'Пользователи' },
+    { id: 1, value:'psychologists', label: 'Пси-специалисты' }
+]
 
 const idsList = [
     '8148518',
-] 
+]
 
 const UsersListContent = () => {
+    const [value, setValue] = useState<string>( personType[0].value )
     const [ searchQuery, setSearchQuery ] = useState<string>( '' )
     const [ context, setContext ] = useState<string>( '' )
     const [ showClear, setShowClear ] = useState<boolean>( false )
@@ -82,6 +96,26 @@ const UsersListContent = () => {
         <>
             <div className="users-list__ctx">
                 <h2 className="headline">Админ-панель</h2>
+                <ToggleButtonGroup
+                    className="person-type"
+                    spacing={ 2 }
+                    value={ value }
+                    onChange={(_event, newValue) => {
+                        if ( newValue !== null ) {
+                            setValue(newValue)
+                        }
+                    }}
+                >
+                    {personType.map( (item: PersonType) => (
+                        <IconButton
+                            className="person-type__item"
+                            key={`person-type__${item.id}`}
+                            value={item.value}
+                        >
+                            {item.label}
+                        </IconButton>
+                    ))}
+                </ToggleButtonGroup>
                 <TextField
                     className="person-input"
                     id="person-input"
