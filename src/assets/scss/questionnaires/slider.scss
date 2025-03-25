@@ -1,13 +1,17 @@
 .slider {
     width: 100%;
-    height: 100%;
+    max-width: 800px;
+    height: 85vh;
     padding-inline: 1rem;
 
     &__nav {
         width: 100%;
+        max-width: 800px;
+        height: 11.5vh;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        margin-top: 12.2vh;
+        margin-top: 12.3vh;
+        align-self: start;
 
         .plans {
             width: 100%;
@@ -25,5 +29,248 @@
 
     &__poster {
         width: 100%;
+        height: 61.3vh;
+        align-self: start;
+        padding-bottom: 2vh;
+        display: flex;
+        justify-content: center;
+
+        .poster__ctx {
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .carousel-container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+                
+                .carousel-track {
+                    display: flex;
+                    transition: transform 0.5s ease-in-out;
+
+                    .carousel-slide {
+                        height: 59.3vh;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        flex: 0 0 100%;
+                        width: 0;
+
+                        .slide {
+                            width: 100%;
+                            max-width: 370px;
+                            height: 100%;
+                            background-size: cover;
+                            background-position: center;
+                            background-blend-mode: multiply;
+                            background-color: #1010100d;
+                            box-shadow: inset 0 0 1rem #00000080;
+                            border-radius: 1.2rem;
+                            padding: 0.8rem;
+                            display: grid;
+                            grid-template-rows: 1fr 1fr;
+                            position: relative;
+                            transition: opacity 0.3s ease-in-out;
+
+                            &__nav {
+                                position: absolute;
+                                width: 100%;
+                                height: 50%;
+                                opacity: 1;
+                                display: grid;
+                                grid-template-columns: 1fr 2fr 1fr;
+
+                                .item {
+                                    cursor: pointer;
+                                    width: 100%;
+                                    height: 100%;
+                                }
+                            }
+
+                            &__header {
+                                align-self: start;
+                                z-index: 5;
+            
+                                .scroll-bar {
+                                    width: 100%;
+                                    display: flex;
+                                    flex-direction: row;
+                                    justify-content: center;
+                                    gap: 0.7rem;
+
+                                    .item {
+                                        width: 30%;
+                                        height: 0.3rem;
+                                        background: #D7FF81;
+                                        border-radius: 0.8rem;
+                                        opacity: 0.5;
+
+                                        &.selected {
+                                            opacity: 1;
+                                        }
+                                    }
+                                }
+            
+                                .labels {
+                                    width: 100%;
+                                    display: flex;
+                                    justify-content: left;
+                                    margin-top: 1rem;
+
+                                    .label {
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: space-between;
+                                        align-items: center;
+                                        gap: 0.5rem;
+                                        background: #D7FF81;
+                                        color: #121112;
+                                        border-radius: 3.75rem;
+                                        padding: 0.1rem 0.3rem;
+                                    }
+                                }
+                            }
+            
+                            &__footer {
+                                align-self: end;
+                                display: flex;
+                                flex-direction: column;
+                                z-index: 5;
+                                gap: 1rem;
+            
+                                .text {
+                                    width: 100%;
+                                    cursor: pointer;
+            
+                                    .headline {
+                                        width: 100%;
+                                        font-weight: 700;
+                                    }
+            
+                                    .description {
+                                        width: 100%;
+                                        margin-top: 0.5rem;
+                                        font-weight: 400;
+                                    }
+                                }
+            
+                                .panel {
+                                    width: 100%;
+                                    min-height: 2rem;
+                                    background: #00000047;
+                                    border-radius: 3.7rem;
+                                    display: flex;
+                                    flex-direction: row;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    padding: 0.5rem;
+
+                                    .label {
+                                        width: 45%;
+                                        height: 100%;
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: center;
+                                        align-items: center;
+                                        border-radius: 3.75rem;
+                                        padding-inline: 0.3rem;
+                                        padding-block: 0.2rem;
+                                        gap: 0.3rem;
+                                        background: #BC96FF;
+
+                                        p {
+                                            color: #1B1A1B;
+                                            font-size: 12px;
+                                        }
+
+                                        img {
+                                            background: #371F7D;
+                                            border-radius: 50%;
+                                            padding: 0.1rem;
+                                            width: 18px;
+                                            height: 18px;
+                                        }
+                                    }
+
+                                    .text {
+                                        width: 55%;
+                                        text-align: end;
+                                        font-size: 12px;
+                                    }
+                                }
+            
+                                .btns {
+                                    width: 100%;
+                                    display: grid;
+                                    grid-template-columns: 2fr 1fr 2fr;
+
+                                    .icon-btn {
+                                        position: relative;
+                                        background: #FF4365 !important;
+                                        width: 38px !important;
+                                        justify-self: center;
+
+                                        @keyframes heart-top {
+                                            0% {
+                                                top: -25px;
+                                                opacity: 0;
+                                            }
+                                            50% {
+                                                top: -300px;
+                                                opacity: 1;
+                                                display: block;
+                                            }
+                                            100% {
+                                                top: -300px;
+                                                opacity: 0;
+                                            }
+                                        }
+
+                                        .heart {
+                                            top: 0px;
+                                            position: absolute;
+                                            opacity: 0;
+
+                                            @keyframes beat{
+                                                0%{
+                                                    transform: scale(1);
+                                                }
+                                                20%{
+                                                    transform: scale(1.15);
+                                                }
+                                                40%{
+                                                    transform: scale(1.4);
+                                                }
+                                            }
+
+                                            i{
+                                                color: #000;
+                                                font-size: 90px;
+                                                animation: beat 0.7s infinite;
+                                                text-shadow:
+                                                    0 0 5px red,
+                                                    0 0 45px red,
+                                                    0 0 90px red
+                                                ;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,85 +1,112 @@
-import { useNavigate  } from 'react-router-dom'
-import { appRoutes } from '@/config/routes.config'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { appRoutes } from '@/config/routes.config';
+import { type Questionnaire } from './SliderPoster';
 
-import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
-import Stack from '@mui/material/Stack'
+import Button from '@mui/material/Button';
 
-import SvgCity from '@/assets/icon/city.svg?react'
-
-import PngHertRed from '@/assets/img/heart-red.png'
-import PngDown from '@/assets/img/down.png'
-import PngNeedle from '@/assets/img/needle.png'
-import PngCristal from '@/assets/img/cristal.png'
-import PngHotDog from '@/assets/img/hotdog.png'
+import SvgHeartsBtn from '@/assets/icon/hearts-btn.svg';
+import SvgMapPin from '@/assets/icon/map-pin.svg';
+import SvgCheckMark from '@/assets/icon/check-mark.svg';
 
 
 interface ISliderItemProps {
-    item: {
-        location: string
-        name: string
-    }
-    index: number
-    len: number
+    questionnaires: Questionnaire
+    nextStep: () => void
+    clickLike: () => void
+    prevStep: () => void
 }
 
 const SliderItem = (props: ISliderItemProps) => {
+    const [index, setIndex] = useState<number>( 0 );
+    const [fade, setFade] = useState<boolean>(true);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const handleLink = () => {
-        navigate(appRoutes.questionnaires.inner.details)
-    }
+    const changeImg = (newIndex: number) => {
+        if ( newIndex < 0 ) newIndex = props.questionnaires.imgs.length - 1;
+        if ( newIndex >= props.questionnaires.imgs.length ) newIndex = 0;
+        
+        setFade(false);
+        setTimeout(() => {
+            setIndex(newIndex);
+            setFade(true);
+        }, 200);
+    };
 
-    const barList = Array.from({ length: props.len }, (_, i) => i + 1)
+    const nextPhoto = () => changeImg( index + 1 )
+    const toDetails = () => navigate( appRoutes.details )
+    const prevPhoto = () => changeImg( index - 1 )
 
    return (
         <>
-            <div className="poster__header">
-                <div className="poster-bar">
-                    {barList.map((_, i) => (
-                        <div key={i} className={`poster-bar__item ${i === props.index ? "active" : ""}`}></div>
-                    ))}
-                </div>
-                <div className="poster-desc">
-                    <div className="location">
-                        <SvgCity />
-                        <p>Санкт-Петербург</p>
+            <div
+                className="slide"
+                style={{
+                    backgroundImage: `url(${ props.questionnaires.imgs[index] })`,
+                    opacity: fade ? 1 : 0.25,
+                }}
+            >
+                <nav className="slide__nav">
+                    <span className="item" onClick={ prevPhoto }></span>
+                    <span className="item" onClick={ toDetails }></span>
+                    <span className="item" onClick={ nextPhoto }></span>
+                </nav>
+                <header className="slide__header">
+                    <div className="scroll-bar">
+                        {props.questionnaires.imgs.map((_, i) => (
+                            <span
+                                className={`item ${i === index && 'selected'}`}
+                            ></span>
+                        ))}
                     </div>
-                    <Stack className="stack" direction="row" spacing={1}>
-                        <Chip
-                            icon={<img src={PngCristal} alt="needle" />}
-                            label="Бар"
-                        />
-                        <Chip
-                            icon={<img src={PngHotDog} alt="needle" />}
-                            label="Стритфуд"
-                        />
-                        <Chip
-                            icon={<img src={PngNeedle} alt="needle" />}
-                            label="Адмиралтейский район"
-                        />
-                    </Stack>
-                </div>
-            </div>
-            <div className="poster__footer">
-                <div onClick={handleLink} className="poster__prof-desc">
-                    <h3 className="name">Виктория, 20 лет</h3>
-                    <p className="text">Много работаю ( просто пекарь, бариста, кассир ) Играю на виолончели 🎻 Люблю гулять на свежем воздухе...</p>
-                </div>
-                <div className="poster__btns">
-                    <Button
-                        className="poster-btn"
-                        variant="contained"
-                        startIcon={<img src={PngDown} alt='down-row' />}
-                    >
-                        Назад
-                    </Button>
-                    <Button className="poster-btn" variant="contained">
-                        <img src={PngHertRed} alt="red-heart" />
-                    </Button>
-                </div>
-            </div>
+                    <div className="labels">
+                        <div className="label">
+                            <img src={ SvgMapPin } alt="map-pin" />
+                            <p>{ props.questionnaires.location }</p>
+                        </div>
+                    </div>
+                </header>
+                <footer className="slide__footer">
+                    <div className="text" onClick={ toDetails }>
+                        <h4 className="headline">{ props.questionnaires.name }</h4>
+                        <p className="description">{ props.questionnaires.description }</p>
+                    </div>
+                    <div className="panel">
+                        <div className="label">
+                            <p>{ props.questionnaires.plans.date }</p>
+                            <img src={SvgCheckMark} alt="check-mark" />
+                        </div>
+                        <p className="text">{ props.questionnaires.plans.content }</p>
+                    </div>
+                    <div className="btns">
+                        <Button
+                            className="lemon-fon"
+                            variant="contained"
+                            onClick={ props.prevStep }
+                        >
+                            Назад
+                        </Button>
+                        <Button
+                            className="icon-btn"
+                            variant="contained"
+                            onClick={ props.clickLike }
+                        >
+                            <div className="heart" id="heart">
+                                <i className="fa-solid fa-heart"></i>
+                            </div>
+                            <img src={ SvgHeartsBtn } alt="hearts-btn" />
+                        </Button>
+                        <Button
+                            className="lemon"
+                            variant="contained"
+                            onClick={ props.nextStep }
+                        >
+                            Далее
+                        </Button>
+                    </div>
+                </footer>
+            </div>            
         </>
    )
 }

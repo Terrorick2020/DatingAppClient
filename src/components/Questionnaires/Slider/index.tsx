@@ -9,7 +9,7 @@ const SliderContent = () => {
                 <SliderNav />
             </nav>
             <div className="slider__poster">
-                
+                <SliderPoster />
             </div>
         </>
     )
