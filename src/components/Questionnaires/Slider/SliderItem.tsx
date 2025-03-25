@@ -13,7 +13,7 @@ import SvgCheckMark from '@/assets/icon/check-mark.svg';
 interface ISliderItemProps {
     questionnaires: Questionnaire
     nextStep: () => void
-    clickLike: () => void
+    clickLike: (id: number) => void
     prevStep: () => void
 }
 
@@ -90,9 +90,9 @@ const SliderItem = (props: ISliderItemProps) => {
                         <Button
                             className="icon-btn"
                             variant="contained"
-                            onClick={ props.clickLike }
+                            onClick={ () => props.clickLike( props.questionnaires.id ) }
                         >
-                            <div className="heart" id="heart">
+                            <div className="heart" id={ `heart-${ props.questionnaires.id }` }>
                                 <i className="fa-solid fa-heart"></i>
                             </div>
                             <img src={ SvgHeartsBtn } alt="hearts-btn" />

@@ -30,6 +30,9 @@ const FillingQuestContent = () => {
             const langHtml = document.getElementById('filling-quest');
             if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
+            const logoHeader = document.getElementById('logo-header');
+            if( logoHeader ) logoHeader.style.display = 'flex';
+
             // const geoModalHtml = document.getElementById('geo-modal');
             // if ( geoModalHtml ) {
             //     geoModalHtml.style.animationDelay = '1s';

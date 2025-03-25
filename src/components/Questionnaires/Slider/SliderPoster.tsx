@@ -110,8 +110,8 @@ const SliderPoster = () => {
 
   const nextStep = () => changeSlide(index + 1)
 
-  const clickLike = () => {
-    const heartHtml = document.getElementById('heart');
+  const clickLike = (id: number) => {
+    const heartHtml = document.getElementById(`heart-${ id }`);
     if ( heartHtml ) heartHtml.style.animation = 'heart-top 1.5s ease-in-out forwards';
     
     setTimeout(() => {
