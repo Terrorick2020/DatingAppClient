@@ -25,6 +25,7 @@ export default defineConfig(
         host: env.VITE_DOMAIN,
         protocol: 'wss',
       },
+      port: 4173
     }
 
     var server = env.VITE_MODE === 'dev' ? serverDev : serverPreview

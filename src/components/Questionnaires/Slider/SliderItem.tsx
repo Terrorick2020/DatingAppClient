@@ -4,6 +4,7 @@ import { appRoutes } from '@/config/routes.config';
 import { type Questionnaire } from './SliderPoster';
 
 import Button from '@mui/material/Button';
+import ScrollBar from '@/components/UI/ScrollBar';
 
 import SvgHeartsBtn from '@/assets/icon/hearts-btn.svg';
 import SvgMapPin from '@/assets/icon/map-pin.svg';
@@ -53,13 +54,7 @@ const SliderItem = (props: ISliderItemProps) => {
                     <span className="item" onClick={ nextPhoto }></span>
                 </nav>
                 <header className="slide__header">
-                    <div className="scroll-bar">
-                        {props.questionnaires.imgs.map((_, i) => (
-                            <span
-                                className={`item ${i === index && 'selected'}`}
-                            ></span>
-                        ))}
-                    </div>
+                    <ScrollBar len={props.questionnaires.imgs.length} index={index} />
                     <div className="labels">
                         <div className="label">
                             <img src={ SvgMapPin } alt="map-pin" />

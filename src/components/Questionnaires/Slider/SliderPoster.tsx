@@ -4,7 +4,7 @@ import { useSwipeable } from 'react-swipeable';
 import SliderItem from './SliderItem';
 
 import PngLeady from '@/assets/img/leady.png'
-import PngWoomen from '@/assets/img/woman.png'
+import PngWoman from '@/assets/img/woman.png'
 
 
 export interface Questionnaire {
@@ -31,7 +31,7 @@ const questionnairesList: Questionnaire[] = [
     },
     imgs: [
       PngLeady,
-      PngWoomen,
+      PngWoman,
       PngLeady,
     ],
   },
@@ -46,7 +46,7 @@ const questionnairesList: Questionnaire[] = [
     },
     imgs: [
       PngLeady,
-      PngWoomen,
+      PngWoman,
     ],
   },
   {
@@ -60,7 +60,7 @@ const questionnairesList: Questionnaire[] = [
     },
     imgs: [
       PngLeady,
-      PngWoomen,
+      PngWoman,
     ],
   },
   {
@@ -74,7 +74,7 @@ const questionnairesList: Questionnaire[] = [
     },
     imgs: [
       PngLeady,
-      PngWoomen,
+      PngWoman,
     ],
   },
   {
@@ -88,7 +88,7 @@ const questionnairesList: Questionnaire[] = [
     },
     imgs: [
       PngLeady,
-      PngWoomen,
+      PngWoman,
     ],
   },
 ];

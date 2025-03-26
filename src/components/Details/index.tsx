@@ -1,23 +1,32 @@
-import DetailsHeader from './Header'
+import { useEffect } from 'react';
+
 import DetailsSlider from './Slider'
 import DetailsInfo from './Info'
-import DetailsDescription from './Description'
+import DetailsFixed from './Fixed'
 
 
 const DetailsContent = () => {
+    useEffect(
+        () => {
+            const detailsHtml = document.getElementById('details');
+            if ( detailsHtml ) detailsHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+
+            const logoHeader = document.getElementById('logo-header');
+            if( logoHeader ) logoHeader.style.display = 'flex';
+        },
+        []
+    )
+
     return (
         <>
-            <div className="details__header">
-                <DetailsHeader />
-            </div>
             <div className="details__slider">
                 <DetailsSlider />
             </div>
             <div className="details__info">
                 <DetailsInfo />
             </div>
-            <div className="details__desc">
-                <DetailsDescription />
+            <div className="details__fixed">
+                <DetailsFixed />
             </div>
         </>
     )

@@ -44,7 +44,7 @@
             position: fixed;
             top: 0;
             background: transparent;
-            z-index: 5;
+            z-index: 7;
         }
 
         .logo-header {
@@ -59,7 +59,7 @@
             position: fixed;
             top: 0;
             background: #000000;
-            z-index: 4;
+            z-index: 6;
             
             &::after {
                 content: '';

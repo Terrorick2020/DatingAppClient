@@ -70,6 +70,8 @@
                             width: 100%;
                             max-width: 370px;
                             height: 100%;
+                            user-select: none;
+                            background-repeat: no-repeat;
                             background-size: cover;
                             background-position: center;
                             background-blend-mode: multiply;
@@ -100,26 +102,6 @@
                             &__header {
                                 align-self: start;
                                 z-index: 5;
-            
-                                .scroll-bar {
-                                    width: 100%;
-                                    display: flex;
-                                    flex-direction: row;
-                                    justify-content: center;
-                                    gap: 0.7rem;
-
-                                    .item {
-                                        width: 30%;
-                                        height: 0.3rem;
-                                        background: #D7FF81;
-                                        border-radius: 0.8rem;
-                                        opacity: 0.5;
-
-                                        &.selected {
-                                            opacity: 1;
-                                        }
-                                    }
-                                }
             
                                 .labels {
                                     width: 100%;

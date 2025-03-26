@@ -3,7 +3,7 @@ import DetailsContent from '@/components/Details'
 const QuestDetailsPage = () => {
     return (
         <>
-            <div className="details">
+            <div className="details" id="details">
                 <DetailsContent />
             </div>
         </>
