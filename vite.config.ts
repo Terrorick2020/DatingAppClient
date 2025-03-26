@@ -19,24 +19,25 @@ export default defineConfig(
     }
 
     const serverPreview = {
-      host: env.VITE_HOST,
       allowedHosts: [env.VITE_DOMAIN],
       hmr: {
         host: env.VITE_DOMAIN,
         protocol: 'wss',
       },
-      port: 4173
     }
 
     var server = env.VITE_MODE === 'dev' ? serverDev : serverPreview
 
-    return {
+    const config = {
       plugins: [
         react(),
         svgr(),
         checker({ typescript: true }),
       ],
       server,
+      preview: {
+        allowedHosts: [env.VITE_DOMAIN],
+      },
       resolve: {
         alias: {
           '@': path.resolve(__dirname, 'src'),
@@ -45,7 +46,7 @@ export default defineConfig(
       build: {
         rollupOptions: {
           output: {
-            manualChunks(id) {
+            manualChunks(id: string) {
               if (id.includes('node_modules')) {
                 if (id.includes('lodash')) return 'lodash'
                 return 'vendor'
@@ -55,5 +56,9 @@ export default defineConfig(
         }
       }
     }
+
+    console.log( config )
+
+    return { ...config }
   }
 )
