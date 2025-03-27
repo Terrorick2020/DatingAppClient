@@ -11,20 +11,38 @@ import AppSuspense from './AppSuspense'
 
 async function initTg() {
   if (await isTMA()) {
-    await init()
+    await init();
     
     if (viewport.mount.isAvailable()) {
-      await viewport.mount()
-      viewport.expand()
+      await viewport.mount();
+      viewport.expand();
     }
     
     if (viewport.requestFullscreen.isAvailable()) {
-      await viewport.requestFullscreen()
+      await viewport.requestFullscreen();
     }
 
-    window.Telegram.WebApp.disableVerticalSwipes()
+    window.Telegram.WebApp.disableVerticalSwipes();
+
+    if (window.Telegram.WebApp.enableClosingConfirmation) {
+      window.Telegram.WebApp.enableClosingConfirmation();
+    }
+
+    const preventSwipe = (e: TouchEvent) => e.preventDefault();
+    document.addEventListener("touchmove", preventSwipe, { passive: false });
+
+    const preventSwipeBack = (e: TouchEvent) => {
+      if (e.changedTouches[0]?.clientX > 40) e.preventDefault();
+    };
+    window.addEventListener("touchmove", preventSwipeBack, { passive: false });
+
+    window.addEventListener("beforeunload", () => {
+      document.removeEventListener("touchmove", preventSwipe);
+      window.removeEventListener("touchmove", preventSwipeBack);
+    });
   }
 }
+
 
 (async () => { await initTg() })()
 

@@ -9,12 +9,12 @@
         &.nav-bar {
             width: 100vw;
             max-width: 800px;
-            height: 15vh;
+            height: 100%;
             
             .MuiBottomNavigation-root {
                 background: var(--nav-bar-bg);
                 border-radius: 1.9rem 1.9rem 0 0;
-                height: 15vh;
+                height: 13vh;
 
                 .MuiButtonBase-root {
                     cursor: pointer;

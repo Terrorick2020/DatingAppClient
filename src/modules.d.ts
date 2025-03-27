@@ -17,6 +17,7 @@ declare global {
       WebApp: {
         close: () => void
         disableVerticalSwipes: () => void
+        enableClosingConfirmation: () => void
       }
     }
   }

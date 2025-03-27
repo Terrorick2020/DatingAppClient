@@ -1,6 +1,6 @@
 :root {
-    --quest-outlet-h: 85vh;
-    --nav-bar-h: 15vh;
+    --quest-outlet-h: 88vh;
+    --nav-bar-h: 12vh;
 }
 
 .quest-layout {
@@ -11,6 +11,12 @@
 
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    .match {
+        width: 100%;
+        height: 100lvh;
+    
     }
 
     .quest-outlet {
