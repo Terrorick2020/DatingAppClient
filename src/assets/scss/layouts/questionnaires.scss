@@ -1,6 +1,7 @@
 :root {
     --quest-outlet-h: 88vh;
     --nav-bar-h: 12vh;
+    --match-bg: #000000;
 }
 
 .quest-layout {
@@ -27,13 +28,25 @@
         }
     }
 
+    .quest-outlet {
+        align-self: start;
+        width: 100%;
+        height: var(--quest-outlet-h);
+    }
+
+    .nav-bar {
+        align-self: end;
+        width: 100%;
+        height: var(--nav-bar-h);
+    }
+
     .match {
         position: absolute;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: #000000;
+        background: var(--match-bg);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -129,15 +142,45 @@
         }
     }
 
-    .quest-outlet {
+    .quest-nav-head {
+        width: 100%;
+        max-width: 800px;
+        height: 11vh;
+        display: grid;
+        padding-inline: 1rem;
+        grid-template-columns: 1fr 1fr;
+        align-items: end;
+        justify-content: space-between;
+        margin-top: 6vh;
+        padding-bottom: 1vh;
         align-self: start;
-        width: 100%;
-        height: var(--quest-outlet-h);
-    }
 
-    .nav-bar {
-        align-self: end;
-        width: 100%;
-        height: var(--nav-bar-h);
+        @media (max-height: 660px) {
+            margin-top: 9vh;
+        }
+
+        .plans {
+            width: 100%;
+            justify-self: left;
+
+            .MuiButton-root {
+                justify-self: left;
+                white-space: nowrap;
+                scale: 0.9;
+                translate: -10px 0;
+            }
+        }
+
+        .widgets {
+            width: 100%;
+            justify-self: right;
+            display: flex;
+            justify-content: end;
+            gap: 1vw;
+
+            .MuiButton-root {
+                scale: 0.9;
+            }
+        }
     }
 }

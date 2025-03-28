@@ -10,14 +10,17 @@ interface PropsLikeBtn {
 const LikeBtn = (props: PropsLikeBtn) => {
     return (
         <>
+            <div
+                className="heart"
+                id={ `heart-${ props.id }` }
+            >
+                <i className="fa-solid fa-heart"></i>
+            </div>
             <Button
                 className="icon-btn like-btn"
                 variant="contained"
                 onClick={ () => props.clickLike( props.id ) }
             >
-                <div className="heart" id={ `heart-${ props.id }` }>
-                    <i className="fa-solid fa-heart"></i>
-                </div>
                 <img src={ SvgHeartsBtn } alt="hearts-btn" />
             </Button>
         </>

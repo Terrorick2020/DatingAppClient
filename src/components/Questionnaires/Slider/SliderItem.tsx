@@ -5,8 +5,8 @@ import { type Questionnaire } from './SliderPoster';
 
 import Button from '@mui/material/Button';
 import ScrollBar from '@/components/UI/ScrollBar';
+import LikeBtn from '@/components/UI/LikeBtn';
 
-import SvgHeartsBtn from '@/assets/icon/hearts-btn.svg';
 import SvgMapPin from '@/assets/icon/map-pin.svg';
 import SvgCheckMark from '@/assets/icon/check-mark.svg';
 
@@ -82,16 +82,7 @@ const SliderItem = (props: ISliderItemProps) => {
                         >
                             Назад
                         </Button>
-                        <Button
-                            className="icon-btn"
-                            variant="contained"
-                            onClick={ () => props.clickLike( props.questionnaires.id ) }
-                        >
-                            <div className="heart" id={ `heart-${ props.questionnaires.id }` }>
-                                <i className="fa-solid fa-heart"></i>
-                            </div>
-                            <img src={ SvgHeartsBtn } alt="hearts-btn" />
-                        </Button>
+                        <LikeBtn id={props.questionnaires.id} clickLike={props.clickLike} />
                         <Button
                             className="lemon"
                             variant="contained"

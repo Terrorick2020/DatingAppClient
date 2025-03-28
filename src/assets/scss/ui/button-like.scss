@@ -4,52 +4,54 @@
             background: #FF4365 !important;
             width: 38px !important;
             justify-self: center;
+            z-index: 100;
+        }
+    }
+    @keyframes heart-top {
+        0% {
+            bottom: 10%;
+            opacity: 0;
+        }
+        50% {
+            bottom: 35vh;
+            opacity: 1;
+            display: block;
+        }
+        100% {
+            bottom: 35vh;
+            opacity: 0;
+        }
+    }
 
-            @keyframes heart-top {
-                0% {
-                    top: -25px;
-                    opacity: 0;
-                }
-                50% {
-                    top: -300px;
-                    opacity: 1;
-                    display: block;
-                }
-                100% {
-                    top: -300px;
-                    opacity: 0;
-                }
+    .heart {
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        z-index: 100;
+
+        @keyframes beat{
+            0%{
+                transform: scale(1);
             }
-
-            .heart {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                opacity: 0;
-
-                @keyframes beat{
-                    0%{
-                        transform: scale(1);
-                    }
-                    20%{
-                        transform: scale(1.15);
-                    }
-                    40%{
-                        transform: scale(1.4);
-                    }
-                }
-
-                i{
-                    color: #FF4365;
-                    font-size: 90px;
-                    animation: beat 0.7s infinite;
-                    text-shadow:
-                        0 0 5px #FF4365,
-                        0 0 45px #FF4365,
-                        0 0 90px #FF4365
-                    ;
-                }
+            20%{
+                transform: scale(1.15);
             }
+            40%{
+                transform: scale(1.4);
+            }
+        }
+
+        i{
+            color: #FF4365;
+            font-size: 90px;
+            animation: beat 0.7s infinite;
+            text-shadow:
+                0 0 5px #FF4365,
+                0 0 45px #FF4365,
+                0 0 90px #FF4365
+            ;
         }
     }
 }

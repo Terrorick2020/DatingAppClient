@@ -9,7 +9,7 @@ import SvgClose from '@/assets/icon/close.svg?react'
 import SvgOther from '@/assets/icon/other.svg?react'
 
 
-const DesctopHeadNav = () => {
+const DesktopHeadNav = () => {
     const navigate = useNavigate()
 
     const goBack = () => {
@@ -60,4 +60,4 @@ const DesctopHeadNav = () => {
     )
 }
 
-export default DesctopHeadNav
+export default DesktopHeadNav

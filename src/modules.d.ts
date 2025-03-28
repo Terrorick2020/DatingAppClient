@@ -10,14 +10,17 @@ declare module '@telegram-apps/sdk'
 
 declare global {
   interface Window {
-    Tg: {
-      close: () => void
-    }
     Telegram: {
       WebApp: {
         close: () => void
         disableVerticalSwipes: () => void
         enableClosingConfirmation: () => void
+        BackButton: {
+          show: () => void
+          hide: () => void
+          onClick: (callback: () => void) => void
+          offClick: (callback: () => void) => void
+        }
       }
     }
   }

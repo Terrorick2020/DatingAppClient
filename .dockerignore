@@ -7,4 +7,5 @@ ssl/
 .env.example
 .gitignore
 
+Dockerfile
 README.md

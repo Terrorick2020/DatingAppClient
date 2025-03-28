@@ -14,7 +14,7 @@ const LogoHeader = () => {
                 <SvgLogo
                     className="logo"
                     style={{
-                        marginTop: isMobile ? '3.5vh' : '0',
+                        marginTop: isMobile ? '3.5vh' : '0.2vh',
                     }}
                 />
             </div>

@@ -44,6 +44,12 @@
             color: #D7FF81;
             border: 1px solid #D7FF81;
             border-radius: 3.75rem;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                background: #D7FF81;
+                color: #121112;
+            }
         }
 
         &.lemon {
@@ -58,7 +64,7 @@
         }
 
         &:hover {
-            box-shadow: 0 0 0.5rem #727272;
+            box-shadow: 0 0 0.7rem #999999;
         }
     }
 }

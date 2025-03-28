@@ -8,13 +8,14 @@ import SvgUserAdd from '@/assets/icon/user-add.svg';
 import SvgBlock from '@/assets/icon/block.svg';
 
 
-const SliderNav = () => {
+const QuestNavHead = () => {
     const regGlobRoute = appRoutes.register.global
     const regEveningPlansRoute = appRoutes.register.inner.eveningPlans
     const toEveningPlans = `${regGlobRoute}/${regEveningPlansRoute}`
 
     return (
         <>
+        <nav className="quest-nav-head" id="quest-nav-head">
             <div className="plans">
                 <NavLink className="plans__link" to={ toEveningPlans }>
                     <Button
@@ -40,8 +41,9 @@ const SliderNav = () => {
                     </Button>
                 </NavLink>
             </div>
+        </nav>
         </>
     )
 }
 
-export default SliderNav
+export default QuestNavHead
