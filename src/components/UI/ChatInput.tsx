@@ -4,6 +4,8 @@ import {
     KeyboardEvent,
     useEffect
 } from 'react';
+import { appRoutes } from '@/config/routes.config';
+import { useNavigate } from 'react-router-dom';
 
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -18,6 +20,12 @@ interface PropsChatInput {
 const ChatInput = (props: PropsChatInput) => {
     const [message, setMessage] = useState('');
 
+    const navigate = useNavigate()
+
+    const questGlobRoute = appRoutes.questionnaires.global
+    const questChatsRoute = appRoutes.questionnaires.inner.chats
+    const toChats = `${questGlobRoute}/${questChatsRoute}`
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setMessage(event.target.value);
     };
@@ -25,6 +33,9 @@ const ChatInput = (props: PropsChatInput) => {
     const handleSendMessage = () => {
         if (!message.trim()) return;
         console.log("Отправка сообщения:", message);
+
+        if( props.isMatch ) navigate( toChats );
+
         setMessage('');
     };
 

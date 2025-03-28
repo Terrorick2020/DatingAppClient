@@ -1,7 +1,6 @@
 #root {
     .icon-btn {
         &.like-btn {
-            // position: relative;
             background: #FF4365 !important;
             width: 38px !important;
             justify-self: center;
@@ -23,9 +22,9 @@
             }
 
             .heart {
-                position: absolute;
-                top: 0;
-                left: 0;
+                position: fixed;
+                top: 50%;
+                left: 50%;
                 opacity: 0;
 
                 @keyframes beat{

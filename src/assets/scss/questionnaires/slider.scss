@@ -200,58 +200,6 @@
                                     width: 100%;
                                     display: grid;
                                     grid-template-columns: 2fr 1fr 2fr;
-
-                                    .icon-btn {
-                                        position: relative;
-                                        background: #FF4365 !important;
-                                        width: 38px !important;
-                                        justify-self: center;
-
-                                        @keyframes heart-top {
-                                            0% {
-                                                top: -25px;
-                                                opacity: 0;
-                                            }
-                                            50% {
-                                                top: -300px;
-                                                opacity: 1;
-                                                display: block;
-                                            }
-                                            100% {
-                                                top: -300px;
-                                                opacity: 0;
-                                            }
-                                        }
-
-                                        .heart {
-                                            top: 0px;
-                                            position: absolute;
-                                            opacity: 0;
-
-                                            @keyframes beat{
-                                                0%{
-                                                    transform: scale(1);
-                                                }
-                                                20%{
-                                                    transform: scale(1.15);
-                                                }
-                                                40%{
-                                                    transform: scale(1.4);
-                                                }
-                                            }
-
-                                            i{
-                                                color: #000;
-                                                font-size: 90px;
-                                                animation: beat 0.7s infinite;
-                                                text-shadow:
-                                                    0 0 5px red,
-                                                    0 0 45px red,
-                                                    0 0 90px red
-                                                ;
-                                            }
-                                        }
-                                    }
                                 }
                             }
                         }
