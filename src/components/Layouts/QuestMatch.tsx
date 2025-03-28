@@ -17,7 +17,7 @@ const QuestMatch = () => {
                         <h6 className="text">
                             <span className="caps">Вы</span> и <span className="caps">Виктория</span> понравились друг другу
                         </h6>
-                        <ChatInput />
+                        <ChatInput isMatch={true} />
                     </main>
                     <footer className="footer"></footer>
                 </div>

@@ -1,5 +1,27 @@
 #root {
     .chat-input {
         width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .chat-text-field {
+            width: 100%;
+        }
+
+        .MuiInputAdornment-root {
+            .MuiIconButton-root {
+                border-radius: 3.75rem;
+                background: #D7FF81;
+
+                &:hover {
+                    box-shadow: 0 0 0.5rem rgb(115, 115, 115);
+                }
+
+                &:active {
+                    scale: 0.95;
+                }
+            }
+        }
     }
 }
