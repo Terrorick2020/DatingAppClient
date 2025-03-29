@@ -1,4 +1,4 @@
-import BlockedContent from '@/components/BlockedContent'
+import BlockedContent from '@/components/BlockedContent';
 
 
 const BlockedPage = () => {

@@ -1,7 +1,7 @@
-import { NavLink } from 'react-router-dom'
-import { appRoutes } from '@/config/routes.config'
+import { NavLink } from 'react-router-dom';
+import { appRoutes } from '@/config/routes.config';
 
-import Button from '@mui/material/Button'
+import Button from '@mui/material/Button';
 
 
 const NotFoundContent = () => {

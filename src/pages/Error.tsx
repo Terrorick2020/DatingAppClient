@@ -1,4 +1,4 @@
-import ErrorContent from '@/components/ErrorContent'
+import ErrorContent from '@/components/ErrorContent';
 
 
 const ErrorPage = () => {

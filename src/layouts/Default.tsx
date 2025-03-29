@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom'
 
-import DesktopHeadNav from '@/components/Layouts/DesktopHeadNav'
-import LogoHeader from '@/components/Layouts/LogoHeader'
+import DesktopHeadNav from '@/components/Layouts/DesktopHeadNav';
+import LogoHeader from '@/components/Layouts/LogoHeader';
 
 
 const useBackButton = () => {
@@ -11,7 +11,7 @@ const useBackButton = () => {
     useEffect(() => {
         const isTelegram = window.Telegram?.WebApp !== undefined
         if (!isTelegram) return
-        
+
         const goBack = () => {
             if (window.history.length > 1) {
                 navigate(-1)
