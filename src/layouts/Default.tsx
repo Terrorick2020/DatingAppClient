@@ -1,38 +1,10 @@
-import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { backButton } from '@telegram-apps/sdk';
+import { Outlet } from 'react-router-dom';
 
 import DesktopHeadNav from '@/components/Layouts/DesktopHeadNav';
 import LogoHeader from '@/components/Layouts/LogoHeader';
 
 
-const useBackButton = () => {
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if (backButton.mount.isAvailable()) {
-            backButton.mount();
-        }
-
-        if (backButton.show.isAvailable()) {
-            backButton.show();
-            backButton.isVisible();
-        }
-
-    }, [navigate])
-}
-
 const DefaultLayout = () => {
-    useBackButton()
-
-    if (backButton.mount.isAvailable()) {
-        backButton.mount();
-    }
-
-    if (backButton.show.isAvailable()) {
-        backButton.show();
-    }
-
     const userAgent = navigator.userAgent.toLowerCase()
 
     const predMobile  = userAgent.includes('iphone') || userAgent.includes('android')

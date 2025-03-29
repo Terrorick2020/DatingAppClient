@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { backButton } from '@telegram-apps/sdk';
 
 import { setLang } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
@@ -13,11 +14,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 
 const LangContent = () => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
     const regGlobRoute = appRoutes.register.global;
     const regFillQuestRoute = appRoutes.register.inner.fillQuest;
     const toFillQuest = `${regGlobRoute}/${regFillQuestRoute}`;
-
-    const dispatch = useDispatch()
 
     const handleLanguageChange = (event: ChangeEvent<HTMLInputElement>) => {
         dispatch( setLang( event.target.value ) );
@@ -30,6 +32,14 @@ const LangContent = () => {
 
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'none';
+
+            if (backButton.mount.isAvailable()) backButton.mount();
+            if (backButton.show.isAvailable()) backButton.show();
+
+            if (backButton.onClick.isAvailable()) {
+                const toPreview = () => navigate(-1)
+                backButton.onClick(toPreview)
+            }
         },
         []
     )
