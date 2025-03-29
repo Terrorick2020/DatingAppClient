@@ -22,40 +22,34 @@ async function initTg() {
       await viewport.requestFullscreen();
     }
 
-    await swipeBehavior.disableVertical();
+    // await swipeBehavior.disableVertical();
+  }
+}
 
-    const app = window.Telegram.WebApp;
+function ensureDocumentIsScrollable() {
+  const isScrollable =
+    document.documentElement.scrollHeight > window.innerHeight;
+  if (!isScrollable) {
+    document.documentElement.style.setProperty(
+      "height",
+      "calc(100vh + 1px)",
+      "important"
+    );
+  }
+}
 
-    // @ts-ignore
-    app.ready().then(() => {
-      // Включить подтверждение при закрытии
-      app.isClosingConfirmationEnabled = true;
-    });
-
-
-    // window.Telegram.WebApp.disableVerticalSwipes();
-
-    // if (window.Telegram.WebApp.enableClosingConfirmation) {
-    //   window.Telegram.WebApp.enableClosingConfirmation();
-    // }
-
-    // const preventSwipe = (e: TouchEvent) => e.preventDefault();
-    // document.addEventListener("touchmove", preventSwipe, { passive: false });
-
-    // const preventSwipeBack = (e: TouchEvent) => {
-    //   if (e.changedTouches[0]?.clientX > 40) e.preventDefault();
-    // };
-    // window.addEventListener("touchmove", preventSwipeBack, { passive: false });
-
-    // window.addEventListener("beforeunload", () => {
-    //   document.removeEventListener("touchmove", preventSwipe);
-    //   window.removeEventListener("touchmove", preventSwipeBack);
-    // });
+function preventCollapse() {
+  if (window.scrollY === 0) {
+    window.scrollTo(0, 1);
   }
 }
 
 
 (async () => { await initTg() })();
+
+const scrollableElement = document.querySelector(".scrollable-element");
+if ( scrollableElement ) scrollableElement.addEventListener("touchstart", preventCollapse);
+window.addEventListener("load", ensureDocumentIsScrollable);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
