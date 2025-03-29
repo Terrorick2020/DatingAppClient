@@ -1,4 +1,4 @@
-import { Suspense, useEffect, lazy } from 'react'
+import { Suspense, lazy } from 'react'
 import { initProfileAsync } from '@/store/slices/profileSlice'
 
 import store from './store'
@@ -33,10 +33,6 @@ async function delayForLazy( promise: Promise<any> ) {
 const AppLazy = lazy(() => delayForLazy(import('./App')))
 
 const AppSuspense = () => {
-    useEffect(() => {
-        if ( window.Telegram ) window.Telegram.WebApp.setupSwipeBehavior(false);
-    }, []);
-
     return (
         <>
             <Suspense fallback={ <AppPreloader /> } >
