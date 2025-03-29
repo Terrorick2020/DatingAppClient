@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
+import { backButton } from '@telegram-apps/sdk';
 
 import Button from '@mui/material/Button';
 
@@ -17,6 +18,8 @@ import FillingQuestSelectionSex from './SelectionSex';
 
 const FillingQuestContent = () => {
     const [_confirmation, setConfirmation] = useState<boolean>(false);
+
+    const navigate = useNavigate()
 
     // const regGlobRoute = appRoutes.register.global;
     // const regFillQuestRoute = appRoutes.register.inner.geo;
@@ -38,6 +41,14 @@ const FillingQuestContent = () => {
             //     geoModalHtml.style.animationDelay = '1s';
             //     geoModalHtml.style.animation = 'slideModalDown 1s ease-in-out forwards';
             // }
+
+            if (backButton.mount.isAvailable()) backButton.mount();
+            if (backButton.show.isAvailable()) backButton.show();
+
+            if (backButton.onClick.isAvailable()) {
+                const toPreview = () => navigate(-1)
+                backButton.onClick(toPreview)
+            }
         },
         []
     )
