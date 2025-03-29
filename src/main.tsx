@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { viewport, init, isTMA } from '@telegram-apps/sdk';
+import { viewport, init, isTMA, swipeBehavior  } from '@telegram-apps/sdk';
 
 import store from './store';
 
@@ -22,24 +22,26 @@ async function initTg() {
       await viewport.requestFullscreen();
     }
 
-    window.Telegram.WebApp.disableVerticalSwipes();
+    swipeBehavior.disableVertical();
 
-    if (window.Telegram.WebApp.enableClosingConfirmation) {
-      window.Telegram.WebApp.enableClosingConfirmation();
-    }
+    // window.Telegram.WebApp.disableVerticalSwipes();
 
-    const preventSwipe = (e: TouchEvent) => e.preventDefault();
-    document.addEventListener("touchmove", preventSwipe, { passive: false });
+    // if (window.Telegram.WebApp.enableClosingConfirmation) {
+    //   window.Telegram.WebApp.enableClosingConfirmation();
+    // }
 
-    const preventSwipeBack = (e: TouchEvent) => {
-      if (e.changedTouches[0]?.clientX > 40) e.preventDefault();
-    };
-    window.addEventListener("touchmove", preventSwipeBack, { passive: false });
+    // const preventSwipe = (e: TouchEvent) => e.preventDefault();
+    // document.addEventListener("touchmove", preventSwipe, { passive: false });
 
-    window.addEventListener("beforeunload", () => {
-      document.removeEventListener("touchmove", preventSwipe);
-      window.removeEventListener("touchmove", preventSwipeBack);
-    });
+    // const preventSwipeBack = (e: TouchEvent) => {
+    //   if (e.changedTouches[0]?.clientX > 40) e.preventDefault();
+    // };
+    // window.addEventListener("touchmove", preventSwipeBack, { passive: false });
+
+    // window.addEventListener("beforeunload", () => {
+    //   document.removeEventListener("touchmove", preventSwipe);
+    //   window.removeEventListener("touchmove", preventSwipeBack);
+    // });
   }
 }
 
