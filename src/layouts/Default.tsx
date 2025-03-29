@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom';
+import { backButton } from '@telegram-apps/sdk';
 
 import DesktopHeadNav from '@/components/Layouts/DesktopHeadNav';
 import LogoHeader from '@/components/Layouts/LogoHeader';
@@ -9,24 +10,8 @@ const useBackButton = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const isTelegram = window.Telegram?.WebApp !== undefined
-        if (!isTelegram) return
-
-        const goBack = () => {
-            if (window.history.length > 1) {
-                navigate(-1)
-            } else {
-                window.Telegram.WebApp.close()
-            }
-        }
-
-        const backButton = window.Telegram.WebApp.BackButton
-        backButton.show()
-        backButton.onClick(goBack)
-
-        return () => {
-            backButton.hide()
-            backButton.offClick(goBack)
+        if (backButton.mount.isAvailable()) {
+            backButton.mount();
         }
     }, [navigate])
 }

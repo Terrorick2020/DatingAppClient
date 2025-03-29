@@ -3,11 +3,14 @@ import { useState, ChangeEvent } from 'react';
 import TextField from '@mui/material/TextField';
 
 
+const maxLenBio = 500;
+
 const FillingQuestBio = () => {
     const [bio, setBio] = useState('');
 
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setBio(event.target.value);
+        const text = event.target.value.substring(0, maxLenBio);
+        setBio(text);
     };
 
     return (
@@ -27,7 +30,7 @@ const FillingQuestBio = () => {
                     slotProps={{
                         input: {
                             inputProps: {
-                                maxLength: 500,
+                                maxLength: maxLenBio,
                             },
                         },
                     }}
