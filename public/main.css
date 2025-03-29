@@ -26,6 +26,9 @@
 html, body {
     width: 100%;
     height: 100lvh;
+    overscroll-behavior: none;
+    touch-action: none;
+    overflow: hidden;
 }
 
 body, p {
