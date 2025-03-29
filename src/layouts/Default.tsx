@@ -6,24 +6,24 @@ import DesktopHeadNav from '@/components/Layouts/DesktopHeadNav';
 import LogoHeader from '@/components/Layouts/LogoHeader';
 
 
-// const useBackButton = () => {
-//     const navigate = useNavigate()
+const useBackButton = () => {
+    const navigate = useNavigate()
 
-//     useEffect(() => {
-//         if (backButton.mount.isAvailable()) {
-//             backButton.mount();
-//         }
+    useEffect(() => {
+        if (backButton.mount.isAvailable()) {
+            backButton.mount();
+        }
 
-//         if (backButton.show.isAvailable()) {
-//             backButton.show();
-//             backButton.isVisible();
-//         }
+        if (backButton.show.isAvailable()) {
+            backButton.show();
+            backButton.isVisible();
+        }
 
-//     }, [navigate])
-// }
+    }, [navigate])
+}
 
 const DefaultLayout = () => {
-    // useBackButton()
+    useBackButton()
 
     if (backButton.mount.isAvailable()) {
         backButton.mount();
