@@ -16,7 +16,7 @@ function preventCollapse() {
     }
 }
 
-const scrollableElement = document.querySelector("#root");
+const scrollableElement = document.getElementById("root");
 scrollableElement.addEventListener("touchstart", preventCollapse);
 
 window.addEventListener("load", ensureDocumentIsScrollable);
