@@ -31,7 +31,13 @@
         }
 
         .video {
+            position: relative;
             cursor: pointer;
+
+            &__media {
+                position: absolute;
+                z-index: 10;
+            }
         }
     }
 

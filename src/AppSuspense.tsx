@@ -34,7 +34,7 @@ const AppLazy = lazy(() => delayForLazy(import('./App')))
 
 const AppSuspense = () => {
     useEffect(() => {
-        window.Telegram.WebApp.setupSwipeBehavior(false);
+        if ( window.Telegram ) window.Telegram.WebApp.setupSwipeBehavior(false);
     }, []);
 
     return (
