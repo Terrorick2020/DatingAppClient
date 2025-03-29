@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { viewport, init, isTMA, swipeBehavior } from '@telegram-apps/sdk';
+import { viewport, init, isTMA } from '@telegram-apps/sdk';
 
 import store from './store';
 
@@ -21,8 +21,6 @@ async function initTg() {
     if (viewport.requestFullscreen.isAvailable()) {
       await viewport.requestFullscreen();
     }
-
-    await swipeBehavior.disableVertical();
   }
 }
 
