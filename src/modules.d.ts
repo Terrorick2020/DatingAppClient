@@ -12,6 +12,9 @@ declare global {
   interface Window {
     Telegram: {
       WebApp: {
+        ready: () => void
+        isClosingConfirmationEnabled: boolean
+
         close: () => void
         setupSwipeBehavior: (arg: boolean) => void
         disableVerticalSwipes: () => void

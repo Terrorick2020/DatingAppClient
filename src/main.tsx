@@ -22,7 +22,16 @@ async function initTg() {
       await viewport.requestFullscreen();
     }
 
-    swipeBehavior.disableVertical();
+    await swipeBehavior.disableVertical();
+
+    const app = window.Telegram.WebApp;
+
+    // @ts-ignore
+    app.ready().then(() => {
+      // Включить подтверждение при закрытии
+      app.isClosingConfirmationEnabled = true;
+    });
+
 
     // window.Telegram.WebApp.disableVerticalSwipes();
 
