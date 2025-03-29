@@ -13,8 +13,7 @@ interface InterestsVariant {
 const variantsList: InterestsVariant[] = [
     { id: 0, value: 'communication', label: 'Общение' },
     { id: 1, value: 'friendship', label: 'Дружба' },
-    { id: 2, value: 'sex', label: 'Секс' },
-    { id: 3, value: 'love', label: 'Любовь' },
+    { id: 2, value: 'love', label: 'Любовь' },
 ]
 
 const FillingQuestInterests = () => {
@@ -26,6 +25,7 @@ const FillingQuestInterests = () => {
                 <h4 className="headline">Вы хотите найти</h4>
                 <ToggleButtonGroup
                     className="select"
+                    id="select-interests"
                     spacing={ 5 }
                     value={ value }
                     onChange={(_event, newValue) => {

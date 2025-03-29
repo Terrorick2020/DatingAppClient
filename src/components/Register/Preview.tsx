@@ -9,8 +9,11 @@ import SvgTriangle from '@/assets/icon/triangle.svg?react';
 
 const PreviewContent = () => {
     const regGlobRoute = appRoutes.register.global;
-    const regLangRoute = appRoutes.register.inner.lang;
-    const toLang = `${regGlobRoute}/${regLangRoute}`;
+    // const regLangRoute = appRoutes.register.inner.lang;
+    // const toLang = `${regGlobRoute}/${regLangRoute}`;
+
+    const regFillQuestRoute = appRoutes.register.inner.fillQuest;
+    const toFillQuest = `${regGlobRoute}/${regFillQuestRoute}`;
 
     useEffect(
         () => {
@@ -35,7 +38,7 @@ const PreviewContent = () => {
                     <h6 className="description">Мы верим, что крепкие связи устанавливаются лицом к лицу. Наша цель — помочь вам встретить новых людей офлайн, создавая значимые моменты и впечатления.</h6>
                 </div>
                 <div className="btn">
-                    <NavLink className="link" to={ toLang }>
+                    <NavLink className="link" to={ toFillQuest }>
                         <Button variant="contained" endIcon={<SvgTriangle />}>Далее</Button>
                     </NavLink>
                 </div>

@@ -1,4 +1,7 @@
-import PlanPanel from '@/components/UI/PlanPanel';
+import Button from '@mui/material/Button';
+
+import SvgCheckMark from '@/assets/icon/check-mark.svg';
+import SvgTimerCircle from '@/assets/icon/timer-circle.svg';
 
 
 const labels = [
@@ -10,7 +13,24 @@ const DetailsInfo = () => {
     return (
         <>
             <div className="poster">
-                <PlanPanel content='18:00' isDetails={ true } />
+                <div className="plan-panel">
+                    <Button
+                        className="label"
+                        variant="outlined"
+                        disabled
+                        endIcon={
+                            <span className="circle">
+                                <img src={SvgCheckMark} alt="check-mark" />
+                            </span>  
+                        }
+                    >
+                        Планы на сегодня
+                    </Button>
+                    <div className="timer">
+                        <img src={SvgTimerCircle} alt="timer-circle" />
+                        <p className="time">18:00</p>
+                    </div>
+                </div>
                 <div className="labels">
                     {labels.map(item => (
                         <p key={`labels-item-${item.id}`} className="item">{item.label}</p>

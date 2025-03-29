@@ -69,7 +69,7 @@ const SliderItem = (props: ISliderItemProps) => {
                     </div>
                     <div className="panel">
                         <div className="label">
-                            <p>{ props.questionnaires.plans.date }</p>
+                            <p className="text">{ props.questionnaires.plans.date }</p>
                             <img src={SvgCheckMark} alt="check-mark" />
                         </div>
                         <p className="text">{ props.questionnaires.plans.content }</p>

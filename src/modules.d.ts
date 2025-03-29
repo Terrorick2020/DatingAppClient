@@ -13,6 +13,7 @@ declare global {
     Telegram: {
       WebApp: {
         close: () => void
+        setupSwipeBehavior: (arg: boolean) => void
         disableVerticalSwipes: () => void
         enableClosingConfirmation: () => void
         BackButton: {

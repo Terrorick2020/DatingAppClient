@@ -13,6 +13,7 @@ const FillingQuestMySex = () => {
                 <h4 className="headline">Выберите ваш пол</h4>
                 <ToggleButtonGroup
                     className="select"
+                    id="select-my-sex"
                     spacing={ 2 }
                     value={ value }
                     onChange={(_event, newValue) => {

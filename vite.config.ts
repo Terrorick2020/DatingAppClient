@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 
-import react from '@vitejs/plugin-react'
-import svgr from 'vite-plugin-svgr'
-import checker from 'vite-plugin-checker'
-import path from 'node:path'
+import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
+import checker from 'vite-plugin-checker';
+import path from 'node:path';
 
 export default defineConfig({
   plugins: [
@@ -11,17 +11,17 @@ export default defineConfig({
     svgr(),
     checker({ typescript: true }),
   ],
-  server: {
-    host: '0.0.0.0',
-    allowedHosts: ['3dating.fun'],
-    hmr: {
-      host: '3dating.fun',
-      protocol: 'wss',
-    },
-  },
-  preview: {
-    allowedHosts: ['3dating.fun']
-  },
+  // server: {
+  //   host: '0.0.0.0',
+  //   allowedHosts: ['3dating.fun'],
+  //   hmr: {
+  //     host: '3dating.fun',
+  //     protocol: 'wss',
+  //   },
+  // },
+  // preview: {
+  //   allowedHosts: ['3dating.fun']
+  // },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
@@ -33,7 +33,7 @@ export default defineConfig({
         manualChunks(id: string) {
           if (id.includes('node_modules')) {
             if (id.includes('lodash')) return 'lodash'
-            return 'vendor'
+            return 'vendor';
           }
         }
       }
