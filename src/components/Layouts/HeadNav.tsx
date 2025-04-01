@@ -42,7 +42,7 @@ const DesktopHeadNav = () => {
         if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
         if (backButton.onClick.isAvailable()) {
             backButton.onClick(goBack);
-            backButton.offClick(goBack);
+            // backButton.offClick(goBack);
         }
     }
 
