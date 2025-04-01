@@ -45,16 +45,6 @@ const DesktopHeadNav = () => {
                 backButton.onClick(goBack);
             }
         }
-
-        return () => {
-            if ( isTgMobile ) {
-                if (closingBehavior.mount.isAvailable()) closingBehavior.unmount();
-                if (backButton.mount.isAvailable()) backButton.unmount();
-                if (backButton.onClick.isAvailable()) {
-                    backButton.offClick(goBack);
-                }
-            }
-        }
     }, []);
 
     useEffect(() => {
