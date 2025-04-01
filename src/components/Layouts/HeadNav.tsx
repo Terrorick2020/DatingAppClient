@@ -36,16 +36,14 @@ const DesktopHeadNav = () => {
 
     const isTgMobile = !!closingBehavior && !!backButton && !isDesktop
 
-    useEffect(() => {
-        if ( isTgMobile ) {
-            if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
-            if (backButton.mount.isAvailable()) backButton.mount();
-            if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
-            if (backButton.onClick.isAvailable()) {
-                backButton.onClick(goBack);
-            }
+    if ( isTgMobile ) {
+        if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
+        if (backButton.mount.isAvailable()) backButton.mount();
+        if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+        if (backButton.onClick.isAvailable()) {
+            backButton.onClick(goBack);
         }
-    }, []);
+    }
 
     useEffect(() => {
         if ( isTgMobile) {
