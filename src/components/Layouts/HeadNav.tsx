@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,14 +16,9 @@ import SvgOther from '@/assets/icon/other.svg?react';
 
 const DesktopHeadNav = () => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
-    const [isBack, setIsBack] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        setIsBack( !!setRoutes.length );
-    }, [setRoutes]);
 
     const userAgent = navigator.userAgent.toLowerCase()
 
@@ -38,7 +33,7 @@ const DesktopHeadNav = () => {
     const closeWindow = () => window.close();
 
     !isDesktop && useEffect(() => {
-        if( isBack ) {
+        if( !!setRoutes.length ) {
             if (closingBehavior.isMounted()) closingBehavior.unmount();
             if (backButton.mount.isAvailable()) backButton.mount();
             if (backButton.show.isAvailable()) backButton.show();
@@ -52,7 +47,7 @@ const DesktopHeadNav = () => {
             if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
             if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
         }
-    }, [isBack]);
+    }, [setRoutes]);
 
     return (
         <>
@@ -61,7 +56,7 @@ const DesktopHeadNav = () => {
                     ?
                     <div className="desc-head-nav">
                         {
-                            isBack
+                            !!setRoutes.length
                                 ?
                                 <Button
                                     className="btn text-fon rounded"
