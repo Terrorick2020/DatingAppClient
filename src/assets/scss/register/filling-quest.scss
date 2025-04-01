@@ -33,6 +33,14 @@
         .video {
             cursor: pointer;
 
+            svg {
+                transition: all 0.2s ease-in-out;
+
+                &:hover {
+                    filter: drop-shadow(0 0 0.3rem #ffffff7f);
+                }
+            }
+
             &__media {
                 top: 0;
                 left: 0;

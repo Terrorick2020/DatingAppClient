@@ -3,45 +3,45 @@ import {
     useState,
     ChangeEvent,
     KeyboardEvent,
-} from 'react'
-import { useNavigate } from 'react-router-dom'
-import { appRoutes } from '@/config/routes.config'
+} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { appRoutes } from '@/config/routes.config';
+import { personTypeList, testIdtList } from '@/constant/admin';
+import { setSearchType, setSearchId, getProfilesList } from '@/store/slices/adminSlice';
 
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import ClearBtn from '@/components/UI/ClearBtn'
-import SvgSearch from '@/assets/icon/search.svg?react'
-import IconButton from '@mui/joy/IconButton'
-import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup'
+import { type IState } from '@/types/store.types'
+import { type PersonType } from '@/types/admin.types'
 
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import ClearBtn from '@/components/UI/ClearBtn';
+import SvgSearch from '@/assets/icon/search.svg?react';
+import IconButton from '@mui/joy/IconButton';
+import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 
-interface PersonType {
-    id: number,
-    value: string,
-    label : string,
-}
-
-const personType: PersonType[] = [
-    { id: 0, value: 'users', label: 'Пользователи' },
-    { id: 1, value:'psychologists', label: 'Пси-специалисты' }
-]
-
-const idsList = [
-    '8148518',
-]
 
 const UsersListContent = () => {
-    const [value, setValue] = useState<string>( personType[0].value )
-    const [ searchQuery, setSearchQuery ] = useState<string>( '' )
+    const adminState = useSelector((state: IState) => state.admin);
+
     const [ context, setContext ] = useState<string>( '' )
     const [ showClear, setShowClear ] = useState<boolean>( false )
     const [ showFindBtn, setShowFindBtn ] = useState<boolean>( true )
     const [ showNotFound, setShowNotFound ] = useState<boolean>( false )
 
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const adminGlobRoute      = appRoutes.admin.global
+    const adminUserInfoRoute  = appRoutes.admin.inner.userInfo
+    const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`
+
     useEffect(
         () => {
             const langHtml = document.getElementById('users-list')
             if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards'
+
+            setShowClear( !!adminState.searchId )
         },
         []
     )
@@ -53,12 +53,12 @@ const UsersListContent = () => {
             setContext( '' )
         }
 
-        setShowClear( event.target.value !== '' )
-        setSearchQuery( event.target.value )
+        setShowClear( !!event.target.value )
+        dispatch( setSearchId( event.target.value ) )
     }
 
     const handleClearInput = () => {
-        setSearchQuery( '' )
+        dispatch( setSearchId( '' ) )
         setContext( '' )
         setShowFindBtn( true )
         setShowNotFound( false )
@@ -71,20 +71,14 @@ const UsersListContent = () => {
         }
     }
 
-    const navigate = useNavigate()
-
-    const adminGlobRoute      = appRoutes.admin.global
-    const adminUserInfoRoute  = appRoutes.admin.inner.userInfo
-    const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`
-
     const handleSearchQuery = () => {
-        if ( !searchQuery ) {
+        if ( !adminState.searchId ) {
             return 
         }
 
-        setContext( searchQuery )
+        setContext( adminState.searchId )
 
-        if ( idsList.includes( searchQuery ) ) {
+        if ( testIdtList.includes( adminState.searchId ) ) {
             navigate( toUserInfo )
         } else {
             setShowFindBtn( false )
@@ -99,14 +93,14 @@ const UsersListContent = () => {
                 <ToggleButtonGroup
                     className="person-type"
                     spacing={ 2 }
-                    value={ value }
+                    value={ adminState.searchType }
                     onChange={(_event, newValue) => {
                         if ( newValue !== null ) {
-                            setValue(newValue)
+                            dispatch(setSearchType( newValue ))
                         }
                     }}
                 >
-                    {personType.map( (item: PersonType) => (
+                    {personTypeList.map( (item: PersonType) => (
                         <IconButton
                             className="person-type__item"
                             key={`person-type__${item.id}`}
@@ -131,15 +125,20 @@ const UsersListContent = () => {
                         },
                       }}
                     placeholder="Поиск пользователя по ID..."
-                    value={ searchQuery }
+                    value={ adminState.searchId }
                     onChange={ handleInputChange }
                     onKeyDown={ handleInputKeyDown }
                 />
                 {
-                    showNotFound &&
-                    <div className="not-found">
-                        <h2 className="text">Пользователь не найден</h2>
-                    </div>
+                    showNotFound
+                        ?
+                        <div className="not-found">
+                            <h2 className="text">Пользователь не найден</h2>
+                        </div>
+                        :
+                        <div className="search-list">
+
+                        </div>
                 }
             </div>
             {

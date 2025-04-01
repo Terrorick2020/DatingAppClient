@@ -1,40 +1,25 @@
-export interface AdminState {
+import { AdminState } from './admin.types';
+import { SettingsState } from './settings.type';
+import { ChatsState } from './chats.types';
+import { LikesState } from './likes.types';
+import { ProfileState } from './profile.types';
+import { QuestState } from './quest.types';
+
+
+export enum ESearchType {
+    user  = 'user',
+    psych = 'psych',
 }
 
-export enum ELanguage {
-    English   = 'en',
-    Russian   = 'ru',
-    Ukrainian = 'ukr',
-    Spanish   = 'esp',
+export enum EProfileRoles {
+    User  = 'User',
+    Admin = 'Admin',
 }
 
-export enum ETheme {
-    light = 'light',
-    dark  = 'dark',
-}
-
-export interface SettingsState {
-    lang:  ELanguage
-    theme: ETheme
-}
-
-export interface ChatsState {
-}
-
-export interface LikesState {
-}
-
-export enum EApiRes {
-    error   = 'error',
-    block   = 'block',
-    success = 'success'
-}
-
-export interface ProfileState {
-    apiRes: EApiRes
-}
-
-export interface QuestionnairesState {
+export enum EProfileStatus {
+    Pro  = 'Pro',
+    Noob = 'Noob',
+    Blocked = 'Blocked'
 }
 
 export interface IState {
@@ -42,6 +27,6 @@ export interface IState {
     chats:          ChatsState
     likes:          LikesState
     profile:        ProfileState
-    questionnaires: QuestionnairesState
+    questionnaires: QuestState
     settings:       SettingsState
 }

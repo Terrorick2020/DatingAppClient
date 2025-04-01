@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
 import DesktopHeadNav from '@/components/Layouts/DesktopHeadNav';
+import MobileHeadNav from '@/components/Layouts/MobileHeadNav';
 import LogoHeader from '@/components/Layouts/LogoHeader';
 
 
@@ -15,7 +16,7 @@ const DefaultLayout = () => {
         <>
             <div className="default-layout">
                 <div className="box">
-                    { isDesktop && <DesktopHeadNav /> }
+                    { isDesktop ? <DesktopHeadNav /> : <MobileHeadNav /> }
                     <LogoHeader />
                     <Outlet />
                 </div>

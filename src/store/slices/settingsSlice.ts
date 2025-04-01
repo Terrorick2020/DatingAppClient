@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ELanguage, ETheme } from '@/types/store.types'
-import { type SettingsState } from '@/types/store.types'
+import { ELanguage, ETheme, EApiStatus } from '@/types/settings.type'
+import { type SettingsState } from '@/types/settings.type'
 
 
 const initialState: SettingsState = {
     lang: ELanguage.Russian,
     theme: ETheme.dark,
+    load: false,
+    apiStatus: EApiStatus.success
 }
 
 const settingsSlice = createSlice({
@@ -17,7 +19,7 @@ const settingsSlice = createSlice({
         },
         setTheme: (state, action) => {
             state.theme = action.payload
-        }
+        },
     },
 })
 

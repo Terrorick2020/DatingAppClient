@@ -1,12 +1,10 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { EApiRes } from '@/types/store.types'
-import { type ProfileState } from '@/types/store.types'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { type ProfileState } from '@/types/profile.types';
 
-import axios from 'axios'
+import axios from 'axios';
 
 
 const initialState: ProfileState = {
-    apiRes: EApiRes.success
 }
 
 export const initProfileAsync = createAsyncThunk(
@@ -43,11 +41,9 @@ const profileSlice = createSlice({
             console.log(state)
         })
         builder.addCase(initProfileAsync.fulfilled, ( state, action ) => {
-            state.apiRes = EApiRes.success
             console.log( state, action )
         })
         builder.addCase(initProfileAsync.rejected, state => {
-            state.apiRes = EApiRes.error
             console.log(state)
         })
     }

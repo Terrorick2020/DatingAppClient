@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { appRoutes } from '@/config/routes.config';
 import { type Questionnaire } from './SliderPoster';
 
 import Button from '@mui/material/Button';
@@ -13,6 +11,7 @@ import SvgCheckMark from '@/assets/icon/check-mark.svg';
 
 interface ISliderItemProps {
     questionnaires: Questionnaire
+    toDetails: () => void
     nextStep: () => void
     clickLike: (id: number) => void
     prevStep: () => void
@@ -21,8 +20,6 @@ interface ISliderItemProps {
 const SliderItem = (props: ISliderItemProps) => {
     const [index, setIndex] = useState<number>( 0 );
     const [fade, setFade] = useState<boolean>(true);
-
-    const navigate = useNavigate();
 
     const changeImg = (newIndex: number) => {
         if ( newIndex < 0 ) newIndex = props.questionnaires.imgs.length - 1;
@@ -36,7 +33,6 @@ const SliderItem = (props: ISliderItemProps) => {
     };
 
     const nextPhoto = () => changeImg( index + 1 )
-    const toDetails = () => navigate( appRoutes.details )
     const prevPhoto = () => changeImg( index - 1 )
 
    return (
@@ -50,7 +46,7 @@ const SliderItem = (props: ISliderItemProps) => {
             >
                 <nav className="slide__nav">
                     <span className="item" onClick={ prevPhoto }></span>
-                    <span className="item" onClick={ toDetails }></span>
+                    <span className="item" onMouseUp={ props.toDetails }></span>
                     <span className="item" onClick={ nextPhoto }></span>
                 </nav>
                 <header className="slide__header">
@@ -63,7 +59,7 @@ const SliderItem = (props: ISliderItemProps) => {
                     </div>
                 </header>
                 <footer className="slide__footer">
-                    <div className="text" onClick={ toDetails }>
+                    <div className="text" onClick={ props.toDetails }>
                         <h4 className="headline">{ props.questionnaires.name }</h4>
                         <p className="description">{ props.questionnaires.description }</p>
                     </div>

@@ -1,11 +1,10 @@
 import { ChangeEvent, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { backButton } from '@telegram-apps/sdk';
 
 import { setLang } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
-import { ELanguage } from '@/types/store.types';
+import { ELanguage } from '@/types/settings.type';
 
 import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
@@ -14,7 +13,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 
 const LangContent = () => {
-    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const regGlobRoute = appRoutes.register.global;
@@ -32,14 +30,6 @@ const LangContent = () => {
 
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'none';
-
-            if (backButton.mount.isAvailable()) backButton.mount();
-            if (backButton.show.isAvailable()) backButton.show();
-
-            if (backButton.onClick.isAvailable()) {
-                const toPreview = () => navigate(-1)
-                backButton.onClick(toPreview)
-            }
         },
         []
     )

@@ -1,12 +1,11 @@
-import { NavLink } from 'react-router-dom'
-import { useNavigate  } from 'react-router-dom'
+import { useNavigate  } from 'react-router-dom';
 
-import Button from '@mui/material/Button'
+import Button from '@mui/material/Button';
 
-import SvgArrowDown from '@/assets/icon/arrow-down.svg?react'
-import SvgArrowLeft from '@/assets/icon/arrow-left.svg?react'
-import SvgClose from '@/assets/icon/close.svg?react'
-import SvgOther from '@/assets/icon/other.svg?react'
+import SvgArrowDown from '@/assets/icon/arrow-down.svg?react';
+import SvgArrowLeft from '@/assets/icon/arrow-left.svg?react';
+import SvgClose from '@/assets/icon/close.svg?react';
+import SvgOther from '@/assets/icon/other.svg?react';
 
 
 const DesktopHeadNav = () => {
@@ -21,7 +20,7 @@ const DesktopHeadNav = () => {
         window.close()
     }
 
-    const isBack = Object.keys( window.history.state ).length > 1
+    const isBack = window.history.state.idx > 1
 
     return (
         <>
@@ -29,16 +28,14 @@ const DesktopHeadNav = () => {
                 {
                     isBack
                         ?
-                        <NavLink to={ '' } >
-                            <Button
-                                className="btn text-fon rounded"
-                                variant="contained"
-                                startIcon={ <SvgArrowLeft /> }
-                                onClick={ goBack }
-                            >
-                                Back
-                            </Button>
-                        </NavLink>
+                        <Button
+                            className="btn text-fon rounded"
+                            variant="contained"
+                            startIcon={ <SvgArrowLeft /> }
+                            onClick={ goBack }
+                        >
+                            Back
+                        </Button>
                         :
                         <Button
                             className="btn text-fon rounded"

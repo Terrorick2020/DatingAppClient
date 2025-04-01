@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { appRoutes } from '@/config/routes.config';
 import { useSwipeable } from 'react-swipeable';
 
 import SliderItem from './SliderItem';
 
-import PngLeady from '@/assets/img/leady.png'
-import PngWoman from '@/assets/img/woman.png'
+import PngLeady from '@/assets/img/leady.png';
+import PngWoman from '@/assets/img/woman.png';
 
 
 export interface Questionnaire {
@@ -94,17 +96,30 @@ const questionnairesList: Questionnaire[] = [
 ];
 
 const SliderPoster = () => {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState<number>(0);
+  const [offset, setOffset] = useState<number>(0);
+  const [isSwiped, setIsSwiped] = useState<boolean>(false);
 
   const changeSlide = (newIndex: number) => {
     if (newIndex < 0) newIndex = questionnairesList.length - 1;
     if (newIndex >= questionnairesList.length) newIndex = 0;
     setIndex(newIndex);
+    setOffset(0);
+    setIsSwiped(false);
   };
 
   const handlers = useSwipeable({
-    onSwipedLeft: () => changeSlide(index + 1),
-    onSwipedRight: () => changeSlide(index - 1),
+    onSwipedLeft: () => {
+      changeSlide(index + 1);
+      Math.abs(offset) < 5 && setIsSwiped(true);
+    },
+    onSwipedRight: () => {
+      changeSlide(index - 1);
+      Math.abs(offset) < 5 && setIsSwiped(true);
+    },
+    onSwiping: (eventData) => {
+      setOffset(eventData.deltaX)
+    },
     trackMouse: true,
   });
 
@@ -123,20 +138,34 @@ const SliderPoster = () => {
 
   const prevStep = () => changeSlide(index - 1)
 
+  const navigate = useNavigate();
+
+  const toDetails = () => {
+    setTimeout(() => {
+      console.log( offset )
+      !isSwiped && Math.abs(offset) < 5 && navigate(appRoutes.details);
+    }, 100); 
+  }
+
   return (
     <div className="poster__ctx">
       <div {...handlers} className="carousel-container">
         <div
           className="carousel-track"
           style={{
-            width: `${questionnairesList.length * 100}%`,
-            transform: `translateX(${-index * 100}%)`,
+            width: `calc(${questionnairesList.length * 100}% + ${(questionnairesList.length - 1) * 16}px)`,
+            transform: `translateX(calc(${-index * 100}% - ${index * 16}px + ${offset}px))`,
+            transition: offset === 0 ? 'transform 0.5s ease-in-out' : 'none',
           }}
         >
           {questionnairesList.map( item => (
-            <div key={`slider-item-${item.id}`} className="carousel-slide">
+            <div
+              className="carousel-slide"
+              key={`slider-item-${item.id}`}
+            >
               <SliderItem 
                 questionnaires={item}
+                toDetails={toDetails}
                 nextStep={nextStep}
                 clickLike={clickLike}
                 prevStep={prevStep}
