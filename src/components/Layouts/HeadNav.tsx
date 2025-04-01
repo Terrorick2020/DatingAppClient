@@ -36,15 +36,26 @@ const DesktopHeadNav = () => {
 
     const isTgMobile = !!closingBehavior && !!backButton && !isDesktop
 
-    if ( isTgMobile ) {
-        if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
-        if (backButton.mount.isAvailable()) backButton.mount();
-        if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
-        if (backButton.onClick.isAvailable()) {
-            backButton.onClick(goBack);
-            // backButton.offClick(goBack);
+    useEffect(() => {
+        if ( isTgMobile ) {
+            if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
+            if (backButton.mount.isAvailable()) backButton.mount();
+            if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+            if (backButton.onClick.isAvailable()) {
+                backButton.onClick(goBack);
+            }
         }
-    }
+
+        return () => {
+            if ( isTgMobile ) {
+                if (closingBehavior.mount.isAvailable()) closingBehavior.unmount();
+                if (backButton.mount.isAvailable()) backButton.unmount();
+                if (backButton.onClick.isAvailable()) {
+                    backButton.offClick(goBack);
+                }
+            }
+        }
+    }, []);
 
     useEffect(() => {
         if ( isTgMobile) {
