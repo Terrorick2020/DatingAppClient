@@ -27,28 +27,29 @@ const DesktopHeadNav = () => {
     const isDesktop   = !predMobile || predDesktop
 
     const goBack = () => {
-        // const backRoute = setRoutes.slice(-1)[0];
-        // navigate(backRoute);
+        const backRoute = setRoutes.slice(-1)[0];
+        navigate(backRoute);
         navigate(-1);
         dispatch(dellRoute());
     };
     const closeWindow = () => window.close();
 
+    if ( !!closingBehavior && !!backButton && !isDesktop ) {
+        if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
+        if (backButton.mount.isAvailable()) backButton.mount();
+        if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+        if (backButton.onClick.isAvailable()) {
+            backButton.onClick(goBack);
+            backButton.offClick(goBack);
+        }
+    }
+
     useEffect(() => {
         if ( !!closingBehavior && !!backButton && !isDesktop) {
             if( !!setRoutes.length ) {
-                if (closingBehavior.isMounted()) closingBehavior.unmount();
-                if (backButton.mount.isAvailable()) backButton.mount();
                 if (backButton.show.isAvailable()) backButton.show();
-    
-                // if (backButton.onClick.isAvailable()) {
-                //     backButton.onClick(goBack);
-                //     backButton.offClick(goBack);
-                // }
             } else {
-                if (backButton.isMounted()) backButton.unmount();
-                if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
-                if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+                if (backButton.hide.isAvailable()) backButton.hide();
             }
         }
     }, [setRoutes]);
