@@ -27,7 +27,7 @@ const DesktopHeadNav = () => {
     const isDesktop   = !predMobile || predDesktop
 
     const goBack = () => {
-        const backRoute = setRoutes.slice(-1)[0];
+        // const backRoute = setRoutes.slice(-1)[0];
         // navigate(backRoute);
         navigate(-1);
         dispatch(dellRoute());
