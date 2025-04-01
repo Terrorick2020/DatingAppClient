@@ -33,22 +33,22 @@ const DesktopHeadNav = () => {
     };
     const closeWindow = () => window.close();
 
-    const isTg = !!closingBehavior && !!backButton;
-
-    !isDesktop && isTg && useEffect(() => {
-        if( !!setRoutes.length ) {
-            if (closingBehavior.isMounted()) closingBehavior.unmount();
-            if (backButton.mount.isAvailable()) backButton.mount();
-            if (backButton.show.isAvailable()) backButton.show();
-
-            if (backButton.onClick.isAvailable()) {
-                backButton.onClick(goBack);
-                backButton.offClick(goBack);
+    useEffect(() => {
+        if ( !!closingBehavior && !!backButton && !isDesktop) {
+            if( !!setRoutes.length ) {
+                if (closingBehavior.isMounted()) closingBehavior.unmount();
+                if (backButton.mount.isAvailable()) backButton.mount();
+                if (backButton.show.isAvailable()) backButton.show();
+    
+                if (backButton.onClick.isAvailable()) {
+                    backButton.onClick(goBack);
+                    backButton.offClick(goBack);
+                }
+            } else {
+                if (backButton.isMounted()) backButton.unmount();
+                if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
+                if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
             }
-        } else {
-            if (backButton.isMounted()) backButton.unmount();
-            if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
-            if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
         }
     }, [setRoutes]);
 
