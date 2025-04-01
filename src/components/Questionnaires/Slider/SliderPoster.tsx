@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { appRoutes } from '@/config/routes.config';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
+import { useDispatch } from 'react-redux';
+import { addRoute } from '@/store/slices/settingsSlice';
+import { appRoutes } from '@/config/routes.config';
 
 import SliderItem from './SliderItem';
 
@@ -139,11 +141,13 @@ const SliderPoster = () => {
   const prevStep = () => changeSlide(index - 1)
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
   const toDetails = () => {
     setTimeout(() => {
-      console.log( offset )
       !isSwiped && Math.abs(offset) < 5 && navigate(appRoutes.details);
+      dispatch(addRoute(location.pathname));
     }, 100); 
   }
 

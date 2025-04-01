@@ -5,13 +5,14 @@ import {
     KeyboardEvent,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
 import { personTypeList, testIdtList } from '@/constant/admin';
-import { setSearchType, setSearchId, getProfilesList } from '@/store/slices/adminSlice';
+import { setSearchType, setSearchId } from '@/store/slices/adminSlice';
 
-import { type IState } from '@/types/store.types'
-import { type PersonType } from '@/types/admin.types'
+import { type IState } from '@/types/store.types';
+import { type PersonType } from '@/types/admin.types';
 
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -29,8 +30,9 @@ const UsersListContent = () => {
     const [ showFindBtn, setShowFindBtn ] = useState<boolean>( true )
     const [ showNotFound, setShowNotFound ] = useState<boolean>( false )
 
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const adminGlobRoute      = appRoutes.admin.global
     const adminUserInfoRoute  = appRoutes.admin.inner.userInfo
@@ -38,10 +40,10 @@ const UsersListContent = () => {
 
     useEffect(
         () => {
-            const langHtml = document.getElementById('users-list')
-            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards'
+            const langHtml = document.getElementById('users-list');
+            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
-            setShowClear( !!adminState.searchId )
+            setShowClear( !!adminState.searchId );
         },
         []
     )
@@ -73,16 +75,17 @@ const UsersListContent = () => {
 
     const handleSearchQuery = () => {
         if ( !adminState.searchId ) {
-            return 
+            return;
         }
 
         setContext( adminState.searchId )
 
         if ( testIdtList.includes( adminState.searchId ) ) {
-            navigate( toUserInfo )
+            navigate( toUserInfo );
+            dispatch(addRoute(location.pathname));
         } else {
-            setShowFindBtn( false )
-            setShowNotFound( true )
+            setShowFindBtn( false );
+            setShowNotFound( true );
         }
     }
 

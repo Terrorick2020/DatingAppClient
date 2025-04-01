@@ -3,8 +3,8 @@ import { ESearchType } from '@/types/store.types';
 
 
 export const personTypeList: PersonType[] = [
-    { id: 0, value: ESearchType.user, label: 'Пользователи' },
-    { id: 1, value: ESearchType.psych, label: 'Пси-специалисты' }
+    { id: 0, value: ESearchType.User, label: 'Пользователи' },
+    { id: 1, value: ESearchType.Psych, label: 'Пси-специалисты' }
 ]
 
 export const testIdtList: string[] = [

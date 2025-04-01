@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
+import { addRoute } from '@/store/slices/settingsSlice';
 import { useDispatch } from 'react-redux';
 
 import { setLang } from '@/store/slices/settingsSlice';
@@ -34,6 +35,12 @@ const LangContent = () => {
         []
     )
 
+    const location = useLocation();
+
+    const handleRoute = () => {
+        dispatch(addRoute(location.pathname));
+    }
+
     return (
         <>
             <div className="lang__ctx">
@@ -52,7 +59,7 @@ const LangContent = () => {
                 </RadioGroup>
             </div>
             <div className="lang__btn">
-                <NavLink className="link" to={ toFillQuest }>
+                <NavLink className="link" to={ toFillQuest } onClick={handleRoute}>
                     <Button variant="contained">Продолжить</Button>
                 </NavLink>
             </div>

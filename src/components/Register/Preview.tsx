@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
 
 import Button from '@mui/material/Button';
@@ -26,6 +28,13 @@ const PreviewContent = () => {
         [] 
     )
 
+    const location = useLocation();
+    const dispatch = useDispatch();
+
+    const handleRoute = () => {
+        dispatch(addRoute(location.pathname));
+    }
+
     return (
         <>
             <div className="preview__logo"></div>
@@ -38,7 +47,7 @@ const PreviewContent = () => {
                     <h6 className="description">Мы верим, что крепкие связи устанавливаются лицом к лицу. Наша цель — помочь вам встретить новых людей офлайн, создавая значимые моменты и впечатления.</h6>
                 </div>
                 <div className="btn">
-                    <NavLink className="link" to={ toFillQuest }>
+                    <NavLink className="link" to={ toFillQuest } onClick={handleRoute}>
                         <Button variant="contained" endIcon={<SvgTriangle />}>Далее</Button>
                     </NavLink>
                 </div>

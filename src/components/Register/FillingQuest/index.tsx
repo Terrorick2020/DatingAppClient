@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
+import { addRoute, resetRoutes } from '@/store/slices/settingsSlice';
+import { type IState, EProfileRoles } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
 import GeoConfirmation from './GeoConfirmation';
@@ -15,6 +18,7 @@ import FillingQuestSelectionSex from './SelectionSex';
 
 
 const FillingQuestContent = () => {
+    const profInfo = useSelector((state: IState) => state.profile.info);
     const [_confirmation, setConfirmation] = useState<boolean>(false);
 
     // const regGlobRoute = appRoutes.register.global;
@@ -23,6 +27,10 @@ const FillingQuestContent = () => {
     const questionnairesGlobRoute = appRoutes.questionnaires.global;
     const questionnairesSliderRoute = appRoutes.questionnaires.inner.slider;
     const toSlider = `${questionnairesGlobRoute}/${questionnairesSliderRoute}`;
+
+    const adminGlobRoute = appRoutes.admin.global;
+    const changeRoute = appRoutes.admin.inner.nav;
+    const toChange = `${adminGlobRoute}/${changeRoute}`
 
     useEffect(
         () => {
@@ -41,6 +49,12 @@ const FillingQuestContent = () => {
         []
     )
 
+    const dispatch = useDispatch();
+
+    const handleRoute = () => {
+        dispatch(resetRoutes());
+        profInfo.role === EProfileRoles.Admin && dispatch(addRoute(toChange));
+    }
 
     return (
         <>
@@ -58,7 +72,7 @@ const FillingQuestContent = () => {
                     <FillingQuestInterests />
                     <FillingQuestSelectionSex />
                 </div>
-                <NavLink className="link" to={ toSlider }>
+                <NavLink className="link" to={toSlider} onClick={handleRoute}>
                     <Button variant="contained">Продолжить</Button>
                 </NavLink>
             </div>

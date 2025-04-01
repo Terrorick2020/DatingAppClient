@@ -1,10 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { EProfileRoles, ESex, EInterests,  EProfileStatus } from '@/types/store.types'
 import { type ProfileState } from '@/types/profile.types';
 
 import axios from 'axios';
 
 
 const initialState: ProfileState = {
+    info: {
+        id: null,
+        role: EProfileRoles.User,
+        status: EProfileStatus.Noob,
+        username: '',
+        name: '',
+        age: null,
+        city: '',
+        sex: ESex.None,
+        bio: '',
+        interest: EInterests.Dialog,
+        selSex: ESex.All,
+    }
 }
 
 export const initProfileAsync = createAsyncThunk(

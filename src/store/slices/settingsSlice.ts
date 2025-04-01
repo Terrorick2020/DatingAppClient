@@ -1,11 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { ELanguage, ETheme, EApiStatus } from '@/types/settings.type'
-import { type SettingsState } from '@/types/settings.type'
+import { createSlice } from '@reduxjs/toolkit';
+import { ELanguage, EApiStatus } from '@/types/settings.type';
+import { type SettingsState } from '@/types/settings.type';
 
 
 const initialState: SettingsState = {
+    routes: [],
     lang: ELanguage.Russian,
-    theme: ETheme.dark,
     load: false,
     apiStatus: EApiStatus.success
 }
@@ -15,13 +15,19 @@ const settingsSlice = createSlice({
     initialState,
     reducers: {
         setLang: (state, action) => {
-            state.lang = action.payload
+            state.lang = action.payload;
         },
-        setTheme: (state, action) => {
-            state.theme = action.payload
+        addRoute: (state, action) => {
+            state.routes.push(action.payload);
         },
+        dellRoute: (state) => {
+            state.routes.pop();
+        },
+        resetRoutes: (state) => {
+            state.routes = [];
+        }
     },
 })
 
-export const { setLang, setTheme } = settingsSlice.actions
-export default settingsSlice.reducer
+export const { setLang, addRoute, dellRoute, resetRoutes } = settingsSlice.actions;
+export default settingsSlice.reducer;

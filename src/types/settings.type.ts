@@ -5,19 +5,14 @@ export enum ELanguage {
     Spanish   = 'esp',
 }
 
-export enum ETheme {
-    light = 'light',
-    dark  = 'dark',
-}
-
 export enum EApiStatus {
     success = 'success',
     error = 'error'
 }
 
 export interface SettingsState {
+    routes: string[]
     lang:  ELanguage
-    theme: ETheme
     load: boolean
     apiStatus: EApiStatus
 }

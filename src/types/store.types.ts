@@ -7,8 +7,8 @@ import { QuestState } from './quest.types';
 
 
 export enum ESearchType {
-    user  = 'user',
-    psych = 'psych',
+    User  = 'User',
+    Psych = 'Psych',
 }
 
 export enum EProfileRoles {
@@ -20,6 +20,19 @@ export enum EProfileStatus {
     Pro  = 'Pro',
     Noob = 'Noob',
     Blocked = 'Blocked'
+}
+
+export enum ESex {
+    None = 'None',
+    All = 'All',
+    Male = 'Male',
+    Female = 'Female',
+}
+
+export enum EInterests {
+    Dialog = 'Dialog',
+    Friendship = 'Friendship',
+    Love = 'Love',
 }
 
 export interface IState {

@@ -1,5 +1,7 @@
 import { appRoutes } from '@/config/routes.config';
 import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { dellRoute } from '@/store/slices/settingsSlice';
 
 import LikeBtn from '@/components/UI/LikeBtn';
 import Button from '@mui/material/Button';
@@ -21,10 +23,14 @@ const DetailsFixed = () => {
     const questionnairesSliderRoute = appRoutes.questionnaires.inner.slider;
     const toSlider = `${questionnairesGlobRoute}/${questionnairesSliderRoute}`;
 
+    const dispatch = useDispatch();
+
+    const handleRoute = () => dispatch(dellRoute());
+
     return (
         <>
             <div className="btns">
-                <NavLink to={ toSlider }>
+                <NavLink to={ toSlider } onClick={ handleRoute }>
                     <Button
                         className="lemon-fon"
                         variant="contained"
