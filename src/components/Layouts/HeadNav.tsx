@@ -34,7 +34,9 @@ const DesktopHeadNav = () => {
     };
     const closeWindow = () => window.close();
 
-    if ( !!closingBehavior && !!backButton && !isDesktop ) {
+    const isTgMobile = !!closingBehavior && !!backButton && !isDesktop
+
+    if ( isTgMobile ) {
         if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
         if (backButton.mount.isAvailable()) backButton.mount();
         if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
@@ -45,12 +47,9 @@ const DesktopHeadNav = () => {
     }
 
     useEffect(() => {
-        if ( !!closingBehavior && !!backButton && !isDesktop) {
-            if( !!setRoutes.length ) {
-                if (backButton.show.isAvailable()) backButton.show();
-            } else {
-                if (backButton.hide.isAvailable()) backButton.hide();
-            }
+        if ( isTgMobile) {
+            if (!!setRoutes.length && backButton.show.isAvailable()) backButton.show();
+            if (!setRoutes.length && backButton.hide.isAvailable()) backButton.hide();
         }
     }, [setRoutes]);
 
