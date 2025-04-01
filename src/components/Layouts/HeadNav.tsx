@@ -27,12 +27,15 @@ const DesktopHeadNav = () => {
     const isDesktop   = !predMobile || predDesktop
 
     const goBack = () => {
-        navigate(setRoutes.slice(-1)[0]);
+        const backRoute = setRoutes.slice(-1)[0];
+        navigate(backRoute);
         dispatch(dellRoute());
     };
     const closeWindow = () => window.close();
 
-    !isDesktop && useEffect(() => {
+    const isTg = !!closingBehavior && !!backButton;
+
+    !isDesktop && isTg && useEffect(() => {
         if( !!setRoutes.length ) {
             if (closingBehavior.isMounted()) closingBehavior.unmount();
             if (backButton.mount.isAvailable()) backButton.mount();
@@ -64,7 +67,7 @@ const DesktopHeadNav = () => {
                                     startIcon={ <SvgArrowLeft /> }
                                     onClick={ goBack }
                                 >
-                                    Back
+                                    Назад
                                 </Button>
                                 :
                                 <Button
@@ -73,7 +76,7 @@ const DesktopHeadNav = () => {
                                     startIcon={ <SvgClose /> }
                                     onClick={ closeWindow }
                                 >
-                                    Close
+                                    Закрыть
                                 </Button>
                         }
                         <Button 
