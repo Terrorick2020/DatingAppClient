@@ -40,10 +40,10 @@ const DesktopHeadNav = () => {
                 if (backButton.mount.isAvailable()) backButton.mount();
                 if (backButton.show.isAvailable()) backButton.show();
     
-                if (backButton.onClick.isAvailable()) {
-                    backButton.onClick(goBack);
-                    backButton.offClick(goBack);
-                }
+                // if (backButton.onClick.isAvailable()) {
+                //     backButton.onClick(goBack);
+                //     backButton.offClick(goBack);
+                // }
             } else {
                 if (backButton.isMounted()) backButton.unmount();
                 if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
