@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { type ChatsState } from '@/types/store.types'
+import { createSlice } from '@reduxjs/toolkit';
+import { type ChatsState } from '@/types/chats.types';
 
 
 const initialState: ChatsState = {

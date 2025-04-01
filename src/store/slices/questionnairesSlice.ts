@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { type QuestState } from '@/types/store.types'
+import { createSlice } from '@reduxjs/toolkit';
+import { type QuestState } from '@/types/quest.types';
 
 
 const initialState: QuestState = {
