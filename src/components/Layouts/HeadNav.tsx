@@ -67,7 +67,7 @@ const DesktopHeadNav = () => {
                                     startIcon={ <SvgArrowLeft /> }
                                     onClick={ goBack }
                                 >
-                                    Назад
+                                    Back
                                 </Button>
                                 :
                                 <Button
@@ -76,7 +76,7 @@ const DesktopHeadNav = () => {
                                     startIcon={ <SvgClose /> }
                                     onClick={ closeWindow }
                                 >
-                                    Закрыть
+                                    Close
                                 </Button>
                         }
                         <Button 

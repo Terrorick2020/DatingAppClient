@@ -1,0 +1,30 @@
+.psychologists {
+    width: 100%;
+    padding-inline: 1rem;
+
+    &__header {
+        width: 100%;
+
+        .headline {
+            font-weight: 900;
+        }
+
+        .text {
+            font-weight: 300;
+            margin-top: 2vh;
+        }
+
+        .search-input {
+            margin-top: 2vh;
+        }
+    }
+
+    &__ctx {
+        width: 100%;
+        margin-top: 2.5vh;
+
+        .headline {
+            font-weight: 900;
+        }
+    }
+}

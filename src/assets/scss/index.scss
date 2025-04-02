@@ -2,10 +2,12 @@
 @use "./layouts/register.scss";
 @use "./layouts/questionnaires.scss";
 
+@use "./ui/avatar.mui.scss";
 @use "./ui/bottom-nav.mui.scss";
 @use "./ui/button-base.mui.scss";
 @use "./ui/chip.mui.scss";
 @use "./ui/input-base.mui.scss";
+@use "./ui/search-input.scss";
 @use "./ui/photos.scss";
 @use "./ui/clear-btn.scss";
 @use "./ui/radio-group.mui.scss";
@@ -21,6 +23,9 @@
 @use "./admin/user-info.scss";
 
 @use "./questionnaires/slider.scss";
+@use "./questionnaires/chats.scss";
+@use "./questionnaires/psychologists.scss";
+
 @use "./register/lang.scss";
 @use "./register/preview.scss";
 @use "./register/filling-quest.scss";

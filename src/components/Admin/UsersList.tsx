@@ -25,18 +25,18 @@ import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 const UsersListContent = () => {
     const adminState = useSelector((state: IState) => state.admin);
 
-    const [ context, setContext ] = useState<string>( '' )
-    const [ showClear, setShowClear ] = useState<boolean>( false )
-    const [ showFindBtn, setShowFindBtn ] = useState<boolean>( true )
-    const [ showNotFound, setShowNotFound ] = useState<boolean>( false )
+    const [ context, setContext ] = useState<string>( '' );
+    const [ showClear, setShowClear ] = useState<boolean>( false );
+    const [ showFindBtn, setShowFindBtn ] = useState<boolean>( true );
+    const [ showNotFound, setShowNotFound ] = useState<boolean>( false );
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
 
-    const adminGlobRoute      = appRoutes.admin.global
-    const adminUserInfoRoute  = appRoutes.admin.inner.userInfo
-    const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`
+    const adminGlobRoute      = appRoutes.admin.global;
+    const adminUserInfoRoute  = appRoutes.admin.inner.userInfo;
+    const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`;
 
     useEffect(
         () => {
@@ -50,21 +50,21 @@ const UsersListContent = () => {
 
     const handleInputChange = ( event: ChangeEvent<HTMLInputElement> ) => {
         if ( context ) {
-            setShowFindBtn( event.target.value !== context )
-            setShowNotFound( event.target.value === context )
-            setContext( '' )
+            setShowFindBtn( event.target.value !== context );
+            setShowNotFound( event.target.value === context );
+            setContext( '' );
         }
 
-        setShowClear( !!event.target.value )
-        dispatch( setSearchId( event.target.value ) )
+        setShowClear( !!event.target.value );
+        dispatch( setSearchId( event.target.value ) );
     }
 
     const handleClearInput = () => {
-        dispatch( setSearchId( '' ) )
-        setContext( '' )
-        setShowFindBtn( true )
-        setShowNotFound( false )
-        setShowClear( false )
+        dispatch( setSearchId( '' ) );
+        setContext( '' );
+        setShowFindBtn( true );
+        setShowNotFound( false );
+        setShowClear( false );
     }
 
     const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {

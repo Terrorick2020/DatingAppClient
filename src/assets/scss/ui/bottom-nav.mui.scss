@@ -10,6 +10,7 @@
             width: 100vw;
             max-width: 800px;
             height: 100%;
+            z-index: 5;
             
             .MuiBottomNavigation-root {
                 background: var(--nav-bar-bg);

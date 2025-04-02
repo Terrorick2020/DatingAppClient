@@ -1,0 +1,134 @@
+.chats {
+    width: 100%;
+    height: 71vh;
+    padding-inline: 1rem;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 1fr 5fr;
+
+    &__head {
+        width: 100%;
+        height: 100%;
+        min-height: 6.5rem;
+        overflow: hidden;
+
+        .headline {
+            width: 100%;
+            height: 20%;
+            font-weight: 900;
+        }
+
+        .history {
+            width: 100%;
+            height: 70%;
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: left;
+            align-items: center;
+            overflow-x: auto;
+            gap: 1.5rem;
+
+            .item {
+                cursor: pointer;
+                
+                .MuiBadge-badge {
+                    cursor: pointer;
+                    background: #BC96FF;
+                    color: #371F7D;
+                    bottom: 10px;
+                    right: 5px;
+                }
+            }
+        }
+    }
+
+    &__ctx {
+        padding-top: 0.8rem;
+        padding-bottom: 3rem;
+        width: 100%;
+        height: 100%;
+        margin-top: 1rem;
+        overflow: auto;
+
+        .list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start;
+            gap: 3vh;
+
+            &__chat {
+                cursor: pointer;
+                width: 100%;
+                padding: 1.25rem;
+                border-radius: 2rem;
+                background: #FFFFFF1F;
+                display: grid;
+                grid-template-columns: 1fr 10fr 1fr;
+                align-items: center;
+                gap: 2vw;
+                transition: scale 0.3s ease;
+
+                &:active {
+                    scale: 0.99;
+                }
+
+                .text {
+                    width: 100%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    .headline {
+                        font-weight: 600;
+                    }
+
+                    .msg {
+                        font-weight: 100;
+                        margin-top: 0.5rem;
+                    }
+                }
+
+                .trigger {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+
+                    .timer {
+                        min-width: 3.4rem;
+                        position: absolute;
+                        border-radius: 3.75rem;
+                        padding: 4px;
+                        background: #BC96FF;
+                        color: #371F7D;
+                        top: -32px;
+                        right: 20px;
+
+                        &.critical {
+                            background: #FF4365;
+                            color: #FFFFFF;
+                        }
+                    }
+
+                    .count {
+                        width: clamp(1.5rem, 3vw, 1.8rem);
+                        height: clamp(1.5rem, 3vw, 1.8rem);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: 3.75rem;
+                        padding: 5px;
+                        background: #D7FF81;
+                        color: #371F7D;
+                    }
+                }
+            }
+        }
+    }
+}

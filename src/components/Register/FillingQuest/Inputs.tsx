@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
+import { type PropsFillingQuest } from './index';
 
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
@@ -16,10 +17,27 @@ const districtsList = [
     { id: 4, value: 'ekb', label: 'Екатеринбург' }
 ];
 
-const FillingQuestInputs = () => {
-    const [city, setCity] = useState('');
+const FillingQuestInputs = (props: PropsFillingQuest) => {
+    const [name, setName] = useState<string>('');
+    const [nameErr, setNameErr] = useState<boolean>(false);
+    const [nameHelperText, setNameHeloerText] = useState<string>('');
 
-    const handleChange = (event: SelectChangeEvent) => {
+    const [city, setCity] = useState<string>('');
+    const [cityErr, setCityErr] = useState<boolean>(false);
+
+    const handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
+        props.setValue(
+            {
+                ...props.value,
+                name: {
+                    ...props.value.name,
+                    value: event.target.value,
+                }
+            }
+        )
+    }
+
+    const handleChangeCity = (event: SelectChangeEvent) => {
         setCity(event.target.value)
     }
 
@@ -32,6 +50,10 @@ const FillingQuestInputs = () => {
                     id="name-input"
                     fullWidth
                     placeholder="Имя"
+                    value={props.value.name.value}
+                    onChange={handleChangeName}
+                    error={props.value.name.err}
+                    helperText={'Поле не может быть пустым'}
                 />
                 <h4>Ваш город</h4>
                 <FormControl>
@@ -57,7 +79,7 @@ const FillingQuestInputs = () => {
                             },
                         }}
                         value={city}
-                        onChange={handleChange}
+                        onChange={handleChangeCity}
                     >
                         {districtsList.map(item => (
                             <MenuItem

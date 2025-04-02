@@ -17,9 +17,35 @@ import FillingQuestInterests from './Interests';
 import FillingQuestSelectionSex from './SelectionSex';
 
 
+interface FillingQuestValueItem {
+    value: string
+    err: boolean
+}
+
+interface FillingQuestValue {
+    name: FillingQuestValueItem
+    city: FillingQuestValueItem
+}
+
+export interface PropsFillingQuest {
+    value: FillingQuestValue
+    setValue: (value: FillingQuestValue) => void
+}
+
 const FillingQuestContent = () => {
     const profInfo = useSelector((state: IState) => state.profile.info);
     const [_confirmation, setConfirmation] = useState<boolean>(false);
+
+    const [value, setValue] = useState({
+        name: {
+            value: '',
+            err: false,
+        },
+        city: {
+            value: '',
+            err: false,
+        } 
+    });
 
     // const regGlobRoute = appRoutes.register.global;
     // const regFillQuestRoute = appRoutes.register.inner.geo;
@@ -65,7 +91,7 @@ const FillingQuestContent = () => {
             <div className="filling-quest__ctx">
                 <div className="widgets">
                     <FillingQuestPhotos />
-                    <FillingQuestInputs />
+                    <FillingQuestInputs value={value} setValue={setValue} />
                     <FillingQuestMySex />
                     <FillingQuestAge />
                     <FillingQuestBio />
