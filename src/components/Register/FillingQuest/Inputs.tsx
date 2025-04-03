@@ -18,12 +18,12 @@ const districtsList = [
 ];
 
 const FillingQuestInputs = (props: PropsFillingQuest) => {
-    const [name, setName] = useState<string>('');
-    const [nameErr, setNameErr] = useState<boolean>(false);
-    const [nameHelperText, setNameHeloerText] = useState<string>('');
+    // const [name, setName] = useState<string>('');
+    // const [nameErr, setNameErr] = useState<boolean>(false);
+    // const [nameHelperText, setNameHeloerText] = useState<string>('');
 
     const [city, setCity] = useState<string>('');
-    const [cityErr, setCityErr] = useState<boolean>(false);
+    // const [cityErr, setCityErr] = useState<boolean>(false);
 
     const handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
         props.setValue(
@@ -94,4 +94,4 @@ const FillingQuestInputs = (props: PropsFillingQuest) => {
     )
 }
 
-export default FillingQuestInputs
+export default FillingQuestInputs;
