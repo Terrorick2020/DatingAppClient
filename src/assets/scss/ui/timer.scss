@@ -1,0 +1,14 @@
+#root {
+    .timer {
+        background: #BC96FF;
+        border-radius: 3.75rem;
+        padding: 0.3rem 0.6rem;
+        font-weight: 400;
+        font-size: clamp(0.7rem, 3vw, 0.9rem);;
+
+        &.critical {
+            background: #FF4365;
+            color: #FFFFFF;
+        }
+    }
+}

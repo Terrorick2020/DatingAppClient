@@ -1,6 +1,7 @@
-import Button from '@mui/material/Button';
+import { PlanLabelSvgType } from '@/types/ui.types';
 
-import SvgCheckMark from '@/assets/icon/check-mark.svg';
+import PlansLabel from '@/components/UI/PlansLabel';
+
 import SvgTimerCircle from '@/assets/icon/timer-circle.svg';
 
 
@@ -14,18 +15,7 @@ const DetailsInfo = () => {
         <>
             <div className="poster">
                 <div className="plan-panel">
-                    <Button
-                        className="label"
-                        variant="outlined"
-                        disabled
-                        endIcon={
-                            <span className="circle">
-                                <img src={SvgCheckMark} alt="check-mark" />
-                            </span>  
-                        }
-                    >
-                        Планы на сегодня
-                    </Button>
+                    <PlansLabel type={ PlanLabelSvgType.ordinary } />
                     <div className="timer">
                         <img src={SvgTimerCircle} alt="timer-circle" />
                         <p className="time">18:00</p>
@@ -46,4 +36,4 @@ const DetailsInfo = () => {
     )
 }
 
-export default DetailsInfo
+export default DetailsInfo;

@@ -1,0 +1,104 @@
+.likes {
+    width: 100%;
+    height: 72vh;
+    padding-inline: 1rem;
+    padding-bottom: 1vh;
+    overflow: hidden;
+
+    @media (max-height: 660px) {
+        padding-block: 1vh 2vh;
+    }
+
+    &__ctx {
+        width: 100%;
+        height: 100%;
+
+        .headline {
+            height: 10%;
+            font-weight: 900;
+        }
+
+        .cards {
+            width: 100%;
+            height: 90%;
+            padding-block: 0.5rem 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            align-content: start;
+            gap: 3vh 3vw;
+            overflow: auto;
+
+            @media (min-width: 540px) {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            @media (max-width: 330px) {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                width: 100%;
+                height: 240px;
+                display: flex;
+                justify-content: center;
+
+                &__content {
+                    cursor: pointer;
+                    width: 100%;
+                    max-width: 180px;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    &:active {
+                        scale: 0.99;
+                    }
+
+                    &:hover {
+                        .substance {
+                            box-shadow: 0 0 0.5rem #ffffff5a;
+                        }
+                    }
+
+                    .substance {
+                        width: 100%;
+                        height: 210px;
+                        border-radius: 20px;
+                        padding: 10px;
+                        user-select: none;
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                        background-position: center;
+                        transition: all 0.1s ease;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+
+                        @media (max-width: 360px) and (min-width: 330px) {
+                            padding-inline: 4px;
+                            padding-block: 7px;
+                        }
+
+                        .label-panel {
+                            width: 100%;
+                            text-align: start;
+                        }
+                        
+                        .time-panel {
+                            width: 100%;
+                            text-align: end;
+                        }
+                    }
+
+                    .name {
+                        width: 100%;
+                        text-align: start;
+                        font-weight: 600;
+                        font-size: clamp(1.1rem, 3vw, 1.4rem);
+                    }
+                }
+            }
+        }
+    }
+}

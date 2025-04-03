@@ -1,4 +1,5 @@
-import Avatar from '@mui/material/Avatar';
+import ListBlock from '@/components/UI/ListBlock';
+import Timer from '@/components/UI/Timer';
 
 import PngWoman from '@/assets/img/woman.png';
 
@@ -18,22 +19,23 @@ const ChatsList = () => {
         <>
             <div className="list">
                 {chatsList.map(item =>(
-                    <div className="list__chat" key={`chat-${item.id}`}>
-                        <div className="icon">
-                            <Avatar
-                                alt="chat-avatar"
-                                src={PngWoman}
-                            />
+                    <ListBlock img={PngWoman} key={`chats-list-item-${item.id}`}>
+                        <div className="inner">
+                            <div className="inner__text">
+                                <h6 className="headline">{item.headline}</h6>
+                                <p className="msg">{item.msg}</p>
+                            </div>
+                            <div className="inner__trigger">
+                                <span className="label">
+                                    {/* <span className={`timer ${item.timer.length < 6 && 'critical'}`}>
+                                        {item.timer}
+                                    </span> */}
+                                    <Timer value={item.timer} isCritical={item.timer.length < 6} />
+                                    {item.count}
+                                </span>
+                            </div>
                         </div>
-                        <div className="text">
-                            <h6 className="headline">{item.headline}</h6>
-                            <p className="msg">{item.msg}</p>
-                        </div>
-                        <div className="trigger">
-                            <span className={`timer ${item.timer.length < 6 && 'critical'}`}>{item.timer}</span>
-                            <span className="count">{item.count}</span>
-                        </div>
-                    </div>
+                    </ListBlock>
                 ))}
             </div>
         </>

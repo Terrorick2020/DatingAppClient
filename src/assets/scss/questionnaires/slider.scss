@@ -128,11 +128,13 @@
             
                                     .headline {
                                         width: 100%;
+                                        font-size: clamp(1.3rem, 3vw, 1.6rem);
                                         font-weight: 700;
                                     }
             
                                     .description {
                                         width: 100%;
+                                        font-size: clamp(0.8rem, 3vw, 1rem);
                                         margin-top: 0.5rem;
                                         font-weight: 400;
                                     }
@@ -143,46 +145,20 @@
                                     min-height: 2rem;
                                     background: #00000047;
                                     border-radius: 3.7rem;
-                                    display: flex;
-                                    flex-direction: row;
-                                    justify-content: space-between;
+                                    display: grid;
+                                    grid-template-columns: 1fr 1fr;
                                     align-items: center;
                                     padding: 0.5rem;
+                                    gap: 1vw;
                                     z-index: 1;
 
-                                    .label {
-                                        width: 45%;
-                                        min-width: 8.5rem;
-                                        height: 100%;
-                                        display: flex;
-                                        flex-direction: row;
-                                        justify-content: space-between;
-                                        align-items: center;
-                                        border-radius: 3.75rem;
-                                        padding-inline: 0.3rem;
-                                        padding-block: 0.2rem;
-                                        gap: 0.3rem;
-                                        background: #BC96FF;
-
-                                        .text {
-                                            color: #1B1A1B;
-                                            font-size: 0.75rem;
-                                            white-space: nowrap;
-                                        }
-
-                                        img {
-                                            background: #371F7D;
-                                            border-radius: 50%;
-                                            padding: 0.1rem;
-                                            width: 18px;
-                                            height: 18px;
-                                        }
-                                    }
-
-                                    .text {
-                                        width: 55%;
+                                    > .text {
+                                        width: 100%;
                                         text-align: end;
-                                        font-size: 12px;
+                                        font-size: 0.7rem;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
                                     }
                                 }
             

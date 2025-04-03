@@ -7,10 +7,12 @@
 
     .MuiBox-root {
         &.nav-bar {
+            border-radius: 1.9rem 1.9rem 0 0 !important;
             width: 100vw;
             max-width: 800px;
             height: 100%;
             z-index: 5;
+            position: relative;
             
             .MuiBottomNavigation-root {
                 background: var(--nav-bar-bg);

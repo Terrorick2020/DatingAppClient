@@ -1,40 +1,42 @@
-import { Routes, Route } from 'react-router-dom'
-import { appRoutes } from './config/routes.config'
+import { Routes, Route } from 'react-router-dom';
+import { appRoutes } from './config/routes.config';
 
-import DefautlLayout from './layouts/Default'
-import QuestLayout from './layouts/Questionnaires'
-import RegisterLayout from './layouts/Register'
-import AdminLayout from './layouts/Admin'
+import DefautlLayout from './layouts/Default';
+import QuestLayout from './layouts/Questionnaires';
+import RegisterLayout from './layouts/Register';
+import AdminLayout from './layouts/Admin';
 
-import RegLangPage from './pages/Register/Lang'
-import RegPreviewPage from './pages/Register/Preview'
-import RegFillingQuestPage from './pages/Register/FillingQuest'
-import RegGeoPage from './pages/Register/Geo'
-import RegEveningPlansPage from './pages/Register/EveningPlans'
+import RegLangPage from './pages/Register/Lang';
+import RegPreviewPage from './pages/Register/Preview';
+import RegFillingQuestPage from './pages/Register/FillingQuest';
+import RegGeoPage from './pages/Register/Geo';
+import RegEveningPlansPage from './pages/Register/EveningPlans';
 
-import QuestChatsPage from './pages/Questionnaires/Chats'
-import QuestLikesPage from './pages/Questionnaires/Likes'
-import QuestProfilePage from './pages/Questionnaires/Profile'
-import QuestPsychologistsPage from './pages/Questionnaires/Psychologists'
-import QuestSliderPage from './pages/Questionnaires/Slider'
+import QuestChatsPage from './pages/Questionnaires/Chats';
+import QuestLikesPage from './pages/Questionnaires/Likes';
+import QuestProfilePage from './pages/Questionnaires/Profile';
+import QuestPsychologistsPage from './pages/Questionnaires/Psychologists';
+import QuestSliderPage from './pages/Questionnaires/Slider';
 
-import DetailsPage from './pages/Details'
+import DetailsPage from './pages/Details';
+import TargetChat from './pages/Chat';
+import TargetPsych from './pages/Psychologist';
 
-import AdminChangePage from './pages/Admin/Change'
-import AdminUsersListPage from './pages/Admin/UsersList'
-import AdminUserInfoPage from './pages/Admin/UserInfo'
+import AdminChangePage from './pages/Admin/Change';
+import AdminUsersListPage from './pages/Admin/UsersList';
+import AdminUserInfoPage from './pages/Admin/UserInfo';
 
-import NotFoundPage from './pages/NotFoud'
-import BlockedPage from './pages/Blocked'
-import ErrorPage from './pages/Error'
+import NotFoundPage from './pages/NotFound';
+import BlockedPage from './pages/Blocked';
+import ErrorPage from './pages/Error';
 
-import './assets/scss/index.scss'
+import './assets/scss/index.scss';
 
 
 const App = () => {
-  const regRoutes   = appRoutes.register
-  const questRoutes = appRoutes.questionnaires
-  const adminRoutes = appRoutes.admin
+  const regRoutes   = appRoutes.register;
+  const questRoutes = appRoutes.questionnaires;
+  const adminRoutes = appRoutes.admin;
   
   return (
     <>
@@ -58,6 +60,8 @@ const App = () => {
           </Route>
 
           <Route path={ appRoutes.details } element={ <DetailsPage /> } />
+          <Route path={ appRoutes.targetChat } element={ <TargetChat /> } />
+          <Route path={ appRoutes.targetPsych } element={ <TargetPsych /> } />
 
           <Route path={ adminRoutes.global } element={ <AdminLayout /> } >
             <Route path={ adminRoutes.inner.nav } element={ <AdminChangePage /> } />
@@ -75,4 +79,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;

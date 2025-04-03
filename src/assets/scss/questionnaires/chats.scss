@@ -1,6 +1,6 @@
 .chats {
     width: 100%;
-    height: 71vh;
+    height: 72vh;
     padding-inline: 1rem;
     overflow: hidden;
     display: grid;
@@ -31,6 +31,15 @@
 
             .item {
                 cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    filter: drop-shadow(0 0 0.3rem #ffffff7f);
+                }
+
+                &:active {
+                    scale: 0.98;
+                }
                 
                 .MuiBadge-badge {
                     cursor: pointer;
@@ -44,8 +53,7 @@
     }
 
     &__ctx {
-        padding-top: 0.8rem;
-        padding-bottom: 3rem;
+        padding-block: 1rem 3rem;
         width: 100%;
         height: 100%;
         margin-top: 1rem;
@@ -59,73 +67,55 @@
             align-items: start;
             gap: 3vh;
 
-            &__chat {
-                cursor: pointer;
+            .inner {
                 width: 100%;
-                padding: 1.25rem;
-                border-radius: 2rem;
-                background: #FFFFFF1F;
+                height: 100%;
                 display: grid;
-                grid-template-columns: 1fr 10fr 1fr;
+                grid-template-columns: 2fr 1fr;
+                justify-content: space-between;
                 align-items: center;
-                gap: 2vw;
-                transition: scale 0.3s ease;
+                gap: 1.5vw;
 
-                &:active {
-                    scale: 0.99;
-                }
+                &__text {
+                    min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: left;
 
-                .text {
-                    width: 100%;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+                    .headline, .msg {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
 
                     .headline {
-                        font-weight: 600;
+                        font-size: clamp(1.1rem, 3vw, 1.4rem);
+                        font-weight: 900;
                     }
 
                     .msg {
-                        font-weight: 100;
-                        margin-top: 0.5rem;
+                        font-size: clamp(0.8rem, 3vw, 1.1rem);
+                        margin-top: 0.5vh;
                     }
                 }
 
-                .trigger {
-                    width: 100%;
-                    height: 100%;
-                    position: relative;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
+                &__trigger {
+                    justify-self: right;
 
-
-                    .timer {
-                        min-width: 3.4rem;
-                        position: absolute;
+                    .label {
+                        position: relative;
+                        padding: 0.3rem 0.6rem;
                         border-radius: 3.75rem;
-                        padding: 4px;
-                        background: #BC96FF;
-                        color: #371F7D;
-                        top: -32px;
-                        right: 20px;
-
-                        &.critical {
-                            background: #FF4365;
-                            color: #FFFFFF;
-                        }
-                    }
-
-                    .count {
-                        width: clamp(1.5rem, 3vw, 1.8rem);
-                        height: clamp(1.5rem, 3vw, 1.8rem);
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        border-radius: 3.75rem;
-                        padding: 5px;
+                        font-weight: 600;
+                        font-size: clamp(0.8rem, 3vw, 1rem);
                         background: #D7FF81;
                         color: #371F7D;
+
+                        .timer {
+                            position: absolute;
+                            top: -45px;
+                            right: 0;
+                        }
                     }
                 }
             }

@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 
 
-const ProfileContent = () => {
+const ChatContent = () => {
     useEffect(
         () => {
-            const profileHtml = document.getElementById('profile');
-            if ( profileHtml ) profileHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+            const chatHtml = document.getElementById('target-chat');
+            if ( chatHtml ) chatHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
@@ -15,9 +15,9 @@ const ProfileContent = () => {
 
     return (
         <>
-            ProfileContent
+            ChatContent
         </>
     )
 }
 
-export default ProfileContent;
+export default ChatContent;

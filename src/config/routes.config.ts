@@ -22,7 +22,9 @@ export const appRoutes = {
             slider: 'slider',
         },
     },
-    details: '/details',
+    details: '/slider/details/:id',
+    targetChat: '/questionnaires/chats/:id',
+    targetPsych: '/questionnaires/psychologists/:id',
     admin: {
         global: '/admin',
         inner: {

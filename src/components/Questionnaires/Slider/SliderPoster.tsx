@@ -166,6 +166,9 @@ const SliderPoster = () => {
             <div
               className="carousel-slide"
               key={`slider-item-${item.id}`}
+              style={{
+                transform: `rotateY(${-Math.min(10, Math.max(-20, offset / 10))}deg)`
+              }}
             >
               <SliderItem 
                 questionnaires={item}

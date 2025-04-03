@@ -1,9 +1,13 @@
 .psychologists {
     width: 100%;
+    height: 72vh;
     padding-inline: 1rem;
+    display: grid;
+    grid-template-rows: 1fr 2fr;
 
     &__header {
         width: 100%;
+        height: 100%;
 
         .headline {
             font-weight: 900;
@@ -21,10 +25,69 @@
 
     &__ctx {
         width: 100%;
-        margin-top: 2.5vh;
+        height: 100%;
+        overflow: hidden;
 
         .headline {
+            margin-block: 2vh 1vh;
+            height: 10%;
             font-weight: 900;
+        }
+
+        .list {
+            width: 100%;
+            height: 83%;
+            padding-block: 1rem 2rem;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3vh;
+
+            .inner {
+                width: 100%;
+                height: 100%;
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1.5vw;
+                
+                &__desc {
+                    min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: left;
+
+                    .headline, .text, .label {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    .headline {
+                        padding: 0;
+                        margin: 0;
+                        font-size: 1.1rem;
+                    }
+
+                    .text {
+                        margin-top: 0.2rem;
+                        opacity: 0.5;
+                        font-weight: 100;
+                    }
+
+                    .label {
+                        color: #D7FF81;
+                        font-weight: 100;
+                    }
+                }
+
+                &__exp {
+                    justify-self: right;
+                    font-size: 0.9rem;
+                    white-space: nowrap;
+                }
+            }
         }
     }
 }

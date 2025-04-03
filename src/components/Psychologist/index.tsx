@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 
 
-const ProfileContent = () => {
+const PsychologistContent = () => {
     useEffect(
         () => {
-            const profileHtml = document.getElementById('profile');
-            if ( profileHtml ) profileHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+            const psychHtml = document.getElementById('target-psych');
+            if ( psychHtml ) psychHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
@@ -15,9 +15,9 @@ const ProfileContent = () => {
 
     return (
         <>
-            ProfileContent
+            PsychologistContent
         </>
     )
 }
 
-export default ProfileContent;
+export default PsychologistContent;

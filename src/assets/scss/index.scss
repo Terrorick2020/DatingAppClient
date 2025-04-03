@@ -14,15 +14,20 @@
 @use "./ui/toggle-button-group.mui.scss";
 @use "./ui/custom-sel-icon.scss";
 @use "./ui/modal.mui.scss";
+@use "./ui/list-block.scss";
 @use "./ui/scroll-bar.scss";
 @use "./ui/button-like.scss";
 @use "./ui/chat-input.scss";
+@use "./ui/plans-label";
+@use "./ui/timer.scss";
 
 @use "./admin/change.scss";
 @use "./admin/users-list.scss";
 @use "./admin/user-info.scss";
 
 @use "./questionnaires/slider.scss";
+@use "./questionnaires/likes.scss";
+@use "./questionnaires/profile.scss";
 @use "./questionnaires/chats.scss";
 @use "./questionnaires/psychologists.scss";
 
@@ -30,6 +35,8 @@
 @use "./register/preview.scss";
 @use "./register/filling-quest.scss";
 
+@use "./target-chat.scss";
+@use "./target-psych.scss";
 @use "./details.scss";
 @use "./error.scss";
 @use "./global.scss";

@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { type Questionnaire } from './SliderPoster';
+import { PlanLabelSvgType } from '@/types/ui.types';
 
 import Button from '@mui/material/Button';
 import ScrollBar from '@/components/UI/ScrollBar';
 import LikeBtn from '@/components/UI/LikeBtn';
+import PlansLabel from '@/components/UI/PlansLabel';
 
 import SvgMapPin from '@/assets/icon/map-pin.svg';
-import SvgCheckMark from '@/assets/icon/check-mark.svg';
 
 
 interface ISliderItemProps {
@@ -64,10 +65,7 @@ const SliderItem = (props: ISliderItemProps) => {
                         <p className="description">{ props.questionnaires.description }</p>
                     </div>
                     <div className="panel">
-                        <div className="label">
-                            <p className="text">{ props.questionnaires.plans.date }</p>
-                            <img src={SvgCheckMark} alt="check-mark" />
-                        </div>
+                        <PlansLabel type={PlanLabelSvgType.ordinary}/>
                         <p className="text">{ props.questionnaires.plans.content }</p>
                     </div>
                     <div className="btns">
