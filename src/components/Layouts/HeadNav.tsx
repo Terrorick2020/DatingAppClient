@@ -29,7 +29,6 @@ const DesktopHeadNav = () => {
     const goBack = () => {
         const backRoute = setRoutes.slice(-1)[0];
         navigate(backRoute);
-        navigate(-1);
         dispatch(dellRoute());
     };
     const closeWindow = () => window.close();

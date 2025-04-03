@@ -1,3 +1,5 @@
+import { appRoutes } from '@/config/routes.config';
+
 import ListBlock from '@/components/UI/ListBlock';
 import Timer from '@/components/UI/Timer';
 
@@ -15,11 +17,17 @@ const chatsList = [
     { id: 7, headline: 'Пользователь 8, 27', msg: 'Сообщение от пользователя 8', timer: '11:03:41', count: 3 }
 ]
 const ChatsList = () => {
+    const globTargetChatRoute = appRoutes.targetChat;
+
     return (
         <>
             <div className="list">
                 {chatsList.map(item =>(
-                    <ListBlock img={PngWoman} key={`chats-list-item-${item.id}`}>
+                    <ListBlock
+                        img={PngWoman}
+                        route={globTargetChatRoute.replace(':id', `${item.id}`)}
+                        key={`chats-list-item-${item.id}`}
+                    >
                         <div className="inner">
                             <div className="inner__text">
                                 <h6 className="headline">{item.headline}</h6>
@@ -27,9 +35,6 @@ const ChatsList = () => {
                             </div>
                             <div className="inner__trigger">
                                 <span className="label">
-                                    {/* <span className={`timer ${item.timer.length < 6 && 'critical'}`}>
-                                        {item.timer}
-                                    </span> */}
                                     <Timer value={item.timer} isCritical={item.timer.length < 6} />
                                     {item.count}
                                 </span>

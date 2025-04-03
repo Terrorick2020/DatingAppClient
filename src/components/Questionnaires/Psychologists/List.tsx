@@ -1,3 +1,5 @@
+import { appRoutes } from '@/config/routes.config';
+
 import ListBlock from '@/components/UI/ListBlock';
 
 import PngWoman from '@/assets/img/woman.png';
@@ -15,12 +17,18 @@ const PsychLisst = [
 ]
 
 const PsychList = () => {
+    const globTargetPsychRoute = appRoutes.targetPsych;
+
     return (
         <>
             <h6 className="headline">Все специалисты</h6>
             <div className="list">
                 {PsychLisst.map(item =>(
-                    <ListBlock img={PngWoman} key={`psych-list-item-${item.id}`}>
+                    <ListBlock
+                        img={PngWoman}
+                        route={globTargetPsychRoute.replace(':id', `${item.id}`)}
+                        key={`psych-list-item-${item.id}`}
+                    >
                         <div className="inner">
                             <div className="inner__desc">
                                 <h5 className="headline">{item.name}</h5>
