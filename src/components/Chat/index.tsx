@@ -1,5 +1,9 @@
 import { useEffect } from 'react';
 
+import ChatHeader from './Header';
+import ChatList from './List';
+import ChatInput from '@/components/UI/ChatInput';
+
 
 const ChatContent = () => {
     useEffect(
@@ -14,8 +18,16 @@ const ChatContent = () => {
     )
 
     return (
-        <>
-            ChatContent
+        <>  
+            <header className="target-chat__header">
+                <ChatHeader />
+            </header>
+            <div className="target-chat__ctx">
+                <ChatList />
+            </div>
+            <footer className="target-chat__footer">
+                <ChatInput isMatch={false} />
+            </footer>
         </>
     )
 }
