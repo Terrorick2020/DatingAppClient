@@ -1,4 +1,195 @@
 .target-psych {
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    padding-top: 12.1vh;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 10fr 1fr;
+
+    &__ctx {
+        width: 100%;
+        height: 100%;
+        padding-inline: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        overflow: auto;
+
+        .image {
+            width: 460px;
+            height: 460px;
+            min-width: 300px;
+            min-height: 460px;
+            padding: 1.25rem;
+            border-radius: 1.25rem;
+            user-select: none;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: multiply;
+            background-color: #50505034;
+            display: flex;
+            align-items: flex-end;
+
+            @media (max-width: 480px ) {
+                width: 100%;
+                height: 100vw;
+                min-height: 100vw
+            }
+
+            @media (max-width: 400px ) {
+                min-height: 320px;
+            }
+
+            .desc {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                .headline {
+                    font-weight: 700;
+                    font-size: clamp(1.3rem, 6.5vw, 2rem);
+                }
+
+                .labels {
+                    width: 100%;
+                    display: flex;
+                    gap: clamp(0.4rem, 2vw, 0.8rem);
+
+                    .item {
+                        color: #121112;
+                        font-size: 0.8rem;
+                        background: #FFFFFF;
+                        padding: 0.2rem 0.4rem;
+                        border-radius: 3.75rem;
+                    }
+                }
+            }
+        }
+        
+        .bio {
+            width: 100%;
+
+            .head {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+
+                .headline {
+                    font-weight: 700;
+                }
+
+                span {
+                    font-size: clamp(12px, 2vw, 14px);
+                    color: #FF4365;
+                    background: #ff43664c;
+                    border-radius: 1.25rem;
+                    padding: 0.3rem 0.8rem;
+
+                    &::before {
+                        content: '';
+                        display: inline-block;
+                        width: 7px;
+                        height: 7px;
+                        background: #FF4365;
+                        border-radius: 50%;
+                        margin-right: 0.5rem;
+                        margin-bottom: 0.1rem;
+                    }
+
+                    &.online {
+                        color: #D7FF81;
+                        background: #D7FF8133;
+
+                        &::before {
+                            background: #D7FF81;
+                        }
+                    }
+                }
+            }
+
+            .text {
+                margin-top: 0.5rem;
+                font-size: clamp(0.9rem, 4vw, 1.1rem);
+                font-weight: 100;
+            }
+        }
+        
+        .exp {
+            width: 100%;
+
+            .headline {
+                font-weight: 700;
+            }
+
+            &__list {
+                width: 100%;
+                margin-top: 0.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.6rem;
+                padding-bottom: 1.5rem;
+
+                .item {
+                    width: 100%;
+                    background: #FFFFFF1A;
+                    padding: 1.25rem;
+                    border-radius: 1.25rem;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    .title, .desc, .label {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    .head {
+                        width: 70%;
+
+                        .title {
+                            font-size: clamp(1rem, 3vw, 1.2rem);
+                            font-weight: 600;
+                        }
+
+                        .desc {
+                            font-size: clamp(0.8rem, 3vw, 1rem);
+                            opacity: 0.5;
+                        }
+                    }
+
+                    .label {
+                        width: 30%;
+                        text-align: end;
+                        font-size: clamp(0.9rem, 3vw, 1.2rem);
+                        font-weight: 400;
+                    }
+                }
+            }
+        }
+    }
+
+    &__btn {
+        background: #FFFFFF1F;
+        padding-inline: 1rem;
+        min-height: 80px;
+        background: #2B2B2B;
+        border-radius: 1.9rem 1.9rem 0 0;
+        display: flex;
+        align-items: center;
+
+        .MuiButtonBase-root {
+            width: 100%;
+            height: 52px;
+            border-radius: 3.75rem;
+
+            &:active {
+                scale: 0.99 !important;
+            }
+        }
+    }
 }

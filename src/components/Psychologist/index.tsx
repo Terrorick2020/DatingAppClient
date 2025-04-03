@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
 
+import Button from '@mui/material/Button';
+import PsychologistCtx from './Ctx';
+
 
 const PsychologistContent = () => {
     useEffect(
@@ -15,7 +18,12 @@ const PsychologistContent = () => {
 
     return (
         <>
-            PsychologistContent
+            <div className="target-psych__ctx">
+                <PsychologistCtx />
+            </div>
+            <div className="target-psych__btn">
+                <Button variant="contained">Выбрать специалиста</Button>
+            </div>
         </>
     )
 }
