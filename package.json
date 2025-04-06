@@ -38,6 +38,7 @@
     "sass": "^1.85.1",
     "typescript": "~5.8.2",
     "vite": "^6.2.3",
-    "vite-plugin-checker": "^0.9.0"
+    "vite-plugin-checker": "^0.9.0",
+    "vite-plugin-terminal-log": "^0.0.1"
   }
 }

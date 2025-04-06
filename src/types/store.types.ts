@@ -1,9 +1,10 @@
-import { AdminState } from './admin.types';
-import { SettingsState } from './settings.type';
-import { ChatsState } from './chats.types';
-import { LikesState } from './likes.types';
-import { ProfileState } from './profile.types';
-import { QuestState } from './quest.types';
+import { type AdminState } from './admin.types';
+import { type AuthState } from './auth.types';
+import { type SettingsState } from './settings.type';
+import { type ChatsState } from './chats.types';
+import { type LikesState } from './likes.types';
+import { type ProfileState } from './profile.types';
+import { type QuestState } from './quest.types';
 
 
 export enum ESearchType {
@@ -19,7 +20,8 @@ export enum EProfileRoles {
 export enum EProfileStatus {
     Pro  = 'Pro',
     Noob = 'Noob',
-    Blocked = 'Blocked'
+    None = 'None',
+    Blocked = 'Blocked',
 }
 
 export enum ESex {
@@ -37,6 +39,7 @@ export enum EInterests {
 
 export interface IState {
     admin:          AdminState
+    auth:           AuthState
     chats:          ChatsState
     likes:          LikesState
     profile:        ProfileState

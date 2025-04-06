@@ -42,6 +42,8 @@ export const initProfileAsync = createAsyncThunk(
                 data: parsedData,
             }
         )
+
+        return parsedData
     }
 )
 
