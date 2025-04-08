@@ -1,23 +1,36 @@
-import { useState } from 'react';
+import { useEffect, MouseEvent } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setInfo } from '@/store/slices/profileSlice';
 
 import IconButton from '@mui/joy/IconButton';
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 
+import type { InterestsVariant } from '@/types/settings.type';
+import type { IState } from '@/types/store.types';
 
-interface InterestsVariant {
-    id: number,
-    value: string,
-    label : string,
-}
-
-const variantsList: InterestsVariant[] = [
-    { id: 0, value: 'communication', label: 'Общение' },
-    { id: 1, value: 'friendship', label: 'Дружба' },
-    { id: 2, value: 'love', label: 'Любовь' },
-]
 
 const FillingQuestInterests = () => {
-    const [value, setValue] = useState<string>(variantsList[0].value);
+    const profInfo = useSelector((state: IState) => state.profile.info);
+    const interestsVariantsList = useSelector((state: IState) => state.settings.interestsVariants);
+
+    const dispatch = useDispatch();
+
+    useEffect(
+        () => {
+            dispatch(setInfo({
+                ...profInfo,
+                interest: interestsVariantsList[0].value,
+            }))
+        },
+        []
+    )
+
+    const handleSelectInterest = (_: MouseEvent<HTMLElement>, newValue: string | null) => {
+        newValue && dispatch(setInfo({
+            ...profInfo,
+            interest: newValue,
+        }))
+    }
 
     return (
         <>
@@ -27,12 +40,10 @@ const FillingQuestInterests = () => {
                     className="select"
                     id="select-interests"
                     spacing={ 5 }
-                    value={ value }
-                    onChange={(_event, newValue) => {
-                        if( newValue ) setValue(newValue);
-                    }}
+                    value={profInfo.interest}
+                    onChange={handleSelectInterest}
                 >
-                    {variantsList.map( (item: InterestsVariant) => (
+                    {interestsVariantsList.map( (item: InterestsVariant) => (
                         <IconButton
                             className="select__item"
                             key={`interest__${item.id}`}
@@ -47,4 +58,4 @@ const FillingQuestInterests = () => {
     )
 }
 
-export default FillingQuestInterests
+export default FillingQuestInterests;

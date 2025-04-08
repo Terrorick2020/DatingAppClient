@@ -25,4 +25,4 @@ const FillingQuestHeader = () => {
     )
 }
 
-export default FillingQuestHeader
+export default FillingQuestHeader;

@@ -1,5 +1,10 @@
-import { EProfileRoles, EProfileStatus, ESex, EInterests } from './store.types';
+import { EProfileRoles, EProfileStatus, ESex } from './store.types';
 
+
+export enum EMySex {
+    Male = ESex.Male,
+    Female = ESex.Female,
+}
 
 export interface ProfileSelf {
     id: number | null
@@ -9,9 +14,9 @@ export interface ProfileSelf {
     name: string
     age: number | null
     city: string
-    sex: ESex
+    sex: EMySex
     bio: string
-    interest: EInterests
+    interest: string
     selSex: ESex
 }
 

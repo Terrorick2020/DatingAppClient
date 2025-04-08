@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { EProfileRoles, ESex, EInterests,  EProfileStatus } from '@/types/store.types'
-import { type ProfileState } from '@/types/profile.types';
+import { EProfileRoles, ESex,  EProfileStatus } from '@/types/store.types'
+import { type ProfileState, EMySex } from '@/types/profile.types';
 
 import axios from 'axios';
 
@@ -9,14 +9,14 @@ const initialState: ProfileState = {
     info: {
         id: null,
         role: EProfileRoles.User,
-        status: EProfileStatus.Noob,
+        status: EProfileStatus.None,
         username: '',
         name: '',
         age: null,
         city: '',
-        sex: ESex.None,
+        sex: EMySex.Male,
         bio: '',
-        interest: EInterests.Dialog,
+        interest: '',
         selSex: ESex.All,
     }
 }
@@ -32,9 +32,9 @@ export const initProfileAsync = createAsyncThunk(
 
         const parsedData = Object.fromEntries(new URLSearchParams(tgData))
 
-        if (parsedData.user) {
-            parsedData.user = JSON.parse(parsedData.user)
-        }
+        // if (parsedData.user) {
+        //     parsedData.user = JSON.parse(parsedData.user)
+        // }
         
         await axios.post(
             'http://localhost:3000/auth',
@@ -47,10 +47,18 @@ export const initProfileAsync = createAsyncThunk(
     }
 )
 
+export const updateProfileAsync = createAsyncThunk(
+    'profile/update-profile',
+    async () => {}
+)
+
 const profileSlice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
+        setInfo: (state, action) => {
+            state.info = action.payload
+        }
     },
     extraReducers: builder => {
         builder.addCase(initProfileAsync.pending, state => {
@@ -65,5 +73,5 @@ const profileSlice = createSlice({
     }
 })
 
-export const {} = profileSlice.actions
+export const { setInfo } = profileSlice.actions
 export default profileSlice.reducer
