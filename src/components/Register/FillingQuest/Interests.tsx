@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-import { useEffect, MouseEvent } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setInfo } from '@/store/slices/profileSlice';
-=======
 import { MouseEvent, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfo } from '@/store/slices/profileSlice';
@@ -10,39 +5,11 @@ import { selSexVarsBase } from '@/constant/settings';
 import { setSelSexVars } from '@/store/slices/settingsSlice';
 import { type InterestsVarsItem } from '@/types/settings.type';
 import { type IState, ESex } from '@/types/store.types';
->>>>>>> dev
 
 import IconButton from '@mui/joy/IconButton';
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 
-import type { InterestsVariant } from '@/types/settings.type';
-import type { IState } from '@/types/store.types';
 
-<<<<<<< HEAD
-
-const FillingQuestInterests = () => {
-    const profInfo = useSelector((state: IState) => state.profile.info);
-    const interestsVariantsList = useSelector((state: IState) => state.settings.interestsVariants);
-
-    const dispatch = useDispatch();
-
-    useEffect(
-        () => {
-            dispatch(setInfo({
-                ...profInfo,
-                interest: interestsVariantsList[0].value,
-            }))
-        },
-        []
-    )
-
-    const handleSelectInterest = (_: MouseEvent<HTMLElement>, newValue: string | null) => {
-        newValue && dispatch(setInfo({
-            ...profInfo,
-            interest: newValue,
-        }))
-    }
-=======
 const FillingQuestInterests = () => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const interestsVars = useSelector((state: IState) => state.settings.interestsVars);
@@ -72,7 +39,6 @@ const FillingQuestInterests = () => {
         },
         [profileInfo.interest, profileInfo.sex]
     )
->>>>>>> dev
 
     return (
         <>
@@ -81,19 +47,11 @@ const FillingQuestInterests = () => {
                 <ToggleButtonGroup
                     className="select"
                     id="select-interests"
-<<<<<<< HEAD
-                    spacing={ 5 }
-                    value={profInfo.interest}
-                    onChange={handleSelectInterest}
-                >
-                    {interestsVariantsList.map( (item: InterestsVariant) => (
-=======
                     spacing={5}
                     value={profileInfo.interest}
                     onChange={handleChangeInterest}
                 >
                     {interestsVars.map( (item: InterestsVarsItem) => (
->>>>>>> dev
                         <IconButton
                             className="select__item"
                             key={`interest__${item.id}`}
@@ -108,4 +66,4 @@ const FillingQuestInterests = () => {
     )
 }
 
-export default FillingQuestInterests;
+export default FillingQuestInterests

@@ -30,9 +30,7 @@ const FillingQuestContent = () => {
 
     const adminGlobRoute = appRoutes.admin.global;
     const changeRoute = appRoutes.admin.inner.nav;
-    const toChange = `${adminGlobRoute}/${changeRoute}`;
-
-    const dispatch = useDispatch();
+    const toChange = `${adminGlobRoute}/${changeRoute}`
 
     useEffect(
         () => {
@@ -51,13 +49,9 @@ const FillingQuestContent = () => {
         []
     )
 
-<<<<<<< HEAD
-    const handleRoute = () => {
-=======
     const dispatch = useDispatch();
 
     const handleRoute = (): void => {
->>>>>>> dev
         dispatch(resetRoutes());
         profInfo.role === EProfileRoles.Admin && dispatch(addRoute(toChange));
     }

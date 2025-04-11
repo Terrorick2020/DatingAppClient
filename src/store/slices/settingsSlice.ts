@@ -1,17 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ELanguage, EApiStatus } from '@/types/settings.type';
-<<<<<<< HEAD
-import type { SettingsState, InterestsVariant } from '@/types/settings.type';
-
-
-import { interestsVariantsList } from '@/constant/settings';
-=======
 import { dfltErrItem } from '@/constant/settings';
 import { interestsVarsList } from '@/constant/settings';
 import { setInfo } from './profileSlice';
 import { type SettingsState } from '@/types/settings.type';
 import { type IState } from '@/types/store.types';
->>>>>>> dev
 
 
 const initialState: SettingsState = {
@@ -19,21 +12,6 @@ const initialState: SettingsState = {
     lang: ELanguage.Russian,
     load: false,
     apiStatus: EApiStatus.success,
-<<<<<<< HEAD
-    regInpErr: {
-        nameErr: false,
-        cityErr: false,
-        ageErr: false,
-        bioErr: false,
-    },
-    interestsVariants: [],
-}
-
-export const initInterestsVariantsAsync = createAsyncThunk(
-    'settings/init-interests-variants',
-    async () => {
-        return interestsVariantsList;
-=======
     fQErrors: {
         photErr: dfltErrItem,
         nameErr: dfltErrItem,
@@ -62,7 +40,6 @@ export const initInterestsVariants = createAsyncThunk(
         }
 
         return response
->>>>>>> dev
     }
 )
 
@@ -87,17 +64,6 @@ const settingsSlice = createSlice({
         }
     },
     extraReducers: builder => {
-<<<<<<< HEAD
-        builder.addCase(initInterestsVariantsAsync.pending, _ => {
-            console.log('Инициализация вариантов интересов!')
-        })
-        builder.addCase(initInterestsVariantsAsync.fulfilled, ( state, action ) => {
-            state.interestsVariants = action.payload as InterestsVariant[]
-            console.log('Успешная инициализация вариантов интересов!')
-        })
-        builder.addCase(initInterestsVariantsAsync.rejected, _ => {
-            console.log('Ошибка инициализации вариантов интересов!')
-=======
         builder.addCase(initInterestsVariants.pending, _ => {
             console.log("Получение варианетов интереесов")
         })
@@ -108,14 +74,9 @@ const settingsSlice = createSlice({
         })
         builder.addCase(initInterestsVariants.rejected, _ => {
             console.log("Ошибка получния вариантов интереесов")
->>>>>>> dev
         })
     }
 })
 
-<<<<<<< HEAD
-export const { setLang, addRoute, dellRoute, resetRoutes } = settingsSlice.actions;
-=======
 export const { setLang, addRoute, dellRoute, resetRoutes, setSelSexVars } = settingsSlice.actions;
->>>>>>> dev
 export default settingsSlice.reducer;

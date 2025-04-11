@@ -1,11 +1,6 @@
 import { EProfileRoles, EProfileStatus, ESex } from './store.types';
 
 
-export enum EMySex {
-    Male = ESex.Male,
-    Female = ESex.Female,
-}
-
 export interface ProfileSelf {
     id: number | null
     role: EProfileRoles
@@ -14,7 +9,7 @@ export interface ProfileSelf {
     name: string
     age: number | null
     city: string
-    sex: EMySex
+    sex: ESex
     bio: string
     interest: string
     selSex: ESex

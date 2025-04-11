@@ -27,8 +27,8 @@ const FillingQuestMySex = () => {
                 <ToggleButtonGroup
                     className="select"
                     id="select-my-sex"
-                    spacing={2}
-                    value={profileInfo.sex}
+                    spacing={ 2 }
+                    value={ profileInfo.sex }
                     onChange={handleOnChangeSex}
                 >
                     <IconButton className="select__item" value={ESex.Male}>Мужчина</IconButton>

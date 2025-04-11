@@ -12,19 +12,6 @@ export enum EApiStatus {
     error = 'error'
 }
 
-<<<<<<< HEAD
-export interface InterestsVariant {
-    id: number
-    value: string
-    label: string
-}
-
-export interface RegInpErr {
-    nameErr: boolean
-    cityErr: boolean
-    ageErr: boolean
-    bioErr: boolean
-=======
 export interface FQErrorsItem {
     value: boolean
     msg: string
@@ -53,7 +40,6 @@ export interface SelSexVarsItem {
 
 export interface SelSexVarsBase {
     [key: string]: SelSexVarsItem[]
->>>>>>> dev
 }
 
 export interface SettingsState {
@@ -61,12 +47,7 @@ export interface SettingsState {
     lang:  ELanguage
     load: boolean
     apiStatus: EApiStatus
-<<<<<<< HEAD
-    regInpErr: RegInpErr
-    interestsVariants: InterestsVariant[]
-=======
     fQErrors: FQErrors
     interestsVars: InterestsVarsItem[]
     selSexVars: SelSexVarsItem[]
->>>>>>> dev
 }

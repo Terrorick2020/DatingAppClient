@@ -1,6 +1,8 @@
-import Photos from '@/components/UI/Photos';
+import Photos from "@/components/UI/Photos"
+
 
 const FillingQuestPhotos = () => {
+
     return (
         <>
             <div className="widgets__photo">
@@ -13,4 +15,4 @@ const FillingQuestPhotos = () => {
     )
 }
 
-export default FillingQuestPhotos;
+export default FillingQuestPhotos

@@ -1,10 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { EProfileRoles, ESex,  EProfileStatus } from '@/types/store.types'
-<<<<<<< HEAD
-import { type ProfileState, EMySex } from '@/types/profile.types';
-=======
 import type { ProfileState, ProfileSelf } from '@/types/profile.types';
->>>>>>> dev
 
 import axios from 'axios';
 
@@ -13,16 +9,12 @@ const initialState: ProfileState = {
     info: {
         id: null,
         role: EProfileRoles.User,
-        status: EProfileStatus.None,
+        status: EProfileStatus.Noob,
         username: '',
         name: '',
         age: null,
         city: '',
-<<<<<<< HEAD
-        sex: EMySex.Male,
-=======
         sex: ESex.Male,
->>>>>>> dev
         bio: '',
         interest: '',
         selSex: ESex.All,
@@ -40,9 +32,9 @@ export const initProfileAsync = createAsyncThunk(
 
         const parsedData = Object.fromEntries(new URLSearchParams(tgData))
 
-        // if (parsedData.user) {
-        //     parsedData.user = JSON.parse(parsedData.user)
-        // }
+        if (parsedData.user) {
+            parsedData.user = JSON.parse(parsedData.user)
+        }
         
         await axios.post(
             'http://localhost:3000/auth',
@@ -50,14 +42,7 @@ export const initProfileAsync = createAsyncThunk(
                 data: parsedData,
             }
         )
-
-        return parsedData
     }
-)
-
-export const updateProfileAsync = createAsyncThunk(
-    'profile/update-profile',
-    async () => {}
 )
 
 const profileSlice = createSlice({
@@ -65,14 +50,9 @@ const profileSlice = createSlice({
     initialState,
     reducers: {
         setInfo: (state, action) => {
-<<<<<<< HEAD
-            state.info = action.payload
-        }
-=======
             const newInfo: ProfileSelf = action.payload;
             state.info = newInfo;
         },
->>>>>>> dev
     },
     extraReducers: builder => {
         builder.addCase(initProfileAsync.pending, state => {
@@ -87,10 +67,5 @@ const profileSlice = createSlice({
     }
 })
 
-<<<<<<< HEAD
-export const { setInfo } = profileSlice.actions
-export default profileSlice.reducer
-=======
 export const { setInfo } = profileSlice.actions;
 export default profileSlice.reducer;
->>>>>>> dev

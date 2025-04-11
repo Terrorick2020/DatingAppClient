@@ -1,8 +1,7 @@
-import { useState } from 'react';
-
+import { useState } from "react";
 import SvgAdd from '@/assets/icon/add.svg'
-import SvgClose from '@/assets/icon/close.svg?react';
-import PngWoman from '@/assets/img/woman.jpg';
+import SvgClose from "@/assets/icon/close.svg?react";
+import PngWoman from "@/assets/img/woman.jpg";
 
 
 interface ImageItem {
@@ -15,7 +14,6 @@ const initialImgsList: ImageItem[] = [
   { id: 2, img: PngWoman },
   { id: 3, img: PngWoman },
 ]
-
 
 const Photos = () => {
   const [imgsList, setImgsList] = useState(initialImgsList);
@@ -90,4 +88,4 @@ const Photos = () => {
   )
 }
 
-export default Photos;
+export default Photos
