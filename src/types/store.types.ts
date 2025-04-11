@@ -18,7 +18,6 @@ export enum EProfileStatus {
 }
 
 export enum ESex {
-    None = 'None',
     All = 'All',
     Male = 'Male',
     Female = 'Female',

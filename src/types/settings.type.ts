@@ -1,3 +1,5 @@
+import { ESex } from "./store.types"
+
 export enum ELanguage {
     English   = 'en',
     Russian   = 'ru',
@@ -26,6 +28,18 @@ export interface InterestsVarsItem {
     id: number
     value: string
     label: string
+    isOppos: boolean
+}
+
+export interface SelSexVarsItem {
+    id: number
+    value: ESex
+    label: string
+    isDisabled: boolean
+}
+
+export interface SelSexVarsBase {
+    [key: string]: SelSexVarsItem[]
 }
 
 export interface SettingsState {
@@ -35,4 +49,5 @@ export interface SettingsState {
     apiStatus: EApiStatus
     fQErrors: FQErrors
     interestsVars: InterestsVarsItem[]
+    selSexVars: SelSexVarsItem[]
 }
