@@ -1,9 +1,10 @@
-import { Suspense, lazy } from 'react'
-import { initProfileAsync } from '@/store/slices/profileSlice'
+import { Suspense, lazy } from 'react';
+import { initProfileAsync } from '@/store/slices/profileSlice';
+import { initInterestsVariants } from './store/slices/settingsSlice';
 
-import store from './store'
+import store from './store';
 
-import AppPreloader from './components/AppPreloader'
+import AppPreloader from './components/AppPreloader';
 
 
 function delay(ms: number) {
@@ -11,26 +12,27 @@ function delay(ms: number) {
 }
 
 async function delayForLazy( promise: Promise<any> ) {
-    await delay(2000)
+    await delay(2000);
 
-    await store.dispatch( initProfileAsync( window.location.href ) )
+    await store.dispatch( initProfileAsync( window.location.href ) );
+    await store.dispatch( initInterestsVariants() )
 
-    const resPromise = await promise
+    const resPromise = await promise;
 
-    const preloader = document.getElementById( 'preloader' )
+    const preloader = document.getElementById( 'preloader' );
 
     if ( preloader ) {
-        preloader.style.animation = "fadeOut 2s ease-in-out forwards"
+        preloader.style.animation = "fadeOut 2s ease-in-out forwards";
 
-        await delay(2000)
+        await delay(2000);
 
-        preloader.style.display = "none"
+        preloader.style.display = "none";
     }
 
-    return resPromise
+    return resPromise;
 }
 
-const AppLazy = lazy(() => delayForLazy(import('./App')))
+const AppLazy = lazy(() => delayForLazy(import('./App')));
 
 const AppSuspense = () => {
     return (

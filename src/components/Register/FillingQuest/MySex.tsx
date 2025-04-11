@@ -1,11 +1,24 @@
-import { useState } from 'react';
+import { MouseEvent } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setInfo } from '@/store/slices/profileSlice';
+import { ESex } from '@/types/store.types';
+import { type IState } from '@/types/store.types';
 
 import IconButton from '@mui/joy/IconButton';
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 
 
 const FillingQuestMySex = () => {
-    const [value, setValue] = useState('male');
+    const profileInfo = useSelector((state: IState) => state.profile.info);
+
+    const dispatch = useDispatch();
+
+    const handleOnChangeSex = (_: MouseEvent<HTMLElement>, newValue: ESex | null): void => {
+        newValue && dispatch(setInfo({
+            ...profileInfo,
+            sex: newValue
+        }))
+    }
 
     return (
         <>
@@ -15,19 +28,15 @@ const FillingQuestMySex = () => {
                     className="select"
                     id="select-my-sex"
                     spacing={ 2 }
-                    value={ value }
-                    onChange={(_event, newValue) => {
-                        if ( newValue !== null ) {
-                            setValue(newValue)
-                        }
-                    }}
+                    value={ profileInfo.sex }
+                    onChange={handleOnChangeSex}
                 >
-                    <IconButton className="select__item" value="male">Мужчина</IconButton>
-                    <IconButton className="select__item" value="female">Женщина</IconButton>
+                    <IconButton className="select__item" value={ESex.Male}>Мужчина</IconButton>
+                    <IconButton className="select__item" value={ESex.Female}>Женщина</IconButton>
                 </ToggleButtonGroup>
             </div>
         </>
     )
 }
 
-export default FillingQuestMySex
+export default FillingQuestMySex;

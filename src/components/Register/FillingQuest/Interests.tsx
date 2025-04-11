@@ -1,23 +1,34 @@
-import { useState } from 'react';
+import { MouseEvent } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setInfo } from '@/store/slices/profileSlice';
+import { ADD_INTEREST_VAR } from '@/constant/settings';
+import { EProfileRoles } from '@/types/store.types';
+import { type InterestsVarsItem } from '@/types/settings.type';
+import { type IState } from '@/types/store.types';
 
 import IconButton from '@mui/joy/IconButton';
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
+import AddIcon from '@mui/icons-material/Add';
 
-
-interface InterestsVariant {
-    id: number,
-    value: string,
-    label : string,
-}
-
-const variantsList: InterestsVariant[] = [
-    { id: 0, value: 'communication', label: 'Общение' },
-    { id: 1, value: 'friendship', label: 'Дружба' },
-    { id: 2, value: 'love', label: 'Любовь' },
-]
 
 const FillingQuestInterests = () => {
-    const [value, setValue] = useState<string>(variantsList[0].value);
+    const profileInfo = useSelector((state: IState) => state.profile.info);
+    const interestsVars = useSelector((state: IState) => state.settings.interestsVars);
+
+    const dispatch = useDispatch();
+
+    const handleChangeInterest = (_: MouseEvent<HTMLElement>, newValue: string | null): void => {
+        if( newValue === ADD_INTEREST_VAR ) return;
+
+        newValue && dispatch(setInfo({
+            ...profileInfo,
+            interest: newValue
+        }))
+    }
+
+    const handleAddInterest = () => {
+        
+    }
 
     return (
         <>
@@ -26,13 +37,11 @@ const FillingQuestInterests = () => {
                 <ToggleButtonGroup
                     className="select"
                     id="select-interests"
-                    spacing={ 5 }
-                    value={ value }
-                    onChange={(_event, newValue) => {
-                        if( newValue ) setValue(newValue);
-                    }}
+                    spacing={5}
+                    value={profileInfo.interest}
+                    onChange={handleChangeInterest}
                 >
-                    {variantsList.map( (item: InterestsVariant) => (
+                    {interestsVars.map( (item: InterestsVarsItem) => (
                         <IconButton
                             className="select__item"
                             key={`interest__${item.id}`}
@@ -41,6 +50,15 @@ const FillingQuestInterests = () => {
                             {item.label}
                         </IconButton>
                     ))}
+                    {
+                        profileInfo.role !== EProfileRoles.Admin &&
+                        <IconButton
+                            className="select__item add-btn"
+                            key={`interest__add`}
+                            value={ADD_INTEREST_VAR}
+                            onClick={handleAddInterest}
+                        ><AddIcon /></IconButton>
+                    }
                 </ToggleButtonGroup>
             </div>
         </>

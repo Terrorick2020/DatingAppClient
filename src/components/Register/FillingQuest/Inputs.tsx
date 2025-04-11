@@ -1,5 +1,8 @@
-import { useState, ChangeEvent } from 'react';
-import { type PropsFillingQuest } from './index';
+import { ChangeEvent } from 'react';
+import { districtsList } from '@/constant/profiles';
+import { useSelector, useDispatch } from 'react-redux';
+import { setInfo } from '@/store/slices/profileSlice';
+import { type IState } from '@/types/store.types';
 
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
@@ -9,36 +12,25 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import CustomSelIcon from '@/components/UI/CustomSelIcon';
 
 
-const districtsList = [
-    { id: 0, value: 'piter', label: 'Санкт-Петербург' },
-    { id: 1, value: 'moscow', label: 'Москва' },
-    { id: 2, value: 'kazan', label: 'Казань' },
-    { id: 3, value: 'novosibirsk', label: 'Новосибирск' },
-    { id: 4, value: 'ekb', label: 'Екатеринбург' }
-];
 
-const FillingQuestInputs = (props: PropsFillingQuest) => {
-    // const [name, setName] = useState<string>('');
-    // const [nameErr, setNameErr] = useState<boolean>(false);
-    // const [nameHelperText, setNameHeloerText] = useState<string>('');
+const FillingQuestInputs = () => {
+    const profileInfo = useSelector((state: IState) => state.profile.info);
+    const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
 
-    const [city, setCity] = useState<string>('');
-    // const [cityErr, setCityErr] = useState<boolean>(false);
+    const dispatch = useDispatch();
 
-    const handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
-        props.setValue(
-            {
-                ...props.value,
-                name: {
-                    ...props.value.name,
-                    value: event.target.value,
-                }
-            }
-        )
+    const handleChangeName = (event: ChangeEvent<HTMLInputElement>): void => {
+        dispatch(setInfo({
+            ...profileInfo,
+            name: event.target.value,
+        }))
     }
 
-    const handleChangeCity = (event: SelectChangeEvent) => {
-        setCity(event.target.value)
+    const handleChangeCity = (event: SelectChangeEvent): void => {
+        dispatch(setInfo({
+            ...profileInfo,
+            city: event.target.value,
+        }))
     }
 
     return (
@@ -50,10 +42,10 @@ const FillingQuestInputs = (props: PropsFillingQuest) => {
                     id="name-input"
                     fullWidth
                     placeholder="Имя"
-                    value={props.value.name.value}
+                    value={profileInfo.name}
                     onChange={handleChangeName}
-                    error={props.value.name.err}
-                    helperText={'Поле не может быть пустым'}
+                    error={fQErrors.nameErr.value}
+                    helperText={fQErrors.nameErr.msg}
                 />
                 <h4>Ваш город</h4>
                 <FormControl>
@@ -78,8 +70,9 @@ const FillingQuestInputs = (props: PropsFillingQuest) => {
                               },
                             },
                         }}
-                        value={city}
+                        value={profileInfo.city}
                         onChange={handleChangeCity}
+
                     >
                         {districtsList.map(item => (
                             <MenuItem
@@ -89,6 +82,7 @@ const FillingQuestInputs = (props: PropsFillingQuest) => {
                         ))}
                     </Select>
                 </FormControl>
+                {fQErrors.cityErr.value && <p className="city-err">{fQErrors.cityErr.msg}</p>}
             </div>
         </>
     )

@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { EProfileRoles, EProfileStatus, ESearchType } from '@/types/store.types'
+import { EProfileRoles, EProfileStatus } from '@/types/store.types'
 import { type AdminState } from '@/types/admin.types'
 
 // import axios from 'axios';
 
 
 const initialState: AdminState = {
-    searchType: ESearchType.User,
+    searchType: EProfileRoles.User,
     searchId: '',
     profilesList: [],
     targetProfile: {

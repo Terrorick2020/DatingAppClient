@@ -1,4 +1,4 @@
-import { EProfileRoles, EProfileStatus, ESex, EInterests } from './store.types';
+import { EProfileRoles, EProfileStatus, ESex } from './store.types';
 
 
 export interface ProfileSelf {
@@ -11,7 +11,7 @@ export interface ProfileSelf {
     city: string
     sex: ESex
     bio: string
-    interest: EInterests
+    interest: string
     selSex: ESex
 }
 

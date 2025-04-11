@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { EProfileRoles, ESex, EInterests,  EProfileStatus } from '@/types/store.types'
-import { type ProfileState } from '@/types/profile.types';
+import { EProfileRoles, ESex,  EProfileStatus } from '@/types/store.types'
+import type { ProfileState, ProfileSelf } from '@/types/profile.types';
 
 import axios from 'axios';
 
@@ -14,9 +14,9 @@ const initialState: ProfileState = {
         name: '',
         age: null,
         city: '',
-        sex: ESex.None,
+        sex: ESex.Male,
         bio: '',
-        interest: EInterests.Dialog,
+        interest: '',
         selSex: ESex.All,
     }
 }
@@ -49,6 +49,10 @@ const profileSlice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
+        setInfo: (state, action) => {
+            const newInfo: ProfileSelf = action.payload;
+            state.info = newInfo;
+        },
     },
     extraReducers: builder => {
         builder.addCase(initProfileAsync.pending, state => {
@@ -63,5 +67,5 @@ const profileSlice = createSlice({
     }
 })
 
-export const {} = profileSlice.actions
-export default profileSlice.reducer
+export const { setInfo } = profileSlice.actions;
+export default profileSlice.reducer;

@@ -10,9 +10,29 @@ export enum EApiStatus {
     error = 'error'
 }
 
+export interface FQErrorsItem {
+    value: boolean
+    msg: string
+}
+export interface FQErrors {
+    photErr: FQErrorsItem
+    nameErr: FQErrorsItem
+    cityErr: FQErrorsItem
+    ageErr: FQErrorsItem
+    bioErr: FQErrorsItem
+}
+
+export interface InterestsVarsItem {
+    id: number
+    value: string
+    label: string
+}
+
 export interface SettingsState {
     routes: string[]
     lang:  ELanguage
     load: boolean
     apiStatus: EApiStatus
+    fQErrors: FQErrors
+    interestsVars: InterestsVarsItem[]
 }

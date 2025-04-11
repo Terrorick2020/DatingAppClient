@@ -32,4 +32,4 @@ const FillingQuestMedia = (props: PropsFillingQuestMedia) => {
     )
 }
 
-export default FillingQuestMedia
+export default FillingQuestMedia;

@@ -1,10 +1,10 @@
 import { type PersonType } from '@/types/admin.types';
-import { ESearchType } from '@/types/store.types';
+import { EProfileRoles } from '@/types/store.types';
 
 
 export const personTypeList: PersonType[] = [
-    { id: 0, value: ESearchType.User, label: 'Пользователи' },
-    { id: 1, value: ESearchType.Psych, label: 'Пси-специалисты' }
+    { id: 0, value: EProfileRoles.User, label: 'Пользователи' },
+    { id: 1, value: EProfileRoles.Psych, label: 'Пси-специалисты' }
 ]
 
 export const testIdtList: string[] = [
