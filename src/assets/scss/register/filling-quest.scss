@@ -116,6 +116,11 @@
                 flex-direction: column;
                 justify-content: center;
                 gap: 1.2rem;
+
+                .city-err {
+                    color: rgba(254, 115, 115, 0.784);
+                    font-size: 0.8rem;
+                }
             }
 
             &__my-sex {
@@ -198,6 +203,19 @@
                             "first second"
                             "third third";
                         grid-template-columns: 1fr 1fr;
+                    }
+                }
+
+                .MuiIconButton-root {
+                    &.add-btn {
+                        &:hover {
+                            background: transparent;
+                        }
+
+                        &:active {
+                            background: transparent;
+                            scale: 0.99;
+                        }
                     }
                 }
             }

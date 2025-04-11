@@ -5,11 +5,15 @@ import { type LikesState } from './likes.types';
 import { type ProfileState } from './profile.types';
 import { type QuestState } from './quest.types';
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
 export enum EProfileRoles {
     Psych = 'Psych',
     User  = 'User',
     Admin = 'Admin',
+    Psych = 'Psych',
 }
 
 export enum ESearchType {

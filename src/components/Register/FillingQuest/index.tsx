@@ -51,7 +51,13 @@ const FillingQuestContent = () => {
         []
     )
 
+<<<<<<< HEAD
     const handleRoute = () => {
+=======
+    const dispatch = useDispatch();
+
+    const handleRoute = (): void => {
+>>>>>>> dev
         dispatch(resetRoutes());
         profInfo.role === EProfileRoles.Admin && dispatch(addRoute(toChange));
     }

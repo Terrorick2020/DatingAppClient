@@ -1,6 +1,10 @@
 import { Suspense, lazy } from 'react';
 import { initProfileAsync } from '@/store/slices/profileSlice';
+<<<<<<< HEAD
 import { initInterestsVariantsAsync } from '@/store/slices/settingsSlice';
+=======
+import { initInterestsVariants } from './store/slices/settingsSlice';
+>>>>>>> dev
 
 import store from './store';
 
@@ -15,7 +19,11 @@ async function delayForLazy( promise: Promise<any> ) {
     await delay(2000);
 
     await store.dispatch( initProfileAsync( window.location.href ) );
+<<<<<<< HEAD
     await store.dispatch( initInterestsVariantsAsync() );
+=======
+    await store.dispatch( initInterestsVariants() )
+>>>>>>> dev
 
     const resPromise = await promise;
 
@@ -29,10 +37,10 @@ async function delayForLazy( promise: Promise<any> ) {
         preloader.style.display = "none";
     }
 
-    return resPromise
+    return resPromise;
 }
 
-const AppLazy = lazy(() => delayForLazy(import('./App')))
+const AppLazy = lazy(() => delayForLazy(import('./App')));
 
 const AppSuspense = () => {
     return (
