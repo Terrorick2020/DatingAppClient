@@ -1,12 +1,11 @@
-import { ESearchType, EProfileRoles, EProfileStatus } from './store.types';
+import { EProfileRoles, EProfileStatus } from './store.types';
 
 
 export interface ProfilesListItem {
-    photo: Blob | null
-    firstName: string
-    lastName?: string
-    age?: number | null
-    isActive: boolean
+    id: string
+    avatr: string
+    name: string
+    status: EProfileStatus
 }
 
 export interface TargetProfile {
@@ -22,14 +21,8 @@ export interface TargetProfile {
 }
 
 export interface AdminState {
-    searchType: ESearchType
+    searchType: EProfileRoles
     searchId: string
     profilesList: ProfilesListItem[]
     targetProfile: TargetProfile
-}
-
-export interface PersonType {
-    id: number,
-    value: string,
-    label : string,
 }

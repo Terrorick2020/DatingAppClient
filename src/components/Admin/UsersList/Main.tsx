@@ -1,78 +1,112 @@
 import { useState, MouseEvent } from "react";
-import { resUsersList } from "@/constant/admin";
+import { useSelector } from 'react-redux';
 import { appRoutes } from '@/config/routes.config';
+import { EProfileStatus } from '@/types/store.types';
+import { type IState } from '@/types/store.types';
 
 import ListBlock from '@/components/UI/ListBlock';
 import IconButton from '@mui/joy/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import UsersListDialog from './Dialog';
+import CircularProgress from '@mui/material/CircularProgress';
 import SvgMoreCircle from '@/assets/icon/more-circle.svg?react';
 
 
 const UsersListMain = () => {
+    const adminState = useSelector((state: IState) => state.admin);
+    const isLoad = useSelector((state: IState) => state.settings.load);
+
     const adminGlobRoute      = appRoutes.admin.global;
     const adminUserInfoRoute  = appRoutes.admin.inner.userInfo;
     const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`;
 
-    const [openDel, setOpenDel] = useState<boolean>(true)
+    const [openDel, setOpenDel] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-      setAnchorEl(null);
-      () => setOpenDel(true)
+
+    const handleClick = (event: MouseEvent<HTMLButtonElement>): void => {
+        event.stopPropagation();
+        event.preventDefault();
+        setAnchorEl(event.currentTarget);
     };
 
+    const handleClose = (event: MouseEvent<HTMLLIElement>): void => {
+        event.stopPropagation();
+        setAnchorEl(null);
+        () => setOpenDel(true);
+    };
 
+    const hadleBlock = (event: MouseEvent<HTMLLIElement>): void => {
+        console.log("Пользователь заблокирован");
+        handleClose(event);
+    };
+
+    const handleEdit = (event: MouseEvent<HTMLLIElement>): void => {
+        console.log("Редактирование пользователя");
+        handleClose(event);
+    };
+
+    const handleOpenDeletePanel = (event: MouseEvent<HTMLLIElement>): void => {
+        setOpenDel(true);
+        handleClose(event);
+    };
 
     return (
         <>
             {
-                false
+                !adminState.profilesList.length && !isLoad
                     ?
                     <div className="not-found">
-                        <h2 className="text">Пользователь не найден</h2>
+                        <h2 className="text">Ничего не найдено</h2>
                     </div>
                     :
                     <div className="search-list">
-                        {resUsersList.map(item => (
-                            <ListBlock img={item.img} route={item.route}>
-                                <div className="search-list__item">
-                                    <div className="text">
-                                        <h3 className="name">Татьяна Иванова</h3>
-                                        {
-                                            item.id % 2 === 0
-                                                ?
-                                                <span className="label off">НЕАКТИВЕН</span>
-                                                :
-                                                <span className="label">АКТИВЕН</span>
-                                        }
-                                    </div>
-                                    <IconButton
-                                        aria-controls={open ? 'basic-menu' : undefined}
-                                        aria-haspopup="true"
-                                        aria-expanded={open ? 'true' : undefined}
-                                        onClick={handleClick}
+                        {
+                            isLoad
+                                ?
+                                <CircularProgress className="progress" />
+                                :
+                                (adminState.profilesList.map(item => (
+                                    <ListBlock
+                                        img={item.avatr}
+                                        route={`${toUserInfo.replace(':id', '')}${item.id}`}
+                                        key={`admin-profile-${item.id}`}
                                     >
-                                        <SvgMoreCircle />
-                                    </IconButton>
-                                    <Menu
-                                        id="serch-usrs-menu"
-                                        className="serch-usrs-menu"
-                                        anchorEl={anchorEl}
-                                        open={open}
-                                        onClose={handleClose}
-                                    >
-                                        <MenuItem onClick={handleClose}>Деактивировать</MenuItem>
-                                        <MenuItem onClick={handleClose}>Редактировать</MenuItem>
-                                        <MenuItem onClick={() => setOpenDel(true)}>Удалить</MenuItem>
-                                    </Menu>
-                                </div>
-                            </ListBlock>
-                        ))}
+                                        <div className="search-list__item">
+                                            <div className="text">
+                                                <h3 className="name">Татьяна Иванова</h3>
+                                                {
+                                                    item.status === EProfileStatus.Blocked
+                                                        ?
+                                                        <span className="label off">НЕАКТИВЕН</span>
+                                                        :
+                                                        <span className="label">АКТИВЕН</span>
+                                                }
+                                            </div>
+                                            <IconButton
+                                                aria-controls={open ? 'basic-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={open ? 'true' : undefined}
+                                                onClick={handleClick}
+                                            >
+                                                <SvgMoreCircle />
+                                            </IconButton>
+                                            <Menu
+                                                id="serch-usrs-menu"
+                                                className="serch-usrs-menu"
+                                                anchorEl={anchorEl}
+                                                open={open}
+                                                onClose={handleClose}
+                                            >
+                                                <MenuItem onClick={hadleBlock}>Деактивировать</MenuItem>
+                                                <MenuItem onClick={handleEdit}>Редактировать</MenuItem>
+                                                <MenuItem onClick={handleOpenDeletePanel}>Удалить</MenuItem>
+                                            </Menu>
+                                        </div>
+                                    </ListBlock>
+                                )))
+                        }
                     </div>
             }
             <UsersListDialog open={openDel} hadleClose={() => setOpenDel(false)} />

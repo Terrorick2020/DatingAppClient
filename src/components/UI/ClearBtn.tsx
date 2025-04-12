@@ -1,18 +1,16 @@
-import SvgClose from '@/assets/icon/close.svg?react'
+import { type ClearBtnProps } from '@/types/ui.types';
+
+import SvgClose from '@/assets/icon/close.svg?react';
 
 
-interface ClearBtnProps {
-    onClear: () => void
-}
-
-const ClearBtn = ( { onClear }: ClearBtnProps ) => {
+const ClearBtn = (props: ClearBtnProps) => {
     return (
         <>
-            <span className="clear-btn" onClick={onClear}>
+            <span className="clear-btn" onClick={props.onClear}>
                 <SvgClose />
             </span>
         </>
     )
 }
 
-export default ClearBtn
+export default ClearBtn;

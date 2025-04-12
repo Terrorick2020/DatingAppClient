@@ -1,7 +1,13 @@
 import { MouseEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { appRoutes } from '@/config/routes.config';
+import { addRoute } from '@/store/slices/settingsSlice';
 import { setSearchType, setSearchId } from '@/store/slices/adminSlice';
+import { SERCH_ID_PATTERN } from '@/constant/admin';
 import { EProfileRoles } from '@/types/store.types';
+import { getProfilesListAsync } from '@/store/slices/adminSlice';
+import { RoootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
 
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
@@ -13,22 +19,36 @@ import Button from '@mui/material/Button';
 const UsersListHeader = () => {
     const adminState = useSelector((state: IState) => state.admin);
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<RoootDispatch>();
 
     const handleChangeRole = (_: MouseEvent<HTMLElement>, newValue: EProfileRoles | null): void => {
         newValue && dispatch(setSearchType( newValue ));
     }
 
-    const handleInputChange = (newValue: string) => {
-        dispatch( setSearchId( newValue ) );
+    const handleInputChange = async (newValue: string): Promise<void> => {
+        if( !newValue ) {
+            dispatch( setSearchId( newValue ) );
+            await dispatch( getProfilesListAsync() );
+            return;
+        };
+
+        let isId = SERCH_ID_PATTERN.test( newValue );
+
+        dispatch( setSearchId( isId ? newValue : adminState.searchId ) );
     }
 
-    const handleClearInput = () => {
+    const handleSerch = async () => await dispatch( getProfilesListAsync() );
 
-    }
+    const adminGlobRoute = appRoutes.admin.global;
+    const adminAddPhys   = appRoutes.admin.inner.physAdd;
+    const toAddPhys      = `${adminGlobRoute}/${adminAddPhys}`;
 
-    const handleInputKeyDown = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
 
+    const handleNavToAddPhys = (): void => {
+        dispatch(addRoute(location.pathname));
+        navigate(toAddPhys);
     }
 
     return (
@@ -48,12 +68,12 @@ const UsersListHeader = () => {
                     value={adminState.searchId}
                     placeholder="Поиск пользователя по ID..."
                     handleInputChange={handleInputChange}
-                    handleClearInput={handleClearInput}
-                    handleInputKeyDown={handleInputKeyDown}
+                    handleClearInput={handleSerch}
+                    handleInputKeyDown={handleSerch}
                 />
                 {
                     adminState.searchType === EProfileRoles.Psych &&
-                    <Button className="persone-btn" variant="contained">Добавить</Button>
+                    <Button className="persone-btn" variant="contained" onClick={handleNavToAddPhys}>Добавить</Button>
                 }
             </div>
         </>

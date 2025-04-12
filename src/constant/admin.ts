@@ -1,13 +1,14 @@
 import PngWoman from '@/assets/img/woman.png';
+import { EProfileStatus } from '@/types/store.types';
+import { type ProfilesListItem } from '@/types/admin.types';
 
 
-
-export const resUsersList = [
-    {id: 0, img: PngWoman, route: ''},
-    {id: 1, img: PngWoman, route: ''},
-    {id: 2, img: PngWoman, route: ''},
-    {id: 3, img: PngWoman, route: ''},
-    {id: 4, img: PngWoman, route: ''},
+export const resUsersList: ProfilesListItem[] = [
+    {id: '2342343', avatr: PngWoman, name: 'Татьяна Иванова', status: EProfileStatus.Noob},
+    {id: '8148518', avatr: PngWoman, name: 'Валерия Иванова', status: EProfileStatus.Blocked},
+    {id: '8111518', avatr: PngWoman, name: 'Константин Иванов', status: EProfileStatus.Noob},
+    {id: '8148548', avatr: PngWoman, name: 'Илия Иванова', status: EProfileStatus.Noob},
+    {id: '8167808', avatr: PngWoman, name: 'Привет Иванова', status: EProfileStatus.Blocked},
 ]
 
 export const testIdtList: string[] = [
@@ -16,3 +17,5 @@ export const testIdtList: string[] = [
     '8148548',
     '8167808',
 ]
+
+export const SERCH_ID_PATTERN = /\d+$/;

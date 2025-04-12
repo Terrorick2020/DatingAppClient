@@ -207,15 +207,8 @@
                 }
 
                 .MuiIconButton-root {
-                    &.add-btn {
-                        &:hover {
-                            background: transparent;
-                        }
-
-                        &:active {
-                            background: transparent;
-                            scale: 0.99;
-                        }
+                    &:disabled {
+                        opacity: 0.5;
                     }
                 }
             }

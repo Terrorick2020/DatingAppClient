@@ -42,8 +42,8 @@ const UsersListDialog = (props: PropsUsersListDialog) => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={props.hadleClose}>Disagree</Button>
-                    <Button onClick={props.hadleClose}>Agree</Button>
+                    <Button onClick={props.hadleClose}>Отмена</Button>
+                    <Button onClick={props.hadleClose}>Удалить</Button>
                 </DialogActions>
             </Dialog>
         </>

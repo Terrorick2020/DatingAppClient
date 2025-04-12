@@ -1,6 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { EProfileRoles, EProfileStatus } from '@/types/store.types'
-import { type AdminState } from '@/types/admin.types'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { EProfileRoles, EProfileStatus } from '@/types/store.types';
+import { resUsersList } from '@/constant/admin';
+import { setLoad } from './settingsSlice';
+import { delay } from '@/AppSuspense';
+import { type IState } from '@/types/store.types';
+import type { AdminState, ProfilesListItem } from '@/types/admin.types';
+
 
 // import axios from 'axios';
 
@@ -22,10 +27,28 @@ const initialState: AdminState = {
     }
 }
 
-export const getProfilesList = createAsyncThunk(
+export const getProfilesListAsync = createAsyncThunk(
     'admin/get-profile-list',
-    async (_, thunkAPI) => {
-        console.log( thunkAPI )
+    async (_, { getState, dispatch }): Promise<ProfilesListItem[]> => {
+        try {
+            dispatch(setLoad(true));
+
+            await delay(1000);
+
+            const rootState = getState() as IState;
+            const searchId = rootState.admin.searchId;
+    
+            const response = resUsersList;
+    
+            if ( searchId ) return response.filter( item => item.id.includes( searchId ) );
+    
+            return response;
+
+        } catch ( error ) {
+            throw error;
+        } finally {
+            dispatch(setLoad(false));
+        }
     }
 )
 
@@ -43,7 +66,19 @@ const adminSlice = createSlice({
             state.targetProfile = action.payload
         },
     },
+    extraReducers: builder => {
+        builder.addCase(getProfilesListAsync.pending, _ => {
+            console.log("Получение списка пользователей");
+        })
+        builder.addCase(getProfilesListAsync.fulfilled, ( state, action ) => {
+            console.log("Успешное получение списка пользователей");
+            state.profilesList = action.payload;
+        })
+        builder.addCase(getProfilesListAsync.rejected, _ => {
+            console.log("Ошибка получения списка пользователей");
+        })
+    }
 })
 
-export const { setSearchType, setSearchId } = adminSlice.actions
-export default adminSlice.reducer
+export const { setSearchType, setSearchId } = adminSlice.actions;
+export default adminSlice.reducer;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SvgAdd from '@/assets/icon/add.svg'
+import SvgAdd from '@/assets/icon/add.svg';
 import SvgClose from "@/assets/icon/close.svg?react";
 import PngWoman from "@/assets/img/woman.jpg";
 
@@ -88,4 +88,4 @@ const Photos = () => {
   )
 }
 
-export default Photos
+export default Photos;

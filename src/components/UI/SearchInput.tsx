@@ -1,26 +1,18 @@
 import { useState, ChangeEvent, KeyboardEvent } from 'react';
+import { type PropsSearchInput } from '@/types/ui.types';
 
 import TextField from '@mui/material/TextField';
 import ClearBtn from '@/components/UI/ClearBtn';
-
 import SvgSearch from '@/assets/icon/search.svg?react';
 
-
-interface PropsSearchInput {
-    value: string
-    placeholder: string
-    handleInputChange: (newValue: string) => void
-    handleClearInput: () => void
-    handleInputKeyDown: () => void
-}
 
 const SearchInput = (props: PropsSearchInput) => {
     const [ showClear, setShowClear ] = useState<boolean>( false );
 
     const handleClearInput = () => {
-        props.handleClearInput();
         props.handleInputChange( '' );
         setShowClear( false );
+        props.handleClearInput();
     }
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {

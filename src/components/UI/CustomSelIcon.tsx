@@ -1,4 +1,4 @@
-import SvgMapPin from '@/assets/icon/map-pin.svg?react'
+import SvgMapPin from '@/assets/icon/map-pin.svg?react';
 
 
 const CustomSelIcon = () => {
@@ -14,4 +14,4 @@ const CustomSelIcon = () => {
     )
 }
 
-export default CustomSelIcon
+export default CustomSelIcon;

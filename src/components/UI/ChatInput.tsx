@@ -6,16 +6,13 @@ import {
 } from 'react';
 import { appRoutes } from '@/config/routes.config';
 import { useNavigate } from 'react-router-dom';
+import { type PropsChatInput } from '@/types/ui.types';
 
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/joy/IconButton';
 import SvgSend from '@/assets/icon/send.svg';
 
-
-interface PropsChatInput {
-    isMatch: boolean
-}
 
 const ChatInput = (props: PropsChatInput) => {
     const [message, setMessage] = useState('');

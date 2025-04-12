@@ -1,7 +1,5 @@
-interface PropsScrollBar {
-    len:   number
-    index: number
-}
+import { type PropsScrollBar } from "@/types/ui.types"
+
 
 const ScrollBar = (props: PropsScrollBar) => {
     return (
@@ -18,4 +16,4 @@ const ScrollBar = (props: PropsScrollBar) => {
     )
 }
 
-export default ScrollBar
+export default ScrollBar;

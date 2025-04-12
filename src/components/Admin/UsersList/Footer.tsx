@@ -1,9 +1,14 @@
+import { getProfilesListAsync } from '@/store/slices/adminSlice';
+import { useDispatch } from 'react-redux';
+import { RoootDispatch } from '@/store';
+
 import Button from '@mui/material/Button';
 
 
 const UsersListFooter = () => {
-    const handleSearchQuery = () => {
-    }
+    const dispatch = useDispatch<RoootDispatch>();
+
+    const handleSearchQuery = async () => await dispatch( getProfilesListAsync() );
 
     return (
         <>

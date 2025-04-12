@@ -1,11 +1,8 @@
+import { type PropsLikeBtn } from '@/types/ui.types';
+
 import Button from '@mui/material/Button';
 import SvgHeartsBtn from '@/assets/icon/hearts-btn.svg';
 
-
-interface PropsLikeBtn {
-    id: number
-    clickLike: (id: number) => void
-}
 
 const LikeBtn = (props: PropsLikeBtn) => {
     return (
@@ -27,4 +24,4 @@ const LikeBtn = (props: PropsLikeBtn) => {
     )
 }
 
-export default LikeBtn
+export default LikeBtn;

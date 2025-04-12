@@ -3,8 +3,8 @@ import { ELanguage, EApiStatus } from '@/types/settings.type';
 import { dfltErrItem } from '@/constant/settings';
 import { interestsVarsList } from '@/constant/settings';
 import { setInfo } from './profileSlice';
-import { type SettingsState } from '@/types/settings.type';
 import { type IState } from '@/types/store.types';
+import type { SettingsState, InterestsVarsItem } from '@/types/settings.type';
 
 
 const initialState: SettingsState = {
@@ -25,12 +25,12 @@ const initialState: SettingsState = {
 
 export const initInterestsVariantsAsync = createAsyncThunk(
     'settings/init-interest-variants',
-    async (_, { getState, dispatch  }) => {
+    async (_, { getState, dispatch  }): Promise<InterestsVarsItem[]> => {
 
-        const response = interestsVarsList
+        const response = interestsVarsList;
 
         const rootState = getState() as IState;
-        const profileState = rootState.profile
+        const profileState = rootState.profile;
 
         if( !profileState.info.interest ) {
             dispatch(setInfo({
@@ -39,7 +39,7 @@ export const initInterestsVariantsAsync = createAsyncThunk(
             }))
         }
 
-        return response
+        return response;
     }
 )
 
@@ -61,7 +61,10 @@ const settingsSlice = createSlice({
         },
         setSelSexVars: (state, action) => {
             state.selSexVars = action.payload
-        }
+        },
+        setLoad: (state, action) => {
+            state.load = action.payload
+        },
     },
     extraReducers: builder => {
         builder.addCase(initInterestsVariantsAsync.pending, _ => {
@@ -78,5 +81,12 @@ const settingsSlice = createSlice({
     }
 })
 
-export const { setLang, addRoute, dellRoute, resetRoutes, setSelSexVars } = settingsSlice.actions;
+export const {
+    setLang,
+    addRoute,
+    dellRoute,
+    resetRoutes,
+    setSelSexVars,
+    setLoad,
+} = settingsSlice.actions;
 export default settingsSlice.reducer;

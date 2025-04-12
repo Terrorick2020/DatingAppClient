@@ -1,7 +1,5 @@
-interface PropsTimer {
-    isCritical: boolean
-    value: string
-}
+import { type PropsTimer } from "@/types/ui.types"
+
 
 const Timer = (props: PropsTimer) => {
     return (

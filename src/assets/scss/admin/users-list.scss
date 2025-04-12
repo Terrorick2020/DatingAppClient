@@ -90,8 +90,14 @@
         .search-list {
             width: 100%;
             display: flex;
+            justify-content: center;
+            align-items: center;
             flex-direction: column;
             gap: 1rem;
+
+            .progress {
+                margin-top: 15vh;
+            }
 
             &__item {
                 width: 100%;

@@ -30,7 +30,7 @@ export const appRoutes = {
         inner: {
             nav: 'change',
             usersList: 'users-list',
-            userInfo: 'user-info',
+            userInfo: 'user-info/:id',
             physAdd: 'phys-add',
         },
     },

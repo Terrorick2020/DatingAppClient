@@ -1,23 +1,17 @@
-import { ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addRoute } from '@/store/slices/settingsSlice';
+import { type PropsListBlock } from '@/types/ui.types';
 
 import Avatar from '@mui/material/Avatar';
 
-
-interface PropsListBlock {
-    img: string
-    route: string
-    children: ReactNode
-}
 
 const ListBlock = (props: PropsListBlock) => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
 
-    const handleClick = () => {
+    const handleClick = (): void => {
         navigate(props.route);
         dispatch(addRoute(location.pathname));
     }
