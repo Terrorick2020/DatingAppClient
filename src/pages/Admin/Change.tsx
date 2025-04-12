@@ -1,4 +1,4 @@
-import ChangeContent from '@/components/Admin/Change'
+import ChangeContent from '@/components/Admin/Change';
 
 
 const AdminChangePage = () => {
@@ -11,4 +11,4 @@ const AdminChangePage = () => {
     )
 }
 
-export default AdminChangePage
+export default AdminChangePage;

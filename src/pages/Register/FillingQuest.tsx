@@ -1,4 +1,4 @@
-import FillingQuestContent from '@/components/Register/FillingQuest'
+import FillingQuestContent from '@/components/Register/FillingQuest';
 
 
 const RegFillingQuestPage = () => {
@@ -11,4 +11,4 @@ const RegFillingQuestPage = () => {
     )
 }
 
-export default RegFillingQuestPage
+export default RegFillingQuestPage;

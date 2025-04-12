@@ -1,4 +1,4 @@
-import PsychologistsContent from '@/components/Questionnaires/Psychologists'
+import PsychologistsContent from '@/components/Questionnaires/Psychologists';
 
 
 const QuestPsychologistsPage = () => {
@@ -11,4 +11,4 @@ const QuestPsychologistsPage = () => {
     )
 }
 
-export default QuestPsychologistsPage
+export default QuestPsychologistsPage;

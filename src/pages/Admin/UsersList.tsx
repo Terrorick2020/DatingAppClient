@@ -1,4 +1,4 @@
-import UsersListContent from '@/components/Admin/UsersList'
+import UsersListContent from '@/components/Admin/UsersList';
 
 
 const AdminUsersListPage = () => {
@@ -11,4 +11,4 @@ const AdminUsersListPage = () => {
     )
 }
 
-export default AdminUsersListPage
+export default AdminUsersListPage;

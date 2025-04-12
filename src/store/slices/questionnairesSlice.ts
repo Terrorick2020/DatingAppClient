@@ -12,5 +12,5 @@ const questionnairesSlice = createSlice({
     },
 })
 
-export const {} = questionnairesSlice.actions
-export default questionnairesSlice.reducer
+export const {} = questionnairesSlice.actions;
+export default questionnairesSlice.reducer;

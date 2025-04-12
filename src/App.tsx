@@ -25,6 +25,7 @@ import TargetPsych from './pages/Psychologist';
 import AdminChangePage from './pages/Admin/Change';
 import AdminUsersListPage from './pages/Admin/UsersList';
 import AdminUserInfoPage from './pages/Admin/UserInfo';
+import AdminPhysAddPage from './pages/Admin/PhysAdd';
 
 import NotFoundPage from './pages/NotFound';
 import BlockedPage from './pages/Blocked';
@@ -67,6 +68,7 @@ const App = () => {
             <Route path={ adminRoutes.inner.nav } element={ <AdminChangePage /> } />
             <Route path={ adminRoutes.inner.usersList } element={ <AdminUsersListPage /> } />
             <Route path={ adminRoutes.inner.userInfo } element={ <AdminUserInfoPage /> } />
+            <Route path={ adminRoutes.inner.physAdd } element={ <AdminPhysAddPage /> } />
           </Route>
 
           <Route path={ appRoutes.notFound } element={ <NotFoundPage /> } />

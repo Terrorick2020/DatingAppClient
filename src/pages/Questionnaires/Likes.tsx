@@ -1,4 +1,4 @@
-import LikesContent from '@/components/Questionnaires/Likes'
+import LikesContent from '@/components/Questionnaires/Likes';
 
 
 const QuestLikesPage = () => {
@@ -11,4 +11,4 @@ const QuestLikesPage = () => {
     )
 }
 
-export default QuestLikesPage
+export default QuestLikesPage;

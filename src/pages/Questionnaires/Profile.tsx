@@ -1,4 +1,4 @@
-import ProfileContent from '@/components/Questionnaires/Profile'
+import ProfileContent from '@/components/Questionnaires/Profile';
 
 
 const QuestProfilePage = () => {
@@ -11,4 +11,4 @@ const QuestProfilePage = () => {
     )
 }
 
-export default QuestProfilePage
+export default QuestProfilePage;

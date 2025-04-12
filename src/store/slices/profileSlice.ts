@@ -45,6 +45,11 @@ export const initProfileAsync = createAsyncThunk(
     }
 )
 
+export const signUpProfileAsync = createAsyncThunk(
+    'profile/sign-up-profile',
+    () => {}
+)
+
 const profileSlice = createSlice({
     name: 'profile',
     initialState,

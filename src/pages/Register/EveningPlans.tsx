@@ -1,4 +1,4 @@
-import EveningPlansContent from '@/components/Register/EveningPlans'
+import EveningPlansContent from '@/components/Register/EveningPlans';
 
 
 const RegEveningPlansPage = () => {
@@ -11,4 +11,4 @@ const RegEveningPlansPage = () => {
     )
 }
 
-export default RegEveningPlansPage
+export default RegEveningPlansPage;

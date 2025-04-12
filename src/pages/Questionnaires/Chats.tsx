@@ -1,4 +1,4 @@
-import ChatsContent from '@/components/Questionnaires/Chats'
+import ChatsContent from '@/components/Questionnaires/Chats';
 
 
 const QuestChatsPage = () => {
@@ -11,4 +11,4 @@ const QuestChatsPage = () => {
     )
 }
 
-export default QuestChatsPage
+export default QuestChatsPage;

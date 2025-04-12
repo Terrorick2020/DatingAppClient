@@ -1,4 +1,4 @@
-import LangContent from '@/components/Register/Lang'
+import LangContent from '@/components/Register/Lang';
 
 
 const RegLangPage = () => {
@@ -11,4 +11,4 @@ const RegLangPage = () => {
     )
 }
 
-export default RegLangPage
+export default RegLangPage;

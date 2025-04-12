@@ -1,10 +1,13 @@
-import { type PersonType } from '@/types/admin.types';
-import { EProfileRoles } from '@/types/store.types';
+import PngWoman from '@/assets/img/woman.png';
 
 
-export const personTypeList: PersonType[] = [
-    { id: 0, value: EProfileRoles.User, label: 'Пользователи' },
-    { id: 1, value: EProfileRoles.Psych, label: 'Пси-специалисты' }
+
+export const resUsersList = [
+    {id: 0, img: PngWoman, route: ''},
+    {id: 1, img: PngWoman, route: ''},
+    {id: 2, img: PngWoman, route: ''},
+    {id: 3, img: PngWoman, route: ''},
+    {id: 4, img: PngWoman, route: ''},
 ]
 
 export const testIdtList: string[] = [

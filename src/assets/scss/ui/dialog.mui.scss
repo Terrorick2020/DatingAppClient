@@ -1,0 +1,70 @@
+.del-confirm {
+    .MuiDialog-container {
+        .MuiPaper-root {
+            background: #2B2B2B;
+            color: #FFFFFF;
+            border-radius: 1rem;
+
+            .MuiTypography-root {
+                text-align: center;
+            }
+
+            .MuiDialogContent-root {
+                width: 100%;
+
+                .headline {
+                    font-weight: 500;
+                    font-size: clamp(0.8rem, 4.5vw, 1.3rem);
+                }
+
+                .MuiInputBase-root {
+                    margin-top: 2vh;
+                    background: #2B2B2B;
+                    border-radius: 3rem;
+                    border: 1px solid #2B2B2B;
+                    color: #FFFFFF;
+                    caret-color: #BC96FF;
+            
+                    &.Mui-focused fieldset {
+                        border-width: 1px;
+                        border-color: #BC96FF;
+                    }
+                }
+            }
+
+            .MuiDialogActions-root {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2vw;
+
+                @media (max-width: 400px) {
+                    grid-template-columns: 1fr;
+                    grid-template-rows: 1fr 1fr;
+                }
+
+                .MuiButtonBase-root {
+                    width: 100%;
+                    border-radius: 3.75rem;
+                    height: 3rem;
+                    font-weight: 700;
+
+                    &:first-of-type {
+                        border: 1px solid #BC96FF;
+                        color: #FFFFFF;
+                    }
+
+                    &:last-of-type {
+                        background: #FF4365;
+                        color: #121112;
+                        margin-left: 0;
+                    }
+
+                    &:active {
+                        scale: 0.99;
+                    }
+                }
+            }
+        }
+    }
+}

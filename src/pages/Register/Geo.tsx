@@ -1,4 +1,4 @@
-import GeoContent from '@/components/Register/Geo'
+import GeoContent from '@/components/Register/Geo';
 
 
 const RegGeoPage = () => {
@@ -11,4 +11,4 @@ const RegGeoPage = () => {
     )
 }
 
-export default RegGeoPage
+export default RegGeoPage;

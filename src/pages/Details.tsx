@@ -10,4 +10,4 @@ const QuestDetailsPage = () => {
     )
 }
 
-export default QuestDetailsPage
+export default QuestDetailsPage;

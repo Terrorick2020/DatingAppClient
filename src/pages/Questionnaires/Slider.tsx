@@ -1,4 +1,4 @@
-import SliderContent from '@/components/Questionnaires/Slider'
+import SliderContent from '@/components/Questionnaires/Slider';
 
 
 const QuestSliderPage = () => {
@@ -11,4 +11,4 @@ const QuestSliderPage = () => {
     )
 }
 
-export default QuestSliderPage
+export default QuestSliderPage;

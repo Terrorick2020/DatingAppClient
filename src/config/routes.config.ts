@@ -31,6 +31,7 @@ export const appRoutes = {
             nav: 'change',
             usersList: 'users-list',
             userInfo: 'user-info',
+            physAdd: 'phys-add',
         },
     },
 }

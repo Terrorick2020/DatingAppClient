@@ -3,5 +3,12 @@
 
     #search-input {
         margin-left: 1rem;
+
+        &::placeholder {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.9rem;
+        }
     }
 }

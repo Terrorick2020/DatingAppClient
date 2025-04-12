@@ -1,4 +1,4 @@
-import PreviewContent from '@/components/Register/Preview'
+import PreviewContent from '@/components/Register/Preview';
 
 
 const RegPreviewPage = () => {
@@ -11,4 +11,4 @@ const RegPreviewPage = () => {
     )
 }
 
-export default RegPreviewPage
+export default RegPreviewPage;

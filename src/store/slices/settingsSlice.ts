@@ -23,7 +23,7 @@ const initialState: SettingsState = {
     selSexVars: [],
 }
 
-export const initInterestsVariants = createAsyncThunk(
+export const initInterestsVariantsAsync = createAsyncThunk(
     'settings/init-interest-variants',
     async (_, { getState, dispatch  }) => {
 
@@ -64,15 +64,15 @@ const settingsSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(initInterestsVariants.pending, _ => {
+        builder.addCase(initInterestsVariantsAsync.pending, _ => {
             console.log("Получение варианетов интереесов")
         })
-        builder.addCase(initInterestsVariants.fulfilled, ( state, action ) => {
+        builder.addCase(initInterestsVariantsAsync.fulfilled, ( state, action ) => {
             console.log("Варианты интересов успешно полученый")
             
             state.interestsVars = action.payload
         })
-        builder.addCase(initInterestsVariants.rejected, _ => {
+        builder.addCase(initInterestsVariantsAsync.rejected, _ => {
             console.log("Ошибка получния вариантов интереесов")
         })
     }

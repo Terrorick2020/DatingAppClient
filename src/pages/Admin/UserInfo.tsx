@@ -1,4 +1,4 @@
-import UserInfoContent from '@/components/Admin/UserInfo'
+import UserInfoContent from '@/components/Admin/UserInfo';
 
 
 const AdminUserInfoPage = () => {
@@ -11,4 +11,4 @@ const AdminUserInfoPage = () => {
     )
 }
 
-export default AdminUserInfoPage
+export default AdminUserInfoPage;

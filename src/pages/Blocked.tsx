@@ -11,4 +11,4 @@ const BlockedPage = () => {
     )
 }
 
-export default BlockedPage
+export default BlockedPage;
