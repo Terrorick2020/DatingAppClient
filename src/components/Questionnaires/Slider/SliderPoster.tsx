@@ -119,6 +119,14 @@ const SliderPoster = () => {
       changeSlide(index - 1);
       Math.abs(offset) < 5 && setIsSwiped(true);
     },
+    onSwipedUp: () => {
+      if( offset < -50 ) changeSlide(index - 1);
+      if( offset > 50 ) changeSlide(index - 1);
+    },
+    onSwipedDown: () => {
+      if( offset < -50 ) changeSlide(index - 1);
+      if( offset > 50 ) changeSlide(index - 1);
+    },
     onSwiping: (eventData) => {
       setOffset(eventData.deltaX)
     },

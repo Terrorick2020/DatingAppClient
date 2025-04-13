@@ -1,14 +1,23 @@
 import PngWoman from '@/assets/img/woman.png';
+import PngMale from '@/assets/img/male.png';
 import { EProfileStatus, EProfileRoles } from '@/types/store.types';
 import type { ProfilesListItem, TargetProfile, StatusData } from '@/types/admin.types';
 
 
 export const resUsersList: ProfilesListItem[] = [
-    {id: '2342343', avatr: PngWoman, name: 'Татьяна Иванова', status: EProfileStatus.Noob},
-    {id: '8148518', avatr: PngWoman, name: 'Валерия Иванова', status: EProfileStatus.Blocked},
-    {id: '8111518', avatr: PngWoman, name: 'Константин Иванов', status: EProfileStatus.Pro},
-    {id: '8148548', avatr: PngWoman, name: 'Илия Иванова', status: EProfileStatus.Noob},
-    {id: '8167808', avatr: PngWoman, name: 'Привет Иванова', status: EProfileStatus.Blocked},
+    {id: '2342343', role: EProfileRoles.User, avatr: PngWoman, name: 'Татьяна Иванова', status: EProfileStatus.Noob},
+    {id: '8148518', role: EProfileRoles.User, avatr: PngWoman, name: 'Валерия Иванова', status: EProfileStatus.Blocked},
+    {id: '8111518', role: EProfileRoles.User, avatr: PngWoman, name: 'Константин Иванов', status: EProfileStatus.Pro},
+    {id: '8148548', role: EProfileRoles.User, avatr: PngWoman, name: 'Илия Иванова', status: EProfileStatus.Noob},
+    {id: '8167808', role: EProfileRoles.User, avatr: PngWoman, name: 'Привет Иванова', status: EProfileStatus.Blocked},
+]
+
+export const resPsychsList: ProfilesListItem[] = [
+    {id: '2342343', role: EProfileRoles.Psych, avatr: PngMale, name: 'Татьяна Иванова', status: EProfileStatus.Noob},
+    {id: '8148518', role: EProfileRoles.Psych, avatr: PngMale, name: 'Валерия Иванова', status: EProfileStatus.Blocked},
+    {id: '8111518', role: EProfileRoles.Psych, avatr: PngMale, name: 'Константин Иванов', status: EProfileStatus.Pro},
+    {id: '8148548', role: EProfileRoles.Psych, avatr: PngMale, name: 'Илия Иванова', status: EProfileStatus.Noob},
+    {id: '8167808', role: EProfileRoles.Psych, avatr: PngMale, name: 'Привет Иванова', status: EProfileStatus.Blocked},
 ]
 
 export const targetsUsers: Record<string, TargetProfile> = {

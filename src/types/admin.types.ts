@@ -3,6 +3,7 @@ import { EProfileRoles, EProfileStatus } from './store.types';
 
 export interface ProfilesListItem {
     id: string
+    role: EProfileRoles
     avatr: string
     name: string
     status: EProfileStatus
@@ -22,6 +23,8 @@ export interface TargetProfile {
 export interface AdminState {
     searchType: EProfileRoles
     searchId: string
+    password: string
+    link: string
     profilesList: ProfilesListItem[]
     targetProfile: TargetProfile
 }
@@ -30,4 +33,15 @@ export interface StatusData {
     text: string
     status: string
     addClass: string
+}
+
+export enum LinkTooltipText {
+    Copy = 'Copy!',
+    Copied = 'Copied!',
+    Error = 'Error!',
+}
+
+export interface DataSerchProfStat {
+    id: string
+    targetValue: EProfileStatus
 }

@@ -1,11 +1,9 @@
 import { Suspense, lazy } from 'react';
 import { initProfileAsync } from '@/store/slices/profileSlice';
 import { initInterestsVariantsAsync } from './store/slices/settingsSlice';
-import { getProfilesListAsync } from '@/store/slices/adminSlice';
 import { delay } from './funcs/general.funcs';
 
 import store from './store';
-
 import AppPreloader from './components/AppPreloader';
 
 
@@ -14,7 +12,6 @@ async function delayForLazy( promise: Promise<any> ) {
 
     await store.dispatch( initProfileAsync( window.location.href ) );
     await store.dispatch( initInterestsVariantsAsync() );
-    await store.dispatch( getProfilesListAsync() );
 
     const resPromise = await promise;
 

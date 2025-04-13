@@ -1,15 +1,19 @@
 import { useState, MouseEvent } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from "react-router-dom";
 import { appRoutes } from '@/config/routes.config';
+import { serchProfileStatusAsync, setTargetProfileId } from "@/store/slices/adminSlice";
 import { statusTextMap } from "@/constant/admin";
-import { type IState } from '@/types/store.types';
+import { addRoute } from "@/store/slices/settingsSlice";
+import { type RootDispatch } from "@/store";
+import { type IState, EProfileStatus } from '@/types/store.types';
 
 import ListBlock from '@/components/UI/ListBlock';
 import IconButton from '@mui/joy/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import UsersListDialog from './Dialog';
-import CircularProgress from '@mui/material/CircularProgress';
+import MyLoader from '@/components/UI/MyLoader';
 import SvgMoreCircle from '@/assets/icon/more-circle.svg?react';
 
 
@@ -23,7 +27,11 @@ const UsersListMain = () => {
 
     const [openDel, setOpenDel] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
     const open = Boolean(anchorEl);
+    const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>): void => {
         event.stopPropagation();
@@ -37,17 +45,23 @@ const UsersListMain = () => {
         () => setOpenDel(true);
     };
 
-    const hadleBlock = (event: MouseEvent<HTMLLIElement>): void => {
-        console.log("Пользователь заблокирован");
+    const hadleBlock = async (event: MouseEvent<HTMLLIElement>, id: string): Promise<void> => {
+        await dispatch(serchProfileStatusAsync({
+            id,
+            targetValue: EProfileStatus.Blocked,
+        }));
+
         handleClose(event);
     };
 
-    const handleEdit = (event: MouseEvent<HTMLLIElement>): void => {
-        console.log("Редактирование пользователя");
+    const handleEdit = (event: MouseEvent<HTMLLIElement>, id: string): void => {
+        navigate(`${toUserInfo.replace(':id', '')}${id}`);
+        dispatch(addRoute(location.pathname));
         handleClose(event);
     };
 
-    const handleOpenDeletePanel = (event: MouseEvent<HTMLLIElement>): void => {
+    const handleOpenDeletePanel = (event: MouseEvent<HTMLLIElement>, id: string): void => {
+        dispatch(setTargetProfileId(id));
         setOpenDel(true);
         handleClose(event);
     };
@@ -65,7 +79,7 @@ const UsersListMain = () => {
                         {
                             isLoad
                                 ?
-                                <CircularProgress className="progress" />
+                                <MyLoader />
                                 :
                                 (adminState.profilesList.map(item => (
                                     <ListBlock
@@ -95,9 +109,9 @@ const UsersListMain = () => {
                                                 open={open}
                                                 onClose={handleClose}
                                             >
-                                                <MenuItem onClick={hadleBlock}>Деактивировать</MenuItem>
-                                                <MenuItem onClick={handleEdit}>Редактировать</MenuItem>
-                                                <MenuItem onClick={handleOpenDeletePanel}>Удалить</MenuItem>
+                                                <MenuItem onClick={(e) => hadleBlock(e, item.id)} >Деактивировать</MenuItem>
+                                                <MenuItem onClick={(e) => handleEdit(e, item.id)}>Редактировать</MenuItem>
+                                                <MenuItem onClick={(e) => handleOpenDeletePanel(e, item.id)}>Удалить</MenuItem>
                                             </Menu>
                                         </div>
                                     </ListBlock>

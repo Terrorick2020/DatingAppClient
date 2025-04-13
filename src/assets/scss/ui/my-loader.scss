@@ -1,0 +1,45 @@
+:root {
+    --size: 50px;
+    --th: 1.5px;
+}
+
+#root {
+    .my-loader-box {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+
+        &__container {
+            position: relative;
+    
+            @keyframes bounce {
+                from {
+                    transform: rotate(45deg) translate(calc(-1 * var(--size) / 5), calc(-1 * var(--size) / 5)); 
+                }
+                to {
+                    transform: rotate(45deg) translate(calc(var(--size) / 5), calc(var(--size) / 5));
+                }
+            }
+    
+            .square {
+                border: solid #BC96FF var(--th);
+                width: var(--size);
+                height: var(--size);
+                position: absolute;
+                box-shadow: #bc96ff7d 0 0 calc(var(--size) / 10) inset, #bc96ff7d 0 0 calc(var(--size) / 20);
+                animation: bounce 0.5s cubic-bezier(.46,.03,.52,.96) infinite alternate;
+                left: calc(-1 * var(--size) / 2);
+                transform: rotate(45deg) translate(calc(-1 * var(--size) / 5), calc(-1 * var(--size) / 5)); 
+            }
+            .square:nth-of-type(2) {
+                animation-delay: 100ms;
+            }
+            .square:nth-of-type(3) {
+                animation-delay: 200ms;
+            }
+        }
+    }
+}

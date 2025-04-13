@@ -1,0 +1,73 @@
+@use "../components/mixins";
+
+.phys-add {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10vh;
+
+    .description {
+        width: 90%;
+        text-align: center;
+        font-size: 1.5rem;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
+    }
+
+    .conteiner {
+        width: 90%;
+        background: #ffffff37;
+        border-radius: 1.25rem;
+        padding: 0.2rem;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
+
+        .box {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #bc96ff85;
+            border-radius: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-inline: 0.6rem 0.4rem;
+            padding-block: 0.4rem;
+            gap: 1rem;
+
+            .text {
+                opacity: 0.5;
+                width: 90%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .MuiIconButton-root {
+                width: 8%;
+                height: 100%;
+                border-radius: 0.7rem;
+                background: transparent;
+                transform-origin: center;
+
+                .MuiSvgIcon-root {
+                    fill: #BC96FF;
+                }
+
+                &:hover {
+                    background: #bc96ff19;
+                }
+
+                &:active {
+                    scale: 0.99;
+                    background: #bc96ff34;
+
+                    .MuiSvgIcon-root {
+                        fill: #D7FF81;
+                    }
+                }
+            }
+        }
+    }
+}
+

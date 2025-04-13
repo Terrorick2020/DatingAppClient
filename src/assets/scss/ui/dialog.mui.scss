@@ -63,6 +63,10 @@
                     &:active {
                         scale: 0.99;
                     }
+
+                    &:disabled {
+                        opacity: 0.5;
+                    }
                 }
             }
         }

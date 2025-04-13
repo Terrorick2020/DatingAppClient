@@ -21,8 +21,8 @@ const UsersListHeader = () => {
 
     const dispatch = useDispatch<RootDispatch>();
 
-    const handleChangeRole = (_: MouseEvent<HTMLElement>, newValue: EProfileRoles | null): void => {
-        newValue && dispatch(setSearchType( newValue ));
+    const handleChangeRole = async (_: MouseEvent<HTMLElement>, newValue: EProfileRoles | null): Promise<void> => {
+        newValue && dispatch(setSearchType( newValue )) && await dispatch( getProfilesListAsync() );
     }
 
     const handleInputChange = async (newValue: string): Promise<void> => {

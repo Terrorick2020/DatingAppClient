@@ -4,9 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "npx tsc -b && vite build",
-    "preview": "vite preview"
+    "dev": "bun run vite",
+    "build": "bunx tsc -b && bun run vite build",
+    "preview": "bun run vite preview"
   },
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-alpha.6",

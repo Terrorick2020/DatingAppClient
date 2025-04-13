@@ -1,4 +1,8 @@
-import { useState, ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteUserAsync, setTargetProfileId, setPassword } from '@/store/slices/adminSlice';
+import { RootDispatch } from '@/store';
+import { type IState } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -14,10 +18,28 @@ interface PropsUsersListDialog {
 }
 
 const UsersListDialog = (props: PropsUsersListDialog) => {
-    const [pass, setPass] = useState('');
+    const password = useSelector((state: IState) => state.admin.password);
+
+    const [dLoading, setDLoading] = useState<boolean>(false);
+
+    const dispatch = useDispatch<RootDispatch>();
 
     const handleChangePass = (event: ChangeEvent<HTMLInputElement>): void => {
-        setPass(event.target.value)
+        dispatch(setPassword(event.target.value));
+    }
+
+    const handleDeleteUser = async (): Promise<void> => {
+        setDLoading(true);
+        await dispatch(deleteUserAsync());
+        setDLoading(false);
+        dispatch(setPassword(''));
+        props.hadleClose();
+    }
+
+    const handleExit = (): void => {
+        dispatch(setPassword(''));
+        dispatch(setTargetProfileId(''));
+        props.hadleClose();
     }
 
     return (
@@ -26,7 +48,7 @@ const UsersListDialog = (props: PropsUsersListDialog) => {
                 className="del-confirm"
                 open={props.open}
                 keepMounted
-                onClose={props.hadleClose}
+                onClose={handleExit}
                 aria-describedby="alert-dialog-slide-description"
             >
                 <DialogTitle>Вы действительно хотите удалить специалиста?</DialogTitle>
@@ -37,13 +59,20 @@ const UsersListDialog = (props: PropsUsersListDialog) => {
                         id="del-input"
                         fullWidth
                         placeholder="Введите пароль"
-                        value={pass}
+                        value={password}
                         onChange={handleChangePass}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={props.hadleClose}>Отмена</Button>
-                    <Button onClick={props.hadleClose}>Удалить</Button>
+                    <Button onClick={handleExit}>Отмена</Button>
+                    <Button
+                        fullWidth
+                        loadingPosition="start"
+                        loading={dLoading}
+                        onClick={handleDeleteUser}
+                    >
+                        {dLoading ? 'Удаление..' : 'Удалить'}
+                    </Button>
                 </DialogActions>
             </Dialog>
         </>
