@@ -7,7 +7,7 @@ export const dfltErrItem: FQErrorsItem = {
     msg: '',
 }
 
-export const AGE_PATTERN = /\d+$/;
+export const AGE_PATTERN: RegExp = /\d+$/;
 
 export const selSexVarsBase: SelSexVarsBase = {
     [ESex.All]: [

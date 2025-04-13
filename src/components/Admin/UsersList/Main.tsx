@@ -1,7 +1,7 @@
 import { useState, MouseEvent } from "react";
 import { useSelector } from 'react-redux';
 import { appRoutes } from '@/config/routes.config';
-import { EProfileStatus } from '@/types/store.types';
+import { statusTextMap } from "@/constant/admin";
 import { type IState } from '@/types/store.types';
 
 import ListBlock from '@/components/UI/ListBlock';
@@ -76,13 +76,9 @@ const UsersListMain = () => {
                                         <div className="search-list__item">
                                             <div className="text">
                                                 <h3 className="name">Татьяна Иванова</h3>
-                                                {
-                                                    item.status === EProfileStatus.Blocked
-                                                        ?
-                                                        <span className="label off">НЕАКТИВЕН</span>
-                                                        :
-                                                        <span className="label">АКТИВЕН</span>
-                                                }
+                                                <span className={`label ${statusTextMap[item.status].addClass}`}>
+                                                    {statusTextMap[item.status].status}
+                                                </span>
                                             </div>
                                             <IconButton
                                                 aria-controls={open ? 'basic-menu' : undefined}

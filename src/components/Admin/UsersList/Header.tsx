@@ -7,7 +7,7 @@ import { setSearchType, setSearchId } from '@/store/slices/adminSlice';
 import { SERCH_ID_PATTERN } from '@/constant/admin';
 import { EProfileRoles } from '@/types/store.types';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
-import { RoootDispatch } from '@/store';
+import { RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
 
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
@@ -19,7 +19,7 @@ import Button from '@mui/material/Button';
 const UsersListHeader = () => {
     const adminState = useSelector((state: IState) => state.admin);
 
-    const dispatch = useDispatch<RoootDispatch>();
+    const dispatch = useDispatch<RootDispatch>();
 
     const handleChangeRole = (_: MouseEvent<HTMLElement>, newValue: EProfileRoles | null): void => {
         newValue && dispatch(setSearchType( newValue ));

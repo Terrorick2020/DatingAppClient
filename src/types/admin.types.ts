@@ -11,13 +11,12 @@ export interface ProfilesListItem {
 export interface TargetProfile {
     id: string
     role: EProfileRoles
-    photos: Blob[]
-    firstName: string
-    lastName?: string
+    photos: string[]
+    name: string
     age: number | null
-    location: string
+    city: string
     status: EProfileStatus
-    description?: string
+    description: string
 }
 
 export interface AdminState {
@@ -25,4 +24,10 @@ export interface AdminState {
     searchId: string
     profilesList: ProfilesListItem[]
     targetProfile: TargetProfile
+}
+
+export interface StatusData {
+    text: string
+    status: string
+    addClass: string
 }

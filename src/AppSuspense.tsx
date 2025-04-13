@@ -2,15 +2,12 @@ import { Suspense, lazy } from 'react';
 import { initProfileAsync } from '@/store/slices/profileSlice';
 import { initInterestsVariantsAsync } from './store/slices/settingsSlice';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
+import { delay } from './funcs/general.funcs';
 
 import store from './store';
 
 import AppPreloader from './components/AppPreloader';
 
-
-export function delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 async function delayForLazy( promise: Promise<any> ) {
     await delay(2000);

@@ -1,36 +1,54 @@
-import { useEffect } from 'react'
-import Button from '@mui/material/Button'
-import Photos from '@/components/UI/Photos'
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootDispatch } from '@/store';
+import { getProfileByIdAsync } from '@/store/slices/adminSlice';
+import { statusTextMap } from '@/constant/admin';
+import { ageToStr } from '@/funcs/general.funcs';
+import type { IState } from '@/types/store.types';
 
-import SvgMapPin from '@/assets/icon/map-pin.svg?react'
+import Button from '@mui/material/Button';
+import Photos from '@/components/UI/Photos';
+import SvgMapPin from '@/assets/icon/map-pin.svg?react';
 
 
 const UserInfoContent = () => {
+    const targetProfile = useSelector((state: IState) => state.admin.targetProfile);
+
+    const { id } = useParams();
+    const dispatch = useDispatch<RootDispatch>();
+
     useEffect(
         () => {
-            const langHtml = document.getElementById('user-info')
-            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards'
+            const langHtml = document.getElementById('user-info');
+            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+
+            id && dispatch(getProfileByIdAsync(id));
         },
         []
     )
 
+    const { text, status, addClass } = statusTextMap[targetProfile.status];
+
     return (
         <>
             <div className="user-info__ctx">
-                <h3 className="headline">ID8148518</h3>
+                <h3 className="headline">{`ID${targetProfile.id}`}</h3>
                 <Photos />
                 <div className="description">
-                    <h4 className="headline">Виктория, 20 лет</h4>
+                    <h4 className="headline">
+                        {`${targetProfile.name}, ${ageToStr(targetProfile.age)}`}
+                    </h4>
                     <div className="labels">
                         <div className="item">
                             <SvgMapPin />
-                            <p className="text">Санкт-Петербург</p>
+                            <p className="text">{targetProfile.city}</p>
                         </div>
-                        <div className="item">
-                            <p className="text">Про - <span>АКТИВЕН</span></p>
+                        <div className={`item ${addClass}`}>
+                            <p className="text">{text}<span>{status}</span></p>
                         </div>
                     </div>
-                    <p className="info">Привет! Я очень трудолюбивый человек, и у меня есть несколько профессий, которые я с удовольствием совмещаю: я работаю пекарем, баристой и кассиром. Каждая из этих работ приносит мне радость и позволяет развиваться в разных направлениях. В свободное время я увлекаюсь игрой на виолончели 🎻, что приносит мне огромное удовольствие и помогает расслабиться после насыщенного рабочего дня. Кроме того, я обожаю проводить время на свежем воздухе, гуляя по живописным паркам, наслаждаясь красотой природы и общаясь с друзьями. Эти моменты наполняют мою жизнь счастьем и гармонией.</p>
+                    <p className="info">{targetProfile.description}</p>
                 </div>
             </div>
             <div className="user-info__btns">
@@ -48,4 +66,4 @@ const UserInfoContent = () => {
     )
 }
 
-export default UserInfoContent
+export default UserInfoContent;

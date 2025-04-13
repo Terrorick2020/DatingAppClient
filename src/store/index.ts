@@ -23,5 +23,5 @@ const store = configureStore({
     reducer: rootReducer,
 })
 
-export type RoootDispatch = typeof store.dispatch;
+export type RootDispatch = typeof store.dispatch;
 export default store;

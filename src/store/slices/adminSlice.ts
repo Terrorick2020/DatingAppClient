@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { EProfileRoles, EProfileStatus } from '@/types/store.types';
-import { resUsersList } from '@/constant/admin';
+import { resUsersList, targetsUsers } from '@/constant/admin';
 import { setLoad } from './settingsSlice';
-import { delay } from '@/AppSuspense';
+import { delay } from '@/funcs/general.funcs';
 import { type IState } from '@/types/store.types';
-import type { AdminState, ProfilesListItem } from '@/types/admin.types';
+import type { AdminState, ProfilesListItem, TargetProfile } from '@/types/admin.types';
 
 
 // import axios from 'axios';
@@ -18,17 +18,16 @@ const initialState: AdminState = {
         id: '',
         role: EProfileRoles.User,
         photos: [],
-        firstName: '',
-        lastName: '',
+        name: '',
         age: null,
-        location: '',
+        city: '',
         status: EProfileStatus.Noob,
         description: '',
     }
 }
 
 export const getProfilesListAsync = createAsyncThunk(
-    'admin/get-profile-list',
+    'admin/get-profiles-list',
     async (_, { getState, dispatch }): Promise<ProfilesListItem[]> => {
         try {
             dispatch(setLoad(true));
@@ -52,6 +51,15 @@ export const getProfilesListAsync = createAsyncThunk(
     }
 )
 
+export const getProfileByIdAsync = createAsyncThunk(
+    'admin/get-profile-by-id',
+    async (id: string): Promise<TargetProfile> => {
+        const response = targetsUsers[id];
+
+        return response
+    }
+)
+
 const adminSlice = createSlice({
     name: 'admin',
     initialState,
@@ -67,15 +75,28 @@ const adminSlice = createSlice({
         },
     },
     extraReducers: builder => {
+        // Получение списка пользователей
         builder.addCase(getProfilesListAsync.pending, _ => {
             console.log("Получение списка пользователей");
         })
         builder.addCase(getProfilesListAsync.fulfilled, ( state, action ) => {
             console.log("Успешное получение списка пользователей");
             state.profilesList = action.payload;
-        })
+        }),
         builder.addCase(getProfilesListAsync.rejected, _ => {
             console.log("Ошибка получения списка пользователей");
+        })
+
+        // Получение конкретного пользователя
+        builder.addCase(getProfileByIdAsync.pending, _ => {
+            console.log("Получение целевого пользователя");
+        })
+        builder.addCase(getProfileByIdAsync.fulfilled, ( state, action ) => {
+            console.log("Успешное получение целевого пользователя");
+            state.targetProfile = action.payload;
+        }),
+        builder.addCase(getProfileByIdAsync.rejected, _ => {
+            console.log("Ошибка получения целевого пользователя");
         })
     }
 })
