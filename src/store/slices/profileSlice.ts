@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { EProfileRoles, ESex,  EProfileStatus } from '@/types/store.types'
+import { EProfileRoles, ESex,  EProfileStatus } from '@/types/store.types';
+import { setLoad } from './settingsSlice';
+import { delay } from '@/funcs/general.funcs';
 import type { ProfileState, ProfileSelf } from '@/types/profile.types';
 
 import axios from 'axios';
@@ -47,7 +49,34 @@ export const initProfileAsync = createAsyncThunk(
 
 export const signUpProfileAsync = createAsyncThunk(
     'profile/sign-up-profile',
-    () => {}
+    async (_, {dispatch}): Promise<ProfileSelf> => {
+        try {
+            dispatch(setLoad(true));
+
+            await delay(2000);
+
+            const responce = {
+                id: null,
+                role: EProfileRoles.User,
+                status: EProfileStatus.Noob,
+                username: '',
+                name: '',
+                age: null,
+                city: '',
+                sex: ESex.Male,
+                bio: '',
+                interest: '',
+                selSex: ESex.All,
+            };
+
+            return responce;
+
+        } catch (error) {
+            throw error;
+        } finally {
+            dispatch(setLoad(false));
+        }
+    }
 )
 
 const profileSlice = createSlice({
@@ -60,14 +89,28 @@ const profileSlice = createSlice({
         },
     },
     extraReducers: builder => {
-        builder.addCase(initProfileAsync.pending, state => {
-            console.log(state)
+        // Первичная проверка пользователя
+        builder.addCase(initProfileAsync.pending, _ => {
+            console.log("Первичная проверка пользователя");
         })
         builder.addCase(initProfileAsync.fulfilled, ( state, action ) => {
-            console.log( state, action )
+            console.log("Успешная первичная проверка пользователя");
+            console.log( state, action );
         })
-        builder.addCase(initProfileAsync.rejected, state => {
-            console.log(state)
+        builder.addCase(initProfileAsync.rejected, _ => {
+            console.log("Ошибка при первичной проверки пользователя");
+        })
+
+        // Регистрация профиля пользователя
+        builder.addCase(signUpProfileAsync.pending, _ => {
+            console.log("Регистрация профиля пользователя");
+        })
+        builder.addCase(signUpProfileAsync.fulfilled, ( state, action ) => {
+            console.log("Успешная регистрация профиля пользователя");
+            state.info = action.payload;
+        })
+        builder.addCase(signUpProfileAsync.rejected, _ => {
+            console.log("Ошибка регистрации профиля пользователя");
         })
     }
 })

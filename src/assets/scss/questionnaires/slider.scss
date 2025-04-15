@@ -1,3 +1,5 @@
+@use "../components/mixins";
+
 .slider {
     width: 100%;
     max-width: 800px;
@@ -16,14 +18,24 @@
             height: 69vh;
         }
 
-        .poster__ctx {
+        .poster__loader {
             width: 100%;
             max-width: 800px;
             height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .poster__ctx {
+            width: 100%;
+            max-width: 800px;
+            height: 70vh;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
             .carousel-container {
                 width: 100%;

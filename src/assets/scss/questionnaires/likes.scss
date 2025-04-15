@@ -1,3 +1,5 @@
+@use "../components/mixins";
+
 .likes {
     width: 100%;
     height: 72vh;
@@ -18,6 +20,14 @@
             font-weight: 900;
         }
 
+        .loader {
+            width: 100%;
+            height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .cards {
             width: 100%;
             height: 90%;
@@ -27,6 +37,7 @@
             align-content: start;
             gap: 3vh 3vw;
             overflow: auto;
+            @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
             @media (min-width: 540px) {
                 grid-template-columns: repeat(3, 1fr);

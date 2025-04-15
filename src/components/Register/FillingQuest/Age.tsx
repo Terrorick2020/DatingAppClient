@@ -25,11 +25,11 @@ const FillingQuestAge = () => {
             return;
         }
 
-        let isAge = AGE_PATTERN.test( newAgeValue ) && Number( newAgeValue ) <= 100;
+        let isAge = AGE_PATTERN.test( newAgeValue ) && +newAgeValue <= 100;
 
         dispatch(setInfo({
             ...profileInfo,
-            age: isAge ? Number( newAgeValue ) : profileInfo.age,
+            age: isAge ? +newAgeValue : profileInfo.age,
         }))
     }
 

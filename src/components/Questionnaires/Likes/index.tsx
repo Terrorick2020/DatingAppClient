@@ -1,9 +1,19 @@
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { initLikesListAsync } from '@/store/slices/questionnairesSlice';
+import { type RootDispatch } from '@/store';
+import { type IState } from '@/types/store.types';
 
 import LikesCard from './Card';
+import MyLoader from '@/components/UI/MyLoader';
 
 
 const LikesContent = () => {
+    const likesList = useSelector((state: IState) => state.questionnaires.likesList);
+    const isLoad = useSelector((state: IState) => state.settings.load);
+
+    const dispatch = useDispatch<RootDispatch>();
+
     useEffect(
         () => {
             const likesHtml = document.getElementById('likes');
@@ -11,6 +21,8 @@ const LikesContent = () => {
 
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
+
+            dispatch(initLikesListAsync());
         },
         []
     )
@@ -19,19 +31,22 @@ const LikesContent = () => {
         <>
             <div className="likes__ctx">
                 <h4 className="headline">Симпатии</h4>
-                <div className="cards">
-                    <LikesCard />
-                    <LikesCard />
-                    <LikesCard />
-                    <LikesCard />
-                    <LikesCard />
-                    <LikesCard />
-                    <LikesCard />
-                    <LikesCard />
-                </div>
+                {
+                    isLoad
+                        ?
+                        <div className='loader'>
+                            <MyLoader />
+                        </div>
+                        :
+                        <div className="cards">
+                            {likesList.map(item => (
+                                <LikesCard likesItem={item} />
+                            ))}
+                        </div>
+                }
             </div>
         </>
     )
 }
 
-export default LikesContent
+export default LikesContent;

@@ -32,7 +32,12 @@ const FillingQuestSelectionSex = () => {
                     onChange={handleOnChangeSelSex}
                 >
                     {selSexVars.map(item => (
-                        <IconButton className="select__item" disabled={item.isDisabled} value={item.value}>{item.label}</IconButton>
+                        <IconButton
+                            className="select__item"
+                            key={`select__item-${item.id}`}
+                            disabled={item.isDisabled}
+                            value={item.value}
+                        >{item.label}</IconButton>
                     ))}
                 </ToggleButtonGroup>
             </div>

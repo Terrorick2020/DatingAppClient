@@ -1,6 +1,7 @@
 :root {
     --size: 50px;
     --th: 1.5px;
+    --height: 100px;
 }
 
 #root {
@@ -17,7 +18,7 @@
     
             @keyframes bounce {
                 from {
-                    transform: rotate(45deg) translate(calc(-1 * var(--size) / 5), calc(-1 * var(--size) / 5)); 
+                    transform: rotate(45deg) translate(calc(-1 * var(--height) / 5), calc(-1 * var(--height) / 5)); 
                 }
                 to {
                     transform: rotate(45deg) translate(calc(var(--size) / 5), calc(var(--size) / 5));
@@ -32,6 +33,7 @@
                 box-shadow: #bc96ff7d 0 0 calc(var(--size) / 10) inset, #bc96ff7d 0 0 calc(var(--size) / 20);
                 animation: bounce 0.5s cubic-bezier(.46,.03,.52,.96) infinite alternate;
                 left: calc(-1 * var(--size) / 2);
+                top: calc(-1 * var(--size) / 2);
                 transform: rotate(45deg) translate(calc(-1 * var(--size) / 5), calc(-1 * var(--size) / 5)); 
             }
             .square:nth-of-type(2) {

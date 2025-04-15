@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { RootDispatch } from '@/store';
+import { useNavigate } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
 import { addRoute, resetRoutes } from '@/store/slices/settingsSlice';
+import { signUpProfileAsync } from '@/store/slices/profileSlice';
 import { type IState, EProfileRoles } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
@@ -19,6 +21,7 @@ import FillingQuestSelectionSex from './SelectionSex';
 
 const FillingQuestContent = () => {
     const profInfo = useSelector((state: IState) => state.profile.info);
+    const isLoad = useSelector((state: IState) => state.settings.load);
     const [_confirmation, setConfirmation] = useState<boolean>(false);
 
     // const regGlobRoute = appRoutes.register.global;
@@ -30,7 +33,7 @@ const FillingQuestContent = () => {
 
     const adminGlobRoute = appRoutes.admin.global;
     const changeRoute = appRoutes.admin.inner.nav;
-    const toChange = `${adminGlobRoute}/${changeRoute}`
+    const toChange = `${adminGlobRoute}/${changeRoute}`;
 
     useEffect(
         () => {
@@ -49,9 +52,13 @@ const FillingQuestContent = () => {
         []
     )
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
 
-    const handleRoute = (): void => {
+    const handleRoute = async (): Promise<void> => {
+        await dispatch(signUpProfileAsync());
+
+        navigate(toSlider);
         dispatch(resetRoutes());
         profInfo.role === EProfileRoles.Admin && dispatch(addRoute(toChange));
     }
@@ -72,9 +79,16 @@ const FillingQuestContent = () => {
                     <FillingQuestInterests />
                     <FillingQuestSelectionSex />
                 </div>
-                <NavLink className="link" to={toSlider} onClick={handleRoute}>
-                    <Button variant="contained">Продолжить</Button>
-                </NavLink>
+                <div className="link" onClick={handleRoute}>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        loadingPosition="start"
+                        loading={isLoad}
+                    >
+                        {isLoad ? 'Регистрация...' : 'Продолжить'}
+                    </Button>
+                </div>
             </div>
         </>
     )

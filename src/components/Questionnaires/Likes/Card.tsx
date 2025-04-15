@@ -1,12 +1,15 @@
 import { PlanLabelSvgType } from '@/types/ui.types';
+import { ageToStr } from '@/funcs/general.funcs';
+import { type LikesItem } from '@/types/quest.types';
 
 import PlansLabel from '@/components/UI/PlansLabel';
 import Timer from '@/components/UI/Timer';
 
-import PngWoman from '@/assets/img/woman.png';
 
-
-const LikesCard= () => {
+interface PropsLikesCard {
+    likesItem: LikesItem
+}
+const LikesCard= (props: PropsLikesCard) => {
     return (
         <>
             <div className="card">
@@ -14,17 +17,22 @@ const LikesCard= () => {
                     <div
                         className="substance"
                         style={{
-                            backgroundImage: `url(${ PngWoman })`,
+                            backgroundImage: `url(${ props.likesItem.avatar })`,
                         }}
                     >
                         <div className="label-panel">
                             <PlansLabel type={ PlanLabelSvgType.success } />
                         </div>
                         <div className="time-panel">
-                            <Timer value="11:10:41" isCritical={false} />
+                            <Timer
+                                value={props.likesItem.timer.value}
+                                isCritical={props.likesItem.timer.isCritical}
+                            />
                         </div>
                     </div>
-                    <h5 className="name">Виктория, 20</h5>
+                    <h5 className="name">
+                        {`${props.likesItem.name}, ${ageToStr(props.likesItem.age)}`}
+                    </h5>
                 </div>
             </div>
         </>
