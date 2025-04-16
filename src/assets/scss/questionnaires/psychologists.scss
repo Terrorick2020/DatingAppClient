@@ -79,6 +79,10 @@
                     .label {
                         color: #D7FF81;
                         font-weight: 100;
+
+                        &.off {
+                            color: #FF4365;
+                        }
                     }
                 }
 

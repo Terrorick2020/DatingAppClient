@@ -1,6 +1,6 @@
 import { PlanLabelSvgType } from '@/types/ui.types';
 import { ageToStr } from '@/funcs/general.funcs';
-import { type LikesItem } from '@/types/quest.types';
+import { type LikesItem } from '@/types/likes.types';
 
 import PlansLabel from '@/components/UI/PlansLabel';
 import Timer from '@/components/UI/Timer';

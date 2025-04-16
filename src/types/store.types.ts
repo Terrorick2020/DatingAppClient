@@ -1,5 +1,6 @@
 import { AdminState } from './admin.types';
 import { SettingsState } from './settings.type';
+import { PsychState } from './psych.types';
 import { ChatsState } from './chats.types';
 import { LikesState } from './likes.types';
 import { ProfileState } from './profile.types';
@@ -23,11 +24,17 @@ export enum ESex {
     Female = 'Female',
 }
 
+export enum ELineStatus {
+    Online = 'Onlie',
+    Offline = 'Offline',
+}
+
 export interface IState {
     admin:          AdminState
     chats:          ChatsState
     likes:          LikesState
     profile:        ProfileState
     questionnaires: QuestState
+    psych:          PsychState
     settings:       SettingsState
 }

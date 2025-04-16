@@ -2,7 +2,7 @@ import { EProfileRoles, EProfileStatus, ESex } from './store.types';
 
 
 export interface ProfileSelf {
-    id: number | null
+    id: string
     role: EProfileRoles
     status: EProfileStatus
     username: string

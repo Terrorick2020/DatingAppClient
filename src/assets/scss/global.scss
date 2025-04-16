@@ -55,3 +55,12 @@ img, svg {
     overflow: hidden;
     @include mixins.fadeIn(1.2s, ease-in-out, 3s, forwards);
 }
+
+.loader {
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,4 +1,15 @@
+@use "../components/mixins";
+
 .profile {
     width: 100%;
-    height: 100%;
+    height: 72vh;
+
+    &__ctx {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
+    }
 }

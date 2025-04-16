@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const initialState: ProfileState = {
     info: {
-        id: null,
+        id: '',
         role: EProfileRoles.User,
         status: EProfileStatus.Noob,
         username: '',
@@ -56,7 +56,39 @@ export const signUpProfileAsync = createAsyncThunk(
             await delay(2000);
 
             const responce = {
-                id: null,
+                id: '',
+                role: EProfileRoles.User,
+                status: EProfileStatus.Noob,
+                username: '',
+                name: '',
+                age: null,
+                city: '',
+                sex: ESex.Male,
+                bio: '',
+                interest: '',
+                selSex: ESex.All,
+            };
+
+            return responce;
+
+        } catch (error) {
+            throw error;
+        } finally {
+            dispatch(setLoad(false));
+        }
+    }
+)
+
+export const getSelfProfile = createAsyncThunk(
+    'profile/get-self-profile',
+    async (_, {dispatch}): Promise<ProfileSelf> => {
+        try {
+            dispatch(setLoad(true));
+
+            await delay(2000);
+
+            const responce = {
+                id: '',
                 role: EProfileRoles.User,
                 status: EProfileStatus.Noob,
                 username: '',
@@ -111,6 +143,18 @@ const profileSlice = createSlice({
         })
         builder.addCase(signUpProfileAsync.rejected, _ => {
             console.log("Ошибка регистрации профиля пользователя");
+        })
+
+        // Получение текущего профиля пользователя
+        builder.addCase(getSelfProfile.pending, _ => {
+            console.log("Получение текущего профиля пользователя");
+        })
+        builder.addCase(getSelfProfile.fulfilled, ( state, action ) => {
+            console.log("Успешное получение текущего профиля пользователя");
+            state.info = action.payload;
+        })
+        builder.addCase(getSelfProfile.rejected, _ => {
+            console.log("Ошибка получения текущего профиля пользователя");
         })
     }
 })

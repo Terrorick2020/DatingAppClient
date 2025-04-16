@@ -79,7 +79,9 @@ const UsersListMain = () => {
                         {
                             isLoad
                                 ?
-                                <MyLoader />
+                                <div className="loader">
+                                    <MyLoader />
+                                </div>
                                 :
                                 (adminState.profilesList.map(item => (
                                     <ListBlock

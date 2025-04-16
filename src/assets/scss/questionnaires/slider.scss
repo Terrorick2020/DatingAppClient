@@ -18,15 +18,6 @@
             height: 69vh;
         }
 
-        .poster__loader {
-            width: 100%;
-            max-width: 800px;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .poster__ctx {
             width: 100%;
             max-width: 800px;
@@ -66,6 +57,7 @@
                         }
 
                         .slide {
+                            position: relative;
                             width: 100%;
                             max-width: 370px;
                             height: 100%;
@@ -82,6 +74,24 @@
                             grid-template-rows: 1fr 1fr;
                             position: relative;
                             transition: opacity 0.3s ease-in-out;
+
+                            &::before, &::after {
+                                content: "";
+                                position: absolute;
+                                height: 2rem;
+                                width: 100%;
+                                left: 0;
+                            }
+
+                            &::before{
+                                background: linear-gradient(to bottom, #0000008c, transparent);
+                                top: 0;
+                            }
+
+                            &::after {
+                                bottom: 0;
+                                background: linear-gradient(to top, #0000008c, transparent);
+                            }
 
                             &__nav {
                                 position: absolute;

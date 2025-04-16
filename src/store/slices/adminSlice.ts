@@ -104,31 +104,23 @@ export const getProfileByIdAsync = createAsyncThunk(
 export const serchProfileStatusAsync = createAsyncThunk(
     'admin/serch-profile-status',
     async ({ id, targetValue }: DataSerchProfStat, { getState, dispatch }): Promise<EProfileStatus> => {
-        try {
-            dispatch(setLoad(true));
+        const rootState = getState() as IState;
+        const adminState = rootState.admin;
 
-            const rootState = getState() as IState;
-            const adminState = rootState.admin;
+        const newProfilesList = adminState.profilesList.map(
+            item => ({
+                ...item,
+                status: item.id === id ? targetValue : item.status,
+            })
+        )
 
-            const newProfilesList = adminState.profilesList.map(
-                item => ({
-                    ...item,
-                    status: item.id === id ? targetValue : item.status,
-                })
-            )
+        dispatch(setNewProfilesList(newProfilesList));
 
-            dispatch(setNewProfilesList(newProfilesList));
+        await delay(500);
 
-            await delay(500);
+        const response = targetValue;
 
-            const response = targetValue;
-
-            return response;
-        } catch (error) {
-            throw error;
-        } finally {
-            dispatch(setLoad(false));
-        }
+        return response;
     }
 )
 

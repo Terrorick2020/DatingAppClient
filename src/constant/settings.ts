@@ -1,5 +1,5 @@
 import type { FQErrorsItem, InterestsVarsItem, SelSexVarsBase } from '@/types/settings.type';
-import { ESex } from '@/types/store.types';
+import { ESex, ELineStatus } from '@/types/store.types';
 
 
 export const dfltErrItem: FQErrorsItem = {
@@ -25,6 +25,17 @@ export const selSexVarsBase: SelSexVarsBase = {
         {id: 1, value: ESex.Male, label: 'Мужчину', isDisabled: true},
         {id: 2, value: ESex.All, label: 'Всех', isDisabled: true},
     ],
+}
+
+export const lineStatusAttr = {
+    [ELineStatus.Online]: {
+        addClass: '',
+        text: 'Онлайн',
+    },
+    [ELineStatus.Offline]: {
+        addClass: 'off',
+        text: 'Оффлайн',
+    },
 }
 
 export const interestsVarsList: InterestsVarsItem[] = [

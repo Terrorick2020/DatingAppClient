@@ -45,3 +45,13 @@ export interface DataSerchProfStat {
     id: string
     targetValue: EProfileStatus
 }
+
+export interface PropsUserInfoComponent {
+    targetProfile: TargetProfile
+}
+
+export enum UserInfoBtnId {
+    Block = 'Block',
+    ProUnblock = 'ProUnblock',
+    Unpro = 'unpro',
+}

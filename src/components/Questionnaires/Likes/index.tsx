@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { initLikesListAsync } from '@/store/slices/questionnairesSlice';
+import { initLikesListAsync } from '@/store/slices/likesSlice';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
 
@@ -9,7 +9,7 @@ import MyLoader from '@/components/UI/MyLoader';
 
 
 const LikesContent = () => {
-    const likesList = useSelector((state: IState) => state.questionnaires.likesList);
+    const likesList = useSelector((state: IState) => state.likes.likesList);
     const isLoad = useSelector((state: IState) => state.settings.load);
 
     const dispatch = useDispatch<RootDispatch>();
@@ -33,7 +33,7 @@ const LikesContent = () => {
                 {
                     isLoad
                         ?
-                        <div className='loader'>
+                        <div className="loader">
                             <MyLoader />
                         </div>
                         :

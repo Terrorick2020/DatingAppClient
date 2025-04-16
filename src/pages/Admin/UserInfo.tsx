@@ -1,4 +1,4 @@
-import UserInfoContent from '@/components/Admin/UserInfo';
+import UserInfoContent from "@/components/Admin/UserInfo";
 
 
 const AdminUserInfoPage = () => {

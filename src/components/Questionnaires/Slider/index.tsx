@@ -32,7 +32,7 @@ const SliderContent = () => {
                 {
                     isLoad
                         ?
-                        <div className='poster__loader'>
+                        <div className="loader">
                             <MyLoader />
                         </div>
                         :
