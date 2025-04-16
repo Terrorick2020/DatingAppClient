@@ -1,5 +1,10 @@
 import { PlanLabelSvgType } from "@/types/ui.types";
-import type { SliderItem, LikesItem } from "@/types/quest.types";
+import type {
+  SliderItem,
+  LikesItem,
+  ChatsCtxFavoriteItem,
+  ChatsCtxChatsItem
+} from "@/types/quest.types";
 
 import PngLeady from '@/assets/img/leady.png';
 import PngWoman from '@/assets/img/woman.png';
@@ -198,3 +203,25 @@ export const likesList: LikesItem[] = [
       age: 30
     }
   ];
+
+export const chatsFavList: ChatsCtxFavoriteItem[] = [
+  {id: '12234231', timer: '15:41', avatar: PngLeady},
+  {id: '12234231', timer: '15:41', avatar: PngWoman},
+  {id: '12234231', timer: '15:41', avatar: PngLeady},
+  {id: '12234231', timer: '15:41', avatar: PngFemale},
+  {id: '12234231', timer: '15:41', avatar: PngLeady},
+  {id: '12234231', timer: '15:41', avatar: PngFemale},
+  {id: '12234231', timer: '15:41', avatar: PngFemale},
+  {id: '12234231', timer: '15:41', avatar: PngWoman},
+];
+
+export const chatsList: ChatsCtxChatsItem[] = [
+  { id: '12234231', avatar: PngLeady, name: 'Екатерина', age: 20, lastMsg: 'Сообщение от пользователя 1', timer: '11:10:41', unreadMsgsCount: 3 },
+  { id: '12234231', avatar: PngWoman, name: 'Виктория', age: 22, lastMsg: 'Сообщение от пользователя 2', timer: '11:09:41', unreadMsgsCount: 3 },
+  { id: '12234231', avatar: PngFemale, name: 'Зухра', age: 21, lastMsg: 'Сообщение от пользователя 3', timer: '11:08:41', unreadMsgsCount: 2 },
+  { id: '12234231', avatar: PngWoman, name: 'Елизавета', age: 26, lastMsg: 'Сообщение от пользователя 4', timer: '07:41', unreadMsgsCount: 4 },
+  { id: '12234231', avatar: PngFemale, name: 'Екатерина', age: 24, lastMsg: 'Сообщение от пользователя 5', timer: '11:06:41', unreadMsgsCount: 3 },
+  { id: '12234231', avatar: PngLeady, name: 'Елена', age: 23, lastMsg: 'Сообщение от пользователя 6', timer: '11:05:41', unreadMsgsCount: 1 },
+  { id: '12234231', avatar: PngFemale, name: 'Влада', age: 21, lastMsg: 'Сообщение от пользователя 7', timer: '04:41', unreadMsgsCount: 4 },
+  { id: '12234231', avatar: PngWoman, name: 'Айгуль', age: 25, lastMsg: 'Сообщение от пользователя 8', timer: '11:03:41', unreadMsgsCount: 3 },
+];

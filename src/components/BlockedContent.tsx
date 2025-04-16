@@ -1,9 +1,25 @@
+import { NavLink } from 'react-router-dom';
+
+import Button from '@mui/material/Button';
+import SvgBlocked from '@/assets/icon/blocked.svg';
+
+
 const BlockedContent = () => {
     return (
         <>
             <div className="error__ctx">
-                <h1>404</h1>
-                <h4>Ваш аккаунт был заблокирован</h4>
+                <header className="header">
+                    <div className="box">
+                        <img className="image" src={SvgBlocked} alt="blocked" />
+                        <h3 className="headline">Ваш аккаунт заблокирован</h3>
+                        <p className="description">Возможно, вы нарушили правила использования приложения или конституции РФ. Если вы были заблокированы ошибочно, то отправьте запрос в техподдержку</p>
+                    </div>
+                </header>
+                <footer className="footer">
+                    <NavLink className="link" to={ '' }>
+                        <Button variant="contained">Техподдержка</Button>
+                    </NavLink>
+                </footer>
             </div>
         </>
     )

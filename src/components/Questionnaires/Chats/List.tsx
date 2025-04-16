@@ -14,7 +14,7 @@ const chatsList = [
     { id: 4, headline: 'Пользователь 5, 24', msg: 'Сообщение от пользователя 5', timer: '11:06:41', count: 3 },
     { id: 5, headline: 'Пользователь 6, 25', msg: 'Сообщение от пользователя 6', timer: '11:05:41', count: 1 },
     { id: 6, headline: 'Пользователь 7, 26', msg: 'Сообщение от пользователя 7', timer: '04:41', count: 4 },
-    { id: 7, headline: 'Пользователь 8, 27', msg: 'Сообщение от пользователя 8', timer: '11:03:41', count: 3 }
+    { id: 7, headline: 'Пользователь 8, 27', msg: 'Сообщение от пользователя 8', timer: '11:03:41', count: 3 },
 ]
 const ChatsList = () => {
     const globTargetChatRoute = appRoutes.targetChat;

@@ -1,13 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
-import { slidersList, likesList } from '@/constant/quest';
-import type { QuestState, SliderItem, LikesItem } from '@/types/quest.types';
+import { slidersList, likesList, chatsFavList, chatsList } from '@/constant/quest';
+import type { QuestState, SliderItem, LikesItem, ChatsCtx } from '@/types/quest.types';
 
 
 const initialState: QuestState = {
     sliderList: [],
     likesList: [],
+    chatsCtx: {
+        favoriteList: [],
+        chatsList: [],
+    }
 }
 
 export const initSliderListAsync = createAsyncThunk(
@@ -44,6 +48,26 @@ export const initLikesListAsync = createAsyncThunk(
     }
 )
 
+export const initChatsCtxListAsync = createAsyncThunk(
+    'questionnaires/init-chats-ctx-list',
+    async (_, {dispatch}): Promise<ChatsCtx> => {
+        try {
+            dispatch(setLoad(true));
+
+            await delay(2000);
+
+            return {
+                favoriteList: chatsFavList,
+                chatsList: chatsList,
+            };
+        } catch (error) {
+            throw error;
+        } finally {
+            dispatch(setLoad(false));
+        }
+    }
+)
+
 const questionnairesSlice = createSlice({
     name: 'questionnaires',
     initialState,
@@ -72,6 +96,18 @@ const questionnairesSlice = createSlice({
         })
         builder.addCase(initLikesListAsync.rejected, _ => {
             console.log("Ошибка получение списка симпатий");
+        })
+
+        // Получение списков чатов и особых пользоватеоей
+        builder.addCase(initChatsCtxListAsync.pending, _ => {
+            console.log("Получение списков чатов и особых пользоватеоей");
+        })
+        builder.addCase(initChatsCtxListAsync.fulfilled, ( state, action ) => {
+            console.log("Успешное получение списков чатов и особых пользоватеоей");
+            state.chatsCtx = action.payload;
+        })
+        builder.addCase(initChatsCtxListAsync.rejected, _ => {
+            console.log("Ошибка получение списков чатов и особых пользоватеоей");
         })
     }
 })

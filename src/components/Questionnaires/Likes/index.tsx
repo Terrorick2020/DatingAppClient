@@ -30,7 +30,6 @@ const LikesContent = () => {
     return (
         <>
             <div className="likes__ctx">
-                <h4 className="headline">Симпатии</h4>
                 {
                     isLoad
                         ?
@@ -38,11 +37,14 @@ const LikesContent = () => {
                             <MyLoader />
                         </div>
                         :
-                        <div className="cards">
-                            {likesList.map(item => (
-                                <LikesCard likesItem={item} />
-                            ))}
-                        </div>
+                        <>
+                            <h4 className="headline">Симпатии</h4>
+                            <div className="cards">
+                                {likesList.map(item => (
+                                    <LikesCard likesItem={item} />
+                                ))}
+                            </div>
+                        </>
                 }
             </div>
         </>

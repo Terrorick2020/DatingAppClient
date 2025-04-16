@@ -1,12 +1,20 @@
+import SvgNetError from '@/assets/icon/net-error.svg';
+
+
 const ErrorContent = () => {
     return (
         <>
             <div className="error__ctx">
-                <h1 className="headline">403</h1>
-                <h4 className="description">Сервис недоступен, поробуйте зайти чуть позже</h4>
+                <header className="header">
+                    <div className="box">
+                        <img className="image net-error" src={SvgNetError} alt="net-error" />
+                        <h3 className="headline">Ошибка соединения</h3>
+                        <p className="description">Возможно, у вас возникли проблемы с сетью или что-то случилось с сервером. Проверьте ваше интернет-соединение и перезапустите приложение или попробуйте позже.</p>
+                    </div>
+                </header>
             </div>
         </>
     )
 }
 
-export default ErrorContent
+export default ErrorContent;

@@ -18,6 +18,7 @@
         .headline {
             height: 10%;
             font-weight: 900;
+            @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
         }
 
         .loader {
