@@ -10,15 +10,13 @@ import Timer from '@/components/UI/Timer';
 const ChatsList = () => {
     const chatsList = useSelector((state: IState) => state.chats.chatsList);
 
-    const globTargetChatRoute = appRoutes.targetChat;
-
     return (
         <>
             <div className="list">
                 {chatsList.map(item =>(
                     <ListBlock
                         img={item.avatar}
-                        route={globTargetChatRoute.replace(':id', `${item.id}`)}
+                        route={appRoutes.targetChat.replace(':id', `${item.id}`)}
                         key={`chats-list-item-${item.id}`}
                     >
                         <div className="inner">

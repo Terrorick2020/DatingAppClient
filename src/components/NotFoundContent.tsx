@@ -1,14 +1,24 @@
-import { NavLink } from 'react-router-dom';
-import { appRoutes } from '@/config/routes.config';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { dellRoute } from '@/store/slices/settingsSlice';
+import { type RootDispatch } from '@/store';
+import { type IState } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
 import SvgNotFound from '@/assets/icon/not-found.svg';
 
 
 const NotFoundContent = () => {
-    const regGlobRoute = appRoutes.register.global
-    const regPreviewRoute = appRoutes.register.inner.preview
-    const toPreview = `${regGlobRoute}/${regPreviewRoute}`
+    const setRoutes = useSelector((state: IState) => state.settings.routes);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch<RootDispatch>();
+
+    const goBack = (): void => {
+        const backRoute = setRoutes.slice(-1)[0];
+        navigate(backRoute);
+        dispatch(dellRoute());
+    };
 
     return (
         <>
@@ -21,13 +31,13 @@ const NotFoundContent = () => {
                     </div>
                 </header>
                 <footer className="footer">
-                    <NavLink className="link" to={ toPreview }>
+                    <div className="link" onClick={goBack}>
                         <Button variant="contained">Назад к анкетам</Button>
-                    </NavLink>
+                    </div>
                 </footer>
             </div>
         </>
     )
 }
 
-export default NotFoundContent
+export default NotFoundContent;

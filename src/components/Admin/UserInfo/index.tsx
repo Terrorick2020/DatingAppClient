@@ -11,10 +11,11 @@ import UserInfoBtns from './Btns';
 
 
 const UserInfoContent = () => {
+    const { id } = useParams();
+
     const targetProfile = useSelector((state: IState) => state.admin.targetProfile);
     const isLoad = useSelector((state: IState) => state.settings.load);
 
-    const { id } = useParams();
     const dispatch = useDispatch<RootDispatch>();
 
     useEffect(

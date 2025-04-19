@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const initialState: ProfileState = {
     info: {
-        id: '',
+        id: '10234231',
         role: EProfileRoles.User,
         status: EProfileStatus.Noob,
         username: '',

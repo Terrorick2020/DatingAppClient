@@ -1,9 +1,5 @@
-import { ELineStatus } from "./store.types"
+import { ELineStatus } from './store.types';
 
-
-export interface TargerPsych {
-    
-}
 
 export interface PsychListItem {
     id: string
@@ -14,8 +10,25 @@ export interface PsychListItem {
     exp: number
 }
 
+export interface TargerPsychExpListItem {
+    id: string
+    title: string
+    desc: string
+    expGap: string
+}
+export interface TargerPsych {
+    id: string
+    photo: string | null
+    name: string
+    exp: number | null
+    spec: string
+    lineStat: ELineStatus
+    desc: string
+    expList: TargerPsychExpListItem[]
+}
+
 export interface PsychState {
-    serchPsychId: string
+    serchPsychQuery: string
     psychList: PsychListItem[]
-    targetPsych: TargerPsych
+    targetPsych: TargerPsych | null
 }

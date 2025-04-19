@@ -9,12 +9,11 @@ import { type RootDispatch } from "@/store";
 import { type IState, EProfileStatus } from '@/types/store.types';
 
 import ListBlock from '@/components/UI/ListBlock';
-import IconButton from '@mui/joy/IconButton';
-import Menu from '@mui/material/Menu';
+import MenuBtn from '@/components/UI/MenuBtn';
 import MenuItem from '@mui/material/MenuItem';
 import UsersListDialog from './Dialog';
 import MyLoader from '@/components/UI/MyLoader';
-import SvgMoreCircle from '@/assets/icon/more-circle.svg?react';
+import SvgMoreCircle from '@/assets/icon/more-circle.svg';
 
 
 const UsersListMain = () => {
@@ -28,21 +27,13 @@ const UsersListMain = () => {
     const [openDel, setOpenDel] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const open = Boolean(anchorEl);
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleClick = (event: MouseEvent<HTMLButtonElement>): void => {
-        event.stopPropagation();
-        event.preventDefault();
-        setAnchorEl(event.currentTarget);
-    };
-
     const handleClose = (event: MouseEvent<HTMLLIElement>): void => {
         event.stopPropagation();
         setAnchorEl(null);
-        () => setOpenDel(true);
     };
 
     const hadleBlock = async (event: MouseEvent<HTMLLIElement>, id: string): Promise<void> => {
@@ -96,25 +87,18 @@ const UsersListMain = () => {
                                                     {statusTextMap[item.status].status}
                                                 </span>
                                             </div>
-                                            <IconButton
-                                                aria-controls={open ? 'basic-menu' : undefined}
-                                                aria-haspopup="true"
-                                                aria-expanded={open ? 'true' : undefined}
-                                                onClick={handleClick}
-                                            >
-                                                <SvgMoreCircle />
-                                            </IconButton>
-                                            <Menu
-                                                id="serch-usrs-menu"
-                                                className="serch-usrs-menu"
+                                            <MenuBtn
                                                 anchorEl={anchorEl}
-                                                open={open}
-                                                onClose={handleClose}
+                                                setAnchorEl={setAnchorEl}
+                                                handleClose={handleClose}
+                                                btnIcon={SvgMoreCircle}
+                                                btnAddClass="admin-ul-btn"
+                                                menuAddClass="admin-ul-menu"
                                             >
                                                 <MenuItem onClick={(e) => hadleBlock(e, item.id)} >Деактивировать</MenuItem>
                                                 <MenuItem onClick={(e) => handleEdit(e, item.id)}>Редактировать</MenuItem>
                                                 <MenuItem onClick={(e) => handleOpenDeletePanel(e, item.id)}>Удалить</MenuItem>
-                                            </Menu>
+                                            </MenuBtn>
                                         </div>
                                     </ListBlock>
                                 )))

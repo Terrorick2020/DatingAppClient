@@ -45,7 +45,7 @@ const UsersListDialog = (props: PropsUsersListDialog) => {
     return (
         <>
             <Dialog
-                className="del-confirm"
+                className="base-confirm admin-confirm"
                 open={props.open}
                 keepMounted
                 onClose={handleExit}

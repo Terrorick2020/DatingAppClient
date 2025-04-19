@@ -1,9 +1,11 @@
-.del-confirm {
-    .MuiDialog-container {
+.MuiDialog-root {
+    &.base-confirm {
         .MuiPaper-root {
             background: #2B2B2B;
             color: #FFFFFF;
             border-radius: 1rem;
+            border: 1px solid #FFFFFF4D;
+            padding: 20px;
 
             .MuiTypography-root {
                 text-align: center;
@@ -11,24 +13,10 @@
 
             .MuiDialogContent-root {
                 width: 100%;
+                padding: 0;
 
                 .headline {
-                    font-weight: 500;
-                    font-size: clamp(0.8rem, 4.5vw, 1.3rem);
-                }
-
-                .MuiInputBase-root {
-                    margin-top: 2vh;
-                    background: #2B2B2B;
-                    border-radius: 3rem;
-                    border: 1px solid #2B2B2B;
-                    color: #FFFFFF;
-                    caret-color: #BC96FF;
-            
-                    &.Mui-focused fieldset {
-                        border-width: 1px;
-                        border-color: #BC96FF;
-                    }
+                    width: 100%;
                 }
             }
 
@@ -37,6 +25,7 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 2vw;
+                padding-inline: 0;
 
                 @media (max-width: 400px) {
                     grid-template-columns: 1fr;
@@ -48,17 +37,7 @@
                     border-radius: 3.75rem;
                     height: 3rem;
                     font-weight: 700;
-
-                    &:first-of-type {
-                        border: 1px solid #BC96FF;
-                        color: #FFFFFF;
-                    }
-
-                    &:last-of-type {
-                        background: #FF4365;
-                        color: #121112;
-                        margin-left: 0;
-                    }
+                    margin: 0;
 
                     &:active {
                         scale: 0.99;
@@ -67,6 +46,83 @@
                     &:disabled {
                         opacity: 0.5;
                     }
+                }
+            }
+        }
+    }
+
+    &.admin-confirm {
+        .MuiDialogContent-root {
+            .headline {
+                font-weight: 500;
+                text-align: start;
+                font-size: clamp(0.8rem, 4.5vw, 1.3rem);
+            }
+
+            .MuiInputBase-root {
+                margin-top: 2vh;
+                background: #2B2B2B;
+                border-radius: 3rem;
+                border: 1px solid #2B2B2B;
+                color: #FFFFFF;
+                caret-color: #BC96FF;
+        
+                &.Mui-focused fieldset {
+                    border-width: 1px;
+                    border-color: #BC96FF;
+                }
+            }
+        }
+
+        .MuiDialogActions-root {
+            .MuiButtonBase-root {
+                &:first-of-type {
+                    border: 1px solid #BC96FF;
+                    color: #FFFFFF;
+                }
+
+                &:last-of-type {
+                    background: #FF4365;
+                    color: #121112;
+                }
+            }
+        }
+    }
+
+    &.chat-confirm {
+        .MuiDialogContent-root {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2vh;
+
+            .headline {
+                font-weight: 900;
+                text-align: center;
+                font-size: clamp(1.5rem, 5.5vw, 1.9rem);
+            }
+
+            .text {
+                width: 100%;
+                font-weight: 400;
+                text-align: center;
+                font-size: clamp(0.9rem, 3.8vw, 1.2rem);
+            }
+        }
+
+        .MuiDialogActions-root {
+            margin-top: 1rem;
+
+            .MuiButtonBase-root {
+                &:first-of-type {
+                    border: 1px solid #D7FF81;
+                    color: #D7FF81;
+                }
+
+                &:last-of-type {
+                    background: #FF4365;
+                    color: #FFFFFF;
                 }
             }
         }

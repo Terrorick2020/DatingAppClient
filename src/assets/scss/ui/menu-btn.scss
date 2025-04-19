@@ -1,0 +1,53 @@
+#root {
+    // .MuiIconButton-root {
+    //     background: transparent;
+
+    //     scale: 1.2;
+
+    //     &:hover {
+    //         background: transparent;
+    //     }
+    // }
+
+    .menu-btn {
+
+    }
+}
+
+
+.serch-menu {
+    .MuiPaper-root {
+        margin-top: 1vh;
+        background: #2B2B2B;
+        color: #FFFFFF;
+        border-radius: 1rem;
+
+        .MuiMenuItem-root:last-of-type {
+            color: #FF4365;
+        }
+    }
+
+    &.chat-menu {
+        .MuiPaper-root {
+            .MuiMenuItem-root {
+                display: flex;
+                flex-direction: row;
+                justify-content: left;
+                align-items: center;
+                gap: 0.8rem;
+
+                .text {
+                    font-weight: 400;
+                }
+
+                &:last-of-type {
+                    margin-left: 0.1rem;
+
+                    .text {
+                        margin-left: 0.2rem;
+                    }
+                }
+            }
+        }
+    }
+}

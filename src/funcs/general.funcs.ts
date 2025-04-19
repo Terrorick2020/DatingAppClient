@@ -19,5 +19,14 @@ export function ageToStr(age: number | null): string {
 			txt = 'лет';
 		}
 	}
-	return age+" "+txt;
+	return `${age} ${txt}`;
+}
+
+export function formatDateToUser(dateStr: string): string {
+	const date = new Date(dateStr);
+
+	return date.toLocaleDateString('ru-RU', {
+		day: 'numeric',
+		month: 'long',
+	});
 }

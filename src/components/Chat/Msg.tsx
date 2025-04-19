@@ -17,7 +17,7 @@ const ChatMsg = (props: PropsChatMsg) => {
                 </div>
                 <div className="msg__label">
                     <p className="time">{ props.time }</p>
-                    <SvgCheckDoubleFill class={props.isChecked && 'checked'} />
+                    <SvgCheckDoubleFill className={props.isChecked ? 'checked' : undefined} />
                 </div>
             </div>
         </>

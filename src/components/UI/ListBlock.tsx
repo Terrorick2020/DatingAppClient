@@ -14,7 +14,7 @@ const ListBlock = (props: PropsListBlock) => {
     const handleClick = (): void => {
         navigate(props.route);
         dispatch(addRoute(location.pathname));
-    }
+    };
 
     return (
         <>

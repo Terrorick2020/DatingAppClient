@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { initPsychList } from '@/store/slices/psychologists';
+import { initPsychList, setSerchPsychQuery } from '@/store/slices/psychSlice';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
 
@@ -22,6 +22,7 @@ const PsychologistsContent = () => {
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
 
+            dispatch(setSerchPsychQuery(''));
             dispatch(initPsychList());
         },
         []

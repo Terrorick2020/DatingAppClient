@@ -5,7 +5,7 @@ import chatsReducer from './slices/chatsSlice';
 import likesReducer from './slices/likesSlice';
 import profileReducer from './slices/profileSlice';
 import questionnairesReducer from './slices/questionnairesSlice';
-import psychReducer from './slices/psychologists';
+import psychReducer from './slices/psychSlice';
 import settingsReducer from './slices/settingsSlice';
 
 import { type IState } from '@/types/store.types';

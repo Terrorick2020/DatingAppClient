@@ -9,9 +9,9 @@ import SvgBlock from '@/assets/icon/block.svg';
 
 
 const QuestNavHead = () => {
-    const regGlobRoute = appRoutes.register.global
-    const regEveningPlansRoute = appRoutes.register.inner.eveningPlans
-    const toEveningPlans = `${regGlobRoute}/${regEveningPlansRoute}`
+    const regGlobRoute = appRoutes.register.global;
+    const regEveningPlansRoute = appRoutes.register.inner.eveningPlans;
+    const toEveningPlans = `${regGlobRoute}/${regEveningPlansRoute}`;
 
     return (
         <>
@@ -46,4 +46,4 @@ const QuestNavHead = () => {
     )
 }
 
-export default QuestNavHead
+export default QuestNavHead;

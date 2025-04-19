@@ -40,4 +40,4 @@ const AppSuspense = () => {
     )
 }
 
-export default AppSuspense
+export default AppSuspense;

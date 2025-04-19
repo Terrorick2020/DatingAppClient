@@ -1,4 +1,5 @@
-import type { ChatsFavListItem, ChatsListItem } from "@/types/chats.types";
+import { ELineStatus } from '@/types/store.types';
+import type { ChatsFavListItem, ChatsListItem, TargetChat } from '@/types/chats.types';
 
 import PngLeady from '@/assets/img/leady.png';
 import PngWoman from '@/assets/img/woman.png';
@@ -26,3 +27,84 @@ export const chatsList: ChatsListItem[] = [
   { id: '16234231', avatar: PngFemale, name: 'Влада', age: 21, lastMsg: 'Сообщение от пользователя 7', timer: '04:41', unreadMsgsCount: 4 },
   { id: '17234231', avatar: PngWoman, name: 'Айгуль', age: 25, lastMsg: 'Сообщение от пользователя 8', timer: '11:03:41', unreadMsgsCount: 3 },
 ];
+
+export const targetChat: TargetChat = {
+    id: '11231',
+    interlocutor: {
+        id: '11234231',
+        avatar: PngFemale,
+        name: 'Екатерина',
+        age: 21,
+        lineStat: ELineStatus.Offline,
+    },
+    chatDialog: [
+        {
+            id: 0,
+            day: '2024-07-12',
+            dayListMsg: [
+                {
+                    id: 0,
+                    from: '10234231',
+                    to: '11234231',
+                    msg: 'Привет, как твои дела? Что у тебя нового. Чем сегодня занимался',
+                    time: '14:15',
+                    isChecked: true
+                },
+                {
+                    id: 1,
+                    from: '10234231',
+                    to: '11234231',
+                    msg: 'Привет! Все отлично, работаю над проектом. А ты как?',
+                    time: '14:20',
+                    isChecked: true
+                },
+                {
+                    id: 2,
+                    from: '11234231',
+                    to: '10234231',
+                    msg: 'Здорово! Я тоже занят, но решил сделать перерыв.',
+                    time: '14:25',
+                    isChecked: true
+                }
+            ]
+        },
+        {
+            id: 1,
+            day: '2024-07-13',
+            dayListMsg: [
+                {
+                    id: 0,
+                    from: '11234231',
+                    to: '10234231',
+                    msg: 'Доброе утро! Какие планы на сегодня?',
+                    time: '09:00',
+                    isChecked: true
+                },
+                {
+                    id: 1,
+                    from: '10234231',
+                    to: '11234231',
+                    msg: 'Привет! Думаю заняться спортом и немного почитать.',
+                    time: '09:05',
+                    isChecked: true
+                },
+                {
+                    id: 2,
+                    from: '11234231',
+                    to: '10234231',
+                    msg: 'Отлично! Тогда вечером расскажешь, как прошло.',
+                    time: '09:10',
+                    isChecked: false
+                },
+                {
+                    id: 3,
+                    from: '11234231',
+                    to: '10234231',
+                    msg: 'Если хочешь, можешь пойти со мной.',
+                    time: '09:10',
+                    isChecked: false
+                },
+            ]
+        }
+    ]
+};

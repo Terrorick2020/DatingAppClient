@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { setSearchType, setSearchId } from '@/store/slices/adminSlice';
-import { SERCH_ID_PATTERN } from '@/constant/admin';
 import { EProfileRoles } from '@/types/store.types';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
 import { RootDispatch } from '@/store';
@@ -26,15 +25,9 @@ const UsersListHeader = () => {
     }
 
     const handleInputChange = async (newValue: string): Promise<void> => {
-        if( !newValue ) {
-            dispatch( setSearchId( newValue ) );
-            await dispatch( getProfilesListAsync() );
-            return;
-        };
+        dispatch( setSearchId( newValue ) );
 
-        let isId = SERCH_ID_PATTERN.test( newValue );
-
-        dispatch( setSearchId( isId ? newValue : adminState.searchId ) );
+        !newValue && await dispatch( getProfilesListAsync() );
     }
 
     const handleSerch = async () => await dispatch( getProfilesListAsync() );
@@ -67,6 +60,7 @@ const UsersListHeader = () => {
                 <SearchInput
                     value={adminState.searchId}
                     placeholder="Поиск пользователя по ID..."
+                    inpType='number'
                     handleInputChange={handleInputChange}
                     handleClearInput={handleSerch}
                     handleInputKeyDown={handleSerch}

@@ -3,6 +3,7 @@ import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { closingBehavior, backButton } from '@telegram-apps/sdk';
+import { type RootDispatch } from '@/store';
 
 import type { IState } from '@/types/store.types';
 
@@ -18,7 +19,7 @@ const DesktopHeadNav = () => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
 
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<RootDispatch>();
 
     const userAgent = navigator.userAgent.toLowerCase()
 
@@ -92,4 +93,4 @@ const DesktopHeadNav = () => {
     )
 }
 
-export default DesktopHeadNav
+export default DesktopHeadNav;

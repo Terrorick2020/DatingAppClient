@@ -79,4 +79,4 @@ const QuestNavBar = () => {
     )
 }
 
-export default QuestNavBar
+export default QuestNavBar;

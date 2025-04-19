@@ -9,19 +9,23 @@ import SvgSearch from '@/assets/icon/search.svg?react';
 const SearchInput = (props: PropsSearchInput) => {
     const [ showClear, setShowClear ] = useState<boolean>( false );
 
-    const handleClearInput = () => {
+    const handleClearInput = (): void => {
         props.handleInputChange( '' );
         setShowClear( false );
         props.handleClearInput();
     }
 
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         props.handleInputChange( event.target.value );
         setShowClear( !!event.target.value );
     }
 
-    const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
+    const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
+        const forbiddenKeys = ['e', 'E', '-', '+'];
+        
+        forbiddenKeys.includes(event.key) && props.inpType === 'number' && event.preventDefault();
+
+        if (event.key === 'Enter' && props.value) {
             props.handleInputKeyDown();
         }
     }
@@ -32,6 +36,7 @@ const SearchInput = (props: PropsSearchInput) => {
                 className="search-input"
                 id="search-input"
                 fullWidth
+                type={props.inpType}
                 slotProps={{
                     input: {
                         startAdornment: (

@@ -1,5 +1,6 @@
 #root {
     --nav-bar-bg: #2B2B2B;
+    --nav-before-h: 44px;
     --nav-default-color: #BC96FF;
     --nav-selected-color: #FFFFFF;
     --nav-svg-default-color: #BC96FF;
@@ -13,6 +14,17 @@
             height: 100%;
             z-index: 5;
             position: relative;
+
+            &::before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: var(--nav-before-h);
+                top: calc(-1 * var(--nav-before-h) / 4);
+                background: linear-gradient(to top, #000000, #000000, #000000, transparent);
+                border-radius: 1.5rem 1.5rem 0 0;
+                z-index: -1;
+            }
             
             .MuiBottomNavigation-root {
                 background: var(--nav-bar-bg);

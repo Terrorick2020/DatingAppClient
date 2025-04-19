@@ -38,6 +38,7 @@ export interface PropsScrollBar {
 export interface PropsSearchInput {
     value: string
     placeholder: string
+    inpType: string
     handleInputChange: (newValue: string) => void
     handleClearInput: () => void
     handleInputKeyDown: () => void
