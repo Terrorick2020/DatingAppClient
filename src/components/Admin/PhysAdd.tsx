@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { LinkTooltipText } from '@/types/admin.types';
+import { LinkTooltipText } from '@/types/store.types';
 import { getUniqueLinkAsync } from '@/store/slices/adminSlice';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
@@ -30,7 +30,10 @@ const PhysAddContent = () => {
         } catch (error) {
             setMsg(LinkTooltipText.Error);
         } finally {
-            setTimeout( () => { setMsg(LinkTooltipText.Copy) }, 1000 );
+            setTimeout( () => {
+                setOpen(false);
+                setMsg(LinkTooltipText.Copy);
+            }, 1000 );
         }
     }
 

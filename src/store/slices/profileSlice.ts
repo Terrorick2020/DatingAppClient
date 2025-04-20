@@ -20,7 +20,8 @@ const initialState: ProfileState = {
         bio: '',
         interest: '',
         selSex: ESex.All,
-    }
+    },
+    addLink: 'Hello world!',
 }
 
 export const initProfileAsync = createAsyncThunk(

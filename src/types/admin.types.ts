@@ -35,12 +35,6 @@ export interface StatusData {
     addClass: string
 }
 
-export enum LinkTooltipText {
-    Copy = 'Copy!',
-    Copied = 'Copied!',
-    Error = 'Error!',
-}
-
 export interface DataSerchProfStat {
     id: string
     targetValue: EProfileStatus

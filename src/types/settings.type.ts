@@ -8,8 +8,10 @@ export enum ELanguage {
 }
 
 export enum EApiStatus {
-    success = 'success',
-    error = 'error'
+    Success = 'success',
+    Info = 'info',
+    Warning = 'warning',
+    Error = 'error',
 }
 
 export interface FQErrorsItem {
@@ -42,12 +44,32 @@ export interface SelSexVarsBase {
     [key: string]: SelSexVarsItem[]
 }
 
+export interface ComplaintsVarsItem {
+    id: number
+    value: string
+    label: string
+}
+
+export enum EComplaintType {
+    Load = 'Load',
+    List = 'List',
+    TxtArea = 'TxtArea',
+}
+
+export interface Complaint {
+    open: boolean
+    type: EComplaintType
+    query: string
+    complaintsVars: ComplaintsVarsItem[]
+}
+
 export interface SettingsState {
     routes: string[]
     lang:  ELanguage
     load: boolean
-    apiStatus: EApiStatus
+    apiRes: EApiStatus
     fQErrors: FQErrors
     interestsVars: InterestsVarsItem[]
     selSexVars: SelSexVarsItem[]
+    complaint: Complaint
 }

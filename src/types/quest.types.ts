@@ -1,5 +1,3 @@
-import { PlanLabelSvgType } from "./ui.types";
-
 export interface PlansObj {
     date: string
     content: string

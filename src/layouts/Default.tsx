@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import HeadNav from '@/components/Layouts/HeadNav';
 import LogoHeader from '@/components/Layouts/LogoHeader';
 
 
-const DefaultLayout = () => {
+const DefaultLayout = memo(() => {
     return (
         <>
             <div className="default-layout">
@@ -16,6 +17,6 @@ const DefaultLayout = () => {
             </div>
         </>
     )
-}
+})
 
-export default DefaultLayout
+export default DefaultLayout;
