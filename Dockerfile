@@ -1,15 +1,15 @@
-FROM node:20-alpine
+FROM oven/bun:1.0.25-alpine
 
 WORKDIR /client
 
 COPY package.json ./
 
-RUN npm i --legacy-peer-deps
+RUN bun install --no-progress
 
 COPY . .
 
-RUN npm run build
+RUN bun run build
 
 EXPOSE 4173
 
-CMD [ "npm", "run", "preview" ]
+CMD ["bun", "run", "preview"]

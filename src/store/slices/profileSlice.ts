@@ -57,7 +57,7 @@ export const signUpProfileAsync = createAsyncThunk(
             await delay(2000);
 
             const responce = {
-                id: '',
+                id: '10234231',
                 role: EProfileRoles.User,
                 status: EProfileStatus.Noob,
                 username: '',

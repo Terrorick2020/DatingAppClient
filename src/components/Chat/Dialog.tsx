@@ -34,10 +34,10 @@ const ChatDialog = (props: PropsChatDialog) => {
 
     const handleDeleteUser = async (): Promise<void> => {
         setDLoading(true);
-        const response = await dispatch(delteChatByIDAsync(props.id));
+        await dispatch(delteChatByIDAsync(props.id));
         setDLoading(false);
         props.hadleClose();
-        response && goBack();
+        goBack();
     };
 
     return (
