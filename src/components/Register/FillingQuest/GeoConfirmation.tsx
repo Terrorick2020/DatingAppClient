@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { sendSelfGeoAsync } from '@/store/slices/profileSlice';
+import { requestGeolocation } from '@/funcs/geo.funcs';
+import { type RootDispatch } from '@/store';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -9,16 +13,30 @@ interface GeoConfirmationProps {
     setConfirmation: (value: boolean) => void;
 }
 
-const GeoConfirmation = ({setConfirmation}: GeoConfirmationProps) => {
-    const [open, setOpen] = useState(true);
+const GeoConfirmation = (props: GeoConfirmationProps) => {
+    const [open, setOpen] = useState<boolean>(true);
+    const [isLoad, setIsLoad] = useState<boolean>(true);
 
-    const handleBad = () => {
+    const dispatch = useDispatch<RootDispatch>();
+
+    const handleBad = (): void => {
         setOpen(false);
-        setConfirmation(false);
+        props.setConfirmation(false);
     }
-    const handleSuccess = () => {
-        setOpen(false);
-        setConfirmation(true);
+    const handleSuccess = async (): Promise<void> => {
+        setIsLoad(true);
+
+        const geo = await requestGeolocation();
+
+        if(!geo) {
+            setIsLoad(false);
+            return;
+        }
+        
+        await dispatch(sendSelfGeoAsync(geo));
+        
+        setIsLoad(false);
+        props.setConfirmation(true);
     }
 
     return (
@@ -40,11 +58,14 @@ const GeoConfirmation = ({setConfirmation}: GeoConfirmationProps) => {
                             Отклонить
                         </Button>
                         <Button
+                            fullWidth
                             className="btn success"
                             variant="contained"
+                            loadingPosition="start"
+                            loading={isLoad}
                             onClick={handleSuccess}
                         >
-                            Разрешить
+                            {isLoad ? 'Разрешить' : 'Загрузка...'}
                         </Button>
                     </div>
                 </Box>
@@ -53,4 +74,4 @@ const GeoConfirmation = ({setConfirmation}: GeoConfirmationProps) => {
     )
 }
 
-export default GeoConfirmation
+export default GeoConfirmation;

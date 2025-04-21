@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { EProfileRoles, ESex,  EProfileStatus } from '@/types/store.types';
+import { EProfileRoles, ESex,  EProfileStatus, ELineStatus } from '@/types/store.types';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
-import type { ProfileState, ProfileSelf } from '@/types/profile.types';
+import type { ProfileState, ProfileSelf, SendGeoData } from '@/types/profile.types';
 
 import axios from 'axios';
 
@@ -10,6 +10,8 @@ import axios from 'axios';
 const initialState: ProfileState = {
     info: {
         id: '10234231',
+        enableGeo: false,
+        lineStat: ELineStatus.Online,
         role: EProfileRoles.User,
         status: EProfileStatus.Noob,
         username: '',
@@ -48,6 +50,17 @@ export const initProfileAsync = createAsyncThunk(
     }
 )
 
+export const sendSelfGeoAsync = createAsyncThunk(
+    'profile/send-self-geo',
+    async (data: SendGeoData): Promise<void> => {
+        try {
+            await axios.post('/geo/ser-get', data);
+        } catch (error) {
+            throw error;
+        } finally {}
+    }
+)
+
 export const signUpProfileAsync = createAsyncThunk(
     'profile/sign-up-profile',
     async (_, {dispatch}): Promise<ProfileSelf> => {
@@ -58,6 +71,8 @@ export const signUpProfileAsync = createAsyncThunk(
 
             const responce = {
                 id: '10234231',
+                enableGeo: false,
+                lineStat: ELineStatus.Online,
                 role: EProfileRoles.User,
                 status: EProfileStatus.Noob,
                 username: '',
@@ -89,7 +104,9 @@ export const getSelfProfile = createAsyncThunk(
             await delay(2000);
 
             const responce = {
-                id: '',
+                id: '10234231',
+                enableGeo: false,
+                lineStat: ELineStatus.Online,
                 role: EProfileRoles.User,
                 status: EProfileStatus.Noob,
                 username: '',
@@ -132,6 +149,17 @@ const profileSlice = createSlice({
         })
         builder.addCase(initProfileAsync.rejected, _ => {
             console.log("Ошибка при первичной проверки пользователя");
+        })
+
+        // Отправка личного geo
+        builder.addCase(sendSelfGeoAsync.pending, _ => {
+            console.log("Отправка личного geo");
+        })
+        builder.addCase(sendSelfGeoAsync.fulfilled, _ => {
+            console.log("Успешная отправка личного geo");
+        })
+        builder.addCase(sendSelfGeoAsync.rejected, _ => {
+            console.log("Ошибка при отправке личного geo");
         })
 
         // Регистрация профиля пользователя

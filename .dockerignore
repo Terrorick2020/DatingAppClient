@@ -7,5 +7,6 @@ ssl/
 .env.example
 .gitignore
 
+bun.lock
 Dockerfile
 README.md
