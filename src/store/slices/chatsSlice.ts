@@ -56,18 +56,9 @@ export const getChatByIdAsync = createAsyncThunk(
 
 export const delteChatByIDAsync = createAsyncThunk(
     'chats/delete-chat-by-id',
-    async (id: string, {dispatch}): Promise<boolean> => {
-        try {
-            dispatch(setLoad(true));
-
-            await delay(2000);
-
-            return !!id;
-        } catch (error) {
-            throw error;
-        } finally {
-            dispatch(setLoad(false));
-        }
+    async (id: string): Promise<boolean> => {
+        await delay(2000);
+        return !!id;
     }
 )
 

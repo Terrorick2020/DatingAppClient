@@ -20,7 +20,8 @@ const initialState: ProfileState = {
         bio: '',
         interest: '',
         selSex: ESex.All,
-    }
+    },
+    addLink: 'Hello world!',
 }
 
 export const initProfileAsync = createAsyncThunk(
@@ -56,7 +57,7 @@ export const signUpProfileAsync = createAsyncThunk(
             await delay(2000);
 
             const responce = {
-                id: '',
+                id: '10234231',
                 role: EProfileRoles.User,
                 status: EProfileStatus.Noob,
                 username: '',

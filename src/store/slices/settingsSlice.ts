@@ -1,17 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ELanguage, EApiStatus } from '@/types/settings.type';
+import { ELanguage, EComplaintType } from '@/types/settings.type';
 import { dfltErrItem } from '@/constant/settings';
-import { interestsVarsList } from '@/constant/settings';
+import { interestsVarsList, complaintsVarsList, targetComplaintsVarsList } from '@/constant/settings';
 import { setInfo } from './profileSlice';
+import { delay } from '@/funcs/general.funcs';
+import { EApiStatus } from '@/types/settings.type';
 import { type IState } from '@/types/store.types';
-import type { SettingsState, InterestsVarsItem } from '@/types/settings.type';
+import type { SettingsState, InterestsVarsItem, ComplaintsVarsItem } from '@/types/settings.type';
 
 
 const initialState: SettingsState = {
     routes: [],
     lang: ELanguage.Russian,
     load: false,
-    apiStatus: EApiStatus.success,
+    apiRes: EApiStatus.Info,
     fQErrors: {
         photErr: dfltErrItem,
         nameErr: dfltErrItem,
@@ -21,6 +23,12 @@ const initialState: SettingsState = {
     },
     interestsVars: [],
     selSexVars: [],
+    complaint: {
+        open: false,
+        type: EComplaintType.TxtArea,
+        query: '',
+        complaintsVars: [],
+    },
 }
 
 export const initInterestsVariantsAsync = createAsyncThunk(
@@ -43,6 +51,28 @@ export const initInterestsVariantsAsync = createAsyncThunk(
     }
 )
 
+export const initComplaintsVarsAsync = createAsyncThunk(
+    'settings/init-complaints-variants',
+    async (value: string | null, { dispatch }): Promise<ComplaintsVarsItem[]> => {
+        try {
+            dispatch(setComplCtx(EComplaintType.Load));
+    
+            await delay(2000);
+    
+            if (!value) {
+                return complaintsVarsList;
+            };
+    
+    
+            return targetComplaintsVarsList;
+        } catch (error) {
+            throw error;
+        } finally {
+            dispatch(setComplCtx(EComplaintType.List));
+        }
+    }
+)
+
 const settingsSlice = createSlice({
     name: 'settings',
     initialState,
@@ -60,23 +90,45 @@ const settingsSlice = createSlice({
             state.routes = [];
         },
         setSelSexVars: (state, action) => {
-            state.selSexVars = action.payload
+            state.selSexVars = action.payload;
         },
         setLoad: (state, action) => {
-            state.load = action.payload
+            state.load = action.payload;
+        },
+        setApiRes: (state, action) => {
+            state.apiRes = action.payload;
+        },
+        setComplOpen: (state, action) => {
+            state.complaint.open = action.payload;
+        },
+        setComplCtx: (state, action) => {
+            state.complaint.type = action.payload;
         },
     },
     extraReducers: builder => {
+        // Получение варианетов интересов
         builder.addCase(initInterestsVariantsAsync.pending, _ => {
-            console.log("Получение варианетов интереесов")
+            console.log("Получение варианетов интересов");
         })
         builder.addCase(initInterestsVariantsAsync.fulfilled, ( state, action ) => {
-            console.log("Варианты интересов успешно полученый")
-            
-            state.interestsVars = action.payload
+            console.log("Варианты интересов успешно полученый");
+            state.interestsVars = action.payload;
         })
         builder.addCase(initInterestsVariantsAsync.rejected, _ => {
-            console.log("Ошибка получния вариантов интереесов")
+            console.log("Ошибка получния вариантов интереесов");
+        })
+
+        // Получение варианетов жалоб
+        builder.addCase(initComplaintsVarsAsync.pending, _ => {
+            console.log("Получение варианетов жалоб");
+        })
+        builder.addCase(initComplaintsVarsAsync.fulfilled, ( state, action ) => {
+            console.log("Варианты жалоб успешно полученый");
+            state.complaint.complaintsVars = action.payload;
+            state.complaint.type = EComplaintType.TxtArea;
+        })
+        builder.addCase(initComplaintsVarsAsync.rejected, _ => {
+            console.log("Ошибка получния вариантов жалоб");
         })
     }
 })
@@ -88,5 +140,8 @@ export const {
     resetRoutes,
     setSelSexVars,
     setLoad,
+    setApiRes,
+    setComplOpen,
+    setComplCtx,
 } = settingsSlice.actions;
 export default settingsSlice.reducer;

@@ -17,4 +17,5 @@ export interface ProfileSelf {
 
 export interface ProfileState {
     info: ProfileSelf
+    addLink: string
 }

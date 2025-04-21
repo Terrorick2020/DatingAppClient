@@ -29,6 +29,12 @@ export enum ELineStatus {
     Offline = 'Offline',
 }
 
+export enum LinkTooltipText {
+    Copy = 'Copy',
+    Copied = 'Copied',
+    Error = 'Error',
+}
+
 export interface IState {
     admin:          AdminState
     chats:          ChatsState
