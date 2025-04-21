@@ -1,5 +1,7 @@
 FROM oven/bun:1.0.25-alpine
 
+RUN apk add --no-cache nodejs npm
+
 WORKDIR /client
 
 COPY package.json ./
@@ -8,7 +10,7 @@ RUN bun install --no-progress
 
 COPY . .
 
-RUN bun run build
+RUN npm run build
 
 EXPOSE 4173
 
