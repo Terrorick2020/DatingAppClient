@@ -15,7 +15,7 @@ interface GeoConfirmationProps {
 
 const GeoConfirmation = (props: GeoConfirmationProps) => {
     const [open, setOpen] = useState<boolean>(true);
-    const [isLoad, setIsLoad] = useState<boolean>(true);
+    const [isLoad, setIsLoad] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
 
