@@ -7,6 +7,7 @@ import type { QuestState, SliderItem } from '@/types/quest.types';
 
 const initialState: QuestState = {
     sliderList: [],
+    targetUser: null
 }
 
 export const initSliderListAsync = createAsyncThunk(

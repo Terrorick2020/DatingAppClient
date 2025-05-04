@@ -57,4 +57,4 @@ const DetailsSlider = () => {
     )
 }
 
-export default DetailsSlider
+export default DetailsSlider;

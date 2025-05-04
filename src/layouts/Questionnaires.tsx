@@ -1,28 +1,25 @@
-import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import type { IState } from '@/types/store.types';
 
-import QuestNavHead from '@/components/Layouts/QuestNavHead';
 import QuestMatch from '@/components/Layouts/QuestMatch';
 import QuestNavBar from '@/components/Layouts/QuestNavBar';
-import ComplaintDrawer from '@/components/Layouts/ComplaintDrawer';
 
 
 const QuestLayout = () => {
-    const [show, _setShow] = useState(false)
+    const isMatch = useSelector((state: IState) => state.likes.match.value);
 
     return (
         <>
             <div className="quest-layout">
-                { show && <QuestMatch /> }
+                { isMatch && <QuestMatch /> }
                 <div className="quest-outlet">
-                    <QuestNavHead />
                     <Outlet />
                 </div>
                 <QuestNavBar />
             </div>
-            <ComplaintDrawer />
         </>
     )
 }
 
-export default QuestLayout
+export default QuestLayout;

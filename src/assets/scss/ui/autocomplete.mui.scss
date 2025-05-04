@@ -1,0 +1,11 @@
+#root {
+    .MuiAutocomplete-root {
+        &.district-input {
+            &.Mui-focused {
+                .MuiFormLabel-root {
+                    
+                }
+            }
+        }
+    }
+}

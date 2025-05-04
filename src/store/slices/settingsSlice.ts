@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ELanguage, EComplaintType } from '@/types/settings.type';
-import { dfltErrItem } from '@/constant/settings';
+import { ELanguage, EComplaintType, EApiStatus } from '@/types/settings.type';
 import { interestsVarsList, complaintsVarsList, targetComplaintsVarsList } from '@/constant/settings';
 import { setInfo } from './profileSlice';
+import { dfltErrItem } from '@/constant/settings';
 import { delay } from '@/funcs/general.funcs';
-import { EApiStatus } from '@/types/settings.type';
 import { type IState } from '@/types/store.types';
 import type { SettingsState, InterestsVarsItem, ComplaintsVarsItem } from '@/types/settings.type';
 
@@ -29,25 +28,36 @@ const initialState: SettingsState = {
         query: '',
         complaintsVars: [],
     },
+    mediaLink: 'https://storage.yandexcloud.net/photodatingapp/1.MOV?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=YCAJE2WAntPULZcEo0LlklLMu%2F20250429%2Fru-central1%2Fs3%2Faws4_request&X-Amz-Date=20250429T165117Z&X-Amz-Expires=108000&X-Amz-Signature=6dc73f2a9ed9d1a4703f787fd4aec4131ee3c3ea75c8adffbcdbae10db54d5ed&X-Amz-SignedHeaders=host',
 }
 
 export const initInterestsVariantsAsync = createAsyncThunk(
     'settings/init-interest-variants',
     async (_, { getState, dispatch  }): Promise<InterestsVarsItem[]> => {
+        try {
+            dispatch(setLoad(true));
 
-        const response = interestsVarsList;
+            await delay(2000);
 
-        const rootState = getState() as IState;
-        const profileState = rootState.profile;
+            const response = interestsVarsList;
 
-        if( !profileState.info.interest ) {
-            dispatch(setInfo({
-                ...profileState.info,
-                interest: response[0].value,
-            }))
+            const rootState = getState() as IState;
+            const profileState = rootState.profile;
+    
+            if( !profileState.info.interest ) {
+                dispatch(setInfo({
+                    ...profileState.info,
+                    interest: response[0].value,
+                }))
+            }
+    
+            return response;
+
+        } catch (error) {
+            throw error;
+        } finally {
+            dispatch(setLoad(false));
         }
-
-        return response;
     }
 )
 
@@ -99,7 +109,7 @@ const settingsSlice = createSlice({
             state.apiRes = action.payload;
         },
         setComplOpen: (state, action) => {
-            state.complaint.open = action.payload;
+            state.complaint.open = action.payload as boolean;
         },
         setComplCtx: (state, action) => {
             state.complaint.type = action.payload;

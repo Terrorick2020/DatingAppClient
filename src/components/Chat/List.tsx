@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { type IState } from '@/types/store.types';
 
@@ -7,6 +8,14 @@ import ChatDay from './Day';
 const ChatList = () => {
     const chatDialog = useSelector((state: IState) => state.chats.targetChat.chatDialog);
     const selfId = useSelector((state: IState) => state.profile.info.id);
+
+    const msgsEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setTimeout(() => {
+            msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 0);
+    }, [chatDialog]);
 
     return (
         <>
@@ -20,6 +29,7 @@ const ChatList = () => {
                         dayListMsg={item.dayListMsg}
                     />
                 ))}
+                <div ref={msgsEndRef} />
             </div>
         </>
     )

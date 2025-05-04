@@ -72,4 +72,5 @@ export interface SettingsState {
     interestsVars: InterestsVarsItem[]
     selSexVars: SelSexVarsItem[]
     complaint: Complaint
+    mediaLink: string
 }

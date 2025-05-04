@@ -1,42 +1,40 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { sendSelfGeoAsync } from '@/store/slices/profileSlice';
-import { requestGeolocation } from '@/funcs/geo.funcs';
-import { type RootDispatch } from '@/store';
+import { delay } from '@/funcs/general.funcs';
+// import { useDispatch } from 'react-redux';
+// import { sendSelfGeoAsync } from '@/store/slices/profileSlice';
+// import { requestGeolocation } from '@/funcs/geo.funcs';
+// import { type RootDispatch } from '@/store';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 
 
-interface GeoConfirmationProps {
-    setConfirmation: (value: boolean) => void;
-}
-
-const GeoConfirmation = (props: GeoConfirmationProps) => {
+const GeoConfirmation = () => {
     const [open, setOpen] = useState<boolean>(true);
     const [isLoad, setIsLoad] = useState<boolean>(false);
 
-    const dispatch = useDispatch<RootDispatch>();
+    // const dispatch = useDispatch<RootDispatch>();
 
     const handleBad = (): void => {
         setOpen(false);
-        props.setConfirmation(false);
     }
     const handleSuccess = async (): Promise<void> => {
         setIsLoad(true);
 
-        const geo = await requestGeolocation();
+        await delay(2000);
 
-        if(!geo) {
-            setIsLoad(false);
-            return;
-        }
+        // const geo = await requestGeolocation();
+
+        // if(!geo) {
+        //     setIsLoad(false);
+        //     return;
+        // }
         
-        await dispatch(sendSelfGeoAsync(geo));
+        // await dispatch(sendSelfGeoAsync(geo));
         
         setIsLoad(false);
-        props.setConfirmation(true);
+        setOpen(false);
     }
 
     return (
@@ -65,7 +63,7 @@ const GeoConfirmation = (props: GeoConfirmationProps) => {
                             loading={isLoad}
                             onClick={handleSuccess}
                         >
-                            {isLoad ? 'Разрешить' : 'Загрузка...'}
+                            {isLoad ? 'Загрузка...' : 'Разрешить'}
                         </Button>
                     </div>
                 </Box>

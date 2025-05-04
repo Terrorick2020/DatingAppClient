@@ -1,6 +1,5 @@
 import { Suspense, lazy } from 'react';
 import { initProfileAsync } from '@/store/slices/profileSlice';
-import { initInterestsVariantsAsync } from './store/slices/settingsSlice';
 import { delay } from './funcs/general.funcs';
 
 import store from './store';
@@ -11,7 +10,6 @@ async function delayForLazy( promise: Promise<any> ) {
     await delay(2000);
 
     await store.dispatch( initProfileAsync( window.location.href ) );
-    await store.dispatch( initInterestsVariantsAsync() );
 
     const resPromise = await promise;
 

@@ -2,7 +2,7 @@
 
 .likes {
     width: 100%;
-    height: 72vh;
+    height: 100%;
     padding-inline: 1rem;
     padding-bottom: 1vh;
     overflow: hidden;
@@ -16,14 +16,14 @@
         height: 100%;
 
         .headline {
-            height: 10%;
+            height: 7%;
             font-weight: 900;
             @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
         }
 
         .cards {
             width: 100%;
-            height: 90%;
+            height: 95%;
             padding-block: 0.5rem 1rem;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -55,10 +55,6 @@
                     flex-direction: column;
                     justify-content: space-between;
 
-                    &:active {
-                        scale: 0.99;
-                    }
-
                     &:hover {
                         .substance {
                             box-shadow: 0 0 0.5rem #ffffff5a;
@@ -83,15 +79,17 @@
                             padding-inline: 4px;
                             padding-block: 7px;
                         }
-
-                        .label-panel {
-                            width: 100%;
-                            text-align: start;
-                        }
                         
                         .time-panel {
                             width: 100%;
-                            text-align: end;
+                            text-align: start;
+                        }
+
+                        .btns-panel {
+                            width: 100%;
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 0.35rem;
                         }
                     }
 

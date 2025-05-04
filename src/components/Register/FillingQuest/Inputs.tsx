@@ -47,9 +47,9 @@ const FillingQuestInputs = () => {
                     error={fQErrors.nameErr.value}
                     helperText={fQErrors.nameErr.msg}
                 />
-                <h4>Ваш город</h4>
+                <h4 className="city-headline">Ваш город</h4>
                 <FormControl>
-                    <InputLabel className="sel-label" htmlFor="city-input">Выбирите город</InputLabel>
+                    <InputLabel className="sel-label" htmlFor="city-input" shrink={false}>Выбирите город</InputLabel>
                     <Select
                         IconComponent={(props) => (
                             <CustomSelIcon {...props}/>
@@ -64,6 +64,10 @@ const FillingQuestInputs = () => {
                                 color: '#FFFFFF',
                                 borderRadius: 2,
                                 '& .MuiMenuItem-root.Mui-selected': {
+                                    backgroundColor: '#D7FF81',
+                                    color: '#121112',
+                                },
+                                '& .MuiMenuItem-root.Mui-selected:hover': {
                                     backgroundColor: '#D7FF81',
                                     color: '#121112',
                                 },

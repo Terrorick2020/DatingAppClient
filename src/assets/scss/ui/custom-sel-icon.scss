@@ -1,5 +1,4 @@
 #root {
-
     .MuiFormControl-root {
         .MuiFormLabel-root {
             color: #848484f4;
@@ -7,23 +6,10 @@
             font-size: 1rem;
             letter-spacing: -0.5px;
 
-            &.Mui-focused {
-                margin-top: 1.7rem;
-            }
-
             &.MuiFormLabel-filled {
                 display: none;
             }
         }
-        // .MuiFormLabel-root {
-        //     color: red;
-        // }
-
-        // &:has(.MuiFormLabel-filled) {
-        //     .MuiFormLabel-filled {
-        //         display: none;
-        //     }
-        // }
     }
 
     .MuiSelect-icon {

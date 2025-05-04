@@ -6,7 +6,11 @@ import type { LikesState, LikesItem } from '@/types/likes.types';
 
 
 const initialState: LikesState = {
-    likesList: []
+    likesList: [],
+    match: {
+        value: false,
+        from: null
+    }
 }
 
 export const initLikesListAsync = createAsyncThunk(

@@ -1,8 +1,5 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { appRoutes } from '@/config/routes.config';
-import { addRoute } from '@/store/slices/settingsSlice';
 import { setSearchType, setSearchId } from '@/store/slices/adminSlice';
 import { EProfileRoles } from '@/types/store.types';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
@@ -11,12 +8,15 @@ import { type IState } from '@/types/store.types';
 
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 import SearchInput from '@/components/UI/SearchInput';
+import LinkMsg from '@/components/UI/LinkMsg';
 import IconButton from '@mui/joy/IconButton';
 import Button from '@mui/material/Button';
 
 
 const UsersListHeader = () => {
     const adminState = useSelector((state: IState) => state.admin);
+
+    const [open, setOpen] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -32,17 +32,7 @@ const UsersListHeader = () => {
 
     const handleSerch = async () => await dispatch( getProfilesListAsync() );
 
-    const adminGlobRoute = appRoutes.admin.global;
-    const adminAddPhys   = appRoutes.admin.inner.physAdd;
-    const toAddPhys      = `${adminGlobRoute}/${adminAddPhys}`;
-
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    const handleNavToAddPhys = (): void => {
-        dispatch(addRoute(location.pathname));
-        navigate(toAddPhys);
-    }
+    const handleOpen = (): void => setOpen(true);
 
     return (
         <>
@@ -67,9 +57,10 @@ const UsersListHeader = () => {
                 />
                 {
                     adminState.searchType === EProfileRoles.Psych &&
-                    <Button className="persone-btn" variant="contained" onClick={handleNavToAddPhys}>Добавить</Button>
+                    <Button className="persone-btn" variant="contained" onClick={handleOpen}>Добавить</Button>
                 }
             </div>
+            <LinkMsg link={adminState.link} open={open} setOpen={setOpen} />
         </>
     )
 }

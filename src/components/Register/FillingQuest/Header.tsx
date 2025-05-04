@@ -1,14 +1,24 @@
-import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { appRoutes } from '@/config/routes.config';
+import { addRoute } from '@/store/slices/settingsSlice';
+import type { RootDispatch } from '@/store';
 
-import FillingQuestMedia from './Media';
 import SvgVideoHelpers from '@/assets/icon/video-helpers.svg?react';
 
 
 const FillingQuestHeader = () => {
-    const [ showMedia, setShowMedia ] = useState<boolean>( false );
+    const dispatch = useDispatch<RootDispatch>();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const handleClick = () => {
-        setShowMedia( !showMedia );
+        const regGlobRoute  = appRoutes.register.global;
+        const regMediaRoute = appRoutes.register.inner.media;
+        const toMedia = `${regGlobRoute}/${regMediaRoute}`;
+        
+        navigate(toMedia);
+        dispatch(addRoute(location.pathname));
     }
 
     return (
@@ -19,7 +29,6 @@ const FillingQuestHeader = () => {
             </div>
             <div className="video" onClick={handleClick}>
                 <SvgVideoHelpers />
-                <FillingQuestMedia show={showMedia} />
             </div>
         </>
     )

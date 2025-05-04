@@ -14,7 +14,7 @@ const initialState: AdminState = {
     searchType: EProfileRoles.User,
     searchId: '',
     password: '',
-    link: '',
+    link: 'https://t.me/BotFather',
     profilesList: [],
     targetProfile: {
         id: '',

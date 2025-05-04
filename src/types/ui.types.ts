@@ -48,3 +48,16 @@ export interface PropsTimer {
     isCritical: boolean
     value: string
 }
+
+export interface PropsLinkMsg {
+    link: string
+    open: boolean
+    setOpen: (value: boolean) => void
+}
+
+export interface PropsChatPatternDialog {
+    open: boolean
+    img: string
+    setOpen: (value: boolean) => void
+    children: ReactNode
+}

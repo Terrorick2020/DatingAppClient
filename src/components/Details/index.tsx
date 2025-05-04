@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 
-import DetailsSlider from './Slider'
-import DetailsInfo from './Info'
-import DetailsFixed from './Fixed'
+import DetailsSlider from './Slider';
+import DetailsInfo from './Info';
+import DetailsFixed from './Fixed';
+import ComplaintDrawer from '@/components/Layouts/ComplaintDrawer';
 
 
 const DetailsContent = () => {
@@ -28,8 +29,9 @@ const DetailsContent = () => {
             <div className="details__fixed">
                 <DetailsFixed />
             </div>
+            <ComplaintDrawer />
         </>
     )
 }
 
-export default DetailsContent
+export default DetailsContent;

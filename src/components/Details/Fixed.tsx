@@ -32,7 +32,7 @@ const DetailsFixed = () => {
             <div className="btns">
                 <NavLink to={ toSlider } onClick={ handleRoute }>
                     <Button
-                        className="lemon-fon"
+                        className="lemon-fon bg-dark"
                         variant="contained"
                     >
                         Назад
@@ -45,4 +45,4 @@ const DetailsFixed = () => {
     )
 }
 
-export default DetailsFixed
+export default DetailsFixed;

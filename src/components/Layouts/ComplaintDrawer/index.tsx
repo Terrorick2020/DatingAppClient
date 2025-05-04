@@ -26,7 +26,7 @@ const CtxVars = {
     [EComplaintType.TxtArea]: ComplaintDrawerTxtArea,
 }
 
-const СomplaintDrawer = () => {
+const ComplaintDrawer = () => {
     const {open, type} = useSelector((state: IState) => state.settings.complaint);
 
     const dispatch = useDispatch<RootDispatch>();
@@ -54,4 +54,4 @@ const СomplaintDrawer = () => {
     )
 }
 
-export default СomplaintDrawer;
+export default ComplaintDrawer;

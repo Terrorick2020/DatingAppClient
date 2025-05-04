@@ -1,9 +1,10 @@
-import { PlanLabelSvgType } from '@/types/ui.types';
 import { ageToStr } from '@/funcs/general.funcs';
-import { type LikesItem } from '@/types/likes.types';
+import type { LikesItem } from '@/types/likes.types';
 
-import PlansLabel from '@/components/UI/PlansLabel';
 import Timer from '@/components/UI/Timer';
+import Button from '@mui/material/Button';
+import SvgClose from '@/assets/icon/close.svg?react';
+import SvgHeart from '@/assets/icon/heart-white.svg?react';
 
 
 interface PropsLikesCard {
@@ -20,14 +21,25 @@ const LikesCard= (props: PropsLikesCard) => {
                             backgroundImage: `url(${ props.likesItem.avatar })`,
                         }}
                     >
-                        <div className="label-panel">
-                            <PlansLabel type={ PlanLabelSvgType.success } />
-                        </div>
                         <div className="time-panel">
                             <Timer
                                 value={props.likesItem.timer.value}
                                 isCritical={props.likesItem.timer.isCritical}
                             />
+                        </div>
+                        <div className="btns-panel">
+                            <Button
+                                size="small"
+                                className="card-btn indigo"
+                            >
+                                <SvgClose />
+                            </Button>
+                            <Button
+                                size="small"
+                                className="card-btn crimson"
+                            >
+                                <SvgHeart />
+                            </Button>
                         </div>
                     </div>
                     <h5 className="name">

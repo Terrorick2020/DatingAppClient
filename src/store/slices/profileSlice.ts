@@ -63,35 +63,27 @@ export const sendSelfGeoAsync = createAsyncThunk(
 
 export const signUpProfileAsync = createAsyncThunk(
     'profile/sign-up-profile',
-    async (_, {dispatch}): Promise<ProfileSelf> => {
-        try {
-            dispatch(setLoad(true));
+    async (): Promise<ProfileSelf> => {
 
-            await delay(2000);
+        await delay(2000);
 
-            const responce = {
-                id: '10234231',
-                enableGeo: false,
-                lineStat: ELineStatus.Online,
-                role: EProfileRoles.User,
-                status: EProfileStatus.Noob,
-                username: '',
-                name: '',
-                age: null,
-                city: '',
-                sex: ESex.Male,
-                bio: '',
-                interest: '',
-                selSex: ESex.All,
-            };
+        const responce = {
+            id: '10234231',
+            enableGeo: false,
+            lineStat: ELineStatus.Online,
+            role: EProfileRoles.User,
+            status: EProfileStatus.Noob,
+            username: '',
+            name: '',
+            age: null,
+            city: '',
+            sex: ESex.Male,
+            bio: '',
+            interest: '',
+            selSex: ESex.All,
+        };
 
-            return responce;
-
-        } catch (error) {
-            throw error;
-        } finally {
-            dispatch(setLoad(false));
-        }
+        return responce;
     }
 )
 

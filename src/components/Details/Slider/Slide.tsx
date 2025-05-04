@@ -1,6 +1,9 @@
+import { useDispatch } from 'react-redux';
+import { setComplOpen } from '@/store/slices/settingsSlice';
+import { type RootDispatch } from '@/store';
+
 import ScrollBar from '@/components/UI/ScrollBar';
 import Button from '@mui/material/Button';
-
 import SvgMapPin from '@/assets/icon/map-pin.svg';
 import SvgBlock from '@/assets/icon/block.svg?react';
 
@@ -13,6 +16,10 @@ interface PropsDetailsSlide {
     content: any
 }
 const DetailsSlide = (props: PropsDetailsSlide) => {
+    const dispatch = useDispatch<RootDispatch>();
+
+    const handleComplaint = () => dispatch(setComplOpen(true));
+
     return (
         <>
             <div className="slide__ctx">
@@ -29,7 +36,11 @@ const DetailsSlide = (props: PropsDetailsSlide) => {
                         >
                             Санкт-Петербург
                         </Button>
-                        <Button className="nav-btn icon-btn" variant="contained">
+                        <Button
+                            className="nav-btn icon-btn"
+                            variant="contained"
+                            onClick={handleComplaint}
+                        >
                             <SvgBlock />
                         </Button>
                     </nav>
@@ -46,4 +57,4 @@ const DetailsSlide = (props: PropsDetailsSlide) => {
     )
 }
 
-export default DetailsSlide
+export default DetailsSlide;

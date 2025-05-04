@@ -5,7 +5,7 @@
             color: #FFFFFF;
             border-radius: 1rem;
             border: 1px solid #FFFFFF4D;
-            padding: 20px;
+            padding: 1.25rem;
 
             .MuiTypography-root {
                 text-align: center;
@@ -112,17 +112,147 @@
         }
 
         .MuiDialogActions-root {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+
+            &:has(.to-main-btn) {
+                grid-template-columns: 1fr;
+            }
 
             .MuiButtonBase-root {
-                &:first-of-type {
+                border-radius: 3.75rem;
+                transition: all 0.2s ease-in-out;
+
+                &.exit-btn {
                     border: 1px solid #D7FF81;
+                    background: transparent;
                     color: #D7FF81;
+        
+                    &:hover {
+                        background: #D7FF81;
+                        color: #121112;
+                    }
                 }
 
-                &:last-of-type {
+                &.close-btn {
                     background: #FF4365;
                     color: #FFFFFF;
+                }
+
+                &.to-main-btn {
+                    width: 100%;
+                    background: #BC96FF;
+                    border-color: #BC96FF;
+                    color: #121112;
+                }
+            }
+        }
+    }
+
+    &.link-confirm {
+        .MuiPaper-root {
+            width: 100%;
+            max-width: 400px;
+
+            .MuiDialogContent-root {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 2.5rem;
+    
+                .text-block {
+                    width: 100%;
+    
+                    .headline, .description {
+                        width: 100%;
+                        text-align: center;
+                        user-select: none;
+                    }
+    
+                    .headline {
+                        font-weight: 900;
+                        font-size: clamp(1.2rem, 3vw, 1.5rem);
+                    }
+    
+                    .description {
+                        margin-top: 0.7rem;
+                        font-weight: 400;
+                        font-size: clamp(0.9rem, 3vw, 1.1rem);
+                    }
+                }
+    
+                .link-block {
+                    width: 100%;
+                    background: #FFFFFF1F;
+                    border-radius: 2rem;
+                    padding: clamp(0.85rem, 3vw, 1.25rem);
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    &__txt {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.5rem;
+
+                        .headline {
+                            font-weight: 700;
+                            font-size: clamp(0.9rem, 4vw, 1.1rem);
+                            user-select: none;
+                        }
+
+                        .link {
+                            font-weight: 400;
+                            opacity: 0.5;
+                            font-size: clamp(0.7rem, 4vw, 0.9rem);
+                        }
+                    }
+
+                    .MuiIconButton-root {
+                        border-radius: 50%;
+                        background: #D7FF81;
+                        transition: all 0.1s ease;
+
+                        &:hover {
+                            box-shadow: 0 0 0.4rem #f0ffd057;
+                        }
+
+                        &:active {
+                            scale: 0.99;
+                            box-shadow: 0 0 0.6rem #f0ffd08b;
+                        }
+                    }
+                }
+            }
+
+            .MuiDialogActions-root {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                margin-top: 2.5rem;
+                gap: 1rem;
+
+                .MuiButtonBase-root {
+                    width: 100%;
+                    border-radius: 3.75rem;
+                    font-weight: 700;
+                    transition: all 0.2s ease-in-out;
+                    border: 1px solid #D7FF81;
+
+                    &.send-btn {
+                        background: #D7FF81;
+                        color: #121112;
+                    }
+                    
+                    &.close-btn {
+                        background: transparent;
+                        color: #D7FF81;
+            
+                        &:hover {
+                            background: #D7FF81;
+                            color: #121112;
+                        }
+                    }
                 }
             }
         }

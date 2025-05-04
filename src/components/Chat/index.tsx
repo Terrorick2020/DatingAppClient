@@ -7,6 +7,7 @@ import { type IState } from '@/types/store.types';
 
 import ChatHeader from './Header';
 import ChatList from './List';
+import ChatDialogSessionEnd from './DialogSessionEnd';
 import ChatInput from '@/components/UI/ChatInput';
 import MyLoader from '@/components/UI/MyLoader';
 
@@ -52,6 +53,7 @@ const ChatContent = () => {
                         <footer className="target-chat__footer">
                             <ChatInput isMatch={false} />
                         </footer>
+                        <ChatDialogSessionEnd open={false} setOpen={(_: boolean) => {}} />
                     </>
             }
         </>

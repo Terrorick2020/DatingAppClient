@@ -1,11 +1,14 @@
 import { useState, MouseEvent, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { lineStatusAttr } from '@/constant/settings';
+import { setComplOpen } from '@/store/slices/settingsSlice';
 import { ageToStr } from '@/funcs/general.funcs';
+import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
 
 import MenuBtn from '@/components/UI/MenuBtn';
-import ChatDialog from './Dialog';
+import ComplaintDrawer from '@/components/Layouts/ComplaintDrawer';
+import ChatDialogDelete from './DialogDelete';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import SvgVertOther from '@/assets/icon/vertical-other.svg';
@@ -19,6 +22,8 @@ interface PropsChatHeader {
 const ChatHeader = (props: PropsChatHeader) => {
     const chatInterlocutor = useSelector((state: IState) => state.chats.targetChat.interlocutor);
 
+    const dispatch = useDispatch<RootDispatch>();
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [openDel, setOpenDel] = useState<boolean>(false);
 
@@ -27,7 +32,8 @@ const ChatHeader = (props: PropsChatHeader) => {
         setAnchorEl(null);
     };
 
-    const hadleComplain = async (event: MouseEvent<HTMLLIElement>): Promise<void> => {
+    const hadleComplain = (event: MouseEvent<HTMLLIElement>): void => {
+        dispatch(setComplOpen(true));
         handleMenuClose(event);
     };
 
@@ -71,7 +77,8 @@ const ChatHeader = (props: PropsChatHeader) => {
                     <span className="text">Удалить чат</span>
                 </MenuItem>
             </MenuBtn>
-            <ChatDialog open={openDel} id={props.id} hadleClose={() => setOpenDel(false)} />
+            <ChatDialogDelete open={openDel} id={props.id} hadleClose={() => setOpenDel(false)} />
+            <ComplaintDrawer />
         </>
     )
 }

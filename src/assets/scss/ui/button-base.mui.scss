@@ -7,6 +7,22 @@
         color: var(--app-btn-color);
         font-weight: 700;
 
+        &.card-btn {
+            border-radius: 1.75rem;
+        }
+
+        &.indigo {
+            background: #371F7D;
+        }
+
+        &.crimson {
+            background: #FF4365;
+        }
+
+        &.base-height {
+            height: 3.06rem;
+        }
+
         &.text-fon {
             background: #2B2B2B;
             color: #FFFFFF;
@@ -46,6 +62,10 @@
             border-radius: 3.75rem;
             transition: all 0.3s ease-in-out;
 
+            &.bg-dark {
+                background: #000000;
+            }
+
             &:hover {
                 background: #D7FF81;
                 color: #121112;
@@ -57,6 +77,11 @@
             color: #121112;
             border: 1px solid #D7FF81;
             border-radius: 3.75rem;
+        }
+
+        &.edit {
+            font-weight: 700;
+            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
         }
 
         &:active {
