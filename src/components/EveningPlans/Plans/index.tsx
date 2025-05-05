@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { addRoute } from '@/store/slices/settingsSlice';
+import { addRoute, initPlansVarsAsync } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
 import PlansPreview from './Preview';
@@ -12,9 +13,18 @@ import PlansDetails from './Details';
 
 
 const EveningPlansPlansCtx = () => {
+    const plansVars = useSelector((state: IState) => state.settings.plansVars);
+
     const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();
     const navigate = useNavigate();
+
+    useEffect(
+        () => {
+            !plansVars.length && dispatch(initPlansVarsAsync());
+        },
+        [plansVars]
+    );
 
     const handleRoute = async (): Promise<void> => {
         const ePGlobRoute = appRoutes.eveningPlans.global;
@@ -29,7 +39,7 @@ const EveningPlansPlansCtx = () => {
         <>
             <div className="ep-plans__ctx">
                 <PlansPreview />
-                <PlansVars />
+                <PlansVars plansVars={plansVars} />
                 <PlansDetails />
             </div>
             <div className="ep-plans__btn">

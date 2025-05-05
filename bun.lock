@@ -18,7 +18,6 @@
         "react-player": "^2.16.0",
         "react-redux": "^9.2.0",
         "react-router-dom": "^7.2.0",
-        "react-share": "^5.2.2",
         "react-swipeable": "^7.0.2",
         "vite-plugin-svgr": "^4.3.0",
       },

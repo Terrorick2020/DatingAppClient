@@ -1,3 +1,6 @@
+@use "../components/mixins";
+
+
 :root {
     --media-indent: clamp(0.6rem, 4vw, 1.2rem);
     --media-bord-rad: 1.25rem;
@@ -8,6 +11,7 @@
     height: 100vh;
     display: grid;
     grid-template-rows: 87vh clamp(5rem, 13vh, 6rem);
+    @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
     .video{
         width: 100%;

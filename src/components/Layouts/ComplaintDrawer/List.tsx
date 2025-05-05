@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { initComplaintsVarsAsync } from '@/store/slices/settingsSlice';
+import { initComplaintsVarsAsync, setComplaint } from '@/store/slices/settingsSlice';
 import { delay } from '@/funcs/general.funcs';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
@@ -15,7 +15,7 @@ import SvgArrowRight from '@/assets/icon/arrow-right.svg?react'
 
 
 const ComplaintDrawerList = () => {
-    const { complaintsVars } = useSelector((state: IState) => state.settings.complaint);
+    const complaint = useSelector((state: IState) => state.settings.complaint);
 
     const [open, setOpen] = useState<boolean>(true);
 
@@ -24,7 +24,11 @@ const ComplaintDrawerList = () => {
     const handleSelect = async (value: string): Promise<void> => {
         setOpen(false);
         await delay(130);
-        await dispatch(initComplaintsVarsAsync(value));
+        dispatch(setComplaint({
+            ...complaint,
+            value,
+        }));
+        await dispatch(initComplaintsVarsAsync());
         setOpen(true);
     }
 
@@ -35,7 +39,7 @@ const ComplaintDrawerList = () => {
                 orientation="horizontal"
             >
                 <List>
-                    {complaintsVars.map(item => (
+                    {complaint.complaintsVars.map(item => (
                         <ListItem
                             key={`complaint-item-${item.id}`}
                             disablePadding

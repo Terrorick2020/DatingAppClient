@@ -3,6 +3,7 @@ import { EProfileRoles, EProfileStatus, ESex, ELineStatus } from './store.types'
 
 export interface ProfileSelf {
     id: string
+    photos: string[]
     enableGeo: boolean
     lineStat: ELineStatus
     role: EProfileRoles
@@ -17,9 +18,20 @@ export interface ProfileSelf {
     selSex: ESex
 }
 
+export interface EveningPlansItem {
+    value: string
+    description: string
+}
+
+export interface EveningPlans {
+    plan: EveningPlansItem
+    location: EveningPlansItem
+}
+
 export interface ProfileState {
     info: ProfileSelf
     addLink: string
+    eveningPlans: EveningPlans
 }
 
 export interface SendGeoData {

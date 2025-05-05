@@ -205,6 +205,9 @@
                             font-weight: 400;
                             opacity: 0.5;
                             font-size: clamp(0.7rem, 4vw, 0.9rem);
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
                         }
                     }
 

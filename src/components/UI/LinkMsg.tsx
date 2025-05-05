@@ -15,8 +15,18 @@ import SvgLink from '@/assets/icon/link.svg';
 const LinkMsg = (props: PropsLinkMsg) => {
     const handleClose = (): void => props.setOpen(false);
 
-    const handleCopy = async (): Promise<void> => 
+    const handleCopy = async (): Promise<void> =>
         await navigator.clipboard.writeText(props.link);
+
+    const handleShare = async (): Promise<void> => {
+        const shareData = {
+            title: 'Приглашение',
+            text: 'Попробуй приложение!',
+            url: props.link,
+        };
+
+        await navigator.share(shareData);
+    }
 
     return (
         <>
@@ -57,6 +67,7 @@ const LinkMsg = (props: PropsLinkMsg) => {
                     <Button
                         className="send-btn"
                         startIcon={<img src={SvgLink} alt='link'/>}
+                        onClick={handleShare}
                     >Отправить</Button>
                     <Button
                         className="close-btn"

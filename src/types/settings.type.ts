@@ -25,18 +25,18 @@ export interface FQErrors {
     ageErr: FQErrorsItem
     bioErr: FQErrorsItem
 }
-
-export interface InterestsVarsItem {
+``
+export interface BaseVarsItem {
     id: number
     value: string
     label: string
+}
+
+export interface InterestsVarsItem extends BaseVarsItem {
     isOppos: boolean
 }
 
-export interface SelSexVarsItem {
-    id: number
-    value: ESex
-    label: string
+export interface SelSexVarsItem extends BaseVarsItem {
     isDisabled: boolean
 }
 
@@ -44,23 +44,25 @@ export interface SelSexVarsBase {
     [key: string]: SelSexVarsItem[]
 }
 
-export interface ComplaintsVarsItem {
-    id: number
-    value: string
-    label: string
-}
-
 export enum EComplaintType {
     Load = 'Load',
-    List = 'List',
-    TxtArea = 'TxtArea',
+    Content = 'Content',
+}
+
+export enum EComplaintStep {
+    FStep = 'FStep',
+    SStep = 'SStep',
+    TStep = 'TStep',
 }
 
 export interface Complaint {
     open: boolean
     type: EComplaintType
+    step: EComplaintStep
+    to: string
+    value: string
     query: string
-    complaintsVars: ComplaintsVarsItem[]
+    complaintsVars: BaseVarsItem[]
 }
 
 export interface SettingsState {
@@ -73,4 +75,6 @@ export interface SettingsState {
     selSexVars: SelSexVarsItem[]
     complaint: Complaint
     mediaLink: string
+    plansVars: BaseVarsItem[]
+    districtsVars: BaseVarsItem[]
 }

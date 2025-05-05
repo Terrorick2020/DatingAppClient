@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
-import { slidersList } from '@/constant/quest';
-import type { QuestState, SliderItem } from '@/types/quest.types';
+import { slidersList, targetUser } from '@/constant/quest';
+import type { QuestState, SliderItem, DetailsTargetUser } from '@/types/quest.types';
 
 
 const initialState: QuestState = {
     sliderList: [],
-    targetUser: null
+    targetUser: null,
 }
 
 export const initSliderListAsync = createAsyncThunk(
@@ -19,6 +19,23 @@ export const initSliderListAsync = createAsyncThunk(
             await delay(2000);
 
             return slidersList;
+        } catch (error) {
+            throw error;
+        } finally {
+            dispatch(setLoad(false));
+        }
+    }
+)
+
+export const initTargetUserAsync = createAsyncThunk(
+    'questionnaires/init-terget-user',
+    async (_id: string, {dispatch}): Promise<DetailsTargetUser> => {
+        try {
+            dispatch(setLoad(true));
+
+            await delay(2000);
+
+            return targetUser;
         } catch (error) {
             throw error;
         } finally {
@@ -41,7 +58,19 @@ const questionnairesSlice = createSlice({
             state.sliderList = action.payload;
         })
         builder.addCase(initSliderListAsync.rejected, _ => {
-            console.log("Ошибка получение списка анкет");
+            console.log("Ошибка получения списка анкет");
+        })
+
+        // Получение информации о целевой анкете
+        builder.addCase(initTargetUserAsync.pending, _ => {
+            console.log("Получение информации о целевой анкете");
+        })
+        builder.addCase(initTargetUserAsync.fulfilled, ( state, action ) => {
+            console.log("Успешное получение информации о целевой анкете");
+            state.targetUser = action.payload;
+        })
+        builder.addCase(initTargetUserAsync.rejected, _ => {
+            console.log("Ошибка получения информации о целевой анкете");
         })
     },
 })

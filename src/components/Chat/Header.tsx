@@ -78,7 +78,7 @@ const ChatHeader = (props: PropsChatHeader) => {
                 </MenuItem>
             </MenuBtn>
             <ChatDialogDelete open={openDel} id={props.id} hadleClose={() => setOpenDel(false)} />
-            <ComplaintDrawer />
+            <ComplaintDrawer id={props.id} />
         </>
     )
 }

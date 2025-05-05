@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import IconButton from '@mui/joy/IconButton';
 import LinkMsg from '@/components/UI/LinkMsg';
-import SvgLink from '@/assets/icon/link.svg';
+import SvgLink from '@/assets/icon/link-white.svg';
 
 
 const ProfileLink = () => {

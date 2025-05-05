@@ -1,8 +1,30 @@
+import { MouseEvent } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setPlan } from '@/store/slices/profileSlice';
+import type { BaseVarsItem } from '@/types/settings.type';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
+
 import IconButton from '@mui/joy/IconButton';
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 
 
-const PlansVars = () => {
+interface PropsPlansVars {
+    plansVars: BaseVarsItem[]
+}
+const PlansVars = (props: PropsPlansVars) => {
+    const plan = useSelector((state: IState) => state.profile.eveningPlans.plan);
+
+    const dispatch = useDispatch<RootDispatch>();
+
+    const handleOnChangePlan = (_: MouseEvent<HTMLElement>, newValue: string | null): void => {
+        console.log( newValue )
+        newValue && dispatch(setPlan({
+            ...plan,
+            value: newValue
+        }))
+    }
+
     return (
         <>
             <div className="vars">
@@ -11,17 +33,18 @@ const PlansVars = () => {
                         className="select"
                         id="select-plan"
                         spacing={5}
+                        value={plan.value ?? null}
+                        onChange={handleOnChangePlan}
                     >
-                        <IconButton className="select__item">fdfbdfb</IconButton>
-                        <IconButton className="select__item">fdfbdfb</IconButton>
-                        <IconButton className="select__item">fdfbdfb</IconButton>
-                        <IconButton className="select__item">fdfbdfb</IconButton>
-                        <IconButton className="select__item">fdfbdfb</IconButton>
-                        <IconButton className="select__item">fdfbdfb</IconButton>
-                        <IconButton className="select__item">fdfbdfb</IconButton>
-                        <IconButton className="select__item">fdfbdfb</IconButton>
-                        <IconButton className="select__item">fdfbdfb</IconButton>
-                        <IconButton className="select__item">fdfbdfb</IconButton>
+                        {props.plansVars.map(item => (
+                            <IconButton
+                                key={`plan-item-${item.id}`}
+                                className="select__item"
+                                value={item.value}
+                            >
+                                {item.label}
+                            </IconButton>
+                        ))}
                 </ToggleButtonGroup>
             </div>
         </>

@@ -6,10 +6,9 @@ import { dellRoute } from '@/store/slices/settingsSlice';
 import LikeBtn from '@/components/UI/LikeBtn';
 import Button from '@mui/material/Button';
 
+const ID = 1;
 
 const DetailsFixed = () => {
-    const id = 1;
-
     const clickLike = (id: number) => {
         const heartHtml = document.getElementById(`heart-${ id }`);
         if ( heartHtml ) heartHtml.style.animation = 'heart-top 1.5s ease-in-out forwards';
@@ -38,7 +37,7 @@ const DetailsFixed = () => {
                         Назад
                     </Button>
                 </NavLink>
-                <LikeBtn id={id} clickLike={clickLike} />
+                <LikeBtn id={ID} clickLike={clickLike} />
             </div>
             <div className="void"></div>
         </>

@@ -1,35 +1,58 @@
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { initTargetUserAsync } from '@/store/slices/questionnairesSlice';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import DetailsSlider from './Slider';
 import DetailsInfo from './Info';
 import DetailsFixed from './Fixed';
 import ComplaintDrawer from '@/components/Layouts/ComplaintDrawer';
+import MyLoader from '@/components/UI/MyLoader';
 
 
 const DetailsContent = () => {
+    const { id } = useParams();
+
+    if(!id) return null;
+
+    const isLoad = useSelector((state: IState) => state.settings.load);
+
+    const dispatch = useDispatch<RootDispatch>();
+
     useEffect(
         () => {
-            const detailsHtml = document.getElementById('details');
-            if ( detailsHtml ) detailsHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
-
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
+
+            dispatch(initTargetUserAsync(id));
         },
         []
     )
 
     return (
         <>
-            <div className="details__slider">
-                <DetailsSlider />
-            </div>
-            <div className="details__info">
-                <DetailsInfo />
-            </div>
-            <div className="details__fixed">
-                <DetailsFixed />
-            </div>
-            <ComplaintDrawer />
+            {
+                isLoad
+                    ?
+                    <div className="loader">
+                        <MyLoader />
+                    </div>
+                    :
+                    <>
+                        <div className="details__slider">
+                            <DetailsSlider />
+                        </div>
+                        <div className="details__info">
+                            <DetailsInfo />
+                        </div>
+                        <div className="details__fixed">
+                            <DetailsFixed />
+                        </div>
+                        <ComplaintDrawer id={id} />
+                    </>
+            }
         </>
     )
 }

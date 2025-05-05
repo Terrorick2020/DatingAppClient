@@ -5,11 +5,13 @@ import { delay } from '@/funcs/general.funcs';
 import type { ProfileState, ProfileSelf, SendGeoData } from '@/types/profile.types';
 
 import axios from 'axios';
+import PngLeady from '@/assets/img/leady.png';
 
 
 const initialState: ProfileState = {
     info: {
         id: '10234231',
+        photos: [],
         enableGeo: false,
         lineStat: ELineStatus.Online,
         role: EProfileRoles.User,
@@ -23,7 +25,17 @@ const initialState: ProfileState = {
         interest: '',
         selSex: ESex.All,
     },
-    addLink: 'Hello world!',
+    addLink: 'https://t.me/BotFather',
+    eveningPlans: {
+        plan: {
+            value: '',
+            description: '',
+        },
+        location: {
+            value: '',
+            description: '',
+        },
+    }
 }
 
 export const initProfileAsync = createAsyncThunk(
@@ -69,6 +81,7 @@ export const signUpProfileAsync = createAsyncThunk(
 
         const responce = {
             id: '10234231',
+            photos: [PngLeady],
             enableGeo: false,
             lineStat: ELineStatus.Online,
             role: EProfileRoles.User,
@@ -97,14 +110,15 @@ export const getSelfProfile = createAsyncThunk(
 
             const responce = {
                 id: '10234231',
+                photos: [PngLeady],
                 enableGeo: false,
                 lineStat: ELineStatus.Online,
                 role: EProfileRoles.User,
                 status: EProfileStatus.Noob,
                 username: '',
-                name: '',
-                age: null,
-                city: '',
+                name: 'Вктория',
+                age: 20,
+                city: 'Санкт-Петербург',
                 sex: ESex.Male,
                 bio: '',
                 interest: '',
@@ -128,6 +142,12 @@ const profileSlice = createSlice({
         setInfo: (state, action) => {
             const newInfo: ProfileSelf = action.payload;
             state.info = newInfo;
+        },
+        setPlan: (state, action) => {
+            state.eveningPlans.plan = action.payload;
+        },
+        setLocation: (state, action) => {
+            state.eveningPlans.location = action.payload;
         },
     },
     extraReducers: builder => {
@@ -180,5 +200,5 @@ const profileSlice = createSlice({
     }
 })
 
-export const { setInfo } = profileSlice.actions;
+export const { setInfo, setPlan, setLocation } = profileSlice.actions;
 export default profileSlice.reducer;

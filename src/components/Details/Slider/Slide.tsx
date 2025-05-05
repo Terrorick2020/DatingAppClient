@@ -1,6 +1,8 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setComplOpen } from '@/store/slices/settingsSlice';
-import { type RootDispatch } from '@/store';
+import { ageToStr } from '@/funcs/general.funcs';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import ScrollBar from '@/components/UI/ScrollBar';
 import Button from '@mui/material/Button';
@@ -13,9 +15,12 @@ interface PropsDetailsSlide {
     toRightScroll: () => void
     len:     number
     index:   number
-    content: any
 }
 const DetailsSlide = (props: PropsDetailsSlide) => {
+    const targetUser = useSelector((state: IState) => state.questionnaires.targetUser);
+
+    if(!targetUser) return null;
+
     const dispatch = useDispatch<RootDispatch>();
 
     const handleComplaint = () => dispatch(setComplOpen(true));
@@ -33,9 +38,7 @@ const DetailsSlide = (props: PropsDetailsSlide) => {
                             startIcon={
                                 <img src={SvgMapPin} alt="map-pin" />
                             }
-                        >
-                            Санкт-Петербург
-                        </Button>
+                        >{ targetUser.city }</Button>
                         <Button
                             className="nav-btn icon-btn"
                             variant="contained"
@@ -50,7 +53,9 @@ const DetailsSlide = (props: PropsDetailsSlide) => {
                     <span onClick={props.toRightScroll}></span>
                 </main>
                 <footer>
-                    <h4 className="headline">Виктория, 20 лет</h4>
+                    <h4 className="headline">
+                        {`${targetUser.name}, ${ageToStr(targetUser.age)}`}
+                    </h4>
                 </footer>
             </div>
         </>
