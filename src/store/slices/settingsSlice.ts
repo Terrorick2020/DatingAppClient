@@ -35,6 +35,11 @@ const initialState: SettingsState = {
         ageErr: dfltErrItem,
         bioErr: dfltErrItem,
     },
+    fEPErrors: {
+        descPlanErr: dfltErrItem,
+        districtErr: dfltErrItem,
+        descDistErr: dfltErrItem,
+    },
     interestsVars: [],
     selSexVars: [],
     complaint: {
@@ -192,6 +197,9 @@ const settingsSlice = createSlice({
         setFQErrors: (state, action) => {
             state.fQErrors = action.payload;
         },
+        setEPErrors: (state, action) => {
+            state.fEPErrors = action.payload;
+        },
         setComplOpen: (state, action) => {
             state.complaint.open = action.payload;
         },
@@ -276,6 +284,7 @@ export const {
     setLoad,
     setApiRes,
     setFQErrors,
+    setEPErrors,
     setComplOpen,
     setComplCtx,
     setComplStep,

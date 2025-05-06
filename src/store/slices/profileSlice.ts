@@ -27,6 +27,7 @@ const initialState: ProfileState = {
     },
     addLink: 'https://t.me/BotFather',
     eveningPlans: {
+        isCurrent: false,
         plan: {
             value: '',
             description: '',

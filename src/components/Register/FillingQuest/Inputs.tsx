@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { districtsList } from '@/constant/profiles';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFQErrors } from '@/store/slices/settingsSlice';
@@ -16,6 +16,8 @@ import CustomSelIcon from '@/components/UI/CustomSelIcon';
 const FillingQuestInputs = () => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
+
+    const [open, setOpen] = useState<boolean>(false);
 
     const dispatch = useDispatch();
 
@@ -43,9 +45,7 @@ const FillingQuestInputs = () => {
         }))
     }
 
-    const handleOpenPanel = (): void => {
-        console.log( 'Открытие окна городов!');
-    }
+    const handleOpenPanel = (): void => setOpen(!open);
 
     return (
         <>
@@ -90,6 +90,9 @@ const FillingQuestInputs = () => {
                               },
                             },
                         }}
+                        open={open}
+                        onOpen={() => setOpen(true)}
+                        onClose={() => setOpen(false)}
                         value={profileInfo.city}
                         onChange={handleChangeCity}
 

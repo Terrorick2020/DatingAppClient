@@ -13,6 +13,7 @@ interface PropsLocationDistrict {
 }
 const LocationDistrict = (props: PropsLocationDistrict) => {
   const location = useSelector((state: IState) => state.profile.eveningPlans.location);
+  const fEPErrors = useSelector((state: IState) => state.settings.fEPErrors);
 
   const [ value, setValue ] = useState<string>('');
 
@@ -74,6 +75,8 @@ const LocationDistrict = (props: PropsLocationDistrict) => {
                       slotProps={{
                           inputLabel: { shrink: false },
                       }}
+                      error={fEPErrors.districtErr.value}
+                      helperText={fEPErrors.districtErr.msg}
                   />
               }
           />

@@ -2,7 +2,10 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { addRoute, initPlansVarsAsync } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
+import { Slide } from "react-awesome-reveal";
 import { useDispatch, useSelector } from 'react-redux';
+import { ANIME_DURATION } from '@/constant/settings';
+import { EAnimeDirection } from '@/types/settings.type';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -38,9 +41,15 @@ const EveningPlansPlansCtx = () => {
     return (
         <>
             <div className="ep-plans__ctx">
-                <PlansPreview />
-                <PlansVars plansVars={plansVars} />
-                <PlansDetails />
+                <Slide
+                    triggerOnce
+                    direction={EAnimeDirection.Left}
+                    duration={ANIME_DURATION}
+                >
+                    <PlansPreview />
+                    <PlansVars plansVars={plansVars} />
+                    <PlansDetails />
+                </Slide>
             </div>
             <div className="ep-plans__btn">
                 <div className="link" onClick={handleRoute}>

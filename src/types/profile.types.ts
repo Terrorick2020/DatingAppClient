@@ -24,6 +24,7 @@ export interface EveningPlansItem {
 }
 
 export interface EveningPlans {
+    isCurrent: boolean
     plan: EveningPlansItem
     location: EveningPlansItem
 }

@@ -36,8 +36,8 @@ const UsersListMain = () => {
         setAnchorEl(null);
     };
 
-    const hadleBlock = async (event: MouseEvent<HTMLLIElement>, id: string): Promise<void> => {
-        await dispatch(serchProfileStatusAsync({
+    const hadleBlock = (event: MouseEvent<HTMLLIElement>, id: string): void => {
+        dispatch(serchProfileStatusAsync({
             id,
             targetValue: EProfileStatus.Blocked,
         }));

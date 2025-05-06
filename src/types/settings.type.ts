@@ -30,7 +30,13 @@ export interface FQErrors {
     ageErr: FQErrorsItem
     bioErr: FQErrorsItem
 }
-``
+
+export interface FEPErrors {
+    descPlanErr: FQErrorsItem
+    districtErr: FQErrorsItem
+    descDistErr: FQErrorsItem
+}
+
 export interface BaseVarsItem {
     id: number
     value: string
@@ -76,6 +82,7 @@ export interface SettingsState {
     load: boolean
     apiRes: EApiStatus
     fQErrors: FQErrors
+    fEPErrors: FEPErrors
     interestsVars: InterestsVarsItem[]
     selSexVars: SelSexVarsItem[]
     complaint: Complaint

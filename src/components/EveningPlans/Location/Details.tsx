@@ -1,6 +1,7 @@
 import { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocation } from '@/store/slices/profileSlice';
+import { setEPErrors } from '@/store/slices/settingsSlice';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -9,13 +10,24 @@ import TextField from '@mui/material/TextField';
 
 const LocationDetails = () => {
     const location = useSelector((state: IState) => state.profile.eveningPlans.location);
+    const fEPErrors = useSelector((state: IState) => state.settings.fEPErrors);
 
     const dispatch = useDispatch<RootDispatch>();
 
     const handleChangeDesc = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+        const description = event.target.value;
+
         dispatch(setLocation({
             ...location,
-            description: event.target.value,
+            description,
+        }))
+
+        dispatch(setEPErrors({
+            ...fEPErrors,
+            descDistErr: {
+                value: !description,
+                msg: !description ? 'Поле не должно быть пустым' : '',
+            }
         }))
     };
 
@@ -38,6 +50,8 @@ const LocationDetails = () => {
                 }}
                 value={location.description}
                 onChange={handleChangeDesc}
+                error={fEPErrors.descDistErr.value}
+                helperText={fEPErrors.descDistErr.msg}
             />
         </>
     )
