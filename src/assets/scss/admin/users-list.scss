@@ -133,6 +133,9 @@
                         align-self: flex-start;
                         padding: 4px 8px;
                         border-radius: 3.75rem;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
 
                         &.off {
                             background: #FF43651A;
@@ -141,6 +144,15 @@
 
                         &.warn {
                             opacity: 0.7;
+                        }
+
+                        .MuiCircularProgress-root {
+                            --ul-cicle-size: 1rem;
+
+                            width: var(--ul-cicle-size) !important;
+                            height: var(--ul-cicle-size) !important;
+                            margin-right: 0.5rem;
+                            color: inherit;
                         }
                     }
                 }

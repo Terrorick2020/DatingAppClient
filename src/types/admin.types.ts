@@ -47,5 +47,10 @@ export interface PropsUserInfoComponent {
 export enum UserInfoBtnId {
     Block = 'Block',
     ProUnblock = 'ProUnblock',
-    Unpro = 'unpro',
+    Unpro = 'UnPro',
+}
+
+export interface UserItemActivCtx {
+    text: string
+    targetStat: EProfileStatus
 }

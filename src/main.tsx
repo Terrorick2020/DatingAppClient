@@ -2,6 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { SnackbarProvider } from 'notistack';
+import { SNACK_COUNT, SNACK_TIMEOUT } from './constant/settings';
 import { viewport, init, isTMA, swipeBehavior } from '@telegram-apps/sdk';
 
 import store from './store';
@@ -40,7 +42,12 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={ store }>
       <BrowserRouter>
-        <AppSuspense />
+        <SnackbarProvider
+          maxSnack={SNACK_COUNT}
+          autoHideDuration={SNACK_TIMEOUT}
+        >
+          <AppSuspense />
+        </SnackbarProvider>
       </BrowserRouter>
     </Provider>
   </StrictMode>

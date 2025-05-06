@@ -16,6 +16,9 @@ export const AGE_PATTERN: RegExp = /\d+$/;
 
 export const ANIME_DURATION: number = 200;
 
+export const SNACK_TIMEOUT: number = 5000;
+export const SNACK_COUNT:number = 3;
+
 export const selSexVarsBase: SelSexVarsBase = {
     [ESex.All]: [
         {id: 0, value: ESex.Female, label: 'Женщину', isDisabled: false},

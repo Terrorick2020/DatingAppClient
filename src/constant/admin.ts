@@ -1,7 +1,14 @@
+import type {
+    ProfilesListItem,
+    TargetProfile,
+    StatusData,
+    UserItemActivCtx
+} from '@/types/admin.types';
+
+import { EProfileStatus, EProfileRoles } from '@/types/store.types';
+
 import PngWoman from '@/assets/img/woman.png';
 import PngMale from '@/assets/img/male.png';
-import { EProfileStatus, EProfileRoles } from '@/types/store.types';
-import type { ProfilesListItem, TargetProfile, StatusData } from '@/types/admin.types';
 
 
 export const resUsersList: ProfilesListItem[] = [
@@ -80,3 +87,10 @@ export const statusTextMap: Record<string, StatusData> = {
     [EProfileStatus.Noob]: { text: "Про - ", status: "НЕАКТИВЕН", addClass: 'warn' },
     [EProfileStatus.Pro]: { text: "Про - ", status: "АКТИВЕН", addClass: '' }
 };
+
+const unActiveCtx: UserItemActivCtx = {text: 'Деактивировать', targetStat: EProfileStatus.Blocked};
+export const userItemActivCtx: Record<string, UserItemActivCtx> = {
+    [EProfileStatus.Blocked]: { text: 'Активировать', targetStat: EProfileStatus.Noob },
+    [EProfileStatus.Noob]: unActiveCtx,
+    [EProfileStatus.Pro]: unActiveCtx,
+}
