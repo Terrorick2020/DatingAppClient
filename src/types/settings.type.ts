@@ -1,5 +1,3 @@
-import { ESex } from "./store.types"
-
 export enum ELanguage {
     English   = 'en',
     Russian   = 'ru',
@@ -12,6 +10,13 @@ export enum EApiStatus {
     Info = 'info',
     Warning = 'warning',
     Error = 'error',
+}
+
+export enum EAnimeDirection {
+    Left = 'left',
+    Up = 'up',
+    Down = 'down',
+    Right = 'right',
 }
 
 export interface FQErrorsItem {

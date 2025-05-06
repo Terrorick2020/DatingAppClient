@@ -139,11 +139,19 @@
                 width: 100%;
 
                 .age-input {
-                    margin-block: 0.7rem;
+                    margin-block: 0.5rem;
                 }
 
                 .description {
                     opacity: 0.5;
+                    font-weight: 900;
+                    margin-left: 0.9rem;
+                    font-size: 0.9rem;
+
+                    &.red-flag {
+                        color: #FF4365;
+                        opacity: 0.85;
+                    }
                 }
             }
 

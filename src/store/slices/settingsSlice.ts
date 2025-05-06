@@ -189,6 +189,9 @@ const settingsSlice = createSlice({
         setApiRes: (state, action) => {
             state.apiRes = action.payload;
         },
+        setFQErrors: (state, action) => {
+            state.fQErrors = action.payload;
+        },
         setComplOpen: (state, action) => {
             state.complaint.open = action.payload;
         },
@@ -272,6 +275,7 @@ export const {
     setSelSexVars,
     setLoad,
     setApiRes,
+    setFQErrors,
     setComplOpen,
     setComplCtx,
     setComplStep,

@@ -1,6 +1,7 @@
 import { ChangeEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfo } from '@/store/slices/profileSlice';
+import { setFQErrors } from '@/store/slices/settingsSlice';
 import { type IState } from '@/types/store.types';
 
 import TextField from '@mui/material/TextField';
@@ -15,9 +16,18 @@ const FillingQuestBio = () => {
     const dispatch = useDispatch();
 
     const handleChangeBio = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+        const bio = event.target.value;
         dispatch(setInfo({
             ...profileInfo,
-            bio: event.target.value,
+            bio,
+        }))
+
+        dispatch(setFQErrors({
+            ...fQErrors,
+            bioErr: {
+                value: !bio,
+                msg: !bio ? 'Поле не должно быть пустым' : '',
+            }
         }))
     };
 

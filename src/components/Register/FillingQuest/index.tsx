@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootDispatch } from '@/store';
-import { useNavigate, useLocation, replace } from 'react-router-dom';
-import { initInterestsVariantsAsync } from '@/store/slices/settingsSlice';
+import { ANIME_DURATION } from '@/constant/settings';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { initInterestsVariantsAsync, addRoute } from '@/store/slices/settingsSlice';
+import { Slide } from "react-awesome-reveal";
 import { appRoutes } from '@/config/routes.config';
-import { addRoute } from '@/store/slices/settingsSlice';
 import { signUpProfileAsync } from '@/store/slices/profileSlice';
+import { EAnimeDirection } from '@/types/settings.type';
 import { type IState } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
@@ -71,13 +73,19 @@ const FillingQuestContent = () => {
                         </div>
                         <div className="filling-quest__ctx">
                             <div className="widgets">
-                                <FillingQuestPhotos />
-                                <FillingQuestInputs />
-                                <FillingQuestMySex />
-                                <FillingQuestAge />
-                                <FillingQuestBio />
-                                <FillingQuestInterests />
-                                <FillingQuestSelectionSex />
+                                <Slide
+                                    triggerOnce
+                                    direction={EAnimeDirection.Left}
+                                    duration={ANIME_DURATION}
+                                >
+                                    <FillingQuestPhotos />
+                                    <FillingQuestInputs />
+                                    <FillingQuestMySex />
+                                    <FillingQuestAge />
+                                    <FillingQuestBio />
+                                    <FillingQuestInterests />
+                                    <FillingQuestSelectionSex />
+                                </Slide>
                             </div>
                             <div className="link" onClick={handleRoute}>
                                 <Button

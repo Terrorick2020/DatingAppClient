@@ -1,6 +1,7 @@
 import { ChangeEvent } from 'react';
 import { districtsList } from '@/constant/profiles';
 import { useSelector, useDispatch } from 'react-redux';
+import { setFQErrors } from '@/store/slices/settingsSlice';
 import { setInfo } from '@/store/slices/profileSlice';
 import { type IState } from '@/types/store.types';
 
@@ -12,7 +13,6 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import CustomSelIcon from '@/components/UI/CustomSelIcon';
 
 
-
 const FillingQuestInputs = () => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
@@ -20,9 +20,19 @@ const FillingQuestInputs = () => {
     const dispatch = useDispatch();
 
     const handleChangeName = (event: ChangeEvent<HTMLInputElement>): void => {
+        const name: string = event.target.value;
+
         dispatch(setInfo({
             ...profileInfo,
-            name: event.target.value,
+            name,
+        }))
+
+        dispatch(setFQErrors({
+            ...fQErrors,
+            nameErr: {
+                value: !name,
+                msg: !name ? 'Поле обязательно для ввода' : '',
+            }
         }))
     }
 
@@ -31,6 +41,10 @@ const FillingQuestInputs = () => {
             ...profileInfo,
             city: event.target.value,
         }))
+    }
+
+    const handleOpenPanel = (): void => {
+        console.log( 'Открытие окна городов!');
     }
 
     return (
@@ -52,9 +66,11 @@ const FillingQuestInputs = () => {
                     <InputLabel className="sel-label" htmlFor="city-input" shrink={false}>Выбирите город</InputLabel>
                     <Select
                         IconComponent={(props) => (
-                            <CustomSelIcon {...props}/>
+                            <CustomSelIcon
+                                {...props}
+                                handleClick={handleOpenPanel}
+                            />
                         )}
-                        defaultValue=""
                         labelId="city-input"
                         id="city-input"
                         MenuProps={{

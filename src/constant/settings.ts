@@ -2,7 +2,7 @@ import type {
     FQErrorsItem,
     InterestsVarsItem,
     SelSexVarsBase,
-    BaseVarsItem
+    BaseVarsItem,
 } from '@/types/settings.type';
 import { ESex, ELineStatus } from '@/types/store.types';
 
@@ -13,6 +13,8 @@ export const dfltErrItem: FQErrorsItem = {
 }
 
 export const AGE_PATTERN: RegExp = /\d+$/;
+
+export const ANIME_DURATION: number = 200;
 
 export const selSexVarsBase: SelSexVarsBase = {
     [ESex.All]: [
