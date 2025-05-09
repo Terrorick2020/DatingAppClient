@@ -17,7 +17,7 @@ const ProfileInfo = (props: PropsProfileInfo) => {
                 <div className="info">
                     <Avatar
                         alt="profile-avatar"
-                        src={profileInfo.photos[0]}
+                        src={profileInfo.photos[0].photo}
                     />
                     <div className="text">
                         <h4 className="headline">
