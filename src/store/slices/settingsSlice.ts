@@ -24,7 +24,7 @@ import { delay } from '@/funcs/general.funcs';
 import { type IState } from '@/types/store.types';
 
 
-const initialState: SettingsState = {
+export const initialState: SettingsState = {
     routes: [],
     lang: ELanguage.Russian,
     load: false,

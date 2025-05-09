@@ -49,10 +49,13 @@ const Photos = (props: PropsPhotos) => {
     <>
         <ul className="photos" id="photos">
             {props.photos.map(item => (
-                <PhotosItem item={item} setDelDialogState={setDelDialogState} />
+                <PhotosItem
+                  item={item}
+                  key={`photos__item-${item.id}`}
+                  setDelDialogState={setDelDialogState}
+                />
             ))}
 
-            
             {props.photos.length < 3 && (
                 <>
                     {loading && <PhotosLoadItem photo={photo} />}
@@ -60,6 +63,7 @@ const Photos = (props: PropsPhotos) => {
                 </>
             )}
         </ul>
+        
         <PhotosDelDialog
             id={delDialogState.targetId}
             open={delDialogState.open}

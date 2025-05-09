@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { addRoute, initDistrictsVarsAsync } from '@/store/slices/settingsSlice';
+import { useNavigate } from 'react-router-dom';
+import { resetRoutes, initDistrictsVarsAsync } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveSelfPlansAsync } from '@/store/slices/profileSlice';
@@ -18,7 +18,6 @@ const EveningPlansLocationCtx = () => {
     const [appLoad, setAppLoad] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
-    const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(
@@ -38,8 +37,8 @@ const EveningPlansLocationCtx = () => {
         const questSliderRoute = appRoutes.questionnaires.inner.slider;
         const toSlider = `${questGlobRoute}/${questSliderRoute}`;
 
-        dispatch(addRoute(location.pathname));
         setAppLoad(false);
+        dispatch(resetRoutes())
         navigate(toSlider);
     }
 

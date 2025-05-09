@@ -14,6 +14,7 @@ const ChatsContent = () => {
     const isLoad = useSelector((state: IState) => state.settings.load);
 
     const dispatch = useDispatch<RootDispatch>();
+    
     useEffect(
         () => {
             const chatsHtml = document.getElementById('chats');

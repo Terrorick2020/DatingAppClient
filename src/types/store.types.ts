@@ -6,6 +6,7 @@ import { LikesState } from './likes.types';
 import { ProfileState } from './profile.types';
 import { QuestState } from './quest.types';
 
+
 export enum EProfileRoles {
     User  = 'User',
     Admin = 'Admin',
@@ -35,6 +36,13 @@ export enum LinkTooltipText {
     Error = 'Error',
 }
 
+export interface Persist {
+    _persist: {
+        version: number
+        rehydrated: boolean
+    }
+}
+
 export interface IState {
     admin:          AdminState
     chats:          ChatsState
@@ -42,5 +50,5 @@ export interface IState {
     profile:        ProfileState
     questionnaires: QuestState
     psych:          PsychState
-    settings:       SettingsState
+    settings:       SettingsState & Persist
 }

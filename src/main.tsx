@@ -3,11 +3,11 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
+import { PersistGate } from 'redux-persist/integration/react';
 import { SNACK_COUNT, SNACK_TIMEOUT } from './constant/settings';
 import { viewport, init, isTMA, swipeBehavior } from '@telegram-apps/sdk';
 
-import store from './store';
-
+import store, { persistor } from './store';
 import AppSuspense from './AppSuspense';
 
 
@@ -41,14 +41,16 @@ async function initTg() {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={ store }>
-      <BrowserRouter>
-        <SnackbarProvider
-          maxSnack={SNACK_COUNT}
-          autoHideDuration={SNACK_TIMEOUT}
-        >
-          <AppSuspense />
-        </SnackbarProvider>
-      </BrowserRouter>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          <SnackbarProvider
+            maxSnack={SNACK_COUNT}
+            autoHideDuration={SNACK_TIMEOUT}
+          >
+            <AppSuspense />
+          </SnackbarProvider>
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   </StrictMode>
 );

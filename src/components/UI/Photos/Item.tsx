@@ -20,7 +20,6 @@ const PhotosItem = (props: PropsPhotosItem) => {
         <>
             <li
                 className="photos__item custom"
-                key={props.item.id}
                 style={{ backgroundImage: `url(${props.item.photo})` }}
             >
                 <span

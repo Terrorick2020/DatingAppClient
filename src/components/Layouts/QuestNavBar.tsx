@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { appRoutes } from '@/config/routes.config';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import type { IState } from '@/types/store.types';
 
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -14,6 +16,8 @@ import SvgProfile from '@/assets/icon/profile.svg?react';
 
 
 const QuestNavBar = () => {
+    const isLoad = useSelector((state: IState) => state.settings.load);
+
     const navigate = useNavigate();
     const location = useLocation();
     
@@ -48,30 +52,35 @@ const QuestNavBar = () => {
                         value={toChats}
                         icon={ <SvgChats />}
                         onClick={() => navigate(toChats)}
+                        disabled={isLoad}
                     />
                     <BottomNavigationAction
                         label="Симпатии"
                         value={toLikes}
                         icon={ <SvgLikes />}
                         onClick={() => navigate(toLikes)}
+                        disabled={isLoad}
                     />
                     <BottomNavigationAction
                         label="Анкеты"
                         value={toSlider}
                         icon={ <SvgQuestionnaires />}
                         onClick={() => navigate(toSlider)}
+                        disabled={isLoad}
                     />
                     <BottomNavigationAction
                         label="Пси-помощь"
                         value={toPhys}
                         icon={ <SvgPsychologists />}
                         onClick={() => navigate(toPhys)}
+                        disabled={isLoad}
                     />
                     <BottomNavigationAction
                         label="Профиль"
                         value={toProfile}
                         icon={ <SvgProfile />}
                         onClick={() => navigate(toProfile)}
+                        disabled={isLoad}
                     />
                 </BottomNavigation>
             </Box>
