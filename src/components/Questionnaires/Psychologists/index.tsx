@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { initPsychList, setSerchPsychQuery } from '@/store/slices/psychSlice';
 import { type RootDispatch } from '@/store';
@@ -11,6 +11,8 @@ import PsychList from './List';
 
 const PsychologistsContent = () => {
     const isLoad = useSelector((state: IState) => state.settings.load);
+
+    const [preText, setPreText] = useState<string>('Все специалисты');
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -31,7 +33,7 @@ const PsychologistsContent = () => {
     return (
         <>
             <div className="psychologists__header">
-                <PsychHeader />
+                <PsychHeader setPreText={setPreText} />
             </div>
             <div className="psychologists__ctx">
                 {
@@ -41,7 +43,7 @@ const PsychologistsContent = () => {
                             <MyLoader />
                         </div>
                         :
-                        <PsychList />
+                        <PsychList preText={preText} />
                 }
             </div>
         </>

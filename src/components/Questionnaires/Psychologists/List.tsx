@@ -7,22 +7,18 @@ import type { IState } from '@/types/store.types';
 import ListBlock from '@/components/UI/ListBlock';
 
 
-const PsychList = () => {
+interface PropsPsychList {
+    preText: string
+}
+const PsychList = (props: PropsPsychList) => {
     const psychList = useSelector((state: IState) => state.psych.psychList);
-    const serchPsychQuery = useSelector((state: IState) => state.psych.serchPsychQuery);
 
     const globTargetPsychRoute = appRoutes.targetPsych;
 
     return (
         <>
             <h6 className="headline">
-                {
-                    serchPsychQuery
-                        ?
-                        'Найденные специалисты'
-                        :
-                        'Все специалисты'
-                }
+                { props.preText }
             </h6>
             {
                 psychList.length

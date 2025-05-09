@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { delay } from '@/funcs/general.funcs';
 import { setSerchPsychQuery } from '@/store/slices/psychSlice';
 import { initPsychList } from '@/store/slices/psychSlice';
 import { type RootDispatch } from '@/store';
@@ -8,14 +9,23 @@ import { type IState } from '@/types/store.types';
 import SearchInput from '@/components/UI/SearchInput';
 
 
-const PsychHeader = () => {
+interface PropsPsychHeader {
+    setPreText: (value: string) => void
+}
+const PsychHeader = (props: PropsPsychHeader) => {
     const serchPsychQuery = useSelector((state: IState) => state.psych.serchPsychQuery);
 
     const dispatch = useDispatch<RootDispatch>();
 
+    const handleSearch = async (): Promise<void> => {
+        dispatch(initPsychList());
+        delay(10);
+        props.setPreText(!!serchPsychQuery ? 'Найденные специалисты' : 'Все специалисты');
+    } 
+
     useEffect(() => {
         const handler = setTimeout(() => {
-            dispatch(initPsychList());
+            handleSearch();
         }, 500);
     
         return () => {
@@ -27,20 +37,19 @@ const PsychHeader = () => {
         dispatch(setSerchPsychQuery(newValue));
     };
 
-    const handleClearInput = (): void => {
-        dispatch(initPsychList())
-    };
-
     return (
         <>
             <h4 className="headline">Пси-специалисты</h4>
-            <p className="text">Выберите любого специалиста и опишите ему свою проблему или попросите совет. Специалист ответит вам в свободное время, а диалог появится в общем чате</p>
+            <p className="text">
+                Выберите любого специалиста и опишите ему свою проблему или попросите совет.
+                Специалист ответит вам в свободное время, а диалог появится в общем чате.
+            </p>
             <SearchInput
                 value={serchPsychQuery}
                 placeholder="Поиск..."
                 inpType="string"
                 handleInputChange={handleInputChange}
-                handleClearInput={handleClearInput}
+                handleClearInput={handleSearch}
                 handleInputKeyDown={() => {}}
             />
         </>
