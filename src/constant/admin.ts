@@ -31,7 +31,11 @@ export const targetsUsers: Record<string, TargetProfile> = {
     '2342343': {
         id: '2342343',
         role: EProfileRoles.User,
-        photos: [PngWoman, PngWoman, PngWoman],
+        photos: [
+            {id: 'sdvsdv', photo: PngMale},
+            {id: 'pppafg', photo: PngWoman},
+            {id: 'ssdvw2', photo: PngMale},
+        ],
         name: 'Иван Иванов',
         age: 25,
         city: 'Москва',
@@ -41,7 +45,11 @@ export const targetsUsers: Record<string, TargetProfile> = {
     '8148518': {
         id: '8148518',
         role: EProfileRoles.User,
-        photos: [PngWoman, PngWoman],
+        photos: [
+            {id: 'sdvsdv', photo: PngMale},
+            {id: 'pppafg', photo: PngWoman},
+            {id: 'ssdvw2', photo: PngMale},
+        ],
         name: 'Алексей Петров',
         age: 30,
         city: 'Санкт-Петербург',
@@ -51,7 +59,11 @@ export const targetsUsers: Record<string, TargetProfile> = {
     '8111518': {
         id: '8111518',
         role: EProfileRoles.User,
-        photos: [],
+        photos: [
+            {id: 'sdvsdv', photo: PngMale},
+            {id: 'pppafg', photo: PngWoman},
+            {id: 'ssdvw2', photo: PngMale},
+        ],
         name: 'Мария Сидорова',
         age: 23,
         city: 'Казань',
@@ -61,7 +73,11 @@ export const targetsUsers: Record<string, TargetProfile> = {
     '8148548': {
         id: '8148548',
         role: EProfileRoles.User,
-        photos: [PngWoman],
+        photos: [
+            {id: 'sdvsdv', photo: PngMale},
+            {id: 'pppafg', photo: PngWoman},
+            {id: 'ssdvw2', photo: PngMale},
+        ],
         name: 'Елена Смирнова',
         age: 28,
         city: 'Новосибирск',
@@ -71,7 +87,11 @@ export const targetsUsers: Record<string, TargetProfile> = {
     '8167808': {
         id: '8167808',
         role: EProfileRoles.User,
-        photos: [PngWoman, PngWoman, PngWoman],
+        photos: [
+            {id: 'sdvsdv', photo: PngMale},
+            {id: 'pppafg', photo: PngWoman},
+            {id: 'ssdvw2', photo: PngMale},
+        ],
         name: 'Дмитрий Кузнецов',
         age: 22,
         city: 'Екатеринбург',
