@@ -1,8 +1,16 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { EProfileRoles, ESex,  EProfileStatus, ELineStatus } from '@/types/store.types';
-import { setLoad } from './settingsSlice';
+import type {
+    ProfileState,
+    ProfileSelf,
+    SendGeoData,
+    EveningPlans,
+    PhotoItem
+} from '@/types/profile.types';
+
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { EProfileRoles, ESex,  EProfileStatus, ELineStatus, IState } from '@/types/store.types';
+import { setLoad, setApiRes } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
-import type { ProfileState, ProfileSelf, SendGeoData } from '@/types/profile.types';
+import { EApiStatus } from '@/types/settings.type';
 
 import axios from 'axios';
 import PngLeady from '@/assets/img/leady.png';
@@ -27,7 +35,7 @@ const initialState: ProfileState = {
     },
     addLink: 'https://t.me/BotFather',
     eveningPlans: {
-        isCurrent: false,
+        isCurrent: true,
         plan: {
             value: '',
             description: '',
@@ -74,30 +82,72 @@ export const sendSelfGeoAsync = createAsyncThunk(
     }
 )
 
+export const saveSelfPhotoAsync = createAsyncThunk(
+    'profile/save-self-phooto',
+    async (photo: File): Promise<PhotoItem> => {
+        try {
+            await delay(2000);
+
+            const photoUrl = URL.createObjectURL(photo);
+            const newPhoto: PhotoItem = {
+                id: `${Date.now()}`,
+                photo: photoUrl
+            };
+
+            return newPhoto;
+        } catch (error) {
+            throw error;
+        }
+    }
+)
+
+export const deleteSelfPhotoAsync = createAsyncThunk(
+    'profile/delete-self-photo',
+    async (id: string): Promise<string> => {
+        try {
+            await delay(2000);
+
+            return id;
+        } catch (error) {
+            throw error;
+        }
+    }
+)
+
 export const signUpProfileAsync = createAsyncThunk(
     'profile/sign-up-profile',
-    async (): Promise<ProfileSelf> => {
+    async (_, {dispatch}): Promise<ProfileSelf> => {
+        try {
+            await delay(2000);
 
-        await delay(2000);
+            const responce = {
+                id: '10234231',
+                photos: [PngLeady],
+                enableGeo: false,
+                lineStat: ELineStatus.Online,
+                role: EProfileRoles.User,
+                status: EProfileStatus.Noob,
+                username: '',
+                name: '',
+                age: null,
+                city: '',
+                sex: ESex.Male,
+                bio: '',
+                interest: '',
+                selSex: ESex.All,
+            };
 
-        const responce = {
-            id: '10234231',
-            photos: [PngLeady],
-            enableGeo: false,
-            lineStat: ELineStatus.Online,
-            role: EProfileRoles.User,
-            status: EProfileStatus.Noob,
-            username: '',
-            name: '',
-            age: null,
-            city: '',
-            sex: ESex.Male,
-            bio: '',
-            interest: '',
-            selSex: ESex.All,
-        };
-
-        return responce;
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Регистрация прошла успешно',
+                status: EApiStatus.Success,
+                timestamp: Date.now(),
+            }));
+    
+            return responce;
+        } catch ( error ) {
+            throw error
+        }
     }
 )
 
@@ -132,6 +182,29 @@ export const getSelfProfile = createAsyncThunk(
             throw error;
         } finally {
             dispatch(setLoad(false));
+        }
+    }
+)
+
+export const saveSelfPlansAsync = createAsyncThunk(
+    'profile/save-self-plans',
+    async (_, {dispatch, getState}): Promise<EveningPlans> => {
+        try {
+            await delay(2000);
+
+            const rootState = getState() as IState;
+            const eveningPlans = rootState.profile.eveningPlans;
+
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Обновление планов прошло успешно',
+                status: EApiStatus.Success,
+                timestamp: Date.now(),
+            }));
+
+            return eveningPlans;
+        } catch (error) {
+            throw error;
         }
     }
 )
@@ -173,6 +246,30 @@ const profileSlice = createSlice({
         })
         builder.addCase(sendSelfGeoAsync.rejected, _ => {
             console.log("Ошибка при отправке личного geo");
+        })
+
+        //Отправка сообщения на добавление фотографии пользвателя
+        builder.addCase(saveSelfPhotoAsync.pending, _ => {
+            console.log("Отправка сообщения на добавление фотографии пользвателя");
+        })
+        builder.addCase(saveSelfPhotoAsync.fulfilled, (state, action: PayloadAction<PhotoItem>) => {
+            console.log("Успешная отправка сообщения на добавление фотографии пользвателя");
+            state.info.photos.push(action.payload);
+        })
+        builder.addCase(saveSelfPhotoAsync.rejected, _ => {
+            console.log("Ошибка при отправке сообщения на добавление фотографии пользвателя");
+        })
+
+        //Отправка сообщения на удаление фотографии пользвателя
+        builder.addCase(deleteSelfPhotoAsync.pending, _ => {
+            console.log("Отправка сообщения на удаление фотографии пользвателя");
+        })
+        builder.addCase(deleteSelfPhotoAsync.fulfilled, (state, action: PayloadAction<string>) => {
+            console.log("Успешная отправка сообщения на удаление фотографии пользвателя");
+            state.info.photos = state.info.photos.filter(item => item.id !== action.payload);
+        })
+        builder.addCase(deleteSelfPhotoAsync.rejected, _ => {
+            console.log("Ошибка при отправке сообщения на удаление фотографии пользвателя");
         })
 
         // Регистрация профиля пользователя

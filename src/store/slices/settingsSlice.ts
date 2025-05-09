@@ -6,6 +6,7 @@ import {
     type SettingsState,
     type InterestsVarsItem,
     type BaseVarsItem,
+    type SetApiRes,
 } from '@/types/settings.type';
 
 import {
@@ -17,7 +18,7 @@ import {
     districtsVarsList,
 } from '@/constant/settings';
 
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setInfo } from './profileSlice';
 import { delay } from '@/funcs/general.funcs';
 import { type IState } from '@/types/store.types';
@@ -27,7 +28,12 @@ const initialState: SettingsState = {
     routes: [],
     lang: ELanguage.Russian,
     load: false,
-    apiRes: EApiStatus.Info,
+    apiRes: {
+        value: false,
+        msg: '',
+        status: EApiStatus.Info,
+        timestamp: null,
+    },
     fQErrors: {
         photErr: dfltErrItem,
         nameErr: dfltErrItem,
@@ -191,8 +197,16 @@ const settingsSlice = createSlice({
         setLoad: (state, action) => {
             state.load = action.payload;
         },
-        setApiRes: (state, action) => {
+        setApiRes: (state, action: PayloadAction<SetApiRes>) => {
             state.apiRes = action.payload;
+        },
+        resetApiRes: (state) => {
+            state.apiRes = {
+                value: false,
+                msg: '',
+                status: EApiStatus.Info,
+                timestamp: null,
+            };
         },
         setFQErrors: (state, action) => {
             state.fQErrors = action.payload;
@@ -283,6 +297,7 @@ export const {
     setSelSexVars,
     setLoad,
     setApiRes,
+    resetApiRes,
     setFQErrors,
     setEPErrors,
     setComplOpen,

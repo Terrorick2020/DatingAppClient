@@ -1,9 +1,13 @@
 import { EProfileRoles, EProfileStatus, ESex, ELineStatus } from './store.types';
 
 
+export interface PhotoItem {
+    id: string
+    photo: string
+}
 export interface ProfileSelf {
     id: string
-    photos: string[]
+    photos: PhotoItem[]
     enableGeo: boolean
     lineStat: ELineStatus
     role: EProfileRoles

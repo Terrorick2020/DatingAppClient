@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { addRoute, initDistrictsVarsAsync } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
 import { useDispatch, useSelector } from 'react-redux';
+import { saveSelfPlansAsync } from '@/store/slices/profileSlice';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -30,6 +31,8 @@ const EveningPlansLocationCtx = () => {
 
     const handleRoute = async (): Promise<void> => {
         setAppLoad(true);
+
+        await dispatch(saveSelfPlansAsync());
 
         const questGlobRoute = appRoutes.questionnaires.global;
         const questSliderRoute = appRoutes.questionnaires.inner.slider;

@@ -19,6 +19,8 @@ export const ANIME_DURATION: number = 200;
 export const SNACK_TIMEOUT: number = 5000;
 export const SNACK_COUNT:number = 3;
 
+export const EMPTY_INPUT_ERR_MSG = 'Поле обязательно для ввода';
+
 export const selSexVarsBase: SelSexVarsBase = {
     [ESex.All]: [
         {id: 0, value: ESex.Female, label: 'Женщину', isDisabled: false},
@@ -47,6 +49,7 @@ export const lineStatusAttr = {
         text: 'Оффлайн',
     },
 }
+
 
 export const interestsVarsList: InterestsVarsItem[] = [
     { id: 0, value: 'communication', label: 'Общение', isOppos: false },

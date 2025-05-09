@@ -4,7 +4,7 @@ import { RootDispatch } from '@/store';
 import { ANIME_DURATION } from '@/constant/settings';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { initInterestsVariantsAsync, addRoute } from '@/store/slices/settingsSlice';
-import { Slide } from "react-awesome-reveal";
+import { Slide } from 'react-awesome-reveal';
 import { appRoutes } from '@/config/routes.config';
 import { signUpProfileAsync } from '@/store/slices/profileSlice';
 import { EAnimeDirection } from '@/types/settings.type';

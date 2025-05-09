@@ -2,7 +2,6 @@ export function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-
 export function ageToStr(age: number | null): string {
     if ( !age ) return 'лет';
 	let txt;
@@ -35,4 +34,19 @@ export function formatTime (seconds: number): string {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
+
+export function formatTimeLeft(seconds: number): string {
+	const hours = Math.floor(seconds / 3600);
+	const minutes = Math.floor((seconds % 3600) / 60);
+	return `${hours.toString().padStart(2, '0')}ч. ${minutes.toString().padStart(2, '0')}м.`;
+}
+
+export function formatTimeLeftOther(seconds: number, withSecond: boolean = false): string {
+	const hours = Math.floor(seconds / 3600);
+	const minutes = Math.floor((seconds % 3600) / 60);
+	const secs = seconds % 60;
+	return `${hours.toString().padStart(2, '0')}:${minutes
+	  .toString()
+	  .padStart(2, '0')}${withSecond ? ':' + secs.toString().padStart(2, '0') : ''}`;
 }

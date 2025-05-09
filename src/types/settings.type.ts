@@ -12,6 +12,13 @@ export enum EApiStatus {
     Error = 'error',
 }
 
+export interface SetApiRes {
+    value: boolean
+    msg: string
+    status: EApiStatus
+    timestamp: number | null
+}
+
 export enum EAnimeDirection {
     Left = 'left',
     Up = 'up',
@@ -80,7 +87,7 @@ export interface SettingsState {
     routes: string[]
     lang:  ELanguage
     load: boolean
-    apiRes: EApiStatus
+    apiRes: SetApiRes
     fQErrors: FQErrors
     fEPErrors: FEPErrors
     interestsVars: InterestsVarsItem[]

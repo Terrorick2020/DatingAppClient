@@ -26,7 +26,28 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-            @include mixins.fadeIn(0.5s, ease-in-out, 0s, forwards);
+            // background-blend-mode: multiply;
+
+            @keyframes post-load {
+                0% {
+                    background-color: rgba(0, 0, 0, 0.5);
+                    background-blend-mode: multiply;
+                }
+
+                99% {
+                    background-color: transparent;
+                    background-blend-mode: multiply;
+                }
+
+                100% {
+                    background-color: transparent;
+                    background-blend-mode: normal;
+                }
+            }
+
+            &.custom {
+                animation: post-load 0.5s ease forwards;
+            }
     
             &.add {
                 width: 26vw;
@@ -36,6 +57,7 @@
                 justify-content: center;
                 align-items: center;
                 border: 2px dashed #D7FF81;
+                @include mixins.fadeIn(0.5s, ease-in-out, 0s, forwards);
     
                 .btn {
                     cursor: pointer;
@@ -49,6 +71,18 @@
                 img {
                     width: 5vw;
                     min-width: 2.4rem;
+                }
+            }
+
+            &.load {
+                background-blend-mode: multiply;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .MuiCircularProgress-root {
+                    color: #BC96FF;
                 }
             }
     

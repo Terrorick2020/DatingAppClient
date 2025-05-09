@@ -1,4 +1,5 @@
 import { EProfileRoles, EProfileStatus } from './store.types';
+import { PhotoItem } from './profile.types';
 
 
 export interface ProfilesListItem {
@@ -12,7 +13,7 @@ export interface ProfilesListItem {
 export interface TargetProfile {
     id: string
     role: EProfileRoles
-    photos: string[]
+    photos: PhotoItem[]
     name: string
     age: number | null
     city: string

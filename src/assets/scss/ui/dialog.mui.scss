@@ -260,4 +260,43 @@
             }
         }
     }
+
+    &.cropper-confirm {
+        .MuiDialog-container {
+            width: 100%;
+            padding: 0;
+
+            .MuiPaper-root {
+                width: 100%;
+                height: 70vh;
+
+                .MuiDialogContent-root {
+                    position: relative;
+                    height: 40vh;
+                }
+
+                .MuiDialogActions-root {
+                    margin-top: 1rem;
+
+                    .MuiButtonBase-root {
+                        &.exit-btn {
+                            background: transparent;
+                            color: #D7FF81;
+                            border: 2px solid #D7FF81;
+            
+                            &:hover {
+                                background: #D7FF81;
+                                color: #121112;
+                            }
+                        }
+
+                        &.save-btn {
+                            background: #D7FF81;
+                            color: #121112;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,11 +1,17 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import type {
+    AdminState,
+    ProfilesListItem,
+    TargetProfile,
+    DataSerchProfStat
+} from '@/types/admin.types';
+
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { EProfileRoles, EProfileStatus } from '@/types/store.types';
 import { resUsersList, resPsychsList, targetsUsers } from '@/constant/admin';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
-import { type IState } from '@/types/store.types';
-import type { AdminState, ProfilesListItem, TargetProfile, DataSerchProfStat } from '@/types/admin.types';
-
+import type { PhotoItem } from '@/types/profile.types';
+import type { IState } from '@/types/store.types';
 
 // import axios from 'axios';
 
@@ -26,7 +32,7 @@ const initialState: AdminState = {
         status: EProfileStatus.Noob,
         description: '',
     }
-}
+};
 
 export const getProfilesListAsync = createAsyncThunk(
     'admin/get-profiles-list',
@@ -60,7 +66,7 @@ export const getProfilesListAsync = createAsyncThunk(
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 export const getUniqueLinkAsync = createAsyncThunk(
     'admin/get-unique-link',
@@ -80,7 +86,7 @@ export const getUniqueLinkAsync = createAsyncThunk(
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 export const getProfileByIdAsync = createAsyncThunk(
     'admin/get-profile-by-id',
@@ -99,7 +105,39 @@ export const getProfileByIdAsync = createAsyncThunk(
             dispatch(setLoad(false));
         }
     }
-)
+);
+
+export const addPhotoToUserAsync = createAsyncThunk(
+    'admin/add-photo-to-user',
+    async (photo: File): Promise<PhotoItem> => {
+        try {
+            await delay(2000);
+
+            const photoUrl = URL.createObjectURL(photo);
+            const newPhoto: PhotoItem = {
+                id: `${Date.now()}`,
+                photo: photoUrl
+            };
+
+            return newPhoto;
+        } catch (error) {
+            throw error;
+        }
+    }
+);
+
+export const delPhotoToUserAsync = createAsyncThunk(
+    'admin/del-photo-to-user',
+    async (id: string): Promise<string> => {
+        try {
+            await delay(2000);
+
+            return id;
+        } catch (error) {
+            throw error;
+        }
+    }
+);
 
 export const serchProfileStatusAsync = createAsyncThunk(
     'admin/serch-profile-status',
@@ -122,7 +160,7 @@ export const serchProfileStatusAsync = createAsyncThunk(
 
         return response;
     }
-)
+);
 
 export const deleteUserAsync = createAsyncThunk(
     'admin/delete-user',
@@ -141,7 +179,7 @@ export const deleteUserAsync = createAsyncThunk(
             throw error;
         }
     }
-)
+);
 
 const adminSlice = createSlice({
     name: 'admin',
@@ -174,6 +212,32 @@ const adminSlice = createSlice({
         }),
         builder.addCase(getProfilesListAsync.rejected, _ => {
             console.log("Ошибка получения списка пользователей");
+        })
+
+        // Добавление фотографии пользователю
+        builder.addCase(addPhotoToUserAsync.pending, _ => {
+            console.log("Добавление фотографии пользователю");
+        })
+        builder.addCase(addPhotoToUserAsync.fulfilled, ( state, action: PayloadAction<PhotoItem> ) => {
+            console.log("Успешное добавление фотографии пользователю");
+            state.targetProfile.photos.push(action.payload);
+        }),
+        builder.addCase(addPhotoToUserAsync.rejected, _ => {
+            console.log("Ошибка добавления фотографии пользователю");
+        })
+
+        // Удаление фотографии пользователю
+        builder.addCase(delPhotoToUserAsync.pending, _ => {
+            console.log("Удаление фотографии пользователю");
+        })
+        builder.addCase(delPhotoToUserAsync.fulfilled, ( state, action: PayloadAction<string> ) => {
+            console.log("Успешное удаление фотографии пользователю");
+            state.targetProfile.photos = state.targetProfile.photos.filter(
+                item => item.id !== action.payload
+            );
+        }),
+        builder.addCase(delPhotoToUserAsync.rejected, _ => {
+            console.log("Ошибка удаления фотографии пользователю");
         })
 
         // Получение уникальной ссылки

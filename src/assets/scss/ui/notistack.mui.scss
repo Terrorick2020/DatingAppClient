@@ -1,0 +1,34 @@
+#root {
+    .notistack-SnackbarContainer {
+        .notistack-Snackbar {
+            display: flex;
+            justify-content: center;
+
+            .plans-timeout {
+                margin-top: 15vh;
+            }
+
+            .notistack-MuiContent {
+                &-info, &-success, &-warning, &-error {
+                    color: #FFFFFF;
+                }
+
+                &-info {
+                    background: #0070D8;
+                }
+
+                &-success {
+                    background: #1DD800;
+                }
+
+                &-warning {
+                    background: #FFBD38;
+                }
+
+                &-error {
+                    background: #FF4365;
+                }
+            }
+        }
+    }
+}
