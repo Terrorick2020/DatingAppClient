@@ -33,6 +33,10 @@
             justify-content: left;
             gap: clamp(5px, 2vw, 15px);
 
+            .MuiAvatar-root, .name {
+                cursor: pointer;
+            }
+
             .description {
                 display: flex;
                 flex-direction: column;

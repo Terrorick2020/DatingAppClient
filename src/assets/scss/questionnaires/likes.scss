@@ -91,6 +91,17 @@
                             display: grid;
                             grid-template-columns: 1fr 1fr;
                             gap: 0.35rem;
+
+                            .MuiButtonBase-root {
+                                color: #FFFFFF !important;
+
+                                .MuiCircularProgress-root {
+                                    width: 1.5rem !important;
+                                    height: 1.5rem !important;
+    
+                                    color: inherit;
+                                }
+                            }
                         }
                     }
 

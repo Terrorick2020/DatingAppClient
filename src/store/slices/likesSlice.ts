@@ -32,25 +32,29 @@ export const initLikesListAsync = createAsyncThunk(
 
 export const acceptLikingAsync = createAsyncThunk(
     'likes/accept-liking',
-    async (): Promise<void> => {
+    async (id: string): Promise<boolean> => {
         try {
+            await delay(2000);
 
+            return !!id;
         } catch (error) {
             throw error;
         }
     }
-)
+);
 
 export const rejectLikingAsync = createAsyncThunk(
     'likes/reject-liking',
-    async (): Promise<void> => {
+    async (id: string): Promise<boolean> => {
         try {
+            await delay(2000);
 
+            return !!id;
         } catch (error) {
             throw error;
         }
     }
-)
+);
 
 const likesSlice = createSlice({
     name: 'likes',
@@ -69,8 +73,31 @@ const likesSlice = createSlice({
         builder.addCase(initLikesListAsync.rejected, _ => {
             console.log("Ошибка получение списка симпатий");
         })
+
+        // Принятие симпатии
+        builder.addCase(acceptLikingAsync.pending, _ => {
+            console.log("Принятие симпатии");
+        })
+        builder.addCase(acceptLikingAsync.fulfilled, _ => {
+            console.log("Успешное принятие симпатии");
+        })
+        builder.addCase(acceptLikingAsync.rejected, _ => {
+            console.log("Ошибка принятия симпатии");
+        })
+
+        // Отклонение симпантии
+        builder.addCase(rejectLikingAsync.pending, _ => {
+            console.log("Отклонение симпантии");
+        })
+        builder.addCase(rejectLikingAsync.fulfilled, _ => {
+            console.log("Успешное отклонение симпантии");
+
+        })
+        builder.addCase(rejectLikingAsync.rejected, _ => {
+            console.log("Ошибка отклонения симпантии");
+        })
     },
 })
 
-export const {} = likesSlice.actions
-export default likesSlice.reducer
+export const {} = likesSlice.actions;
+export default likesSlice.reducer;

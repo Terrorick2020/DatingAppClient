@@ -1,7 +1,9 @@
 import { useState, MouseEvent, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { appRoutes } from '@/config/routes.config';
 import { lineStatusAttr } from '@/constant/settings';
-import { setComplOpen } from '@/store/slices/settingsSlice';
+import { setComplOpen, addRoute } from '@/store/slices/settingsSlice';
 import { ageToStr } from '@/funcs/general.funcs';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
@@ -22,10 +24,12 @@ interface PropsChatHeader {
 const ChatHeader = (props: PropsChatHeader) => {
     const chatInterlocutor = useSelector((state: IState) => state.chats.targetChat.interlocutor);
 
-    const dispatch = useDispatch<RootDispatch>();
-
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [openDel, setOpenDel] = useState<boolean>(false);
+
+    const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleMenuClose = (event: MouseEvent<HTMLLIElement>): void => {
         event.stopPropagation();
@@ -42,6 +46,14 @@ const ChatHeader = (props: PropsChatHeader) => {
         handleMenuClose(event);
     };
 
+    
+    const handleNavToDetails = (): void => {
+        const toDetails = appRoutes.details.replace(':id', props.id);
+
+        dispatch(addRoute(location.pathname));
+        navigate(toDetails);
+    }
+
     const ageStr = useMemo(() => ageToStr(chatInterlocutor?.age ?? null), [chatInterlocutor?.age]);
 
     return (
@@ -50,9 +62,10 @@ const ChatHeader = (props: PropsChatHeader) => {
                 <Avatar
                     alt="chat-head-avatar"
                     src={chatInterlocutor.avatar}
+                    onClick={handleNavToDetails}
                 />
                 <div className="description">
-                    <h6 className="name">
+                    <h6 className="name" onClick={handleNavToDetails}>
                         {`${chatInterlocutor.name}, ${ageStr}`}
                     </h6>
                     <span className={`line ${lineStatusAttr[chatInterlocutor.lineStat].addClass}`}>
