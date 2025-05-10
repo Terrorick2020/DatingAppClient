@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { addRoute, initPlansVarsAsync } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
-import { Slide } from "react-awesome-reveal";
+import { addRoute, initPlansVarsAsync } from '@/store/slices/settingsSlice';
+import { Slide } from 'react-awesome-reveal';
 import { useDispatch, useSelector } from 'react-redux';
 import { ANIME_DURATION } from '@/constant/settings';
 import { EAnimeDirection } from '@/types/settings.type';

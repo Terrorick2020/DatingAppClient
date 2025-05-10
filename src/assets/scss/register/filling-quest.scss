@@ -37,8 +37,6 @@
         .video {
             cursor: pointer;
 
-            --play-shadow-color: #D7FF81;
-
             @keyframes videoShadowPlay {
                 
                 0% {
@@ -61,6 +59,18 @@
                 &:hover {
                     filter: drop-shadow(0 0 0.3rem var(--play-shadow-color));
                     animation: none;
+                }
+            }
+
+            &.disabled {
+                svg {
+                    opacity: 0.8;
+                    cursor: not-allowed;
+                    animation: none;
+    
+                    &:hover {
+                        filter: none;
+                    }
                 }
             }
         }
