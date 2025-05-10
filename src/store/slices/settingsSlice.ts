@@ -21,7 +21,7 @@ import {
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setInfo } from './profileSlice';
 import { delay } from '@/funcs/general.funcs';
-import { type IState } from '@/types/store.types';
+import { type IState, LinkPageType } from '@/types/store.types';
 
 
 export const initialState: SettingsState = {
@@ -57,7 +57,7 @@ export const initialState: SettingsState = {
         query: '',
         complaintsVars: [],
     },
-    mediaLink: 'https://storage.yandexcloud.net/photodatingapp/1.MOV?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=YCAJE2WAntPULZcEo0LlklLMu%2F20250429%2Fru-central1%2Fs3%2Faws4_request&X-Amz-Date=20250429T165117Z&X-Amz-Expires=108000&X-Amz-Signature=6dc73f2a9ed9d1a4703f787fd4aec4131ee3c3ea75c8adffbcdbae10db54d5ed&X-Amz-SignedHeaders=host',
+    mediaLink: '',
     plansVars: [],
     districtsVars: [],
 }
@@ -175,6 +175,21 @@ export const initDistrictsVarsAsync = createAsyncThunk(
     }
 )
 
+export const initMediaLinkAsync = createAsyncThunk(
+    'settings/init-media-link',
+    async (linkType: LinkPageType): Promise<string> => {
+        try {
+            await delay(2000);
+
+            console.log( linkType );
+
+            return 'https://storage.yandexcloud.net/photodatingapp/1.MOV?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=YCAJE2WAntPULZcEo0LlklLMu%2F20250429%2Fru-central1%2Fs3%2Faws4_request&X-Amz-Date=20250429T165117Z&X-Amz-Expires=108000&X-Amz-Signature=6dc73f2a9ed9d1a4703f787fd4aec4131ee3c3ea75c8adffbcdbae10db54d5ed&X-Amz-SignedHeaders=host';
+        } catch (error) {
+            throw error;
+        }
+    }
+)
+
 const settingsSlice = createSlice({
     name: 'settings',
     initialState,
@@ -285,6 +300,18 @@ const settingsSlice = createSlice({
         })
         builder.addCase(initDistrictsVarsAsync.rejected, _ => {
             console.log("Ошибка получния вариантов районов");
+        })
+
+        // Получение ссылки видео
+        builder.addCase(initMediaLinkAsync.pending, _ => {
+            console.log("Получение ссылки видео");
+        })
+        builder.addCase(initMediaLinkAsync.fulfilled, ( state, action: PayloadAction<string> ) => {
+            console.log("Успешное получение ссылки видео");
+            state.mediaLink = action.payload;
+        })
+        builder.addCase(initMediaLinkAsync.rejected, _ => {
+            console.log("Ошибка получения ссылки видео");
         })
     }
 })

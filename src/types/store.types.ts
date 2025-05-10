@@ -36,6 +36,11 @@ export enum LinkTooltipText {
     Error = 'Error',
 }
 
+export enum LinkPageType {
+    FillingQuest = 'FillingQuest',
+    EveningPlans = 'EveningPlans',
+}
+
 export interface Persist {
     _persist: {
         version: number

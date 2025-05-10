@@ -21,6 +21,10 @@ export interface TargetProfile {
     description: string
 }
 
+export interface ComplaintListItem {
+    
+}
+
 export interface AdminState {
     searchType: EProfileRoles
     searchId: string
@@ -28,6 +32,7 @@ export interface AdminState {
     link: string
     profilesList: ProfilesListItem[]
     targetProfile: TargetProfile
+    complaintsList: ComplaintListItem[]
 }
 
 export interface StatusData {

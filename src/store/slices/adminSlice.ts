@@ -2,7 +2,8 @@ import type {
     AdminState,
     ProfilesListItem,
     TargetProfile,
-    DataSerchProfStat
+    DataSerchProfStat,
+    ComplaintListItem,
 } from '@/types/admin.types';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -31,7 +32,8 @@ const initialState: AdminState = {
         city: '',
         status: EProfileStatus.Noob,
         description: '',
-    }
+    },
+    complaintsList: [],
 };
 
 export const getProfilesListAsync = createAsyncThunk(
@@ -181,6 +183,23 @@ export const deleteUserAsync = createAsyncThunk(
     }
 );
 
+export const initComplaintListAsync = createAsyncThunk(
+    'admin/init-complaint-list',
+    async (_, {dispatch}): Promise<ComplaintListItem[]> => {
+        try {
+            dispatch(setLoad(true));
+
+            await delay(2000);
+
+            return [];
+        } catch (error) {
+            throw error;
+        } finally {
+            dispatch(setLoad(false));
+        }
+    }
+);
+
 const adminSlice = createSlice({
     name: 'admin',
     initialState,
@@ -286,6 +305,18 @@ const adminSlice = createSlice({
         }),
         builder.addCase(deleteUserAsync.rejected, _ => {
             console.log("Ошибка удаления пользователя");
+        })
+
+        // Получение списка жалоб
+        builder.addCase(initComplaintListAsync.pending, _ => {
+            console.log("Получение списка жалоб");
+        })
+        builder.addCase(initComplaintListAsync.fulfilled, ( state, action: PayloadAction<ComplaintListItem[]> ) => {
+            console.log("Успешное получение списка жалоб");
+            state.complaintsList = action.payload;
+        }),
+        builder.addCase(initComplaintListAsync.rejected, _ => {
+            console.log("Ошибка получения списка жалоб");
         })
     }
 })

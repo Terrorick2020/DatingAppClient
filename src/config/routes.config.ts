@@ -37,6 +37,7 @@ export const appRoutes = {
             nav: 'change',
             usersList: 'users-list',
             userInfo: 'user-info/:id',
+            compalintsList: 'complaints-list',
         },
     },
 }

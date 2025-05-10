@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { delay } from '@/funcs/general.funcs';
 import { likesList } from '@/constant/likes';
 import { setLoad } from './settingsSlice';
@@ -14,7 +14,7 @@ const initialState: LikesState = {
 }
 
 export const initLikesListAsync = createAsyncThunk(
-    'questionnaires/init-likes-list',
+    'likes/init-likes-list',
     async (_, {dispatch}): Promise<LikesItem[]> => {
         try {
             dispatch(setLoad(true));
@@ -30,6 +30,28 @@ export const initLikesListAsync = createAsyncThunk(
     }
 )
 
+export const acceptLikingAsync = createAsyncThunk(
+    'likes/accept-liking',
+    async (): Promise<void> => {
+        try {
+
+        } catch (error) {
+            throw error;
+        }
+    }
+)
+
+export const rejectLikingAsync = createAsyncThunk(
+    'likes/reject-liking',
+    async (): Promise<void> => {
+        try {
+
+        } catch (error) {
+            throw error;
+        }
+    }
+)
+
 const likesSlice = createSlice({
     name: 'likes',
     initialState,
@@ -40,7 +62,7 @@ const likesSlice = createSlice({
         builder.addCase(initLikesListAsync.pending, _ => {
             console.log("Получение списка симпатий");
         })
-        builder.addCase(initLikesListAsync.fulfilled, ( state, action ) => {
+        builder.addCase(initLikesListAsync.fulfilled, ( state, action: PayloadAction<LikesItem[]> ) => {
             console.log("Успешное получение списка симпатий");
             state.likesList = action.payload;
         })
