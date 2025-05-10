@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { delay } from '@/funcs/general.funcs';
 import { chatsFavList, chatsList, targetChat } from '@/constant/chats';
 import { setLoad } from './settingsSlice';
@@ -72,7 +72,7 @@ const chatsSlice = createSlice({
         builder.addCase(initChatsCtxAsync.pending, _ => {
             console.log("Получение списков чатов и особых пользоватеоей");
         })
-        builder.addCase(initChatsCtxAsync.fulfilled, ( state, action ) => {
+        builder.addCase(initChatsCtxAsync.fulfilled, ( state, action: PayloadAction<ChatsCtx> ) => {
             console.log("Успешное получение списков чатов и особых пользоватеоей");
             state.chatsFavList = action.payload.chatsFavList;
             state.chatsList = action.payload.chatsList;
@@ -85,7 +85,7 @@ const chatsSlice = createSlice({
         builder.addCase(getChatByIdAsync.pending, _ => {
             console.log("Получение чата по id");
         })
-        builder.addCase(getChatByIdAsync.fulfilled, ( state, action ) => {
+        builder.addCase(getChatByIdAsync.fulfilled, ( state, action: PayloadAction<TargetChat> ) => {
             console.log("Успешное получение чата по id");
             state.targetChat = action.payload;
         })

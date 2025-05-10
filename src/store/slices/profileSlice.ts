@@ -3,7 +3,8 @@ import type {
     ProfileSelf,
     SendGeoData,
     EveningPlans,
-    PhotoItem
+    PhotoItem,
+    EveningPlansItem
 } from '@/types/profile.types';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -49,7 +50,7 @@ const initialState: ProfileState = {
 
 export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
-    async ( data: string, _thunkAPI ) => {
+    async ( data: string ): Promise<null | undefined> => {
         const url = new URL(data)
         const params = new URLSearchParams(url.hash.substring(1))
         const tgData = params.get('tgWebAppData')
@@ -223,14 +224,13 @@ const profileSlice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
-        setInfo: (state, action) => {
-            const newInfo: ProfileSelf = action.payload;
-            state.info = newInfo;
+        setInfo: (state, action: PayloadAction<ProfileSelf>) => {
+            state.info = action.payload;
         },
-        setPlan: (state, action) => {
+        setPlan: (state, action: PayloadAction<EveningPlansItem>) => {
             state.eveningPlans.plan = action.payload;
         },
-        setLocation: (state, action) => {
+        setLocation: (state, action: PayloadAction<EveningPlansItem>) => {
             state.eveningPlans.location = action.payload;
         },
     },
@@ -286,7 +286,7 @@ const profileSlice = createSlice({
         builder.addCase(signUpProfileAsync.pending, _ => {
             console.log("Регистрация профиля пользователя");
         })
-        builder.addCase(signUpProfileAsync.fulfilled, ( state, action ) => {
+        builder.addCase(signUpProfileAsync.fulfilled, ( state, action: PayloadAction<ProfileSelf> ) => {
             console.log("Успешная регистрация профиля пользователя");
             state.info = action.payload;
         })
@@ -298,7 +298,7 @@ const profileSlice = createSlice({
         builder.addCase(getSelfProfile.pending, _ => {
             console.log("Получение текущего профиля пользователя");
         })
-        builder.addCase(getSelfProfile.fulfilled, ( state, action ) => {
+        builder.addCase(getSelfProfile.fulfilled, ( state, action: PayloadAction<ProfileSelf> ) => {
             console.log("Успешное получение текущего профиля пользователя");
             state.info = action.payload;
         })

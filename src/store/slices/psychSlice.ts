@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
 import { psychTestList, targerPsychList } from '@/constant/psych';
@@ -112,7 +112,7 @@ const psychSlice = createSlice({
     name: 'psychologists',
     initialState,
     reducers: {
-        setSerchPsychQuery: (state, action) => {
+        setSerchPsychQuery: (state, action: PayloadAction<string>) => {
             state.serchPsychQuery = action.payload;
         }
     },
@@ -121,7 +121,7 @@ const psychSlice = createSlice({
         builder.addCase(initPsychList.pending, _ => {
             console.log("Получние списка психологов");
         })
-        builder.addCase(initPsychList.fulfilled, ( state, action ) => {
+        builder.addCase(initPsychList.fulfilled, ( state, action: PayloadAction<PsychListItem[]> ) => {
             console.log("Успешное получние списка психологов");
             state.psychList = action.payload;
         })
@@ -133,7 +133,7 @@ const psychSlice = createSlice({
         builder.addCase(getPsycByIdhAsync.pending, _ => {
             console.log("Получние выбранного психолога");
         })
-        builder.addCase(getPsycByIdhAsync.fulfilled, ( state, action ) => {
+        builder.addCase(getPsycByIdhAsync.fulfilled, ( state, action: PayloadAction<TargerPsych | null> ) => {
             console.log("Получние выбранного психолога");
             state.targetPsych = action.payload;
         })

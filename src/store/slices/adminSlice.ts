@@ -204,19 +204,19 @@ const adminSlice = createSlice({
     name: 'admin',
     initialState,
     reducers: {
-        setSearchType: (state, action): void => {
+        setSearchType: (state, action: PayloadAction<EProfileRoles>): void => {
             state.searchType = action.payload;
         },
-        setSearchId: (state, action): void => {
+        setSearchId: (state, action: PayloadAction<string>): void => {
             state.searchId = action.payload;
         },
-        setPassword: (state, action): void => {
+        setPassword: (state, action: PayloadAction<string>): void => {
             state.password = action.payload;
         },
-        setNewProfilesList: (state, action): void => {
+        setNewProfilesList: (state, action: PayloadAction<ProfilesListItem[]>): void => {
             state.profilesList = action.payload;
         },
-        setTargetProfileId: (state, action): void => {
+        setTargetProfileId: (state, action: PayloadAction<string>): void => {
             state.targetProfile.id = action.payload;
         },
     },
@@ -225,7 +225,7 @@ const adminSlice = createSlice({
         builder.addCase(getProfilesListAsync.pending, _ => {
             console.log("Получение списка пользователей");
         })
-        builder.addCase(getProfilesListAsync.fulfilled, ( state, action ) => {
+        builder.addCase(getProfilesListAsync.fulfilled, ( state, action: PayloadAction<ProfilesListItem[]> ) => {
             console.log("Успешное получение списка пользователей");
             state.profilesList = action.payload;
         }),
@@ -263,7 +263,7 @@ const adminSlice = createSlice({
         builder.addCase(getUniqueLinkAsync.pending, _ => {
             console.log("Получение уникальной ссылки");
         })
-        builder.addCase(getUniqueLinkAsync.fulfilled, ( state, action ) => {
+        builder.addCase(getUniqueLinkAsync.fulfilled, ( state, action: PayloadAction<string> ) => {
             console.log("Успешное получение уникальной ссылки");
             state.link = action.payload;
         }),
@@ -275,7 +275,7 @@ const adminSlice = createSlice({
         builder.addCase(getProfileByIdAsync.pending, _ => {
             console.log("Получение целевого пользователя");
         })
-        builder.addCase(getProfileByIdAsync.fulfilled, ( state, action ) => {
+        builder.addCase(getProfileByIdAsync.fulfilled, ( state, action: PayloadAction<TargetProfile> ) => {
             console.log("Успешное получение целевого пользователя");
             state.targetProfile = action.payload;
         }),
@@ -287,7 +287,7 @@ const adminSlice = createSlice({
         builder.addCase(serchProfileStatusAsync.pending, _ => {
             console.log("Изменение статуса пользователя");
         })
-        builder.addCase(serchProfileStatusAsync.fulfilled, ( state, action ) => {
+        builder.addCase(serchProfileStatusAsync.fulfilled, ( state, action: PayloadAction<EProfileStatus> ) => {
             console.log("Успешное изменение статуса пользователя");
             state.targetProfile.status = action.payload;
         }),
@@ -299,7 +299,7 @@ const adminSlice = createSlice({
         builder.addCase(deleteUserAsync.pending, _ => {
             console.log("Удаление пользователя");
         })
-        builder.addCase(deleteUserAsync.fulfilled, ( state, action ) => {
+        builder.addCase(deleteUserAsync.fulfilled, ( state, action: PayloadAction<ProfilesListItem[]> ) => {
             console.log("Успешное удаление пользователя");
             state.profilesList = action.payload;
         }),

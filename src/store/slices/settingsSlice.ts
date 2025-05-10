@@ -3,10 +3,14 @@ import {
     EComplaintType,
     EApiStatus,
     EComplaintStep,
+    type Complaint,
+    type FQErrors,
+    type FEPErrors,
     type SettingsState,
     type InterestsVarsItem,
     type BaseVarsItem,
     type SetApiRes,
+    type SelSexVarsItem,
 } from '@/types/settings.type';
 
 import {
@@ -194,10 +198,10 @@ const settingsSlice = createSlice({
     name: 'settings',
     initialState,
     reducers: {
-        setLang: (state, action) => {
+        setLang: (state, action: PayloadAction<ELanguage>) => {
             state.lang = action.payload;
         },
-        addRoute: (state, action) => {
+        addRoute: (state, action: PayloadAction<string>) => {
             state.routes.push(action.payload);
         },
         dellRoute: (state) => {
@@ -206,10 +210,10 @@ const settingsSlice = createSlice({
         resetRoutes: (state) => {
             state.routes = [];
         },
-        setSelSexVars: (state, action) => {
+        setSelSexVars: (state, action: PayloadAction<SelSexVarsItem[]>) => {
             state.selSexVars = action.payload;
         },
-        setLoad: (state, action) => {
+        setLoad: (state, action: PayloadAction<boolean>) => {
             state.load = action.payload;
         },
         setApiRes: (state, action: PayloadAction<SetApiRes>) => {
@@ -223,22 +227,22 @@ const settingsSlice = createSlice({
                 timestamp: null,
             };
         },
-        setFQErrors: (state, action) => {
+        setFQErrors: (state, action: PayloadAction<FQErrors>) => {
             state.fQErrors = action.payload;
         },
-        setEPErrors: (state, action) => {
+        setEPErrors: (state, action: PayloadAction<FEPErrors>) => {
             state.fEPErrors = action.payload;
         },
-        setComplOpen: (state, action) => {
+        setComplOpen: (state, action: PayloadAction<boolean>) => {
             state.complaint.open = action.payload;
         },
-        setComplCtx: (state, action) => {
+        setComplCtx: (state, action: PayloadAction<EComplaintType>) => {
             state.complaint.type = action.payload;
         },
-        setComplStep: (state, action) => {
+        setComplStep: (state, action: PayloadAction<EComplaintStep>) => {
             state.complaint.step = action.payload;
         },
-        setComplaint: (state, action) => {
+        setComplaint: (state, action: PayloadAction<Complaint>) => {
             state.complaint = action.payload;
         },
         resetComplaint: (state) => {
@@ -258,7 +262,7 @@ const settingsSlice = createSlice({
         builder.addCase(initInterestsVariantsAsync.pending, _ => {
             console.log("Получение варианетов интересов");
         })
-        builder.addCase(initInterestsVariantsAsync.fulfilled, ( state, action ) => {
+        builder.addCase(initInterestsVariantsAsync.fulfilled, ( state, action: PayloadAction<InterestsVarsItem[]> ) => {
             console.log("Варианты интересов успешно полученый");
             state.interestsVars = action.payload;
         })
@@ -270,7 +274,7 @@ const settingsSlice = createSlice({
         builder.addCase(initComplaintsVarsAsync.pending, _ => {
             console.log("Получение варианетов жалоб");
         })
-        builder.addCase(initComplaintsVarsAsync.fulfilled, ( state, action ) => {
+        builder.addCase(initComplaintsVarsAsync.fulfilled, ( state, action: PayloadAction<BaseVarsItem[]> ) => {
             console.log("Варианты жалоб успешно получены");
             state.complaint.complaintsVars = action.payload;
         })
@@ -282,7 +286,7 @@ const settingsSlice = createSlice({
         builder.addCase(initPlansVarsAsync.pending, _ => {
             console.log("Получение варианетов планов");
         })
-        builder.addCase(initPlansVarsAsync.fulfilled, ( state, action ) => {
+        builder.addCase(initPlansVarsAsync.fulfilled, ( state, action: PayloadAction<BaseVarsItem[]> ) => {
             console.log("Варианты планов успешно получены");
             state.plansVars = action.payload;
         })
@@ -294,7 +298,7 @@ const settingsSlice = createSlice({
         builder.addCase(initDistrictsVarsAsync.pending, _ => {
             console.log("Получение варианетов районов");
         })
-        builder.addCase(initDistrictsVarsAsync.fulfilled, ( state, action ) => {
+        builder.addCase(initDistrictsVarsAsync.fulfilled, ( state, action: PayloadAction<BaseVarsItem[]> ) => {
             console.log("Варианты районов успешно получены");
             state.districtsVars = action.payload;
         })

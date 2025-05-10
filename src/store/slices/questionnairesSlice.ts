@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
 import { slidersList, targetUser } from '@/constant/quest';
@@ -53,7 +53,7 @@ const questionnairesSlice = createSlice({
         builder.addCase(initSliderListAsync.pending, _ => {
             console.log("Получение списка анкет");
         })
-        builder.addCase(initSliderListAsync.fulfilled, ( state, action ) => {
+        builder.addCase(initSliderListAsync.fulfilled, ( state, action: PayloadAction<SliderItem[]> ) => {
             console.log("Успешное получение списка анкет");
             state.sliderList = action.payload;
         })
@@ -65,7 +65,7 @@ const questionnairesSlice = createSlice({
         builder.addCase(initTargetUserAsync.pending, _ => {
             console.log("Получение информации о целевой анкете");
         })
-        builder.addCase(initTargetUserAsync.fulfilled, ( state, action ) => {
+        builder.addCase(initTargetUserAsync.fulfilled, ( state, action: PayloadAction<DetailsTargetUser> ) => {
             console.log("Успешное получение информации о целевой анкете");
             state.targetUser = action.payload;
         })
