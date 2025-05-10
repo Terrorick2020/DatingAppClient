@@ -45,7 +45,6 @@ const ChatHeader = (props: PropsChatHeader) => {
         setOpenDel(true);
         handleMenuClose(event);
     };
-
     
     const handleNavToDetails = (): void => {
         const toDetails = appRoutes.details.replace(':id', props.id);
