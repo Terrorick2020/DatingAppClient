@@ -22,7 +22,7 @@ export interface TargetProfile {
 }
 
 export interface ComplaintListItem {
-    
+    id: string
 }
 
 export interface AdminState {

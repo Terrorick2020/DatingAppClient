@@ -1,5 +1,6 @@
-import { JSX, useEffect } from 'react';
+import { JSX, useEffect, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { createSelector } from 'reselect';
 import { initComplaintListAsync } from '@/store/slices/adminSlice';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -9,44 +10,48 @@ import ComplaintsListHeader from './Header';
 import ComplaintsListCtx from './List';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectAdmin = (state: IState) => state.admin;
+
+const selectComplListState = createSelector(
+    [selectSettings, selectAdmin],
+    (settings, admin) => ({
+      isLoad: settings.load,
+      complaintsList: admin.complaintsList,
+    })
+);
+
+const ComplListCtxMemo   = memo(ComplaintsListCtx);
+
 const ComplaintsListConstent = (): JSX.Element => {
-    const isLoad = useSelector((state: IState) => state.settings.load);
-    const complaintsList = useSelector((state: IState) => state.admin.complaintsList);
+    const { isLoad, complaintsList } = useSelector(selectComplListState);
 
     const dispatch = useDispatch<RootDispatch>();
 
     useEffect(() => { dispatch(initComplaintListAsync()) }, []);
 
+    if (isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    );
+
+    if (!complaintsList.length) return (
+        <div className="complaints-list__empty">
+            <h4 className="headline">Жалоб пока не поступало</h4>
+        </div>
+    );
+
     return (
         <>
-            {
-                isLoad
-                    ?
-                    <div className="loader">
-                        <MyLoader />
-                    </div>
-                    :
-                    <>
-                        {
-                            !complaintsList.length
-                                ?
-                                <div className="complaints-list__empty">
-                                    <h4 className="headline">Жалоб пока не поступало</h4>
-                                </div>
-                                :
-                                <>
-                                    <header className="complaints-list__header">
-                                        <ComplaintsListHeader />
-                                    </header>
-                                    <main className="complaints-list__ctx">
-                                        <ComplaintsListCtx />
-                                    </main>
-                               </>
-                        }
-                    </>
-            }
+            <header className="complaints-list__header">
+                <ComplaintsListHeader />
+            </header>
+            <main className="complaints-list__ctx">
+                <ComplListCtxMemo complaintsList={complaintsList} />
+            </main>
         </>
-    )
+    );
 }
 
 export default ComplaintsListConstent;

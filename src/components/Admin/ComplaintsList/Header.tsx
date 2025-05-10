@@ -1,4 +1,7 @@
-const ComplaintsListHeader = () => {
+import { JSX } from 'react';
+
+
+const ComplaintsListHeader = (): JSX.Element => {
     return (
         <>
             ComplaintsListHeader
