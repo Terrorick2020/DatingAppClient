@@ -8,6 +8,7 @@ import Photos from '@/components/UI/Photos';
 
 const FillingQuestPhotos = () => {
     const photos = useSelector((state: IState) => state.profile.info.photos);
+    const photErr = useSelector((state: IState) => state.settings.fQErrors.photErr);
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -26,6 +27,7 @@ const FillingQuestPhotos = () => {
                 <div className="items">
                     <Photos photos={photos} handleAdd={handleAdd} handleDel={handleDel} />
                 </div>
+                {photErr.value && <p className="err-msg">{photErr.msg}</p>}
             </div>
         </>
     )

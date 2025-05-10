@@ -102,6 +102,16 @@
                     margin-top: 1rem;
                     border-radius: 1.3rem;
                 }
+
+                .err-msg {
+                    margin-top: 0.5rem;
+                    color: #FF4365;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    margin-left: 0.9rem;
+                    opacity: 0.9;
+                    letter-spacing: 0.5px;
+                }
             }
 
             &__inputs {
@@ -116,7 +126,7 @@
                 }
 
                 .city-err {
-                    color: rgba(254, 115, 115, 0.784);
+                    color: #fe7373c8;
                     font-size: 0.8rem;
                 }
             }
