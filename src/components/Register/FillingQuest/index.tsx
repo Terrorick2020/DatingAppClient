@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { addRoute, initInterestsVariantsAsync } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { setFQErrors } from '@/store/slices/settingsSlice';
+import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { RootDispatch } from '@/store';
 import { ANIME_DURATION } from '@/constant/settings';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -25,6 +27,8 @@ import FillingQuestSelectionSex from './SelectionSex';
 
 const FillingQuestContent = () => {
     const isLoad = useSelector((state: IState) => state.settings.load);
+    const profileInfo = useSelector((state: IState) => state.profile.info);
+    const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
     
     const [regLoad, setRegLoad] = useState<boolean>(false);
 
@@ -49,6 +53,60 @@ const FillingQuestContent = () => {
         const ePGlobRoute = appRoutes.eveningPlans.global;
         const ePPlansRoute = appRoutes.eveningPlans.inner.plans;
         const toEPPlans = `${ePGlobRoute}/${ePPlansRoute}`;
+
+        if(!profileInfo.photos.length) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                photErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        if(!profileInfo.name) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                nameErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        if(!profileInfo.age) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                ageErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        if(!profileInfo.city) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                cityErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        if(!profileInfo.bio) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                cityErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        // const hasErrors = Object.values(fQErrors).some(item => item.value);
+        
+        // if(hasErrors) return;
 
         setRegLoad(true);
         await dispatch(signUpProfileAsync());

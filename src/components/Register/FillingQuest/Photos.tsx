@@ -33,4 +33,4 @@ const FillingQuestPhotos = () => {
     )
 }
 
-export default FillingQuestPhotos
+export default FillingQuestPhotos;
