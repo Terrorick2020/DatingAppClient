@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { districtsList } from '@/constant/profiles';
 import { useSelector, useDispatch } from 'react-redux';
+import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { setFQErrors } from '@/store/slices/settingsSlice';
 import { setInfo } from '@/store/slices/profileSlice';
 import { type IState } from '@/types/store.types';
@@ -33,7 +34,7 @@ const FillingQuestInputs = () => {
             ...fQErrors,
             nameErr: {
                 value: !name,
-                msg: !name ? 'Поле обязательно для ввода' : '',
+                msg: !name ? EMPTY_INPUT_ERR_MSG : '',
             }
         }))
     }

@@ -25,3 +25,14 @@ export const planLabelStyle = {
         },
     },
 }
+
+export const validImageTypes: string[] = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+    'image/heic',
+    'image/heif'
+];
+
+export const maxImgSize = 5 * 1024 * 1024;

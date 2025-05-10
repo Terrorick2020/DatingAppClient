@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { infoAlert, warningAlert } from '@/funcs/alert.funcs';
+import { validImageTypes, maxImgSize } from '@/constant/ui';
 import type { RootDispatch } from '@/store';
 
 import PhotosCropperDialog from './CropperDialog';
@@ -28,9 +29,6 @@ const PhotosAddItem = (props: PropsPhotosAddItem) => {
             return;
         };
         
-        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        const maxSize = 5 * 1024 * 1024;
-        
         if (!validImageTypes.includes(file.type)) {
           infoAlert(
             dispatch,
@@ -40,10 +38,10 @@ const PhotosAddItem = (props: PropsPhotosAddItem) => {
           return;
         };
         
-        if (file.size > maxSize) {
+        if (file.size > maxImgSize) {
             infoAlert(
                 dispatch,
-                'Фотография превышает разрешённый размер: 5Mb',
+                'Фотография превышает максимально разрешённый размер',
             );
 
           return;

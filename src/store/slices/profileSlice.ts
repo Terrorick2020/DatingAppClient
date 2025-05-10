@@ -122,7 +122,12 @@ export const signUpProfileAsync = createAsyncThunk(
 
             const responce = {
                 id: '10234231',
-                photos: [PngLeady],
+                photos: [
+                    {
+                        id: 'sdvsdvdv',
+                        photo: PngLeady,
+                    }
+                ],
                 enableGeo: false,
                 lineStat: ELineStatus.Online,
                 role: EProfileRoles.User,
@@ -161,7 +166,12 @@ export const getSelfProfile = createAsyncThunk(
 
             const responce = {
                 id: '10234231',
-                photos: [PngLeady],
+                photos: [
+                    {
+                        id: 'sdvsdvdv',
+                        photo: PngLeady,
+                    }
+                ],
                 enableGeo: false,
                 lineStat: ELineStatus.Online,
                 role: EProfileRoles.User,

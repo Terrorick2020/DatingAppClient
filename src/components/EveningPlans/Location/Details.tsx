@@ -1,5 +1,6 @@
 import { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { setLocation } from '@/store/slices/profileSlice';
 import { setEPErrors } from '@/store/slices/settingsSlice';
 import type { RootDispatch } from '@/store';
@@ -26,7 +27,7 @@ const LocationDetails = () => {
             ...fEPErrors,
             descDistErr: {
                 value: !description,
-                msg: !description ? 'Поле не должно быть пустым' : '',
+                msg: !description ? EMPTY_INPUT_ERR_MSG : '',
             }
         }))
     };

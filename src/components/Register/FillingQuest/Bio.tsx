@@ -1,6 +1,7 @@
 import { ChangeEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfo } from '@/store/slices/profileSlice';
+import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { setFQErrors } from '@/store/slices/settingsSlice';
 import { type IState } from '@/types/store.types';
 
@@ -26,7 +27,7 @@ const FillingQuestBio = () => {
             ...fQErrors,
             bioErr: {
                 value: !bio,
-                msg: !bio ? 'Поле не должно быть пустым' : '',
+                msg: !bio ? EMPTY_INPUT_ERR_MSG : '',
             }
         }))
     };
