@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useInitMediaLink } from '@/funcs/effects.funcs';
 import { LinkPageType } from '@/types/store.types';
-import { initMediaLinkAsync } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
 import { addRoute } from '@/store/slices/settingsSlice';
 import type { RootDispatch } from '@/store';
@@ -11,8 +10,8 @@ import SvgVideoHelpers from '@/assets/icon/video-helpers.svg?react';
 
 
 const FillingQuestHeader = () => {
-    const [isDisabled, setIsDisabled] = useState<boolean>(true);
-
+    const isDisabled = useInitMediaLink(LinkPageType.FillingQuest);
+    
     const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();
     const navigate = useNavigate();
@@ -25,25 +24,6 @@ const FillingQuestHeader = () => {
         navigate(toMedia);
         dispatch(addRoute(location.pathname));
     }
-
-    useEffect(
-        () => {
-            const fetchMediaLink = async () => {
-                try {
-                    const response = await dispatch(
-                        initMediaLinkAsync(LinkPageType.FillingQuest)
-                    ).unwrap();
-                    
-                    setIsDisabled(!response);
-                } catch (error) {
-                    setIsDisabled(false);
-                }
-            };
-        
-            fetchMediaLink();
-        },
-        [dispatch]
-    );
 
     return (
         <>  
