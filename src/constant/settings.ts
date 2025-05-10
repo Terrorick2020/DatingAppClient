@@ -16,7 +16,7 @@ export const AGE_PATTERN: RegExp = /\d+$/;
 
 export const ANIME_DURATION: number = 200;
 
-export const SNACK_TIMEOUT: number = 5000;
+export const SNACK_TIMEOUT: number = 4000;
 export const SNACK_COUNT:number = 3;
 
 export const EMPTY_INPUT_ERR_MSG = 'Поле обязательно для ввода';

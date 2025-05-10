@@ -8,6 +8,7 @@ import type { RootDispatch } from '@/store';
 
 export const useInitMediaLink = (linkType: LinkPageType): boolean => {
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
   const dispatch = useDispatch<RootDispatch>();
 
   useEffect(() => {

@@ -1,5 +1,7 @@
 #root {
     .notistack-SnackbarContainer {
+        margin-top: calc(clamp(2.8rem, var(--nav-bar-h), 5rem) - 0.5rem);
+
         .notistack-Snackbar {
             display: flex;
             justify-content: center;
