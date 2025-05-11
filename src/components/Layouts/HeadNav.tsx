@@ -47,8 +47,10 @@ const DesktopHeadNav = (): JSX.Element => {
 
     useEffect(() => {
         if ( isTgMobile) {
-            if (!!setRoutes.length && backButton.show.isAvailable()) backButton.show();
-            if (!setRoutes.length && backButton.hide.isAvailable()) backButton.hide();
+            setTimeout(() => {
+                if (!!setRoutes.length && backButton.show.isAvailable()) backButton.show();
+                if (!setRoutes.length && backButton.hide.isAvailable()) backButton.hide();
+            }, 0);
         }
     }, [setRoutes]);
 
