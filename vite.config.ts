@@ -11,6 +11,9 @@ export default defineConfig({
     svgr(),
     checker({ typescript: true }),
   ],
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   server: {
     host: '0.0.0.0',
     allowedHosts: ['3dating.fun'],
@@ -38,8 +41,5 @@ export default defineConfig({
         }
       }
     }
-  },
-  esbuild: {
-    drop: ['console', 'debugger'],
   },
 })
