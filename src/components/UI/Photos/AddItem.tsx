@@ -59,18 +59,6 @@ const PhotosAddItem = (props: PropsPhotosAddItem) => {
             infoAlert(dispatch, 'Ошибка при загрузке изображения');
         };
 
-
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-            setPhoto(reader.result as string);
-            setOpen(true);
-        };
-
-        reader.onerror = () => {
-            infoAlert(dispatch, 'Ошибка при чтении файла');
-        };
-
         img.src = objectUrl;
 
         event.target.value = '';

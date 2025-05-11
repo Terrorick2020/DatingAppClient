@@ -34,7 +34,7 @@ const DefaultLayout = memo(() => {
     }
 
     useEffect( () => {
-        apiRes.value && showSnackAlert(apiRes.msg, apiRes.status, SNACK_TIMEOUT);
+        apiRes.value && showSnackAlert(apiRes.msg, apiRes.status, null);
     }, [apiRes] );
 
     return (

@@ -1,6 +1,8 @@
 #root {
     .notistack-SnackbarContainer {
-        margin-top: calc(clamp(2.8rem, var(--nav-bar-h), 5rem) - 0.5rem);
+        margin-top: calc(clamp(2.8rem, var(--nav-bar-h), 5rem) - 2rem);
+        display: flex;
+        justify-content: center;
 
         .notistack-Snackbar {
             display: flex;
@@ -11,6 +13,9 @@
             }
 
             .notistack-MuiContent {
+                align-items: center;
+                flex-wrap: nowrap;
+
                 &-info, &-success, &-warning, &-error {
                     color: #FFFFFF;
                 }
