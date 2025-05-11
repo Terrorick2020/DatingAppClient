@@ -35,7 +35,7 @@ const PhotosAddItem = (props: PropsPhotosAddItem) => {
             'Неправильный формат фотографии'
           );
 
-          return;
+        //   return;
         };
         
         if (file.size > maxImgSize) {
