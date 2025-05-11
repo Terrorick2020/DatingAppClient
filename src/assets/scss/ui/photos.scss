@@ -26,10 +26,14 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-            // background-blend-mode: multiply;
 
             @keyframes post-load {
                 0% {
+                    display: none;
+                }
+
+                1% {
+                    display: block;
                     background-color: rgba(0, 0, 0, 0.5);
                     background-blend-mode: multiply;
                 }
@@ -48,7 +52,7 @@
             &.custom {
                 animation: post-load 0.5s ease forwards;
             }
-    
+
             &.add {
                 width: 26vw;
                 height: 28vw;
@@ -58,7 +62,7 @@
                 align-items: center;
                 border: 2px dashed #D7FF81;
                 @include mixins.fadeIn(0.5s, ease-in-out, 0s, forwards);
-    
+
                 .btn {
                     cursor: pointer;
                     position: absolute;
@@ -85,7 +89,7 @@
                     color: #BC96FF;
                 }
             }
-    
+
             .delete {
                 position: absolute;
                 width: 6vw;
@@ -104,4 +108,3 @@
         }
     }
 }
-
