@@ -11,17 +11,17 @@ export default defineConfig({
     svgr(),
     checker({ typescript: true }),
   ],
-  // server: {
-  //   host: '0.0.0.0',
-  //   allowedHosts: ['3dating.fun'],
-  //   hmr: {
-  //     host: '3dating.fun',
-  //     protocol: 'wss',
-  //   },
-  // },
-  // preview: {
-  //   allowedHosts: ['3dating.fun']
-  // },
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: ['3dating.fun'],
+    hmr: {
+      host: '3dating.fun',
+      protocol: 'wss',
+    },
+  },
+  preview: {
+    allowedHosts: ['3dating.fun']
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
@@ -39,7 +39,7 @@ export default defineConfig({
       }
     }
   },
-  // esbuild: {
-  //   drop: ['console', 'debugger'],
-  // },
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
 })
