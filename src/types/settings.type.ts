@@ -83,6 +83,17 @@ export interface Complaint {
     complaintsVars: BaseVarsItem[]
 }
 
+export interface BadgeBlockItem {
+    value: boolean
+    content: string
+}
+
+export interface BadgeBlock {
+    chats: BadgeBlockItem
+    likes: BadgeBlockItem
+    profile: BadgeBlockItem
+}
+
 export interface SettingsState {
     routes: string[]
     lang:  ELanguage
@@ -96,4 +107,5 @@ export interface SettingsState {
     mediaLink: string
     plansVars: BaseVarsItem[]
     districtsVars: BaseVarsItem[]
+    badge: BadgeBlock
 }

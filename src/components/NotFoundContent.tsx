@@ -27,7 +27,10 @@ const NotFoundContent = () => {
                     <div className="box">
                         <img className="image" src={SvgNotFound} alt="not-found" />
                         <h3 className="headline">Cтраница не найдена</h3>
-                        <p className="description">Возможно, пользователь удалил свой аккаунт. Продолжайте общаться с другими людьми.</p>
+                        <p className="description">
+                            Возможно, пользователь удалил свой аккаунт или возникли какие-то проблемы.
+                            Продолжайте общаться с другими людьми.
+                        </p>
                     </div>
                 </header>
                 <footer className="footer">

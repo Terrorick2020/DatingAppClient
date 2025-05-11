@@ -11,6 +11,7 @@ import {
     type BaseVarsItem,
     type SetApiRes,
     type SelSexVarsItem,
+    type BadgeBlock,
 } from '@/types/settings.type';
 
 import {
@@ -20,6 +21,7 @@ import {
     dfltErrItem,
     plansVarsList,
     districtsVarsList,
+    badgeEmptyItem,
 } from '@/constant/settings';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -64,6 +66,11 @@ export const initialState: SettingsState = {
     mediaLink: '',
     plansVars: [],
     districtsVars: [],
+    badge: {
+        chats: badgeEmptyItem,
+        likes: badgeEmptyItem,
+        profile: badgeEmptyItem,
+    }
 }
 
 export const initInterestsVariantsAsync = createAsyncThunk(
@@ -256,6 +263,9 @@ const settingsSlice = createSlice({
                 complaintsVars: [],
             }
         },
+        setBadge: (state, action: PayloadAction<BadgeBlock>) => {
+            state.badge = action.payload
+        }
     },
     extraReducers: builder => {
         // Получение варианетов интересов

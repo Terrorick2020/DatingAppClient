@@ -7,6 +7,7 @@ import type { IState } from '@/types/store.types';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import Badge from '@mui/material/Badge';
 
 import SvgChats from '@/assets/icon/chats.svg?react';
 import SvgLikes from '@/assets/icon/likes.svg?react';
@@ -50,35 +51,47 @@ const QuestNavBar = () => {
                     <BottomNavigationAction
                         label="Чаты"
                         value={toChats}
-                        icon={ <SvgChats />}
+                        icon={
+                            <Badge badgeContent={4} color="error">
+                                <SvgChats />
+                            </Badge>
+                        }
                         onClick={() => navigate(toChats)}
                         disabled={isLoad}
                     />
                     <BottomNavigationAction
                         label="Симпатии"
                         value={toLikes}
-                        icon={ <SvgLikes />}
+                        icon={
+                            <Badge badgeContent={4} color="error">
+                                <SvgLikes />
+                            </Badge>
+                        }
                         onClick={() => navigate(toLikes)}
                         disabled={isLoad}
                     />
                     <BottomNavigationAction
                         label="Анкеты"
                         value={toSlider}
-                        icon={ <SvgQuestionnaires />}
+                        icon={<SvgQuestionnaires />}
                         onClick={() => navigate(toSlider)}
                         disabled={isLoad}
                     />
                     <BottomNavigationAction
                         label="Пси-помощь"
                         value={toPhys}
-                        icon={ <SvgPsychologists />}
+                        icon={<SvgPsychologists />}
                         onClick={() => navigate(toPhys)}
                         disabled={isLoad}
                     />
                     <BottomNavigationAction
                         label="Профиль"
                         value={toProfile}
-                        icon={ <SvgProfile />}
+                        icon={
+                            <Badge badgeContent={'❕'} color="error">
+                                <SvgProfile />
+                            </Badge>
+                        }
                         onClick={() => navigate(toProfile)}
                         disabled={isLoad}
                     />

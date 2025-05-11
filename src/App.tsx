@@ -79,10 +79,10 @@ const App = () => {
             <Route path={ adminRoutes.inner.compalintsList } element={ <AdminComplaintsListPage /> } />
           </Route>
 
-          <Route path={ appRoutes.notFound } element={ <NotFoundPage /> } />
           <Route path={ appRoutes.blocked } element={ <BlockedPage /> } />
           <Route path={ appRoutes.error } element={ <ErrorPage /> } />
-
+          <Route path={ appRoutes.notFound } element={ <NotFoundPage /> } />
+          
         </Route>
       </Routes>
     </>

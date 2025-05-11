@@ -3,6 +3,7 @@ import type {
     InterestsVarsItem,
     SelSexVarsBase,
     BaseVarsItem,
+    BadgeBlockItem,
 } from '@/types/settings.type';
 import { ESex, ELineStatus } from '@/types/store.types';
 
@@ -10,6 +11,11 @@ import { ESex, ELineStatus } from '@/types/store.types';
 export const dfltErrItem: FQErrorsItem = {
     value: false,
     msg: '',
+}
+
+export const badgeEmptyItem: BadgeBlockItem = {
+    value: false,
+    content: '',
 }
 
 export const AGE_PATTERN: RegExp = /\d+$/;

@@ -1,5 +1,5 @@
 export const appRoutes = {
-    notFound: '/not-found',
+    notFound: '*',
     blocked: '/blocked',
     error: '/error',
     register: {
