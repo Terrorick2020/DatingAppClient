@@ -35,7 +35,7 @@ const PhotosAddItem = (props: PropsPhotosAddItem) => {
             'Неправильный формат фотографии'
           );
 
-        //   return;
+          return;
         };
         
         if (file.size > maxImgSize) {
@@ -47,8 +47,19 @@ const PhotosAddItem = (props: PropsPhotosAddItem) => {
           return;
         };
 
-        setPhoto(URL.createObjectURL(file));
-        setOpen(true);
+        const objectUrl = URL.createObjectURL(file);
+        const img = new Image();
+
+        img.onload = () => {
+            setPhoto(objectUrl);
+            setOpen(true);
+        };
+
+        img.onerror = () => {
+            infoAlert(dispatch, 'Ошибка при загрузке изображения');
+        };
+
+        img.src = objectUrl;
 
         event.target.value = '';
     }
