@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, JSX } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,17 +15,17 @@ import SvgClose from '@/assets/icon/close.svg?react';
 import SvgOther from '@/assets/icon/other.svg?react';
 
 
-const DesktopHeadNav = () => {
+const DesktopHeadNav = (): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
 
     const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
 
-    const userAgent = navigator.userAgent.toLowerCase()
+    const userAgent = navigator.userAgent.toLowerCase();
 
-    const predMobile  = userAgent.includes('iphone') || userAgent.includes('android')
-    const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win')
-    const isDesktop   = !predMobile || predDesktop
+    const predMobile  = userAgent.includes('iphone') || userAgent.includes('android');
+    const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win');
+    const isDesktop   = !predMobile || predDesktop;
 
     const goBack = () => {
         const backRoute = setRoutes.slice(-1)[0];
@@ -34,7 +34,7 @@ const DesktopHeadNav = () => {
     };
     const closeWindow = () => window.close();
 
-    const isTgMobile = !!closingBehavior && !!backButton && !isDesktop
+    const isTgMobile = !!closingBehavior && !!backButton && !isDesktop;
 
     if ( isTgMobile ) {
         if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
@@ -52,43 +52,39 @@ const DesktopHeadNav = () => {
         }
     }, [setRoutes]);
 
+    if(!isDesktop) return (<></>);
+
     return (
         <>
-            {
-                isDesktop
-                    ?
-                    <div className="desc-head-nav">
-                        {
-                            !!setRoutes.length
-                                ?
-                                <Button
-                                    className="btn text-fon rounded"
-                                    variant="contained"
-                                    startIcon={ <SvgArrowLeft /> }
-                                    onClick={ goBack }
-                                >
-                                    Back
-                                </Button>
-                                :
-                                <Button
-                                    className="btn text-fon rounded"
-                                    variant="contained"
-                                    startIcon={ <SvgClose /> }
-                                    onClick={ closeWindow }
-                                >
-                                    Close
-                                </Button>
-                        }
-                        <Button 
+            <div className="desc-head-nav">
+                {
+                    !!setRoutes.length
+                        ?
+                        <Button
                             className="btn text-fon rounded"
                             variant="contained"
-                            startIcon={<SvgArrowDown />}
-                            endIcon={<SvgOther />}
-                        ></Button>
-                    </div>
-                    :
-                    null
-            }
+                            startIcon={ <SvgArrowLeft /> }
+                            onClick={ goBack }
+                        >
+                            Back
+                        </Button>
+                        :
+                        <Button
+                            className="btn text-fon rounded"
+                            variant="contained"
+                            startIcon={ <SvgClose /> }
+                            onClick={ closeWindow }
+                        >
+                            Close
+                        </Button>
+                }
+                <Button 
+                    className="btn text-fon rounded"
+                    variant="contained"
+                    startIcon={<SvgArrowDown />}
+                    endIcon={<SvgOther />}
+                ></Button>
+            </div>
         </>
     )
 }
