@@ -104,9 +104,9 @@ const FillingQuestContent = () => {
             }))
         }
 
-        // const hasErrors = Object.values(fQErrors).some(item => item.value);
+        const hasErrors = Object.values(fQErrors).some(item => item.value);
         
-        // if(hasErrors) return;
+        if(hasErrors) return;
 
         setRegLoad(true);
         await dispatch(signUpProfileAsync());
