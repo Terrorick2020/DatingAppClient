@@ -23,6 +23,7 @@ const FillingQuestAge = () => {
             ...fQErrors,
             ageErr: {
                 value: !newAgeValue || ( !!age && age < 18 ),
+                msg: '',
             }
         }))
 

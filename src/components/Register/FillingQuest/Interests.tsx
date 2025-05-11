@@ -26,15 +26,17 @@ const FillingQuestInterests = () => {
     useEffect(
         () => {
             const targetObject = interestsVars.find( item => item.value === profileInfo.interest );
-            const selSexKey = targetObject?.isOppos ? profileInfo.sex : ESex.All;
 
+            if (!targetObject) return;
+
+            const selSexKey = targetObject.isOppos ? profileInfo.sex : ESex.All;
             const interestsVar = selSexVarsBase[ selSexKey ];
-            const targetSex = interestsVar.find( item => !item.isDisabled )?.value;
+            const targetSex = interestsVar.find( item => !item.isDisabled )!.value;
 
             dispatch(setSelSexVars(interestsVar));
             dispatch(setInfo({
                 ...profileInfo,
-                selSex: targetObject?.isOppos ? targetSex : profileInfo.selSex,
+                selSex: targetObject.isOppos ? targetSex : profileInfo.selSex,
             }))
         },
         [profileInfo.interest, profileInfo.sex]
@@ -66,4 +68,4 @@ const FillingQuestInterests = () => {
     )
 }
 
-export default FillingQuestInterests
+export default FillingQuestInterests;

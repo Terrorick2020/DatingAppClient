@@ -1,3 +1,6 @@
+import { ESex } from './store.types';
+
+
 export enum ELanguage {
     English   = 'en',
     Russian   = 'ru',
@@ -55,6 +58,7 @@ export interface InterestsVarsItem extends BaseVarsItem {
 }
 
 export interface SelSexVarsItem extends BaseVarsItem {
+    value: ESex
     isDisabled: boolean
 }
 

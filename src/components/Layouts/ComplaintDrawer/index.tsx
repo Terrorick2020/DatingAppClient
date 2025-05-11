@@ -56,7 +56,7 @@ const ComplaintDrawer = (props: PropsComplaintDrawer) => {
             if(complaint.open) {
                 dispatch(setComplaint({
                     ...complaint,
-                    id: props.id,
+                    to: props.id,
                 }));
 
                 dispatch(initComplaintsVarsAsync());

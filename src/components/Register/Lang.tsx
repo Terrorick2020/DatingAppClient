@@ -21,7 +21,7 @@ const LangContent = () => {
     const toFillQuest = `${regGlobRoute}/${regFillQuestRoute}`;
 
     const handleLanguageChange = (event: ChangeEvent<HTMLInputElement>) => {
-        dispatch( setLang( event.target.value ) );
+        dispatch( setLang( event.target.value as ELanguage ) );
     }
 
     useEffect(
@@ -67,4 +67,4 @@ const LangContent = () => {
     )
 }
 
-export default LangContent
+export default LangContent;
