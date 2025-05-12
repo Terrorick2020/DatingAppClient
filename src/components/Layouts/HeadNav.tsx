@@ -1,6 +1,5 @@
 import { useEffect, JSX } from 'react';
 import { useNavigate  } from 'react-router-dom';
-import { infoAlert } from '@/funcs/alert.funcs';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { closingBehavior, backButton } from '@telegram-apps/sdk';
@@ -47,11 +46,6 @@ const DesktopHeadNav = (): JSX.Element => {
     }
 
     useEffect(() => {
-        infoAlert(
-            dispatch,
-            String(setRoutes)
-        );
-        
         if ( isTgMobile) {
             setTimeout(() => {
                 if (!!setRoutes.length && backButton.show.isAvailable()) backButton.show();
@@ -73,25 +67,21 @@ const DesktopHeadNav = (): JSX.Element => {
                             variant="contained"
                             startIcon={ <SvgArrowLeft /> }
                             onClick={ goBack }
-                        >
-                            Back
-                        </Button>
+                        >Back</Button>
                         :
                         <Button
                             className="btn text-fon rounded"
                             variant="contained"
                             startIcon={ <SvgClose /> }
                             onClick={ closeWindow }
-                        >
-                            Close
-                        </Button>
+                        >Close</Button>
                 }
                 <Button 
                     className="btn text-fon rounded"
                     variant="contained"
                     startIcon={<SvgArrowDown />}
                     endIcon={<SvgOther />}
-                ></Button>
+                />
             </div>
         </>
     )

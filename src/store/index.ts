@@ -10,12 +10,12 @@ import profileReducer from './slices/profileSlice';
 import questionnairesReducer from './slices/questionnairesSlice';
 import psychReducer from './slices/psychSlice';
 import settingsReducer from './slices/settingsSlice';
-import storageSession from 'redux-persist/lib/storage/session';
+import storage from 'redux-persist/lib/storage'; 
 
 
 const settingsPersistConfig = {
     key: 'settings',
-    storage: storageSession,
+    storage: storage,
     whitelist: ['routes'],
     transforms: [settingsTransform],
 };
