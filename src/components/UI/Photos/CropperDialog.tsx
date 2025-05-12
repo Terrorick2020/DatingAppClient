@@ -1,4 +1,11 @@
-import { JSX, useState, useCallback  } from 'react';
+import {
+    JSX,
+    memo,
+    useState,
+    useCallback,
+    useEffect,
+} from 'react';
+
 import { getCroppedImg } from '@/funcs/img.funcs';
 
 import Cropper, { Area } from 'react-easy-crop';
@@ -19,17 +26,32 @@ interface CropState {
     x: number
     y: number
 }
-const PhotosCropperDialog = (props: PropsPhotosCropperDialog): JSX.Element => {
+const PhotosCropperDialog = memo((props: PropsPhotosCropperDialog): JSX.Element => {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
     const [dLoading, setDLoading] = useState<boolean>(false);
     const [crop, setCrop] = useState<CropState>({ x: 0, y: 0 });
     const [zoom, setZoom] = useState<number>(1);
+
+    useEffect(() => {
+        if (props.open) {
+            setCrop({ x: 0, y: 0 });
+            setZoom(1);
+        }
+    },[props.open]);
   
     const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
-        setCroppedAreaPixels(croppedAreaPixels);
+        setCroppedAreaPixels(prev => {
+            if (JSON.stringify(prev) === JSON.stringify(croppedAreaPixels)) {
+                return prev;
+            };
+
+            return croppedAreaPixels;
+        });
     }, []);
 
     const handleClose = (): void => {
+        setCroppedAreaPixels(null);
+        setDLoading(false);
         props.setOpen(false);
     };
 
@@ -52,6 +74,10 @@ const PhotosCropperDialog = (props: PropsPhotosCropperDialog): JSX.Element => {
             handleClose();
         }
     };
+
+    useEffect(() => {
+        return () => { URL.revokeObjectURL(props.photo) };
+    }, [props.photo]);
 
     return (
         <>
@@ -97,6 +123,6 @@ const PhotosCropperDialog = (props: PropsPhotosCropperDialog): JSX.Element => {
             </Dialog>
         </>
     )
-}
+})
 
 export default PhotosCropperDialog;

@@ -47,32 +47,36 @@ const PhotosAddItem = (props: PropsPhotosAddItem) => {
           return;
         };
 
-        const reader = new FileReader();
+        processFile(file);
 
+        event.target.value = '';
+    };
+
+    const processFile = (file: File) => {
+        const reader = new FileReader();
+  
         reader.onload = () => {
             const result = reader.result as string;
             const img = new Image();
-
+            
             img.onload = () => {
                 setPhoto(result);
                 setOpen(true);
             };
-
+            
             img.onerror = () => {
                 infoAlert(dispatch, 'Ошибка при загрузке изображения');
             };
-
+            
             img.src = result;
         };
-
+  
         reader.onerror = () => {
             infoAlert(dispatch, 'Ошибка чтения файла');
         };
-
+  
         reader.readAsDataURL(file);
-
-        event.target.value = '';
-    }
+    };
 
     return (
         <>
