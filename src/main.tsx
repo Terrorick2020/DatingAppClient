@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
 import { PersistGate } from 'redux-persist/integration/react';
 import { SNACK_COUNT, SNACK_TIMEOUT } from './constant/settings';
-import { viewport, init, isTMA, swipeBehavior, getCloudStorageItem } from '@telegram-apps/sdk';
+import { viewport, init, isTMA, swipeBehavior  } from '@telegram-apps/sdk';
 
 import store, { persistor } from './store';
 import AppSuspense from './AppSuspense';
@@ -24,32 +24,18 @@ async function initTg() {
       await viewport.requestFullscreen();
     }
 
-    if (swipeBehavior.mount.isAvailable()) {
+    if ( swipeBehavior.mount.isAvailable() ) {
       await swipeBehavior.mount();
 
-      if (swipeBehavior.isMounted()) {
+      if ( swipeBehavior.isMounted() ) {
         swipeBehavior.disableVertical();
         swipeBehavior.isVerticalEnabled();
       }
     }
-    
-    // Добавьте эти строки для проверки
-    console.log('Telegram SDK initialized in index.tsx');
-    console.log('CloudStorage available:', 
-      getCloudStorageItem && getCloudStorageItem.isAvailable ? 
-      getCloudStorageItem.isAvailable() : 'Not available');
   }
 }
 
-// Вызов функции инициализации
-(async () => { 
-  try {
-    await initTg();
-    console.log('Telegram initialization complete');
-  } catch (error) {
-    console.error('Error initializing Telegram:', error);
-  }
-})();
+(async () => { await initTg() })();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

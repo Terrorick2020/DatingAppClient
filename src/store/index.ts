@@ -1,7 +1,8 @@
 import { configureStore, combineReducers, Reducer } from '@reduxjs/toolkit';
-import { persistStore, persistReducer, createTransform  } from 'redux-persist';
+import { persistStore, persistReducer } from 'redux-persist';
 import { settingsTransform } from './transforms/settings.transform';
-import { getCloudStorageItem } from '@telegram-apps/sdk';
+import { cloudStorage } from '@telegram-apps/sdk';
+import { cloudStorageAdapter } from './utils/tg-cloude-store.utils';
 import type { IState } from '@/types/store.types';
 
 import adminReducer from './slices/adminSlice';
@@ -11,48 +12,16 @@ import profileReducer from './slices/profileSlice';
 import questionnairesReducer from './slices/questionnairesSlice';
 import psychReducer from './slices/psychSlice';
 import settingsReducer from './slices/settingsSlice';
-
-import asyncStorageEngine from './utils/async-storage.utils';
 import storageSession from 'redux-persist/lib/storage/session';
 
 
-// Проверяем доступность Telegram Cloud Storage
-const checkCloudStorage = () => {
-  try {
-    return typeof getCloudStorageItem !== 'undefined' && 
-      getCloudStorageItem.isAvailable && 
-      getCloudStorageItem.isAvailable();
-  } catch (e) {
-    console.error('Error checking CloudStorage availability:', e);
-    return false;
-  }
-};
-
-const isTelegramCloudAvailable = checkCloudStorage();
-console.log('Is Telegram CloudStorage available:', isTelegramCloudAvailable);
-
-// Выбираем хранилище в зависимости от доступности Telegram Cloud Storage
-const storage = isTelegramCloudAvailable ? asyncStorageEngine : storageSession;
-
-// Добавляем дебаг-трансформер для логирования сохранения/загрузки
-const debugTransform = createTransform(
-  // transform state on its way to being serialized and persisted
-  (inboundState, key) => {
-    console.log(`Saving state for key: ${String(key)}`, inboundState);
-    return inboundState;
-  },
-  // transform state being rehydrated
-  (outboundState, key) => {
-    console.log(`Loading state for key: ${String(key)}`, outboundState);
-    return outboundState;
-  }
-);
+const resStorage = cloudStorage.isSupported() ? cloudStorageAdapter : storageSession;
 
 const settingsPersistConfig = {
     key: 'settings',
-    storage: storage,
+    storage: resStorage,
     whitelist: ['routes'],
-    transforms: [settingsTransform, debugTransform],
+    transforms: [settingsTransform],
 };
 
 const rootReducer: Reducer<IState> = combineReducers({
