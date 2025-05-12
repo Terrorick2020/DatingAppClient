@@ -2,9 +2,14 @@ import { Suspense, lazy } from 'react';
 import { initProfileAsync } from '@/store/slices/profileSlice';
 import { delay } from './funcs/general.funcs';
 
-import store from './store';
+import { cloudStorage } from '@telegram-apps/sdk';
+
+// import store from './store';
 import AppPreloader from './components/AppPreloader';
 
+import { createStore } from './store';
+
+const { store } = createStore(cloudStorage.isSupported());
 
 async function delayForLazy( promise: Promise<any> ) {
     await delay(2000);
