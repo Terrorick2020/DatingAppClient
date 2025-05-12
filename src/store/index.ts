@@ -77,3 +77,4 @@ export const createStore = (useCloud: boolean) => {
 };
 
 export type RootDispatch = ReturnType<ReturnType<typeof createStore>['store']['dispatch']>;
+// export type RootDispatch = typeof store.dispatch;
