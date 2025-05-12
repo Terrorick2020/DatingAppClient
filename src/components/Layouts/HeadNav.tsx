@@ -2,7 +2,8 @@ import { useEffect, JSX } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { closingBehavior, backButton } from '@telegram-apps/sdk';
+import { closingBehavior, backButton, getCloudStorageItem } from '@telegram-apps/sdk';
+import { infoAlert } from '@/funcs/alert.funcs';
 import { type RootDispatch } from '@/store';
 
 import type { IState } from '@/types/store.types';
@@ -35,6 +36,11 @@ const DesktopHeadNav = (): JSX.Element => {
     const closeWindow = () => window.close();
 
     const isTgMobile = !!closingBehavior && !!backButton && !isDesktop;
+    
+    infoAlert(
+        dispatch,
+        `${getCloudStorageItem.isAvailable() && 'Включается'}, ${getCloudStorageItem.isSupported() && 'Поддерживается'}`
+    )
 
     if ( isTgMobile ) {
         if (closingBehavior.mount.isAvailable()) closingBehavior.mount();

@@ -10,9 +10,8 @@ RUN bun install --no-progress
 
 COPY . .
 
-# RUN npm run build
+RUN npm run build
 
 EXPOSE 4173
 
-# CMD ["bun", "run", "preview"]
-CMD [ "bun", "run", "dev" ]
+CMD ["bun", "run", "preview"]
