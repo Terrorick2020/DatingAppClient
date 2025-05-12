@@ -11,17 +11,17 @@ export default defineConfig({
     svgr(),
     checker({ typescript: true }),
   ],
-  // esbuild: {
-  //   drop: ['console', 'debugger'],
-  // },
-  // server: {
-  //   host: '0.0.0.0',
-  //   allowedHosts: ['3dating.fun'],
-  //   hmr: {
-  //     host: '3dating.fun',
-  //     protocol: 'wss',
-  //   },
-  // },
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: ['3dating.fun'],
+    hmr: {
+      host: '3dating.fun',
+      protocol: 'wss',
+    },
+  },
   preview: {
     allowedHosts: ['3dating.fun']
   },
