@@ -1,5 +1,6 @@
 import { useEffect, JSX } from 'react';
 import { useNavigate  } from 'react-router-dom';
+import { infoAlert } from '@/funcs/alert.funcs';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { closingBehavior, backButton } from '@telegram-apps/sdk';
@@ -46,6 +47,11 @@ const DesktopHeadNav = (): JSX.Element => {
     }
 
     useEffect(() => {
+        infoAlert(
+            dispatch,
+            String(setRoutes)
+        );
+        
         if ( isTgMobile) {
             setTimeout(() => {
                 if (!!setRoutes.length && backButton.show.isAvailable()) backButton.show();

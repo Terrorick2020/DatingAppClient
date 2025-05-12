@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import ScrollBar from '@/components/UI/ScrollBar';
 import LikeBtn from '@/components/UI/LikeBtn';
 import PlansLabel from '@/components/UI/PlansLabel';
-
 import SvgMapPin from '@/assets/icon/map-pin.svg';
 
 
@@ -34,8 +33,8 @@ const SliderItem = (props: ISliderItemProps) => {
         }, 200);
     };
 
-    const nextPhoto = () => changeImg( index + 1 )
-    const prevPhoto = () => changeImg( index - 1 )
+    const nextPhoto = () => changeImg( index + 1 );
+    const prevPhoto = () => changeImg( index - 1 );
 
    return (
         <>
@@ -76,20 +75,16 @@ const SliderItem = (props: ISliderItemProps) => {
                             className="lemon-fon"
                             variant="contained"
                             onClick={ props.prevStep }
-                        >
-                            Назад
-                        </Button>
+                        >Назад</Button>
                         <LikeBtn id={+props.sliderItem.id} clickLike={props.clickLike} />
                         <Button
                             className="lemon"
                             variant="contained"
                             onClick={ props.nextStep }
-                        >
-                            Далее
-                        </Button>
+                        >Далее</Button>
                     </div>
                 </footer>
-            </div>            
+            </div>
         </>
    )
 }
