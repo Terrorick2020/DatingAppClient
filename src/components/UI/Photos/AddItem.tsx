@@ -24,7 +24,7 @@ const PhotosAddItem = (props: PropsPhotosAddItem) => {
     
         setIsProcessing(true);
 
-        delay(100);
+        await delay(100);
 
         try {
             const file = event.target.files?.[0];
