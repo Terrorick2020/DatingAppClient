@@ -1,6 +1,7 @@
 import { configureStore, combineReducers, Reducer } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import { settingsTransform } from './transforms/settings.transform';
+import { getCloudStorageItem } from '@telegram-apps/sdk';
 import type { IState } from '@/types/store.types';
 
 import adminReducer from './slices/adminSlice';
@@ -10,8 +11,16 @@ import profileReducer from './slices/profileSlice';
 import questionnairesReducer from './slices/questionnairesSlice';
 import psychReducer from './slices/psychSlice';
 import settingsReducer from './slices/settingsSlice';
-import storage from 'redux-persist/lib/storage'; 
 
+import asyncStorageEngine from './utils/async-storage.utils';
+import storageSession from 'redux-persist/lib/storage/session';
+
+
+const isTelegramCloudAvailable = typeof getCloudStorageItem !== 'undefined' && 
+  getCloudStorageItem.isAvailable && 
+  getCloudStorageItem.isAvailable();
+
+const storage = isTelegramCloudAvailable ? asyncStorageEngine : storageSession;
 
 const settingsPersistConfig = {
     key: 'settings',

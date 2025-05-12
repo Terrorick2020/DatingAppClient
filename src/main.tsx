@@ -35,7 +35,6 @@ async function initTg() {
   }
 }
 
-
 (async () => { await initTg() })();
 
 createRoot(document.getElementById('root')!).render(
