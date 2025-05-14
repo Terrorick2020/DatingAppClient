@@ -4,9 +4,9 @@ declare module '*.svg' {
     export const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
     const src: string
     export default src
-}
+};
 
-declare module '@telegram-apps/sdk'
+declare module '@telegram-apps/sdk';
 
 declare global {
   interface Window {
@@ -32,4 +32,17 @@ declare global {
   }
 };
 
-export {}
+declare module 'redux-persist-indexeddb-storage' {
+  interface Options {
+    name?: string;
+    storeName?: string;
+  }
+
+  type StorageIDBAdapter = {
+    getItem(key: string): Promise<any>;
+    setItem(key: string, value: any): Promise<void>;
+    removeItem(key: string): Promise<void>;
+  };
+
+  export default function createIdbStorage(options?: Options): StorageIDBAdapter;
+};

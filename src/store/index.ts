@@ -1,8 +1,6 @@
 import { configureStore, combineReducers, Reducer } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import { settingsTransform } from './transforms/settings.transform';
-import { cloudStorage } from '@telegram-apps/sdk';
-import { cloudStorageAdapter } from './utils/cloude-store-adapter.utils';
 import type { IState } from '@/types/store.types';
 
 import adminReducer from './slices/adminSlice';
@@ -12,13 +10,11 @@ import profileReducer from './slices/profileSlice';
 import questionnairesReducer from './slices/questionnairesSlice';
 import psychReducer from './slices/psychSlice';
 import settingsReducer from './slices/settingsSlice';
-import storageSession from 'redux-persist/lib/storage/session';
+import createIdbStorage from 'redux-persist-indexeddb-storage';
 
 
 export function createAppStore() {
-  const storage  = cloudStorage.isSupported()
-        ? cloudStorageAdapter
-        : storageSession;
+  const storage  = createIdbStorage({name: '3Date-IState', storeName: 'idb'});
 
   const settingsPersistConfig = {
     key: 'settings',
