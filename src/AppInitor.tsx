@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
 import { PersistGate } from 'redux-persist/integration/react';
-import { cloudStorage } from '@telegram-apps/sdk';
 import { Persistor } from 'redux-persist';
 import { createAppStore } from './store';
 import { initTg } from './funcs/tg.funcs';
@@ -14,42 +13,38 @@ import AppPreloader from './components/AppPreloader';
 
 
 const AppInit = (): JSX.Element => {
+    const [isLoad, setIsLoad] = useState<boolean>(true);
     const [persistor, setPersistor] = useState<Persistor | null>(null);
     const [store, setStore] = useState<ReturnType<typeof createAppStore>['baseStore'] | null>(null);
     const [AppComponent, setAppComponent] = useState<ComponentType | null>(null);
 
     useEffect(
         () => {(async () => {
-            initTg();
-
             await delay(2000);
-
-            let attempts = 0;
-            while (!cloudStorage.isSupported() && attempts < 5) {
-                await new Promise(resolve => setTimeout(resolve, 500));
-                attempts++;
-            }
+            await initTg();
 
             const { baseStore, basePersistor } = createAppStore();
+            const { default: ImportedApp } = await import('./App');
 
             setStore(baseStore);
             setPersistor(basePersistor);
-
-            const { default: ImportedApp } = await import('./App');
+            setAppComponent(() => ImportedApp);
 
             await fadeOutPreloader();
 
-            setAppComponent(() => ImportedApp);
+            setIsLoad(false);
         })()}, []
     );
 
-    if(!store || !persistor || !AppComponent) return (
+    if(isLoad) return (
         <AppPreloader />
-    );
+    )
+
+    if(!store || !persistor || !AppComponent) return (<></>);
 
     return (
         <>
-            <Provider store={ store }>
+            <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
                     <BrowserRouter>
                     <SnackbarProvider

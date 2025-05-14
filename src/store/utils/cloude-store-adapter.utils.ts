@@ -1,5 +1,5 @@
 import { Storage } from 'redux-persist';
-import { cloudStorage } from '@telegram-apps/sdk';
+import { cloudStorage  } from '@telegram-apps/sdk';
 
 
 export const cloudStorageAdapter: Storage = {

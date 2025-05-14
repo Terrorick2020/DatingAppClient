@@ -1,5 +1,31 @@
-import { viewport, init, isTMA, swipeBehavior } from '@telegram-apps/sdk';
+import {
+    init,
+    isTMA, 
+    viewport, 
+    cloudStorage,
+    swipeBehavior
+} from '@telegram-apps/sdk';
 
+import { delay } from './general.funcs';
+
+
+export async function isWorkedCloudeStore(): Promise<void> {
+    let attempts = 0;
+    while (attempts < 5) {
+        const is = cloudStorage.isSupported() &&
+            cloudStorage.getItem.isAvailable() &&
+            cloudStorage.setItem.isAvailable() &&
+            cloudStorage.deleteItem.isAvailable()
+
+        if(is) return;
+
+        await delay(500);
+        
+        attempts++;
+    }
+
+    return;
+}
 
 export async function initTg() {
   if (await isTMA()) {
@@ -22,5 +48,7 @@ export async function initTg() {
         swipeBehavior.isVerticalEnabled();
       }
     }
+
+    await isWorkedCloudeStore();
   }
 }
