@@ -6,7 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Persistor } from 'redux-persist';
 import { createAppStore } from './store';
 import { initTg } from './funcs/tg.funcs';
-import { delay, fadeOutPreloader } from './funcs/general.funcs';
+import { fadeOutPreloader } from './funcs/general.funcs';
 import { SNACK_COUNT, SNACK_TIMEOUT } from './constant/settings';
 
 import AppPreloader from './components/AppPreloader';
@@ -19,8 +19,9 @@ const AppInit = (): JSX.Element => {
 
     useEffect(
         () => {(async () => {
-            await delay(2000);
             await initTg();
+
+            // await delay(2000);
 
             const { baseStore, basePersistor } = createAppStore();
 
