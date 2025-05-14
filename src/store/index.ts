@@ -2,7 +2,7 @@ import { configureStore, combineReducers, Reducer } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import { settingsTransform } from './transforms/settings.transform';
 import { cloudStorage } from '@telegram-apps/sdk';
-import { cloudStorageAdapter } from './utils/tg-cloude-store.utils';
+import { cloudStorageAdapter } from './utils/cloude-store-adapter.utils';
 import type { IState } from '@/types/store.types';
 
 import adminReducer from './slices/adminSlice';
@@ -16,11 +16,13 @@ import storageSession from 'redux-persist/lib/storage/session';
 
 
 export function createAppStore() {
-  const resStorage = cloudStorage.isSupported() ? cloudStorageAdapter : storageSession;
+  const storage  = cloudStorage.isSupported()
+        ? cloudStorageAdapter
+        : storageSession;
 
   const settingsPersistConfig = {
     key: 'settings',
-    storage: resStorage,
+    storage,
     whitelist: ['routes'],
     transforms: [settingsTransform],
   };

@@ -3,10 +3,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
 import { PersistGate } from 'redux-persist/integration/react';
+import { cloudStorage } from '@telegram-apps/sdk';
 import { Persistor } from 'redux-persist';
 import { createAppStore } from './store';
 import { initTg } from './funcs/tg.funcs';
-import { fadeOutPreloader } from './funcs/general.funcs';
+import { delay, fadeOutPreloader } from './funcs/general.funcs';
 import { SNACK_COUNT, SNACK_TIMEOUT } from './constant/settings';
 
 import AppPreloader from './components/AppPreloader';
@@ -19,9 +20,15 @@ const AppInit = (): JSX.Element => {
 
     useEffect(
         () => {(async () => {
-            await initTg();
+            initTg();
 
-            // await delay(2000);
+            await delay(2000);
+
+            let attempts = 0;
+            while (!cloudStorage.isSupported() && attempts < 5) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                attempts++;
+            }
 
             const { baseStore, basePersistor } = createAppStore();
 
