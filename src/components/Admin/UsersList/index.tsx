@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
 import { type RootDispatch } from '@/store';
@@ -8,7 +8,7 @@ import UsersListMain from './Main';
 import UsersListFooter from './Footer';
 
 
-const UsersListContent = () => {
+const UsersListContent = (): JSX.Element => {
     const dispatch = useDispatch<RootDispatch>();
 
     useEffect( () => { dispatch(getProfilesListAsync()) }, [] );

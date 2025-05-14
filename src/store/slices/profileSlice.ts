@@ -45,7 +45,8 @@ const initialState: ProfileState = {
             value: '',
             description: '',
         },
-    }
+    },
+    selPsych: ''
 }
 
 export const initProfileAsync = createAsyncThunk(
@@ -218,7 +219,20 @@ export const saveSelfPlansAsync = createAsyncThunk(
             throw error;
         }
     }
-)
+);
+
+export const selectSelfPsychAsync = createAsyncThunk(
+    'profile/select-self-psych',
+    async (id: string): Promise<string> => {
+        try {
+            await delay(2000);
+
+            return id;
+        } catch (error) {
+            throw error;
+        }
+    }
+);
 
 const profileSlice = createSlice({
     name: 'profile',
@@ -304,6 +318,18 @@ const profileSlice = createSlice({
         })
         builder.addCase(getSelfProfile.rejected, _ => {
             console.log("Ошибка получения текущего профиля пользователя");
+        })
+
+        // Выбор специалиста
+        builder.addCase(selectSelfPsychAsync.pending, _ => {
+            console.log("Выбор специалиста");
+        })
+        builder.addCase(selectSelfPsychAsync.fulfilled, ( state, action: PayloadAction<string> ) => {
+            console.log("Успешный выбор специалиста");
+            state.selPsych = action.payload;
+        })
+        builder.addCase(selectSelfPsychAsync.rejected, _ => {
+            console.log("Ошибка выбора специалиста");
         })
     }
 })

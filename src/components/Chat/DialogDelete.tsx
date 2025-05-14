@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { delteChatByIDAsync } from '@/store/slices/chatsSlice';
@@ -18,7 +18,7 @@ interface PropsChatDialogDelete {
     id: string
     hadleClose: () => void
 }
-const ChatDialogDelete = (props: PropsChatDialogDelete) => {
+const ChatDialogDelete = memo((props: PropsChatDialogDelete): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
 
     const [dLoading, setDLoading] = useState<boolean>(false);
@@ -74,6 +74,6 @@ const ChatDialogDelete = (props: PropsChatDialogDelete) => {
             </ChatPatternDialog>
         </>
     )
-}
+})
 
 export default ChatDialogDelete;

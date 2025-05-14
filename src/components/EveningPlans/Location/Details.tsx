@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
@@ -9,7 +10,7 @@ import type { IState } from '@/types/store.types';
 import TextField from '@mui/material/TextField';
 
 
-const LocationDetails = () => {
+const LocationDetails = (): JSX.Element => {
     const location = useSelector((state: IState) => state.profile.eveningPlans.location);
     const fEPErrors = useSelector((state: IState) => state.settings.fEPErrors);
 

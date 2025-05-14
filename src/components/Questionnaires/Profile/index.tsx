@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { appRoutes } from '@/config/routes.config';
 import { addRoute } from '@/store/slices/settingsSlice';
@@ -13,7 +13,7 @@ import ProfilePlans from './Plans';
 import ProfileLink from './Link';
 
 
-const ProfileContent = () => {
+const ProfileContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
 
     const dispatch = useDispatch<RootDispatch>();

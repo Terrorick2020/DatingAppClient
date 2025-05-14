@@ -1,3 +1,4 @@
+import { JSX, memo } from 'react';
 import { appRoutes } from '@/config/routes.config';
 import { useSelector } from 'react-redux';
 import { ageToStr } from '@/funcs/general.funcs';
@@ -10,7 +11,7 @@ import ListBlock from '@/components/UI/ListBlock';
 interface PropsPsychList {
     preText: string
 }
-const PsychList = (props: PropsPsychList) => {
+const PsychList = memo((props: PropsPsychList): JSX.Element => {
     const psychList = useSelector((state: IState) => state.psych.psychList);
 
     const globTargetPsychRoute = appRoutes.targetPsych;
@@ -50,6 +51,6 @@ const PsychList = (props: PropsPsychList) => {
             }
         </>
     )
-}
+})
 
 export default PsychList;

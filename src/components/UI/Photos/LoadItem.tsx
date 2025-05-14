@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, memo, useEffect, JSX } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 interface PropsPhotosLoadItem {
     photo: string
 }
-const PhotosLoadItem = (props: PropsPhotosLoadItem) => {
+const PhotosLoadItem = memo((props: PropsPhotosLoadItem): JSX.Element => {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
@@ -31,6 +31,6 @@ const PhotosLoadItem = (props: PropsPhotosLoadItem) => {
             </li>
         </>
     )
-}
+})
 
 export default PhotosLoadItem;

@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { JSX, memo, ChangeEvent, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteUserAsync, setTargetProfileId, setPassword } from '@/store/slices/adminSlice';
 import { RootDispatch } from '@/store';
@@ -17,7 +17,7 @@ interface PropsUsersListDialog {
     hadleClose: () => void
 }
 
-const UsersListDialog = (props: PropsUsersListDialog) => {
+const UsersListDialog = memo((props: PropsUsersListDialog): JSX.Element => {
     const password = useSelector((state: IState) => state.admin.password);
 
     const [dLoading, setDLoading] = useState<boolean>(false);
@@ -77,6 +77,6 @@ const UsersListDialog = (props: PropsUsersListDialog) => {
             </Dialog>
         </>
     )
-}
+})
 
 export default UsersListDialog;

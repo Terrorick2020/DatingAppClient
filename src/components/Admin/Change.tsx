@@ -21,8 +21,8 @@ const ChangeContent = () => {
 
     useEffect(
         () => {
-            const langHtml = document.getElementById('change')
-            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards'
+            const langHtml = document.getElementById('change');
+            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
         },
         []
     )

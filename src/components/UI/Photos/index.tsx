@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, memo, useState } from 'react';
 import { delay } from '@/funcs/general.funcs';
 import type { PhotoItem } from '@/types/profile.types';
 
@@ -17,7 +17,7 @@ export interface DelDialogState {
     open: boolean
     targetId: string
 }
-const Photos = (props: PropsPhotos) => {
+const Photos = memo((props: PropsPhotos): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
   const [photo, setPhoto] = useState<string>('');
   const [delDialogState, setDelDialogState] = useState<DelDialogState>({
@@ -72,6 +72,6 @@ const Photos = (props: PropsPhotos) => {
         />
     </>
   )
-}
+})
 
 export default Photos;

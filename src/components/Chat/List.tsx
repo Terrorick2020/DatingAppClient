@@ -1,11 +1,11 @@
-import { useRef, useEffect } from 'react';
+import { JSX, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { type IState } from '@/types/store.types';
 
 import ChatDay from './Day';
 
 
-const ChatList = () => {
+const ChatList = (): JSX.Element => {
     const chatDialog = useSelector((state: IState) => state.chats.targetChat.chatDialog);
     const selfId = useSelector((state: IState) => state.profile.info.id);
 

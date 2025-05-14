@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ import type { IState } from '@/types/store.types';
 import SliderItem from './SliderItem';
 
 
-const SliderPoster = () => {
+const SliderPoster = (): JSX.Element => {
   const sliderList = useSelector((state: IState) => state.questionnaires.sliderList);
 
   const [index, setIndex] = useState<number>(0);

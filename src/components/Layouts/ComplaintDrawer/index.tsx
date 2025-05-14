@@ -5,7 +5,7 @@ import {
     setComplaint
 } from '@/store/slices/settingsSlice';
 
-import { JSX, useEffect, useMemo } from 'react';
+import { JSX, memo, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { EComplaintType, EComplaintStep } from '@/types/settings.type';
 import { type RootDispatch } from '@/store';
@@ -46,7 +46,7 @@ const CtxVars: ComplaintDrawerCtxVars = {
 interface PropsComplaintDrawer {
     id: string
 }
-const ComplaintDrawer = (props: PropsComplaintDrawer) => {
+const ComplaintDrawer = memo((props: PropsComplaintDrawer): JSX.Element => {
     const complaint = useSelector((state: IState) => state.settings.complaint);
 
     const dispatch = useDispatch<RootDispatch>();
@@ -95,6 +95,6 @@ const ComplaintDrawer = (props: PropsComplaintDrawer) => {
             </SwipeableDrawer>
         </>
     )
-}
+})
 
 export default ComplaintDrawer;

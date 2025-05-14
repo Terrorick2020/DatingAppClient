@@ -1,3 +1,4 @@
+import { JSX, memo } from 'react';
 import { useSelector } from 'react-redux';
 import { ageToStr } from '@/funcs/general.funcs';
 import type { PropsProfileInfo } from '@/types/quest.types';
@@ -8,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import SvgEdit from '@/assets/icon/edit.svg';
 
 
-const ProfileInfo = (props: PropsProfileInfo) => {
+const ProfileInfo = memo((props: PropsProfileInfo): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     
     return (
@@ -36,6 +37,6 @@ const ProfileInfo = (props: PropsProfileInfo) => {
             </div>
         </>
     )
-}
+})
 
 export default ProfileInfo;

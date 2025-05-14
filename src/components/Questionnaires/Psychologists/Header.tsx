@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, memo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { delay } from '@/funcs/general.funcs';
 import { setSerchPsychQuery } from '@/store/slices/psychSlice';
@@ -12,7 +12,7 @@ import SearchInput from '@/components/UI/SearchInput';
 interface PropsPsychHeader {
     setPreText: (value: string) => void
 }
-const PsychHeader = (props: PropsPsychHeader) => {
+const PsychHeader = memo((props: PropsPsychHeader): JSX.Element => {
     const serchPsychQuery = useSelector((state: IState) => state.psych.serchPsychQuery);
 
     const dispatch = useDispatch<RootDispatch>();
@@ -54,6 +54,6 @@ const PsychHeader = (props: PropsPsychHeader) => {
             />
         </>
     )
-}
+})
 
 export default PsychHeader;

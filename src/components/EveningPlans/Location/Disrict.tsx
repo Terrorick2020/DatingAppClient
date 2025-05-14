@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from 'react';
+import { JSX, memo, SyntheticEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocation } from '@/store/slices/profileSlice';
 import type { BaseVarsItem } from '@/types/settings.type';
@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 interface PropsLocationDistrict {
   districtsVars: BaseVarsItem[]
 }
-const LocationDistrict = (props: PropsLocationDistrict) => {
+const LocationDistrict = memo((props: PropsLocationDistrict): JSX.Element => {
   const location = useSelector((state: IState) => state.profile.eveningPlans.location);
   const fEPErrors = useSelector((state: IState) => state.settings.fEPErrors);
 
@@ -82,6 +82,6 @@ const LocationDistrict = (props: PropsLocationDistrict) => {
           />
       </>
   )
-}
+})
 
 export default LocationDistrict;

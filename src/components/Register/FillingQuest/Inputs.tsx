@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, JSX, useState } from 'react';
 import { districtsList } from '@/constant/profiles';
 import { useSelector, useDispatch } from 'react-redux';
 import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
@@ -14,7 +14,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import CustomSelIcon from '@/components/UI/CustomSelIcon';
 
 
-const FillingQuestInputs = () => {
+const FillingQuestInputs = (): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
 

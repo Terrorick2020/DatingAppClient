@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { initTargetUserAsync } from '@/store/slices/questionnairesSlice';
@@ -12,10 +12,10 @@ import ComplaintDrawer from '@/components/Layouts/ComplaintDrawer';
 import MyLoader from '@/components/UI/MyLoader';
 
 
-const DetailsContent = () => {
+const DetailsContent = (): JSX.Element => {
     const { id } = useParams();
 
-    if(!id) return null;
+    if(id === undefined) return (<></>);
 
     const isLoad = useSelector((state: IState) => state.settings.load);
 
@@ -31,28 +31,24 @@ const DetailsContent = () => {
         []
     )
 
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
+
     return (
         <>
-            {
-                isLoad
-                    ?
-                    <div className="loader">
-                        <MyLoader />
-                    </div>
-                    :
-                    <>
-                        <div className="details__slider">
-                            <DetailsSlider />
-                        </div>
-                        <div className="details__info">
-                            <DetailsInfo />
-                        </div>
-                        <div className="details__fixed">
-                            <DetailsFixed />
-                        </div>
-                        <ComplaintDrawer id={id} />
-                    </>
-            }
+            <div className="details__slider">
+                <DetailsSlider />
+            </div>
+            <div className="details__info">
+                <DetailsInfo />
+            </div>
+            <div className="details__fixed">
+                <DetailsFixed />
+            </div>
+            <ComplaintDrawer id={id} />
         </>
     )
 }

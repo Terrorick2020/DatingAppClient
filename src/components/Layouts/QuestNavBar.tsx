@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { appRoutes } from '@/config/routes.config';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import SvgPsychologists from '@/assets/icon/psychologists.svg?react';
 import SvgProfile from '@/assets/icon/profile.svg?react';
 
 
-const QuestNavBar = () => {
+const QuestNavBar = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
 
     const navigate = useNavigate();

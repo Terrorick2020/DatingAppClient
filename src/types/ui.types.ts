@@ -8,7 +8,9 @@ export enum PlanLabelSvgType {
 }
 
 export interface PropsChatInput {
-    isMatch: boolean
+    message: string
+    handleChange: (value: string) => void
+    handleClick: () => void
 }
 
 export interface ClearBtnProps {

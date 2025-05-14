@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
 import { addRoute, initPlansVarsAsync } from '@/store/slices/settingsSlice';
@@ -15,7 +15,7 @@ import PlansVars from './Vars';
 import PlansDetails from './Details';
 
 
-const EveningPlansPlansCtx = () => {
+const EveningPlansPlansCtx = (): JSX.Element => {
     const plansVars = useSelector((state: IState) => state.settings.plansVars);
 
     const dispatch = useDispatch<RootDispatch>();

@@ -1,4 +1,4 @@
-import { JSX, useEffect, memo } from 'react';
+import { JSX, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 import { initComplaintListAsync } from '@/store/slices/adminSlice';
@@ -20,8 +20,6 @@ const selectComplListState = createSelector(
       complaintsList: admin.complaintsList,
     })
 );
-
-const ComplListCtxMemo   = memo(ComplaintsListCtx);
 
 const ComplaintsListConstent = (): JSX.Element => {
     const { isLoad, complaintsList } = useSelector(selectComplListState);
@@ -48,7 +46,7 @@ const ComplaintsListConstent = (): JSX.Element => {
                 <ComplaintsListHeader />
             </header>
             <main className="complaints-list__ctx">
-                <ComplListCtxMemo complaintsList={complaintsList} />
+                <ComplaintsListCtx complaintsList={complaintsList} />
             </main>
         </>
     );

@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, KeyboardEvent } from 'react';
+import { useState, ChangeEvent, KeyboardEvent, JSX, memo } from 'react';
 import { type PropsSearchInput } from '@/types/ui.types';
 
 import TextField from '@mui/material/TextField';
@@ -6,7 +6,7 @@ import ClearBtn from '@/components/UI/ClearBtn';
 import SvgSearch from '@/assets/icon/search.svg?react';
 
 
-const SearchInput = (props: PropsSearchInput) => {
+const SearchInput = memo((props: PropsSearchInput): JSX.Element => {
     const [ showClear, setShowClear ] = useState<boolean>( false );
 
     const handleClearInput = (): void => {
@@ -54,6 +54,6 @@ const SearchInput = (props: PropsSearchInput) => {
             />
         </>
     )
-}
+})
 
 export default SearchInput;

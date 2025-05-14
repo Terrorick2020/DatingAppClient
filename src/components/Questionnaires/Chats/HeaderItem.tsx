@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { JSX, memo, useState, useEffect } from 'react';
 import { formatTimeLeftOther } from '@/funcs/general.funcs';
 import type { ChatsFavListItem } from '@/types/chats.types';
 
@@ -12,7 +12,7 @@ interface PropsChatsHeaderItem {
     item: ChatsFavListItem
     toChat: (id: string) => void
 }
-const ChatsHeaderItem = (props: PropsChatsHeaderItem) => {
+const ChatsHeaderItem = memo((props: PropsChatsHeaderItem): JSX.Element => {
     const [timeLeft, setTimeLeft] = useState<number>(initialTimeInSeconds);
 
     useEffect(() => {
@@ -48,6 +48,6 @@ const ChatsHeaderItem = (props: PropsChatsHeaderItem) => {
             </Badge>
         </>
     )
-}
+})
 
 export default ChatsHeaderItem;

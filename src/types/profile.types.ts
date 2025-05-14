@@ -37,6 +37,7 @@ export interface ProfileState {
     info: ProfileSelf
     addLink: string
     eveningPlans: EveningPlans
+    selPsych: string
 }
 
 export interface SendGeoData {

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { appRoutes } from '@/config/routes.config';
 import { useSelector } from 'react-redux';
 import { type IState } from '@/types/store.types';
@@ -6,7 +7,7 @@ import ListBlock from '@/components/UI/ListBlock';
 import ChatsListItem from './ChatsItem';
 
 
-const ChatsList = () => {
+const ChatsList = (): JSX.Element => {
     const chatsList = useSelector((state: IState) => state.chats.chatsList);
 
     return (

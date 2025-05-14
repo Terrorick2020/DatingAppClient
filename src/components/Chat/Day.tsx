@@ -1,3 +1,4 @@
+import { JSX, memo } from 'react';
 import { formatDateToUser } from '@/funcs/general.funcs';
 import { type TargetChatDayMsg } from '@/types/chats.types';
 
@@ -10,7 +11,7 @@ interface PropsChatDay {
     day: string
     dayListMsg: TargetChatDayMsg[]
 }
-const ChatDay = (props: PropsChatDay) => {
+const ChatDay = memo((props: PropsChatDay): JSX.Element => {
     return (
         <>
             <div className="day">
@@ -32,6 +33,6 @@ const ChatDay = (props: PropsChatDay) => {
             </div>
         </>
     )
-}
+})
 
 export default ChatDay;

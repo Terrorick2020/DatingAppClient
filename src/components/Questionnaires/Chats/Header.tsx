@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -9,7 +10,7 @@ import { type IState } from '@/types/store.types';
 import ChatsHeaderItem from './HeaderItem';
 
 
-const ChatsHeader = () => {
+const ChatsHeader = (): JSX.Element => {
     const chatsFavList = useSelector((state: IState) => state.chats.chatsFavList);
 
     const navigate = useNavigate();

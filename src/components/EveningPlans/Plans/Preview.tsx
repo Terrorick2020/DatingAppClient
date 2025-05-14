@@ -1,4 +1,7 @@
-const PlansPreview = () => {
+import { JSX } from 'react';
+
+
+const PlansPreview = (): JSX.Element => {
     return (
         <>
             <div className="ep-preview">

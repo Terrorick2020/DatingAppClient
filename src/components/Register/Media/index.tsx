@@ -1,4 +1,4 @@
-import { useState, useRef, SyntheticEvent  } from 'react';
+import { useState, useRef, SyntheticEvent, JSX  } from 'react';
 import { useSelector } from 'react-redux';
 import { formatTime } from '@/funcs/general.funcs';
 import type { MediaProgressState } from '@/types/register.typs';
@@ -9,7 +9,7 @@ import MediaContentBg from './Background';
 import Slider from '@mui/material/Slider';
 
 
-const MediaContent = () => {
+const MediaContent = (): JSX.Element => {
     const mediaLink = useSelector((state: IState) => state.settings.mediaLink);
 
     const [_, setProgress] = useState<number>(0);

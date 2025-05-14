@@ -1,7 +1,8 @@
+import { JSX, memo } from 'react';
 import { type PropsTimer } from "@/types/ui.types"
 
 
-const Timer = (props: PropsTimer) => {
+const Timer = memo((props: PropsTimer): JSX.Element => {
     return (
         <>
             <span className={`timer ${props.isCritical && 'critical'}`}>
@@ -9,6 +10,6 @@ const Timer = (props: PropsTimer) => {
             </span>
         </>
     )
-}
+})
 
 export default Timer;

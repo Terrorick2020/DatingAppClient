@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { delay } from '@/funcs/general.funcs';
 // import { useDispatch } from 'react-redux';
 // import { sendSelfGeoAsync } from '@/store/slices/profileSlice';
@@ -10,7 +10,7 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 
 
-const GeoConfirmation = () => {
+const GeoConfirmation = (): JSX.Element => {
     const [open, setOpen] = useState<boolean>(true);
     const [isLoad, setIsLoad] = useState<boolean>(false);
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, memo, useState } from 'react';
 import { PlanLabelSvgType } from '@/types/ui.types';
 import { ageToStr } from '@/funcs/general.funcs';
 import { type SliderItem } from '@/types/quest.types';
@@ -18,7 +18,7 @@ interface ISliderItemProps {
     prevStep: () => void
 }
 
-const SliderItem = (props: ISliderItemProps) => {
+const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
     const [index, setIndex] = useState<number>( 0 );
     const [fade, setFade] = useState<boolean>(true);
 
@@ -87,6 +87,6 @@ const SliderItem = (props: ISliderItemProps) => {
             </div>
         </>
    )
-}
+})
 
 export default SliderItem;

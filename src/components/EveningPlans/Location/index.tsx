@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { JSX, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { resetRoutes, initDistrictsVarsAsync } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
@@ -12,7 +12,7 @@ import LocationDistrict from './Disrict';
 import LocationDetails from './Details';
 
 
-const EveningPlansLocationCtx = () => {
+const EveningPlansLocationCtx = (): JSX.Element => {
     const districtsVars = useSelector((state: IState) => state.settings.districtsVars);
 
     const [appLoad, setAppLoad] = useState<boolean>(false);
@@ -44,26 +44,26 @@ const EveningPlansLocationCtx = () => {
 
     return (
         <>
-                <div className="ep-location__ctx">
-                    <div className="ep-text">
-                        <h4 className="headline">Место встречи</h4>
-                        <p className="description">Расскажите где бы вы хотели встретиться</p>
-                    </div>
-                    <LocationDistrict districtsVars={districtsVars} />
-                    <LocationDetails />
+            <div className="ep-location__ctx">
+                <div className="ep-text">
+                    <h4 className="headline">Место встречи</h4>
+                    <p className="description">Расскажите где бы вы хотели встретиться</p>
                 </div>
-                <div className="ep-location__btn">
-                    <div className="link" onClick={handleRoute}>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            loadingPosition="start"
-                            loading={appLoad}
-                        >
-                            {appLoad ? 'Сохранение..': 'Сохранить'}
-                        </Button>
-                    </div>
+                <LocationDistrict districtsVars={districtsVars} />
+                <LocationDetails />
+            </div>
+            <div className="ep-location__btn">
+                <div className="link" onClick={handleRoute}>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        loadingPosition="start"
+                        loading={appLoad}
+                    >
+                        {appLoad ? 'Сохранение..': 'Сохранить'}
+                    </Button>
                 </div>
+            </div>
         </>
     )
 }

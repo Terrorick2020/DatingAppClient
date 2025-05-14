@@ -1,7 +1,8 @@
-import { type PropsScrollBar } from "@/types/ui.types"
+import { JSX, memo } from 'react';
+import { type PropsScrollBar } from '@/types/ui.types';
 
 
-const ScrollBar = (props: PropsScrollBar) => {
+const ScrollBar = memo((props: PropsScrollBar): JSX.Element => {
     return (
         <>
             <div className="scroll-bar">
@@ -14,6 +15,6 @@ const ScrollBar = (props: PropsScrollBar) => {
             </div>
         </>
     )
-}
+})
 
 export default ScrollBar;

@@ -1,10 +1,11 @@
+import { JSX } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import SvgBlocked from '@/assets/icon/blocked.svg';
 
 
-const BlockedContent = () => {
+const BlockedContent = (): JSX.Element => {
     return (
         <>
             <div className="error__ctx">

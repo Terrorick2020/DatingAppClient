@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent, JSX, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { useDispatch } from 'react-redux';
@@ -13,7 +13,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 
-const LangContent = () => {
+const LangContent = (): JSX.Element => {
     const dispatch = useDispatch()
 
     const regGlobRoute = appRoutes.register.global;

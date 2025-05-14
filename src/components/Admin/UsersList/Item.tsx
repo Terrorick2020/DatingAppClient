@@ -1,4 +1,4 @@
-import { useState, MouseEvent, useMemo } from 'react';
+import { JSX, useState, MouseEvent, useMemo, memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { serchProfileStatusAsync, setTargetProfileId } from '@/store/slices/adminSlice';
@@ -18,7 +18,7 @@ interface PropsUserListItem {
     toUserInfo: string
     setOpenDel: (value: boolean) => void
 }
-const UserListItem = (props: PropsUserListItem) => {
+const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
     const [loading, setLoading] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -91,6 +91,6 @@ const UserListItem = (props: PropsUserListItem) => {
             </div>
         </>
     )
-}
+})
 
 export default UserListItem;

@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { JSX, ChangeEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfo } from '@/store/slices/profileSlice';
 import { setFQErrors } from '@/store/slices/settingsSlice';
@@ -8,7 +8,7 @@ import { type IState } from '@/types/store.types';
 import TextField from '@mui/material/TextField'
 
 
-const FillingQuestAge = () => {
+const FillingQuestAge = (): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
 

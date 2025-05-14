@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { appRoutes } from '@/config/routes.config';
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -8,7 +9,7 @@ import Button from '@mui/material/Button';
 
 const ID = 1;
 
-const DetailsFixed = () => {
+const DetailsFixed = (): JSX.Element => {
     const clickLike = (id: number) => {
         const heartHtml = document.getElementById(`heart-${ id }`);
         if ( heartHtml ) heartHtml.style.animation = 'heart-top 1.5s ease-in-out forwards';

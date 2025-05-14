@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { initChatsCtxAsync } from '@/store/slices/chatsSlice';
 import { type RootDispatch } from '@/store';
@@ -10,7 +10,7 @@ import MyLoader from '@/components/UI/MyLoader';
 
 
 
-const ChatsContent = () => {
+const ChatsContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
 
     const dispatch = useDispatch<RootDispatch>();

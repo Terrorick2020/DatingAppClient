@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, memo, useState } from 'react';
 
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
@@ -13,7 +13,7 @@ interface PropsPhotosDelDialog {
     setOpen: (value: boolean) => void
     handleDel: (id: string) => void
 }
-const PhotosDelDialog = (props: PropsPhotosDelDialog) => {
+const PhotosDelDialog = memo((props: PropsPhotosDelDialog): JSX.Element => {
     const [dLoading, setDLoading] = useState<boolean>(false);
 
     const handleClose = (): void => props.setOpen(false);
@@ -62,6 +62,6 @@ const PhotosDelDialog = (props: PropsPhotosDelDialog) => {
             </Dialog>
         </>
     )
-}
+})
 
 export default PhotosDelDialog;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { addRoute, initInterestsVariantsAsync } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFQErrors } from '@/store/slices/settingsSlice';
@@ -25,7 +25,7 @@ import FillingQuestInterests from './Interests';
 import FillingQuestSelectionSex from './SelectionSex';
 
 
-const FillingQuestContent = () => {
+const FillingQuestContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const fQErrors = useSelector((state: IState) => state.settings.fQErrors);

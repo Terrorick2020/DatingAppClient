@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { JSX, ChangeEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfo } from '@/store/slices/profileSlice';
 import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 
 const maxLenBio = 500;
 
-const FillingQuestBio = () => {
+const FillingQuestBio = (): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import { useSwipeable } from 'react-swipeable'
 import { useSelector } from 'react-redux';
 import type { IState } from '@/types/store.types';
@@ -6,7 +6,7 @@ import type { IState } from '@/types/store.types';
 import DetailsSlide from './Slide'
 
 
-const DetailsSlider = () => {
+const DetailsSlider = (): JSX.Element => {
     const photos = useSelector((state: IState) => state.questionnaires.targetUser?.photos);
 
     const [index, setIndex] = useState(0);
@@ -26,7 +26,7 @@ const DetailsSlider = () => {
         trackMouse: true,
     })
 
-    if(typeof photos === 'undefined') return null;
+    if(typeof photos === 'undefined') return (<></>);
 
     const toLeftScroll = () => changeSlide((index - 1 + photos.length) % photos.length);
     const toRightScroll = () => changeSlide((index + 1) % photos.length);

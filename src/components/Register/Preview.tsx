@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addRoute } from '@/store/slices/settingsSlice';
@@ -9,7 +9,7 @@ import SvgWhiteHeart from '@/assets/icon/white-heart.svg';
 import SvgTriangle from '@/assets/icon/triangle.svg?react';
 
 
-const PreviewContent = () => {
+const PreviewContent = (): JSX.Element => {
     const regGlobRoute = appRoutes.register.global;
     // const regLangRoute = appRoutes.register.inner.lang;
     // const toLang = `${regGlobRoute}/${regLangRoute}`;

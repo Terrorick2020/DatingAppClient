@@ -1,4 +1,4 @@
-import { MouseEvent } from 'react';
+import { JSX, memo, MouseEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPlan } from '@/store/slices/profileSlice';
 import type { BaseVarsItem } from '@/types/settings.type';
@@ -12,7 +12,7 @@ import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 interface PropsPlansVars {
     plansVars: BaseVarsItem[]
 }
-const PlansVars = (props: PropsPlansVars) => {
+const PlansVars = memo((props: PropsPlansVars): JSX.Element => {
     const plan = useSelector((state: IState) => state.profile.eveningPlans.plan);
 
     const dispatch = useDispatch<RootDispatch>();
@@ -49,6 +49,6 @@ const PlansVars = (props: PropsPlansVars) => {
             </div>
         </>
     )
-}
+})
 
 export default PlansVars;

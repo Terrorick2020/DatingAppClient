@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { JSX, useMemo, memo } from 'react';
 import { ageToStr } from '@/funcs/general.funcs';
 import { useDispatch } from 'react-redux';
 import { addPhotoToUserAsync, delPhotoToUserAsync } from '@/store/slices/adminSlice';
@@ -10,7 +10,7 @@ import Photos from '@/components/UI/Photos';
 import SvgMapPin from '@/assets/icon/map-pin.svg?react';
 
 
-const UserInfoCtx = (props: PropsUserInfoComponent) => {
+const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
     const { id, name, age, city, description, status, photos } = props.targetProfile;
     
     const { text, status: statusText, addClass } = useMemo(() => {
@@ -48,6 +48,6 @@ const UserInfoCtx = (props: PropsUserInfoComponent) => {
             </div>
         </>
     )
-}
+})
 
 export default UserInfoCtx;

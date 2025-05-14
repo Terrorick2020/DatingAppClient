@@ -1,10 +1,11 @@
+import { JSX, memo } from 'react';
 import { type PropsLikeBtn } from '@/types/ui.types';
 
 import Button from '@mui/material/Button';
 import SvgHeartsBtn from '@/assets/icon/hearts-btn.svg';
 
 
-const LikeBtn = (props: PropsLikeBtn) => {
+const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
     return (
         <>
             <div
@@ -22,6 +23,6 @@ const LikeBtn = (props: PropsLikeBtn) => {
             </Button>
         </>
     )
-}
+})
 
 export default LikeBtn;

@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, JSX, memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { delay } from '@/funcs/general.funcs';
 import { infoAlert, warningAlert } from '@/funcs/alert.funcs';
@@ -12,7 +12,7 @@ import SvgAdd from '@/assets/icon/add.svg';
 interface PropsPhotosAddItem {
     handleAdd: (photo: File) => void
 }
-const PhotosAddItem = (props: PropsPhotosAddItem) => {
+const PhotosAddItem = memo((props: PropsPhotosAddItem): JSX.Element => {
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
     const [photo, setPhoto] = useState<string>('');
@@ -117,6 +117,6 @@ const PhotosAddItem = (props: PropsPhotosAddItem) => {
             />
         </>
     )
-}
+})
 
 export default PhotosAddItem;

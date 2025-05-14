@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveSelfPhotoAsync, deleteSelfPhotoAsync } from '@/store/slices/profileSlice';
 import type { RootDispatch } from '@/store';
@@ -6,7 +7,7 @@ import type { IState } from '@/types/store.types';
 import Photos from '@/components/UI/Photos';
 
 
-const FillingQuestPhotos = () => {
+const FillingQuestPhotos = (): JSX.Element => {
     const photos = useSelector((state: IState) => state.profile.info.photos);
     const photErr = useSelector((state: IState) => state.settings.fQErrors.photErr);
 

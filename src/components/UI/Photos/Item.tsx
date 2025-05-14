@@ -1,3 +1,4 @@
+import { JSX, memo } from 'react';
 import type { PhotoItem } from '@/types/profile.types';
 import type { DelDialogState } from '.';
 
@@ -8,7 +9,7 @@ interface PropsPhotosItem {
     item: PhotoItem
     setDelDialogState: (value: DelDialogState) => void
 }
-const PhotosItem = (props: PropsPhotosItem) => {
+const PhotosItem = memo((props: PropsPhotosItem): JSX.Element => {
     const handleClick = (): void => {
         props.setDelDialogState({
             open: true,
@@ -31,6 +32,6 @@ const PhotosItem = (props: PropsPhotosItem) => {
             </li>
         </>
     )
-}
+})
 
 export default PhotosItem;

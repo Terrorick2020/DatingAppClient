@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { JSX, memo, useState, useEffect } from 'react';
 import { ageToStr, formatTimeLeftOther } from '@/funcs/general.funcs';
 import type { ChatsListItem } from '@/types/chats.types';
 
@@ -10,7 +10,7 @@ const initialTimeInSeconds = 24 * 60 * 60;
 interface PropsChatsListItem {
     item: ChatsListItem
 }
-const ChatsListItem = (props: PropsChatsListItem) => {
+const ChatsListItem = memo((props: PropsChatsListItem): JSX.Element => {
     const [timeLeft, setTimeLeft] = useState<number>(initialTimeInSeconds);
 
     useEffect(() => {
@@ -48,6 +48,6 @@ const ChatsListItem = (props: PropsChatsListItem) => {
             </div>
         </>
     )
-}
+})
 
 export default ChatsListItem;

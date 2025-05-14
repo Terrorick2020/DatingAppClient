@@ -1,4 +1,4 @@
-import { MouseEvent } from 'react'
+import { JSX, MouseEvent } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfo } from '@/store/slices/profileSlice';
 import { ESex } from '@/types/store.types';
@@ -8,7 +8,7 @@ import IconButton from '@mui/joy/IconButton'
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup'
 
 
-const FillingQuestSelectionSex = () => {
+const FillingQuestSelectionSex = (): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const selSexVars = useSelector((state: IState) => state.settings.selSexVars);
 

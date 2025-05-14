@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { initComplaintsVarsAsync, setComplaint } from '@/store/slices/settingsSlice';
 import { delay } from '@/funcs/general.funcs';
@@ -14,7 +14,7 @@ import Collapse from '@mui/material/Collapse';
 import SvgArrowRight from '@/assets/icon/arrow-right.svg?react'
 
 
-const ComplaintDrawerList = () => {
+const ComplaintDrawerList = (): JSX.Element => {
     const complaint = useSelector((state: IState) => state.settings.complaint);
 
     const [open, setOpen] = useState<boolean>(true);

@@ -1,12 +1,5 @@
-import {
-    useState,
-    ChangeEvent,
-    KeyboardEvent,
-    useEffect
-} from 'react';
-import { appRoutes } from '@/config/routes.config';
-import { useNavigate } from 'react-router-dom';
-import { type PropsChatInput } from '@/types/ui.types';
+import { JSX, memo, ChangeEvent, KeyboardEvent } from 'react';
+import type { PropsChatInput } from '@/types/ui.types';
 
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -14,40 +7,22 @@ import IconButton from '@mui/joy/IconButton';
 import SvgSend from '@/assets/icon/send.svg';
 
 
-const ChatInput = (props: PropsChatInput) => {
-    const [message, setMessage] = useState('');
-
-    const navigate = useNavigate()
-
-    const questGlobRoute = appRoutes.questionnaires.global
-    const questChatsRoute = appRoutes.questionnaires.inner.chats
-    const toChats = `${questGlobRoute}/${questChatsRoute}`
-
+const ChatInput = memo((props: PropsChatInput): JSX.Element => {
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setMessage(event.target.value);
+        const newValue = event.target.value;
+        props.handleChange(newValue);
     };
 
     const handleSendMessage = () => {
-        if (!message.trim()) return;
-        console.log("Отправка сообщения:", message);
+        const resMsg = props.message.trim();
 
-        if( props.isMatch ) navigate( toChats );
-
-        setMessage('');
+        props.handleChange(resMsg);
+        props.handleClick();
     };
 
     const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-            handleSendMessage();
-        }
+        event.key === "Enter" && handleSendMessage();
     };
-
-    useEffect(
-        () => {
-            if ( props.isMatch ) setMessage('Напишите ей');
-        },
-        []
-    )
 
     return (
         <>
@@ -57,7 +32,7 @@ const ChatInput = (props: PropsChatInput) => {
                     id="chat-text-field"
                     fullWidth
                     placeholder="Сообщение..."
-                    value={message}
+                    value={props.message}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyPress}
                     slotProps={{
@@ -75,6 +50,6 @@ const ChatInput = (props: PropsChatInput) => {
             </div>
         </>
     )
-}
+})
 
-export default ChatInput
+export default ChatInput;

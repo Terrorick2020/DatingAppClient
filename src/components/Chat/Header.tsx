@@ -1,4 +1,4 @@
-import { useState, MouseEvent, useMemo } from 'react';
+import { JSX, memo, useState, MouseEvent, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
@@ -21,7 +21,7 @@ import SvgChatTrash from '@/assets/icon/chat-trash.svg?react';
 interface PropsChatHeader {
     id: string
 }
-const ChatHeader = (props: PropsChatHeader) => {
+const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
     const chatInterlocutor = useSelector((state: IState) => state.chats.targetChat.interlocutor);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -55,8 +55,10 @@ const ChatHeader = (props: PropsChatHeader) => {
 
     const ageStr = useMemo(() => ageToStr(chatInterlocutor?.age ?? null), [chatInterlocutor?.age]);
 
+    if(!chatInterlocutor) return (<></>)
+
     return (
-        chatInterlocutor && <> 
+        <> 
             <div className="person">
                 <Avatar
                     alt="chat-head-avatar"
@@ -93,6 +95,6 @@ const ChatHeader = (props: PropsChatHeader) => {
             <ComplaintDrawer id={props.id} />
         </>
     )
-}
+})
 
 export default ChatHeader;

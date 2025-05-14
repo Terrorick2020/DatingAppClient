@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { JSX, memo, useMemo, useState } from 'react';
 import { EProfileStatus } from '@/types/store.types';
 import { useDispatch } from 'react-redux';
 import { serchProfileStatusAsync } from '@/store/slices/adminSlice';
@@ -8,7 +8,7 @@ import { type PropsUserInfoComponent, UserInfoBtnId } from '@/types/admin.types'
 import Button from '@mui/material/Button';
 
 
-const UserInfoBtns = (props: PropsUserInfoComponent) => {
+const UserInfoBtns = memo((props: PropsUserInfoComponent): JSX.Element => {
     const [loadingButton, setLoadingButton] = useState<UserInfoBtnId | null>(null);
 
     const isPro = props.targetProfile.status === EProfileStatus.Pro;
@@ -73,6 +73,6 @@ const UserInfoBtns = (props: PropsUserInfoComponent) => {
             ))}
         </>
     )
-}
+})
 
 export default UserInfoBtns;

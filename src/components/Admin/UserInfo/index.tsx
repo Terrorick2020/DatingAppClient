@@ -1,4 +1,4 @@
-import { useEffect, memo } from 'react';
+import { JSX, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootDispatch } from '@/store';
@@ -10,7 +10,7 @@ import UserInfoCtx from './Ctx';
 import UserInfoBtns from './Btns';
 
 
-const UserInfoContent = () => {
+const UserInfoContent = (): JSX.Element => {
     const { id } = useParams();
 
     const targetProfile = useSelector((state: IState) => state.admin.targetProfile);
@@ -28,28 +28,20 @@ const UserInfoContent = () => {
         [id, dispatch]
     )
 
-    const MyLoaderMemo = memo(MyLoader);
-    const UserInfoCtxMemo = memo(UserInfoCtx);
-    const UserInfoBtnsMemo = memo(UserInfoBtns);
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
 
     return (
         <>
-            {
-                isLoad
-                    ?
-                    <div className="loader">
-                        <MyLoaderMemo />
-                    </div>
-                    :
-                    <>
-                        <div className="user-info__ctx">
-                            <UserInfoCtxMemo targetProfile={targetProfile} />
-                        </div>
-                        <div className="user-info__btns">
-                            <UserInfoBtnsMemo targetProfile={targetProfile} />
-                        </div>       
-                    </>
-            }
+            <div className="user-info__ctx">
+                <UserInfoCtx targetProfile={targetProfile} />
+            </div>
+            <div className="user-info__btns">
+                <UserInfoBtns targetProfile={targetProfile} />
+            </div>       
         </>
     )
 }

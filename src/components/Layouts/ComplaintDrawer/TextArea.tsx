@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react';
+import { JSX, useState, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendComplaintAsync } from '@/store/slices/settingsSlice';
 import { setComplaint } from '@/store/slices/settingsSlice';
@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 
-const ComplaintDrawerTxtArea = () => {
+const ComplaintDrawerTxtArea = (): JSX.Element => {
     const complaint = useSelector((state: IState) => state.settings.complaint);
 
     const [isLoad, setIsLoad] = useState<boolean>(false);

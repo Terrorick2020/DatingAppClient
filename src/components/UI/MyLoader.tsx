@@ -1,4 +1,7 @@
-const MyLoader = () => {
+import { JSX } from "react";
+
+
+const MyLoader = (): JSX.Element => {
     return (
         <>
             <div className="my-loader-box"  id="my-loader-box">

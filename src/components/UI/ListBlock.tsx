@@ -1,3 +1,4 @@
+import { JSX, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ANIME_DURATION } from '@/constant/settings';
 import { useDispatch } from 'react-redux';
@@ -8,8 +9,7 @@ import { type PropsListBlock } from '@/types/ui.types';
 
 import Avatar from '@mui/material/Avatar';
 
-
-const ListBlock = (props: PropsListBlock) => {
+const ListBlock = memo((props: PropsListBlock): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
@@ -39,6 +39,6 @@ const ListBlock = (props: PropsListBlock) => {
             </Slide>
         </>
     )
-}
+})
 
 export default ListBlock;

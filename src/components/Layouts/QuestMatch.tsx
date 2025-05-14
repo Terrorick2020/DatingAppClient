@@ -1,10 +1,46 @@
+import { JSX, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { acceptMatchAsync } from '@/store/slices/likesSlice';
+import { setMatch } from '@/store/slices/likesSlice';
+import { addRoute } from '@/store/slices/settingsSlice';
+import { useNavigate } from 'react-router-dom';
+import { appRoutes } from '@/config/routes.config';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
+
 import ChatInput from '@/components/UI/ChatInput';
 
-import PngFemale from '@/assets/img/female.png';
-import PngMale from '@/assets/img/male.png';
 
+const QuestMatch = (): JSX.Element => {
+    const profileInfo = useSelector((state: IState) => state.profile.info);
+    const match = useSelector((state: IState) => state.likes.match);
 
-const QuestMatch = () => {
+    if(!match.value || !match.from) return (<></>);
+
+    const [message, setMessage] = useState<string>('');
+
+    const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
+
+    const handleChange = (newValue: string) => setMessage(newValue);
+
+    const handleAcceptMatch = async (): Promise<void> => {
+
+        await dispatch(acceptMatchAsync());
+
+        const questGlobRoute = appRoutes.questionnaires.global;
+        const questChatsRoute = appRoutes.questionnaires.inner.chats;
+        const toChats = `${questGlobRoute}/${questChatsRoute}`;
+
+        dispatch(addRoute(toChats));
+
+        const toTargetChat = appRoutes.targetChat.replace(':id', match.from!.id);
+
+        navigate(toTargetChat);
+
+        dispatch(setMatch({ value: false, from: null }));
+    }
+
     return (
         <>
             <div className="match">
@@ -16,12 +52,12 @@ const QuestMatch = () => {
                         <div className="cards">
                             <div className="item female"
                                 style={{
-                                    backgroundImage: `url(${PngFemale})`
+                                    backgroundImage: `url(${profileInfo.photos[0].photo})`
                                 }}
                             />
                             <div className="item male"
                                 style={{
-                                    backgroundImage: `url(${PngMale})`
+                                    backgroundImage: `url(${match.from.avatar})`
                                 }}
                             />
                         </div>
@@ -29,7 +65,11 @@ const QuestMatch = () => {
                             <span className="caps">Вы</span> и <span className="caps">Виктория</span> 
                             <span className="no-wrap">понравились друг другу</span>
                         </h6>
-                        <ChatInput isMatch={true} />
+                        <ChatInput
+                            message={message}
+                            handleChange={handleChange}
+                            handleClick={handleAcceptMatch}
+                        />
                     </main>
                     <footer className="footer"></footer>
                 </div>

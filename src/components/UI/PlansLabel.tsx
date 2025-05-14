@@ -1,8 +1,9 @@
+import { JSX, memo } from 'react';
 import { planLabelStyle } from '@/constant/ui';
 import { type PropsPlansLabel } from '@/types/ui.types';
 
 
-const PlansLabel = (props: PropsPlansLabel) => {
+const PlansLabel = memo((props: PropsPlansLabel): JSX.Element => {
     return (
         <>
             <div
@@ -16,6 +17,6 @@ const PlansLabel = (props: PropsPlansLabel) => {
             </div>
         </>
     )
-}
+})
 
 export default PlansLabel;

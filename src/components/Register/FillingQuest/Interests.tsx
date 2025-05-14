@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect } from 'react';
+import { JSX, MouseEvent, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfo } from '@/store/slices/profileSlice';
 import { selSexVarsBase } from '@/constant/settings';
@@ -10,7 +10,7 @@ import IconButton from '@mui/joy/IconButton';
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 
 
-const FillingQuestInterests = () => {
+const FillingQuestInterests = (): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const interestsVars = useSelector((state: IState) => state.settings.interestsVars);
 

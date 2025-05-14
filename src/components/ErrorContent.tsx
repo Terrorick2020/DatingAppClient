@@ -1,7 +1,9 @@
+import { JSX } from 'react';
+
 import SvgNetError from '@/assets/icon/net-error.svg';
 
 
-const ErrorContent = () => {
+const ErrorContent = (): JSX.Element => {
     return (
         <>
             <div className="error__ctx">

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootDispatch } from '@/store';
 import { initSliderListAsync } from '@/store/slices/questionnairesSlice';
@@ -8,7 +8,7 @@ import SliderPoster from './SliderPoster';
 import MyLoader from '@/components/UI/MyLoader';
 
 
-const SliderContent = () => {
+const SliderContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
 
     const dispatch = useDispatch<RootDispatch>();

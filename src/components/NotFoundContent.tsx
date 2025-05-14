@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
@@ -8,7 +9,7 @@ import Button from '@mui/material/Button';
 import SvgNotFound from '@/assets/icon/not-found.svg';
 
 
-const NotFoundContent = () => {
+const NotFoundContent = (): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
 
     const navigate = useNavigate();

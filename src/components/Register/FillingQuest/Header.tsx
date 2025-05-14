@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useInitMediaLink } from '@/funcs/effects.funcs';
@@ -9,7 +10,7 @@ import type { RootDispatch } from '@/store';
 import SvgVideoHelpers from '@/assets/icon/video-helpers.svg?react';
 
 
-const FillingQuestHeader = () => {
+const FillingQuestHeader = (): JSX.Element => {
     const isDisabled = useInitMediaLink(LinkPageType.FillingQuest);
     
     const dispatch = useDispatch<RootDispatch>();

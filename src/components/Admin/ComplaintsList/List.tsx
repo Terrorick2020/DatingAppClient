@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, memo } from 'react';
 import type { ComplaintListItem } from '@/types/admin.types';
 
 import ComplaintsListCtxItem from './Item';
@@ -7,7 +7,7 @@ import ComplaintsListCtxItem from './Item';
 interface PropsComplaintsListCtx {
     complaintsList: ComplaintListItem[]
 }
-const ComplaintsListCtx = (props: PropsComplaintsListCtx): JSX.Element => {
+const ComplaintsListCtx = memo((props: PropsComplaintsListCtx): JSX.Element => {
     return (
         <>
             <div className="complaints-list">
@@ -17,6 +17,6 @@ const ComplaintsListCtx = (props: PropsComplaintsListCtx): JSX.Element => {
             </div>
         </>
     )
-}
+})
 
 export default ComplaintsListCtx;

@@ -1,4 +1,4 @@
-import { ReactNode, MouseEvent } from 'react';
+import { ReactNode, MouseEvent, JSX, memo } from 'react';
 
 import IconButton from '@mui/joy/IconButton';
 import Menu from '@mui/material/Menu';
@@ -13,7 +13,7 @@ interface PropsMenuBtn {
     menuAddClass: string
     children: ReactNode
 }
-const MenuBtn = (props: PropsMenuBtn) => {
+const MenuBtn = memo((props: PropsMenuBtn): JSX.Element => {
     const open = Boolean(props.anchorEl);
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>): void => {
@@ -44,6 +44,6 @@ const MenuBtn = (props: PropsMenuBtn) => {
             </Menu>
         </>
     )
-}
+})
 
 export default MenuBtn;

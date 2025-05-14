@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { JSX, memo, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux'
 import { formatTimeLeft } from '@/funcs/general.funcs';
 import type { PropsProfileInfo } from '@/types/quest.types';
@@ -11,7 +11,7 @@ import SvgCalendar from '@/assets/icon/calendar.svg';
 
 const initialTimeInSeconds = 24 * 60 * 60;
 
-const ProfilePlans = (props: PropsProfileInfo) => {
+const ProfilePlans = memo((props: PropsProfileInfo): JSX.Element => {
     const eveningPlans = useSelector((state: IState) => state.profile.eveningPlans)
 
     const [timeLeft, setTimeLeft] = useState<number>(initialTimeInSeconds);
@@ -54,6 +54,6 @@ const ProfilePlans = (props: PropsProfileInfo) => {
             </div>
         </>
     )
-}
+})
 
 export default ProfilePlans;

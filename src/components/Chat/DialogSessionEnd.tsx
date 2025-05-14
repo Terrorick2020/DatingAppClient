@@ -1,3 +1,5 @@
+import { JSX, memo } from 'react';
+
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Button from '@mui/material/Button';
@@ -9,7 +11,7 @@ interface PropsChatDialogSessionEnd {
     open: boolean
     setOpen: (value: boolean) => void
 }
-const ChatDialogSessionEnd = (props: PropsChatDialogSessionEnd) => {
+const ChatDialogSessionEnd = memo((props: PropsChatDialogSessionEnd): JSX.Element => {
     return (
         <>
             <ChatPatternDialog
@@ -36,6 +38,6 @@ const ChatDialogSessionEnd = (props: PropsChatDialogSessionEnd) => {
             </ChatPatternDialog>
         </>
     )
-}
+})
 
 export default ChatDialogSessionEnd;

@@ -1,7 +1,9 @@
+import { JSX } from 'react';
+
 import SvgLogo from '@/assets/icon/logo.svg';
 
 
-const AppPreloader = () => {
+const AppPreloader = (): JSX.Element => {
     return (
         <>
             <div className='preloader' id="preloader">

@@ -1,4 +1,12 @@
-import { useState, useEffect, useMemo, MouseEvent } from 'react';
+import {
+    JSX,
+    memo,
+    useState,
+    useEffect,
+    useMemo,
+    MouseEvent,
+} from 'react';
+
 import { useNavigate, useLocation } from 'react-router-dom';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
@@ -24,7 +32,7 @@ interface LikesCardIsLoading {
     reject: boolean
     accept: boolean
 }
-const LikesCard= (props: PropsLikesCard) => {
+const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
     const [timeLeft, setTimeLeft] = useState<number>(initialTimeInSeconds);
     const [isLoadind, setIsLoading] = useState<LikesCardIsLoading>({
         reject: false,
@@ -134,6 +142,6 @@ const LikesCard= (props: PropsLikesCard) => {
             </div>
         </>
     )
-}
+})
 
 export default LikesCard;

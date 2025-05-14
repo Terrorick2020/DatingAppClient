@@ -1,3 +1,4 @@
+import { JSX, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setComplOpen } from '@/store/slices/settingsSlice';
 import { ageToStr } from '@/funcs/general.funcs';
@@ -16,10 +17,10 @@ interface PropsDetailsSlide {
     len:     number
     index:   number
 }
-const DetailsSlide = (props: PropsDetailsSlide) => {
+const DetailsSlide = memo((props: PropsDetailsSlide): JSX.Element => {
     const targetUser = useSelector((state: IState) => state.questionnaires.targetUser);
 
-    if(!targetUser) return null;
+    if(!targetUser) return (<></>);
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -60,6 +61,6 @@ const DetailsSlide = (props: PropsDetailsSlide) => {
             </div>
         </>
     )
-}
+})
 
 export default DetailsSlide;

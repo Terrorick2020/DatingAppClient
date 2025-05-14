@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { delay } from '@/funcs/general.funcs';
 import { likesList } from '@/constant/likes';
 import { setLoad } from './settingsSlice';
-import type { LikesState, LikesItem } from '@/types/likes.types';
+import type { LikesState, LikesItem, LikesMatch } from '@/types/likes.types';
 
 
 const initialState: LikesState = {
@@ -56,10 +56,20 @@ export const rejectLikingAsync = createAsyncThunk(
     }
 );
 
+export const acceptMatchAsync = createAsyncThunk(
+    'likes/accept-match',
+    async (): Promise<void> => {
+        await delay(2000);
+    }
+)
+
 const likesSlice = createSlice({
     name: 'likes',
     initialState,
     reducers: {
+        setMatch: (state, action: PayloadAction<LikesMatch>) => {
+            state.match = action.payload;
+        }
     },
     extraReducers: builder => {
         // Получение списка симпатий
@@ -96,8 +106,20 @@ const likesSlice = createSlice({
         builder.addCase(rejectLikingAsync.rejected, _ => {
             console.log("Ошибка отклонения симпантии");
         })
+
+        // Ответ на симпатию
+        builder.addCase(acceptMatchAsync.pending, _ => {
+            console.log("Ответ на симпатию");
+        })
+        builder.addCase(acceptMatchAsync.fulfilled, _ => {
+            console.log("Успешный ответ на симпатию");
+
+        })
+        builder.addCase(acceptMatchAsync.rejected, _ => {
+            console.log("Ошибка ответа на симпатию");
+        })
     },
 })
 
-export const {} = likesSlice.actions;
+export const { setMatch } = likesSlice.actions;
 export default likesSlice.reducer;

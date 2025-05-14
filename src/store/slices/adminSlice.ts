@@ -60,6 +60,8 @@ export const getProfilesListAsync = createAsyncThunk(
     
             if ( adminState.searchId ) return response.filter( item => item.id.includes( adminState.searchId ) );
     
+            console.log( response )
+
             return response;
 
         } catch ( error ) {

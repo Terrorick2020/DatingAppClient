@@ -1,3 +1,4 @@
+import { JSX, memo } from 'react';
 import type { PropsChatPatternDialog } from '@/types/ui.types';
 
 import Dialog from '@mui/material/Dialog';
@@ -5,7 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 
 
-const ChatPatternDialog = (props: PropsChatPatternDialog) => {
+const ChatPatternDialog = memo((props: PropsChatPatternDialog): JSX.Element => {
     const handleClose = (): void => props.setOpen(false);
 
     return (
@@ -30,6 +31,6 @@ const ChatPatternDialog = (props: PropsChatPatternDialog) => {
             </Dialog>
         </>
     )
-}
+})
 
 export default ChatPatternDialog;

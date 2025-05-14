@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { JSX, MouseEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSearchType, setSearchId } from '@/store/slices/adminSlice';
 import { EProfileRoles } from '@/types/store.types';
@@ -13,7 +13,7 @@ import IconButton from '@mui/joy/IconButton';
 import Button from '@mui/material/Button';
 
 
-const UsersListHeader = () => {
+const UsersListHeader = (): JSX.Element => {
     const adminState = useSelector((state: IState) => state.admin);
 
     const [open, setOpen] = useState<boolean>(false);

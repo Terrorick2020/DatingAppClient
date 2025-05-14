@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { PlanLabelSvgType } from '@/types/ui.types';
 import { useSelector } from 'react-redux';
 import type { IState } from '@/types/store.types';
@@ -7,7 +8,7 @@ import Chip from '@mui/material/Chip';
 import SvgTimerCircle from '@/assets/icon/timer-circle.svg';
 
 
-const DetailsInfo = () => {
+const DetailsInfo = (): JSX.Element => {
     const plans = useSelector((state: IState) => state.questionnaires.targetUser?.plans);
     const bio = useSelector((state: IState) => state.questionnaires.targetUser?.bio);
 

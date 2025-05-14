@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getChatByIdAsync } from '@/store/slices/chatsSlice';
@@ -12,14 +12,16 @@ import ChatInput from '@/components/UI/ChatInput';
 import MyLoader from '@/components/UI/MyLoader';
 
 
-const ChatContent = () => {
+const ChatContent = (): JSX.Element => {
     const { id } = useParams();
-
-    if ( !id ) return null;
 
     const isLoad = useSelector((state: IState) => state.settings.load);
 
+    const [message, setMessage] = useState<string>('');
+
     const dispatch = useDispatch<RootDispatch>();
+
+    if ( !id ) return (<></>);
 
     useEffect(
         () => {
@@ -34,28 +36,36 @@ const ChatContent = () => {
         [id]
     )
 
+    const handleChangeMsg = (newValue: string): void => {
+        setMessage(newValue);
+    }
+
+    const handleSendMsg = async (): Promise<void> => {
+        setMessage('');
+    }
+
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
+
     return (
-        <>  
-            {
-                isLoad
-                    ?
-                    <div className="loader">
-                        <MyLoader />
-                    </div>
-                    :
-                    <>
-                        <header className="target-chat__header">
-                            <ChatHeader id={id} />
-                        </header>
-                        <div className="target-chat__ctx">
-                            <ChatList />
-                        </div>
-                        <footer className="target-chat__footer">
-                            <ChatInput isMatch={false} />
-                        </footer>
-                        <ChatDialogSessionEnd open={false} setOpen={(_: boolean) => {}} />
-                    </>
-            }
+        <>
+            <header className="target-chat__header">
+                <ChatHeader id={id} />
+            </header>
+            <div className="target-chat__ctx">
+                <ChatList />
+            </div>
+            <footer className="target-chat__footer">
+                <ChatInput
+                    message={message}
+                    handleChange={handleChangeMsg}
+                    handleClick={handleSendMsg}
+                />
+            </footer>
+            <ChatDialogSessionEnd open={false} setOpen={(_: boolean) => {}} />
         </>
     )
 }

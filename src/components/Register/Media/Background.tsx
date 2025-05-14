@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { JSX, memo, useMemo } from 'react';
 import { PlayingSvgVars } from '@/constant/register';
 import type { PropsMediaContentBg } from '@/types/register.typs';
 
@@ -6,7 +6,7 @@ import SvgMediaBack from '@/assets/icon/media-back.svg';
 import SvgMediaForward from '@/assets/icon/media-forward.svg';
 
 
-const MediaContentBg = (props: PropsMediaContentBg) => {
+const MediaContentBg = memo((props: PropsMediaContentBg): JSX.Element => {
     const varianPlaySvg = useMemo(() => PlayingSvgVars[+props.isPlaying], [props.isPlaying]);
 
     return(
@@ -32,6 +32,6 @@ const MediaContentBg = (props: PropsMediaContentBg) => {
             </div>
         </>
     )
-}
+})
 
 export default MediaContentBg;

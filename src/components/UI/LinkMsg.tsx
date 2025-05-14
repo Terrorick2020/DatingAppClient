@@ -1,3 +1,5 @@
+import { JSX, memo, useMemo } from 'react';
+import { shareURL } from '@telegram-apps/sdk';
 import type { PropsLinkMsg } from '@/types/ui.types';
 
 import Button from '@mui/material/Button';
@@ -12,21 +14,29 @@ import SvgCopy from '@/assets/icon/copy.svg';
 import SvgLink from '@/assets/icon/link.svg';
 
 
-const LinkMsg = (props: PropsLinkMsg) => {
+const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
     const handleClose = (): void => props.setOpen(false);
 
     const handleCopy = async (): Promise<void> =>
         await navigator.clipboard.writeText(props.link);
 
     const handleShare = async (): Promise<void> => {
-        const shareData = {
-            title: 'Приглашение',
-            text: 'Попробуй приложение!',
-            url: props.link,
-        };
+        const text = 'Попробуй приложение!';
 
-        await navigator.share(shareData);
+        if(shareURL.isAvailable()) {
+            await shareURL(props.link, text);
+        } else if (navigator.share) {
+            const shareData = {
+                title: 'Приглашение',
+                text,
+                url: props.link,
+            };
+
+            await navigator.share(shareData);
+        }
     }
+
+    const shareIsWorked = useMemo(() => shareURL.isAvailable() || navigator.share, []);
 
     return (
         <>
@@ -64,11 +74,13 @@ const LinkMsg = (props: PropsLinkMsg) => {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        className="send-btn"
-                        startIcon={<img src={SvgLink} alt='link'/>}
-                        onClick={handleShare}
-                    >Отправить</Button>
+                    {
+                        shareIsWorked && <Button
+                            className="send-btn"
+                            startIcon={<img src={SvgLink} alt='link'/>}
+                            onClick={handleShare}
+                        >Отправить</Button>
+                    }
                     <Button
                         className="close-btn"
                         onClick={handleClose}
@@ -77,6 +89,6 @@ const LinkMsg = (props: PropsLinkMsg) => {
             </Dialog>
         </>
     )
-}
+})
 
 export default LinkMsg;

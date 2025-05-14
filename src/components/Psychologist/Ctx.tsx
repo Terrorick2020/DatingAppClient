@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { JSX, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
@@ -7,13 +7,13 @@ import { lineStatusAttr } from '@/constant/settings';
 import { type IState } from '@/types/store.types';
 
 
-const PsychologistCtx = () => {
+const PsychologistCtx = (): JSX.Element => {
     const targerPsych = useSelector((state: IState) => state.psych.targetPsych);
 
     if ( !targerPsych ) {
         const navgate = useNavigate();
         navgate( appRoutes.notFound );
-        return null;
+        return (<></>);
     }
 
     const expStr = useMemo(() => ageToStr(targerPsych.exp), [targerPsych.exp]);

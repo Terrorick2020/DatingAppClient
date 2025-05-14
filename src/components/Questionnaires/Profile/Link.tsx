@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 
 import IconButton from '@mui/joy/IconButton';
 import LinkMsg from '@/components/UI/LinkMsg';
 import SvgLink from '@/assets/icon/link-white.svg';
 
 
-const ProfileLink = () => {
+const ProfileLink = (): JSX.Element => {
     const [open, setOpen] = useState<boolean>(false);
 
     const handleOpen = (): void => setOpen(true);
