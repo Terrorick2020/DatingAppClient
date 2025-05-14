@@ -1,8 +1,9 @@
 import { useEffect, JSX } from 'react';
 import { useNavigate  } from 'react-router-dom';
+import { infoAlert } from '@/funcs/alert.funcs';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { closingBehavior, backButton } from '@telegram-apps/sdk';
+import { closingBehavior, backButton, cloudStorage } from '@telegram-apps/sdk';
 import { type RootDispatch } from '@/store';
 
 import type { IState } from '@/types/store.types';
@@ -51,6 +52,11 @@ const DesktopHeadNav = (): JSX.Element => {
                 if (!!setRoutes.length && backButton.show.isAvailable()) backButton.show();
                 if (!setRoutes.length && backButton.hide.isAvailable()) backButton.hide();
             }, 0);
+
+            infoAlert(
+                dispatch,
+                `Статуc: ${cloudStorage.isSupported() ? 'Yes' : 'No' }`
+            )
         }
     }, [setRoutes]);
 
