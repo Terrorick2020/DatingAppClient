@@ -15,16 +15,17 @@ import settingsReducer from './slices/settingsSlice';
 import storageSession from 'redux-persist/lib/storage/session';
 
 
-const resStorage = cloudStorage.isSupported() ? cloudStorageAdapter : storageSession;
+export function createAppStore() {
+  const resStorage = cloudStorage.isSupported() ? cloudStorageAdapter : storageSession;
 
-const settingsPersistConfig = {
+  const settingsPersistConfig = {
     key: 'settings',
     storage: resStorage,
     whitelist: ['routes'],
     transforms: [settingsTransform],
-};
+  };
 
-const rootReducer: Reducer<IState> = combineReducers({
+  const rootReducer: Reducer<IState> = combineReducers({
     admin: adminReducer,
     chats: chatsReducer,
     likes: likesReducer,
@@ -32,16 +33,17 @@ const rootReducer: Reducer<IState> = combineReducers({
     questionnaires: questionnairesReducer,
     psych: psychReducer,
     settings: persistReducer(settingsPersistConfig, settingsReducer),
-});
+  });
 
-export const store = configureStore({
+  const baseStore = configureStore({
     reducer: rootReducer,
     middleware: getDefaultMiddleware =>
-        getDefaultMiddleware({
-            serializableCheck: false,
-        }),
-});
+      getDefaultMiddleware({ serializableCheck: false }),
+  });
 
-export const persistor = persistStore(store);
-export type RootDispatch = typeof store.dispatch;
-export default store;
+  const basePersistor = persistStore(baseStore);
+
+  return { baseStore, basePersistor };
+};
+
+export type RootDispatch = ReturnType<typeof createAppStore>['baseStore']['dispatch'];

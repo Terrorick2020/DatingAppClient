@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { appRoutes } from './config/routes.config';
 
@@ -37,7 +38,7 @@ import ErrorPage from './pages/Error';
 import './assets/scss/index.scss';
 
 
-const App = () => {
+const App = (): JSX.Element => {
   const regRoutes   = appRoutes.register;
   const epRoutes    = appRoutes.eveningPlans;
   const questRoutes = appRoutes.questionnaires;

@@ -2,6 +2,18 @@ export function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export async function fadeOutPreloader() {
+	const preloader = document.getElementById( 'preloader' );
+
+	if ( preloader ) {
+		preloader.style.animation = "fadeOut 2s ease-in-out forwards";
+
+		await delay(2000);
+
+		preloader.style.display = "none";
+	}
+}
+
 export function ageToStr(age: number | null): string {
     if ( !age ) return 'лет';
 	let txt;
