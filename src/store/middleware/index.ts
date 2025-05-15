@@ -1,11 +1,8 @@
 import { Middleware } from '@reduxjs/toolkit';
 
 
-const myMiddleware: Middleware = (storeAPI) => (next) => (action) => {
-    console.log( storeAPI )
-
+const myMiddleware: Middleware = (_storeAPI) => (next) => (action) => {
     const result = next(action);
-
     return result;
 }
 

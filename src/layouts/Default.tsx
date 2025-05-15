@@ -1,9 +1,10 @@
 import { memo, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { EApiStatus } from '@/types/settings.type';
 import { SNACK_TIMEOUT } from '@/constant/settings';
+import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import IconButton from '@mui/joy/IconButton';
@@ -36,6 +37,12 @@ const DefaultLayout = memo(() => {
     useEffect( () => {
         apiRes.value && showSnackAlert(apiRes.msg, apiRes.status, SNACK_TIMEOUT);
     }, [apiRes] );
+
+    const dispatch = useDispatch<RootDispatch>();
+
+    useEffect(() =>{
+        showSnackAlert('Hello', apiRes.status, SNACK_TIMEOUT);
+    }, [dispatch])
 
     return (
         <>
