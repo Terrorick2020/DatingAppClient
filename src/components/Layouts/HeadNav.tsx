@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -45,6 +45,15 @@ const DesktopHeadNav = (): JSX.Element => {
     };
     const closeWindow = () => window.close();
 
+    useEffect(
+        () => {
+            isTgMobile &&
+                !!setRoutes.length &&
+                backButton.show.isAvailable() &&
+                backButton.show();
+        },
+        [setRoutes]
+    )
 
     if ( isTgMobile ) {
         if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
