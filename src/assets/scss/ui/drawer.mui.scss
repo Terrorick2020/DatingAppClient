@@ -105,4 +105,117 @@
             }
         }
     }
+
+    &.match-drawer {
+        width: 100%;
+
+        .MuiDrawer-paper {
+            width: 100%;
+            max-width: 800px;
+            height: 100vh;
+            margin: 0 auto;
+            background: #000000;
+
+            .match {
+                width: 100%;
+                height: 100%;
+                display: grid;
+                grid-template-rows: 3fr 2.5fr 3fr;
+                color: #FFFFFF;
+                
+                .header, .footer {
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                }
+
+                .header {
+                    background-image: url("/icons/preloader-header.svg");
+                    background-position: bottom;
+                    display: flex;
+                    justify-content: center;
+                    align-items: end;
+
+                    .headline {
+                        font-weight: 900;
+                    }
+                }
+
+                .main {
+                    width: 100%;
+                    padding-inline: 1.25rem;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+
+                    .cards {
+                        width: 100%;
+                        padding-inline: 2vw;
+                        padding-block: 4vh;
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: center;
+                        align-items: center;
+
+                        .item {
+                            width: 9.86vw;
+                            min-width: 7.5rem;
+                            height: 25.11vh;
+                            min-height: 11.25rem;
+                            border-radius: 1.25rem;
+                            background-repeat: no-repeat;
+                            background-size: cover;
+                            background-position: center;
+
+                            &.female {
+                                rotate: -15deg;
+                                z-index: 1;
+                            }
+
+                            &.male {
+                                rotate: 15deg;
+                            }
+                        }
+                    }
+
+                    .text {
+                        width: 100%;
+                        text-align: center;
+                        font-weight: 400;
+
+                        .caps {
+                            font-size: 1.5rem;
+                            font-weight: 500;
+                        }
+
+                        .no-wrap {
+                            white-space: nowrap;
+
+                            &::before {
+                                content: ' ';
+                            }
+                        }
+                    }
+
+                    .chat-input {
+                        margin-top: 1rem;
+
+                        .MuiInputBase-root {
+                            border-radius: 3.75rem;
+                            color: inherit;
+
+                            &.Mui-focused fieldset {
+                                border-width: 1px;
+                                border-color: #BC96FF;
+                            }
+                        }
+                    }
+                }
+
+                .footer {
+                    background-image: url("/icons/preloader-footer.svg");
+                    background-position: top;
+                }
+            }
+        }
+    }
 }

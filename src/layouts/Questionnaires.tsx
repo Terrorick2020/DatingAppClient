@@ -10,12 +10,7 @@ import SAPlansTimeout from '@/components/Layouts/PlansTimeout';
 
 
 const QuestLayout = () => {
-    const [isMatch, isCurrent] = useSelector(
-        (state: IState) => [
-            state.likes.match.value,
-            state.profile.eveningPlans.isCurrent,
-        ]
-    );
+    const isCurrent = useSelector((state: IState) => state.profile.eveningPlans.isCurrent);
 
     const snackbarKeyRef = useRef<string | number | null>(null);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -48,8 +43,8 @@ const QuestLayout = () => {
 
     return (
         <>
+            <QuestMatch />
             <div className="quest-layout">
-                { isMatch && <QuestMatch /> }
                 <div className="quest-outlet">
                     <Outlet />
                 </div>

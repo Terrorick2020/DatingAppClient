@@ -9,6 +9,7 @@ import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import ChatInput from '@/components/UI/ChatInput';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
 
 const QuestMatch = (): JSX.Element => {
@@ -21,6 +22,14 @@ const QuestMatch = (): JSX.Element => {
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
+
+    const handleOpen = (): void => {
+        dispatch(setMatch({...match, value: true}))
+    }
+    
+    const handleClose = (): void => {
+        dispatch(setMatch({...match, value: false}))
+    }
 
     const handleChange = (newValue: string) => setMessage(newValue);
 
@@ -43,8 +52,14 @@ const QuestMatch = (): JSX.Element => {
 
     return (
         <>
-            <div className="match">
-                <div className="container">
+            <SwipeableDrawer
+                className="match-drawer"
+                anchor="top"
+                open={match.value}
+                onOpen={handleOpen}
+                onClose={handleClose}
+            >
+                <div className="match">
                     <header className="header">
                         <h2 className="headline">Это мэтч!</h2>
                     </header>
@@ -73,9 +88,9 @@ const QuestMatch = (): JSX.Element => {
                     </main>
                     <footer className="footer"></footer>
                 </div>
-            </div>
+            </SwipeableDrawer>
         </>
     )
 }
 
-export default QuestMatch
+export default QuestMatch;
