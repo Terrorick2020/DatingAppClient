@@ -5,12 +5,11 @@
     height: 100vh;
     padding: 9vh 8vw 8vh 8vw;
     overflow: auto;
-    opacity: 0;
-    @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
     &__ctx {
         width: 100%;
         margin-top: 3rem;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
         .headline {
             width: 100%;
@@ -85,6 +84,7 @@
         margin-top: 3rem;
         flex-direction: column;
         gap: 1.3rem;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
         .link {
             &__btn {

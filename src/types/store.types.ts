@@ -41,13 +41,6 @@ export enum LinkPageType {
     EveningPlans = 'EveningPlans',
 }
 
-export interface Persist {
-    _persist: {
-        version: number
-        rehydrated: boolean
-    }
-}
-
 export interface IState {
     admin:          AdminState
     chats:          ChatsState
@@ -55,5 +48,5 @@ export interface IState {
     profile:        ProfileState
     questionnaires: QuestState
     psych:          PsychState
-    settings:       SettingsState & Persist
+    settings:       SettingsState
 }

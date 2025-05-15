@@ -31,18 +31,3 @@ declare global {
     };
   }
 };
-
-declare module 'redux-persist-indexeddb-storage' {
-  interface Options {
-    name?: string;
-    storeName?: string;
-  }
-
-  type StorageIDBAdapter = {
-    getItem(key: string): Promise<any>;
-    setItem(key: string, value: any): Promise<void>;
-    removeItem(key: string): Promise<void>;
-  };
-
-  export default function createIdbStorage(options?: Options): StorageIDBAdapter;
-};

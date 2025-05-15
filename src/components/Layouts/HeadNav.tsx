@@ -1,4 +1,4 @@
-import { useEffect, JSX } from 'react';
+import { JSX } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -25,14 +25,26 @@ const DesktopHeadNav = (): JSX.Element => {
     const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win');
     const isDesktop   = !predMobile || predDesktop;
 
+    const isTgMobile = !!closingBehavior && !!backButton && !isDesktop;
+
     const goBack = () => {
+        const remainingRoutes = setRoutes.length - 1;
+
         const backRoute = setRoutes.slice(-1)[0];
         navigate(backRoute);
         dispatch(dellRoute());
+
+        if(isTgMobile) {
+            if (backButton.show.isAvailable() && remainingRoutes > 0) {
+                backButton.show();
+            } else if (backButton.hide.isAvailable()) {
+                backButton.hide();
+            }
+        }
+        
     };
     const closeWindow = () => window.close();
 
-    const isTgMobile = !!closingBehavior && !!backButton && !isDesktop;
 
     if ( isTgMobile ) {
         if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
@@ -42,15 +54,6 @@ const DesktopHeadNav = (): JSX.Element => {
             backButton.onClick(goBack);
         }
     }
-
-    useEffect(() => {
-        if ( isTgMobile) {
-            setTimeout(() => {
-                if (!!setRoutes.length && backButton.show.isAvailable()) backButton.show();
-                if (!setRoutes.length && backButton.hide.isAvailable()) backButton.hide();
-            }, 0);
-        }
-    }, [setRoutes]);
 
     if(!isDesktop) return (<></>);
 
