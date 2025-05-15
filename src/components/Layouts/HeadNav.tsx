@@ -3,7 +3,6 @@ import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { closingBehavior, backButton } from '@telegram-apps/sdk';
-import { infoAlert } from '@/funcs/alert.funcs';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -48,11 +47,6 @@ const DesktopHeadNav = (): JSX.Element => {
 
     useEffect(
         () => {
-            infoAlert(
-                dispatch,
-                String(setRoutes)
-            )
-
             isTgMobile &&
                 !!setRoutes.length &&
                 backButton.show.isAvailable() &&
