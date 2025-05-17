@@ -2,7 +2,8 @@ import type {
     ProfilesListItem,
     TargetProfile,
     StatusData,
-    UserItemActivCtx
+    UserItemActivCtx,
+    ComplaintListItem,
 } from '@/types/admin.types';
 
 import { EProfileStatus, EProfileRoles } from '@/types/store.types';
@@ -12,19 +13,27 @@ import PngMale from '@/assets/img/male.png';
 
 
 export const resUsersList: ProfilesListItem[] = [
-    {id: '2342343', role: EProfileRoles.User, avatr: PngWoman, name: 'Татьяна Иванова', status: EProfileStatus.Noob},
-    {id: '8148518', role: EProfileRoles.User, avatr: PngWoman, name: 'Валерия Иванова', status: EProfileStatus.Blocked},
-    {id: '8111518', role: EProfileRoles.User, avatr: PngWoman, name: 'Константин Иванов', status: EProfileStatus.Pro},
-    {id: '8148548', role: EProfileRoles.User, avatr: PngWoman, name: 'Илия Иванова', status: EProfileStatus.Noob},
-    {id: '8167808', role: EProfileRoles.User, avatr: PngWoman, name: 'Привет Иванова', status: EProfileStatus.Blocked},
+    {id: '2342343', role: EProfileRoles.User, avatar: PngWoman, name: 'Татьяна Иванова', status: EProfileStatus.Noob},
+    {id: '8148518', role: EProfileRoles.User, avatar: PngWoman, name: 'Валерия Иванова', status: EProfileStatus.Blocked},
+    {id: '8111518', role: EProfileRoles.User, avatar: PngWoman, name: 'Константин Иванов', status: EProfileStatus.Pro},
+    {id: '8148548', role: EProfileRoles.User, avatar: PngWoman, name: 'Илия Иванова', status: EProfileStatus.Noob},
+    {id: '8167808', role: EProfileRoles.User, avatar: PngWoman, name: 'Привет Иванова', status: EProfileStatus.Blocked},
 ]
 
 export const resPsychsList: ProfilesListItem[] = [
-    {id: '2342343', role: EProfileRoles.Psych, avatr: PngMale, name: 'Татьяна Иванова', status: EProfileStatus.Noob},
-    {id: '8148518', role: EProfileRoles.Psych, avatr: PngMale, name: 'Валерия Иванова', status: EProfileStatus.Blocked},
-    {id: '8111518', role: EProfileRoles.Psych, avatr: PngMale, name: 'Константин Иванов', status: EProfileStatus.Pro},
-    {id: '8148548', role: EProfileRoles.Psych, avatr: PngMale, name: 'Илия Иванова', status: EProfileStatus.Noob},
-    {id: '8167808', role: EProfileRoles.Psych, avatr: PngMale, name: 'Привет Иванова', status: EProfileStatus.Blocked},
+    {id: '2342343', role: EProfileRoles.Psych, avatar: PngMale, name: 'Татьяна Иванова', status: EProfileStatus.Noob},
+    {id: '8148518', role: EProfileRoles.Psych, avatar: PngMale, name: 'Валерия Иванова', status: EProfileStatus.Blocked},
+    {id: '8111518', role: EProfileRoles.Psych, avatar: PngMale, name: 'Константин Иванов', status: EProfileStatus.Pro},
+    {id: '8148548', role: EProfileRoles.Psych, avatar: PngMale, name: 'Илия Иванова', status: EProfileStatus.Noob},
+    {id: '8167808', role: EProfileRoles.Psych, avatar: PngMale, name: 'Привет Иванова', status: EProfileStatus.Blocked},
+]
+
+export const complaintList: ComplaintListItem[] = [
+    {id: '2342343', avatar: PngMale, name: 'Татьяна Иванова', complGlob: 'Фейк', complTarget: ' Использует данные известного человека', date: '03.11.2025'},
+    {id: '8148518', avatar: PngMale, name: 'Валерия Иванова', complGlob: 'Фейк', complTarget: ' Использует данные известного человека', date: '03.11.2025'},
+    {id: '8111518', avatar: PngMale, name: 'Константин Иванов', complGlob: 'Фейк', complTarget: ' Использует данные известного человека', date: '03.11.2025'},
+    {id: '8148548', avatar: PngMale, name: 'Илия Иванова', complGlob: 'Фейк', complTarget: ' Использует данные известного человека', date: '03.11.2025'},
+    {id: '8167808', avatar: PngMale, name: 'Привет Иванова', complGlob: 'Фейк', complTarget: ' Использует данные известного человека', date: '03.11.2025'},
 ]
 
 export const targetsUsers: Record<string, TargetProfile> = {

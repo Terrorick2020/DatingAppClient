@@ -19,6 +19,12 @@ const UsersListMain = (): JSX.Element => {
     const adminUserInfoRoute  = appRoutes.admin.inner.userInfo;
     const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`;
 
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
+
     if(!adminState.profilesList.length && !isLoad) return (
         <div className="not-found">
             <h2 className="text">Ничего не найдено</h2>
@@ -27,37 +33,23 @@ const UsersListMain = (): JSX.Element => {
 
     return (
         <>
-            {
-                !adminState.profilesList.length && !isLoad
-                    ?
-                    <div className="not-found">
-                        <h2 className="text">Ничего не найдено</h2>
-                    </div>
-                    :
-                    <div className="search-list">
-                        {
-                            isLoad
-                                ?
-                                <div className="loader">
-                                    <MyLoader />
-                                </div>
-                                :
-                                (adminState.profilesList.map(item => (
-                                    <ListBlock
-                                        img={item.avatr}
-                                        route={`${toUserInfo.replace(':id', '')}${item.id}`}
-                                        key={`admin-profile-${item.id}`}
-                                    >
-                                        <UserListItem
-                                            item={item}
-                                            toUserInfo={`${toUserInfo.replace(':id', '')}${item.id}`}
-                                            setOpenDel={setOpenDel}
-                                        />
-                                    </ListBlock>
-                                )))
-                        }
-                    </div>
-            }
+            <div className="search-list">
+                {
+                    (adminState.profilesList.map(item => (
+                        <ListBlock
+                            img={item.avatar}
+                            route={`${toUserInfo.replace(':id', '')}${item.id}`}
+                            key={`admin-profile-${item.id}`}
+                        >
+                            <UserListItem
+                                item={item}
+                                toUserInfo={`${toUserInfo.replace(':id', '')}${item.id}`}
+                                setOpenDel={setOpenDel}
+                            />
+                        </ListBlock>
+                    )))
+                }
+            </div>
             <UsersListDialog open={openDel} hadleClose={() => setOpenDel(false)} />
         </>
     )

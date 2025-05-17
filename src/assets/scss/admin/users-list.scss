@@ -11,20 +11,6 @@
     @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
     &__header {
-        width: 100%;
-        padding-inline: clamp(1.1rem, 4vw, 2.5rem);
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        justify-content: space-between;
-
-        .headline {
-            width: 100%;
-            font-weight: 900;
-            text-align: start;
-        }
-
         .person-type {
             width: 100%;
             display: flex;
@@ -57,17 +43,6 @@
                 font-size: clamp(0.7rem, 3vw, 0.9rem);
             }
         }
-
-        &::after {
-            position: absolute;
-            content: "";
-            background: linear-gradient(#000000, transparent);
-            width: 100%;
-            height: 1rem;
-            bottom: -1rem;
-            left: 0;
-            z-index: 5;
-        }
     }
 
     &__main {
@@ -77,119 +52,64 @@
         padding-block: 2rem;
         overflow: auto;
 
-        .not-found {
+        .users-list__item {
             width: 100%;
             height: 100%;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
             .text {
-                font-size: 2rem;
-                text-align: center;
-                font-weight: 900;
-            }
-        }
-
-        .search-list {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 1rem;
-            @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
-
-            &:has(.loader) {
-                height: 100%;
-            }
-
-            .progress {
-                margin-top: 15vh;
-            }
-
-            &__item {
-                width: 100%;
-                height: 100%;
                 display: flex;
-                justify-content: space-between;
-                align-items: center;
+                flex-direction: column;
+                gap: 0.5rem;
 
-                .text {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.5rem;
-
-                    .name {
-                        font-size: clamp(1rem, 4.5vw, 1.6rem);
-                        font-weight: 700;
-                    }
-
-                    .label {
-                        font-weight: 500;
-                        font-size: clamp(0.7rem, 3vw, 0.9rem);
-                        background: #D7FF8133;
-                        color: #D7FF81;
-                        align-self: flex-start;
-                        padding: 4px 8px;
-                        border-radius: 3.75rem;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-
-                        &.off {
-                            background: #FF43651A;
-                            color: #FF4365;
-                        }
-
-                        &.warn {
-                            opacity: 0.7;
-                        }
-
-                        .MuiCircularProgress-root {
-                            --ul-cicle-size: 1rem;
-
-                            width: var(--ul-cicle-size) !important;
-                            height: var(--ul-cicle-size) !important;
-                            margin-right: 0.5rem;
-                            color: inherit;
-                        }
-                    }
+                .name {
+                    font-size: clamp(1rem, 4.5vw, 1.6rem);
+                    font-weight: 700;
                 }
 
-                .MuiIconButton-root {
-                    background: transparent;
+                .label {
+                    font-weight: 500;
+                    font-size: clamp(0.7rem, 3vw, 0.9rem);
+                    background: #D7FF8133;
+                    color: #D7FF81;
+                    align-self: flex-start;
+                    padding: 4px 8px;
+                    border-radius: 3.75rem;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
 
-                    scale: 1.2;
+                    &.off {
+                        background: #FF43651A;
+                        color: #FF4365;
+                    }
 
-                    &:hover {
-                        background: transparent;
+                    &.warn {
+                        opacity: 0.7;
+                    }
+
+                    .MuiCircularProgress-root {
+                        --ul-cicle-size: 1rem;
+
+                        width: var(--ul-cicle-size) !important;
+                        height: var(--ul-cicle-size) !important;
+                        margin-right: 0.5rem;
+                        color: inherit;
                     }
                 }
             }
-        }
-    }
 
-    &__footer {
-        width: 100%;
-        background: #2B2B2B;
-        border-radius: 1.9rem 1.9rem 0 0;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-inline: clamp(1.1rem, 4vw, 2.5rem);
+            .MuiIconButton-root {
+                background: transparent;
 
-        &::before {
-            position: absolute;
-            content: "";
-            background: linear-gradient(to top, #000000, transparent);
-            width: 100%;
-            height: 1rem;
-            top: -1rem;
-            left: 0;
-            z-index: 5;
+                scale: 1.2;
+
+                &:hover {
+                    background: transparent;
+                }
+            }
         }
     }
 }

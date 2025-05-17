@@ -7,6 +7,7 @@ import type { PropsUserInfoComponent } from '@/types/admin.types';
 import type { RootDispatch } from '@/store';
 
 import Photos from '@/components/UI/Photos';
+import UserInfoContent from './ComplaintInfo';
 import SvgMapPin from '@/assets/icon/map-pin.svg?react';
 
 
@@ -32,6 +33,7 @@ const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
     return (
         <>
             <h3 className="headline">{`ID${id}`}</h3>
+            <UserInfoContent />
             <Photos photos={photos} handleAdd={handleAdd} handleDel={handleDel} />
             <div className="description">
                 <h4 className="headline">{headline}</h4>

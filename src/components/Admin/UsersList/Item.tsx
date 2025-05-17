@@ -68,7 +68,7 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
 
     return (
         <>
-            <div className="search-list__item">
+            <div className="users-list__item">
                 <div className="text">
                     <h3 className="name">{props.item.name}</h3>
                     <span className={`label ${statusTextMap[props.item.status].addClass}`}>

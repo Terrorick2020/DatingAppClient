@@ -8,7 +8,7 @@ import type {
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { EProfileRoles, EProfileStatus } from '@/types/store.types';
-import { resUsersList, resPsychsList, targetsUsers } from '@/constant/admin';
+import { resUsersList, resPsychsList, targetsUsers, complaintList } from '@/constant/admin';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
 import type { PhotoItem } from '@/types/profile.types';
@@ -193,7 +193,7 @@ export const initComplaintListAsync = createAsyncThunk(
 
             await delay(2000);
 
-            return [];
+            return complaintList;
         } catch (error) {
             throw error;
         } finally {

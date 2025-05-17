@@ -3,15 +3,19 @@ import { useDispatch } from 'react-redux';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
 import { type RootDispatch } from '@/store';
 
+import AdmineFooter from '@/components/UI/AdmineFooter';
 import UsersListHeader from './Header';
 import UsersListMain from './Main';
-import UsersListFooter from './Footer';
 
 
 const UsersListContent = (): JSX.Element => {
     const dispatch = useDispatch<RootDispatch>();
 
     useEffect( () => { dispatch(getProfilesListAsync()) }, [] );
+
+    const handleSearch = async (): Promise<void> => {
+        await dispatch( getProfilesListAsync() )
+    }
 
     return (
         <>
@@ -21,9 +25,7 @@ const UsersListContent = (): JSX.Element => {
             <main className="users-list__main">
                 <UsersListMain />
             </main>
-            <footer className="users-list__footer">
-                <UsersListFooter />
-            </footer>
+            <AdmineFooter handleSearch={handleSearch} />
         </>
     )
 }

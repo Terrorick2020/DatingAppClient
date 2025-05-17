@@ -5,7 +5,7 @@ import { PhotoItem } from './profile.types';
 export interface ProfilesListItem {
     id: string
     role: EProfileRoles
-    avatr: string
+    avatar: string
     name: string
     status: EProfileStatus
 }
@@ -23,6 +23,11 @@ export interface TargetProfile {
 
 export interface ComplaintListItem {
     id: string
+    avatar: string
+    name: string
+    complGlob: string
+    complTarget: string
+    date: string
 }
 
 export interface AdminState {
