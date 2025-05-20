@@ -58,11 +58,7 @@ const DesktopHeadNav = (): JSX.Element => {
         closingBehavior.mount.isAvailable() && closingBehavior.mount();
         backButton.mount.isAvailable() && backButton.mount();
         closingBehavior.enableConfirmation.isAvailable() && closingBehavior.enableConfirmation();
-        backButton.onClick.isAvailable() && backButton.onClick(goBack);
-
-        return () => {
-            backButton.offClick(goBack);
-        };
+        backButton.isMounted() && backButton.onClick(goBack);
     }, []);
 
     const btnCtx = useMemo(()=> {
