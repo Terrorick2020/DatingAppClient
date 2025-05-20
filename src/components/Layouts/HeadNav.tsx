@@ -33,14 +33,12 @@ const DesktopHeadNav = (): JSX.Element => {
     }, []);
 
     const goBack = () => {
-        const backRoute = setRoutes.at(-1);
+        const backRoute = setRoutes.slice(-1)[0];
 
-        infoAlert(dispatch, String(backRoute));
+        infoAlert(dispatch, backRoute);
 
-        if (backRoute) {
-            navigate(backRoute);
-            dispatch(dellRoute());
-        }
+        navigate(backRoute);
+        dispatch(dellRoute());
     };
 
     const closeWindow = () => window.close();
