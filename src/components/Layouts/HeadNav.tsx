@@ -24,14 +24,10 @@ const DesktopHeadNav = (): JSX.Element => {
 
     const userAgent = navigator.userAgent.toLowerCase();
 
-    const { isDesktop, isTgMobile } = useMemo(() => {
+    const isTgMobile = useMemo(() => {
         const predMobile  = userAgent.includes('iphone') || userAgent.includes('android');
-        const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win');
 
-        return {
-            isDesktop: !predMobile || predDesktop,
-            isTgMobile: !!closingBehavior && !!backButton && predMobile,
-        };
+        return !!closingBehavior && !!backButton && predMobile;
     }, []);
 
     const goBack = () => {
@@ -57,18 +53,32 @@ const DesktopHeadNav = (): JSX.Element => {
     useEffect(() => {
         if (!isTgMobile) return;
 
-        !!setRoutes.length && backButton.show.isAvailable() && backButton.show();
-        !setRoutes.length && backButton.hide.isAvailable() && backButton.hide();
-    }, [setRoutes]);
-
-    if ( isTgMobile ) {
         if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
         if (backButton.mount.isAvailable()) backButton.mount();
         if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+    }, [])
+
+    useEffect(() => {
+        if (!isTgMobile) return;
+
+        !!setRoutes.length && backButton.show.isAvailable() && backButton.show();
+        !setRoutes.length && backButton.hide.isAvailable() && backButton.hide();
+
         if (backButton.onClick.isAvailable()) {
-            backButton.onClick(goBack);
+            const offclick = backButton.onClick(goBack);
+
+            return () => offclick();
         }
-    }
+    }, [setRoutes]);
+
+    // if ( isTgMobile ) {
+    //     if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
+    //     if (backButton.mount.isAvailable()) backButton.mount();
+    //     if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+    //     if (backButton.onClick.isAvailable()) {
+    //         backButton.onClick(goBack);
+    //     }
+    // }
 
     const btnCtx = useMemo(()=> {
         const hasNav = !!setRoutes.length;
@@ -80,7 +90,7 @@ const DesktopHeadNav = (): JSX.Element => {
         }
     }, [setRoutes]);
 
-    if(!isDesktop) return (<></>);
+    if(!isTgMobile) return (<></>);
 
     return (
         <>
