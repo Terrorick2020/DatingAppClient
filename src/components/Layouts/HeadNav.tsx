@@ -1,4 +1,4 @@
-import { JSX, useEffect } from 'react';
+import { JSX, useMemo, useCallback, useEffect, useRef  } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,76 +16,88 @@ import SvgOther from '@/assets/icon/other.svg?react';
 const DesktopHeadNav = (): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
 
+    const isNavigatingRef = useRef(false);
+
     const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
 
     const userAgent = navigator.userAgent.toLowerCase();
 
-    const predMobile  = userAgent.includes('iphone') || userAgent.includes('android');
-    const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win');
-    const isDesktop   = !predMobile || predDesktop;
+    const { isDesktop, isTgMobile } = useMemo(() => {
+        const predMobile  = userAgent.includes('iphone') || userAgent.includes('android');
+        const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win');
 
-    const isTgMobile = !!closingBehavior && !!backButton && !isDesktop;
+        return {
+            isDesktop: !predMobile || predDesktop,
+            isTgMobile: !!closingBehavior && !!backButton && predMobile,
+        };
+    }, []);
 
-    const goBack = () => {
-        const remainingRoutes = setRoutes.length - 1;
+    const goBack = useCallback(() => {
+        if (isNavigatingRef.current) return;
 
-        const backRoute = setRoutes.slice(-1)[0];
-        navigate(backRoute);
-        dispatch(dellRoute());
+        isNavigatingRef.current = true;
 
-        if(isTgMobile) {
-            if (backButton.show.isAvailable() && remainingRoutes > 0) {
-                backButton.show();
-            } else if (backButton.hide.isAvailable()) {
-                backButton.hide();
-            }
+        const backRoute = setRoutes.at(-1);
+
+        if (backRoute) {
+            navigate(backRoute);
+            dispatch(dellRoute());
         }
-        
-    };
+
+        setTimeout(() => {
+            isNavigatingRef.current = false;
+        }, 300);
+
+    }, [setRoutes, navigate, dispatch]);
+
     const closeWindow = () => window.close();
 
-    useEffect(
-        () => {
-            isTgMobile &&
-                !!setRoutes.length &&
-                backButton.show.isAvailable() &&
-                backButton.show();
-        },
-        [setRoutes]
-    )
+    useEffect(() => {
+        if (!isTgMobile) return;
 
-    if ( isTgMobile ) {
-        if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
-        if (backButton.mount.isAvailable()) backButton.mount();
-        if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+        !!setRoutes.length && backButton.show.isAvailable() && backButton.show();
+        !setRoutes.length && backButton.hide.isAvailable() && backButton.hide();
+    }, [setRoutes]);
+
+    useEffect(() => {
+        if (!isTgMobile) return;
+
+        closingBehavior.mount.isAvailable() && closingBehavior.mount();
+        backButton.mount.isAvailable() && backButton.mount();
+        closingBehavior.enableConfirmation.isAvailable() && closingBehavior.enableConfirmation();
+
         if (backButton.onClick.isAvailable()) {
-            backButton.onClick(goBack);
+            const handler = () => goBack();
+            backButton.onClick(handler);
+
+            return () => {
+                backButton.offClick(handler);
+            };
         }
-    }
+    }, []);
+
+    const btnCtx = useMemo(()=> {
+        const hasNav = !!setRoutes.length;
+
+        return {
+            svg: !!setRoutes.length ? SvgArrowLeft : SvgClose,
+            func: !!setRoutes.length ? goBack : closeWindow,
+            text: hasNav ? 'Назад' : 'Закрыть',
+        }
+    }, [setRoutes]);
 
     if(!isDesktop) return (<></>);
 
     return (
         <>
             <div className="desc-head-nav">
-                {
-                    !!setRoutes.length
-                        ?
-                        <Button
-                            className="btn text-fon rounded"
-                            variant="contained"
-                            startIcon={ <SvgArrowLeft /> }
-                            onClick={ goBack }
-                        >Back</Button>
-                        :
-                        <Button
-                            className="btn text-fon rounded"
-                            variant="contained"
-                            startIcon={ <SvgClose /> }
-                            onClick={ closeWindow }
-                        >Close</Button>
-                }
+                <Button
+                    className="btn text-fon rounded"
+                    variant="contained"
+                    startIcon={ <btnCtx.svg /> }
+                    onClick={ btnCtx.func }
+                >{btnCtx.text}</Button>
                 <Button 
                     className="btn text-fon rounded"
                     variant="contained"
