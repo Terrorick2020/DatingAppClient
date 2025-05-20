@@ -35,7 +35,7 @@ const DesktopHeadNav = (): JSX.Element => {
     }, []);
 
     const goBack = () => {
-        if(!isNavigatingRef.current) return;
+        if(isNavigatingRef.current) return;
 
         isNavigatingRef.current = true;
 
