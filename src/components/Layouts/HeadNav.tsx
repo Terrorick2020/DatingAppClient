@@ -35,16 +35,16 @@ const DesktopHeadNav = (): JSX.Element => {
     }, []);
 
     const goBack = () => {
-        if(isNavigatingRef.current) return;
-
-        isNavigatingRef.current = true;
-
         const backRoute = setRoutes.slice(-1)[0];
 
         infoAlert(dispatch, backRoute);
 
-        navigate(backRoute);
-        dispatch(dellRoute());
+        if(!isNavigatingRef.current) {
+            navigate(backRoute);
+            dispatch(dellRoute());
+            
+            isNavigatingRef.current = true;
+        }
 
         setTimeout(() => {
             isNavigatingRef.current = false;
