@@ -1,4 +1,4 @@
-import { JSX, useMemo, useCallback, useEffect  } from 'react';
+import { JSX, useMemo, useEffect  } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -32,16 +32,16 @@ const DesktopHeadNav = (): JSX.Element => {
         };
     }, []);
 
-    const goBack = useCallback(() => {
+    const goBack = () => {
         const backRoute = setRoutes.at(-1);
 
-        infoAlert(dispatch, String(setRoutes));
+        infoAlert(dispatch, String(backRoute));
 
         if (backRoute) {
             navigate(backRoute);
             dispatch(dellRoute());
         }
-    }, [setRoutes, navigate, dispatch]);
+    };
 
     const closeWindow = () => window.close();
 
