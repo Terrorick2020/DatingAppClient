@@ -1,8 +1,7 @@
-import { JSX, useMemo, useEffect, useRef } from 'react';
+import { JSX, useMemo, useEffect } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { infoAlert } from '@/funcs/alert.funcs';
 import { closingBehavior, backButton } from '@telegram-apps/sdk';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -16,8 +15,6 @@ import SvgOther from '@/assets/icon/other.svg?react';
 
 const DesktopHeadNav = (): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
-
-    const isNavigatingRef = useRef<boolean>(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
@@ -33,19 +30,10 @@ const DesktopHeadNav = (): JSX.Element => {
     const goBack = () => {
         const backRoute = setRoutes.at(-1);
 
-        if(backRoute) {
-            infoAlert(dispatch, backRoute);
+        if(!backRoute) return;
 
-            if(!isNavigatingRef.current) {
-                isNavigatingRef.current = true;
-                navigate(backRoute);
-                dispatch(dellRoute());
-            }
-
-            setTimeout(() => {
-                isNavigatingRef.current = false;
-            }, 300);
-        }
+        navigate(backRoute);
+        dispatch(dellRoute());
     };
 
     const closeWindow = () => window.close();
@@ -71,15 +59,6 @@ const DesktopHeadNav = (): JSX.Element => {
         }
     }, [setRoutes]);
 
-    // if ( isTgMobile ) {
-    //     if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
-    //     if (backButton.mount.isAvailable()) backButton.mount();
-    //     if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
-    //     if (backButton.onClick.isAvailable()) {
-    //         backButton.onClick(goBack);
-    //     }
-    // }
-
     const btnCtx = useMemo(()=> {
         const hasNav = !!setRoutes.length;
 
@@ -90,7 +69,7 @@ const DesktopHeadNav = (): JSX.Element => {
         }
     }, [setRoutes]);
 
-    if(!isTgMobile) return (<></>);
+    if(isTgMobile) return (<></>);
 
     return (
         <>
