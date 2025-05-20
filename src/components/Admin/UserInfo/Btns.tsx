@@ -13,6 +13,7 @@ const UserInfoBtns = memo((props: PropsUserInfoComponent): JSX.Element => {
 
     const isPro = props.targetProfile.status === EProfileStatus.Pro;
     const isBlocked = props.targetProfile.status === EProfileStatus.Blocked;
+    const isCompl = !!props.targetProfile.complaint;
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -27,29 +28,46 @@ const UserInfoBtns = memo((props: PropsUserInfoComponent): JSX.Element => {
         setLoadingButton(null);
     }
 
-    const buttons = useMemo(() => [
-        {
-            id: UserInfoBtnId.Block,
-            label: 'Заблокировать',
-            onClick: () => handleClick(EProfileStatus.Blocked, UserInfoBtnId.Block),
-            disabled: isBlocked,
-            className: 'link__btn block',
-        },
-        {
-            id: UserInfoBtnId.ProUnblock,
-            label: isBlocked ? 'Разблокировать' : 'Сделать Pro',
-            onClick: () => handleClick(isBlocked ? EProfileStatus.Noob : EProfileStatus.Pro, UserInfoBtnId.ProUnblock),
-            disabled: isPro,
-            className: 'link__btn take-pro',
-        },
-        {
-            id: UserInfoBtnId.Unpro,
-            label: 'Убрать Pro',
-            onClick: () => handleClick(EProfileStatus.Noob, UserInfoBtnId.Unpro),
-            disabled: !isPro,
-            className: 'link__btn take-away-pro',
-        },
-    ], [isPro, isBlocked, handleClick]);
+    const buttons = useMemo(() => isCompl ? [
+            {
+                id: UserInfoBtnId.Block,
+                label: 'Заблокировать',
+                onClick: () => handleClick(EProfileStatus.Blocked, UserInfoBtnId.Block),
+                disabled: false,
+                className: 'link__btn block',
+            },
+            {
+                id: UserInfoBtnId.DelCompl,
+                label: 'Удалить жалобу',
+                onClick: () => handleClick(EProfileStatus.Noob, UserInfoBtnId.Unpro),
+                disabled: !isPro,
+                className: 'link__btn take-away-pro',
+            },
+        ] : [
+            {
+                id: UserInfoBtnId.Block,
+                label: 'Заблокировать',
+                onClick: () => handleClick(EProfileStatus.Blocked, UserInfoBtnId.Block),
+                disabled: isBlocked,
+                className: 'link__btn block',
+            },
+            {
+                id: UserInfoBtnId.ProUnblock,
+                label: isBlocked ? 'Разблокировать' : 'Сделать Pro',
+                onClick: () => handleClick(isBlocked ? EProfileStatus.Noob : EProfileStatus.Pro, UserInfoBtnId.ProUnblock),
+                disabled: isPro,
+                className: 'link__btn take-pro',
+            },
+            {
+                id: UserInfoBtnId.Unpro,
+                label: 'Убрать Pro',
+                onClick: () => handleClick(EProfileStatus.Noob, UserInfoBtnId.Unpro),
+                disabled: !isPro,
+                className: 'link__btn take-away-pro',
+            },
+        ],
+        [isPro, isBlocked, isCompl, handleClick]
+    );
 
     return (
         <>

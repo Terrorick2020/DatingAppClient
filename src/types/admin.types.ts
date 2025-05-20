@@ -69,6 +69,7 @@ export enum UserInfoBtnId {
     Block = 'Block',
     ProUnblock = 'ProUnblock',
     Unpro = 'UnPro',
+    DelCompl = 'DelCompl',
 }
 
 export interface UserItemActivCtx {
