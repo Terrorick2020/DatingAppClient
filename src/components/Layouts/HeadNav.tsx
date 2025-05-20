@@ -22,9 +22,13 @@ const DesktopHeadNav = (): JSX.Element => {
     const userAgent = navigator.userAgent.toLowerCase();
 
     const isTgMobile = useMemo(() => {
+        const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win');
         const predMobile  = userAgent.includes('iphone') || userAgent.includes('android');
 
-        return !!closingBehavior && !!backButton && predMobile;
+        const isDesktop  = !predMobile || predDesktop;
+        const isTgMobile = !!closingBehavior && !!backButton && predMobile && !isDesktop;
+        
+        return isTgMobile;
     }, []);
 
     const goBack = () => {
