@@ -146,7 +146,7 @@ export const delPhotoToUserAsync = createAsyncThunk(
 
 export const serchProfileStatusAsync = createAsyncThunk(
     'admin/serch-profile-status',
-    async ({ id, targetValue }: DataSerchProfStat, { getState, dispatch }): Promise<EProfileStatus> => {
+    async ({ id, targetValue, delComplaint: _ }: DataSerchProfStat, { getState, dispatch }): Promise<EProfileStatus> => {
         const rootState = getState() as IState;
         const adminState = rootState.admin;
 

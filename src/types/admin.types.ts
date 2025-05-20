@@ -59,6 +59,7 @@ export interface StatusData {
 export interface DataSerchProfStat {
     id: string
     targetValue: EProfileStatus
+    delComplaint?: boolean
 }
 
 export interface PropsUserInfoComponent {

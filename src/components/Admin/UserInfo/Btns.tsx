@@ -23,6 +23,7 @@ const UserInfoBtns = memo((props: PropsUserInfoComponent): JSX.Element => {
         await dispatch(serchProfileStatusAsync({
             id: props.targetProfile.id, 
             targetValue,
+            delComplaint: btnId === UserInfoBtnId.DelCompl
         }));
 
         setLoadingButton(null);
@@ -39,7 +40,7 @@ const UserInfoBtns = memo((props: PropsUserInfoComponent): JSX.Element => {
             {
                 id: UserInfoBtnId.DelCompl,
                 label: 'Удалить жалобу',
-                onClick: () => handleClick(EProfileStatus.Noob, UserInfoBtnId.Unpro),
+                onClick: () => handleClick(EProfileStatus.Noob, UserInfoBtnId.DelCompl),
                 disabled: !isPro,
                 className: 'link__btn take-away-pro',
             },
