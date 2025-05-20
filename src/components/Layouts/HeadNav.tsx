@@ -1,4 +1,4 @@
-import { JSX, useMemo, useCallback, useEffect, useRef  } from 'react';
+import { JSX, useMemo, useCallback, useEffect  } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,8 +17,6 @@ import SvgOther from '@/assets/icon/other.svg?react';
 const DesktopHeadNav = (): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
 
-    const isNavigatingRef = useRef(false);
-
     const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
 
@@ -35,10 +33,6 @@ const DesktopHeadNav = (): JSX.Element => {
     }, []);
 
     const goBack = useCallback(() => {
-        if (isNavigatingRef.current) return;
-
-        isNavigatingRef.current = true;
-
         const backRoute = setRoutes.at(-1);
 
         infoAlert(dispatch, String(setRoutes));
@@ -47,11 +41,6 @@ const DesktopHeadNav = (): JSX.Element => {
             navigate(backRoute);
             dispatch(dellRoute());
         }
-
-        setTimeout(() => {
-            isNavigatingRef.current = false;
-        }, 300);
-
     }, [setRoutes, navigate, dispatch]);
 
     const closeWindow = () => window.close();
