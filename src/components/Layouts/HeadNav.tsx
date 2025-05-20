@@ -35,20 +35,21 @@ const DesktopHeadNav = (): JSX.Element => {
     }, []);
 
     const goBack = () => {
-        const backRoute = setRoutes.slice(-1)[0];
+        const backRoute = setRoutes.at(-1);
 
-        infoAlert(dispatch, backRoute);
+        if(backRoute) {
+            infoAlert(dispatch, backRoute);
 
-        if(!isNavigatingRef.current) {
-            navigate(backRoute);
-            dispatch(dellRoute());
-            
-            isNavigatingRef.current = true;
+            if(!isNavigatingRef.current) {
+                isNavigatingRef.current = true;
+                navigate(backRoute);
+                dispatch(dellRoute());
+            }
+
+            setTimeout(() => {
+                isNavigatingRef.current = false;
+            }, 300);
         }
-
-        setTimeout(() => {
-            isNavigatingRef.current = false;
-        }, 300);
     };
 
     const closeWindow = () => window.close();
