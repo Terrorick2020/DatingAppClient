@@ -50,14 +50,14 @@ const DesktopHeadNav = (): JSX.Element => {
         !setRoutes.length && backButton.hide.isAvailable() && backButton.hide();
     }, [setRoutes]);
 
-    useEffect(() => {
-        if (!isTgMobile) return;
-
-        closingBehavior.mount.isAvailable() && closingBehavior.mount();
-        backButton.mount.isAvailable() && backButton.mount();
-        closingBehavior.enableConfirmation.isAvailable() && closingBehavior.enableConfirmation();
-        backButton.isMounted() && backButton.onClick(goBack);
-    }, []);
+    if ( isTgMobile ) {
+        if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
+        if (backButton.mount.isAvailable()) backButton.mount();
+        if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+        if (backButton.onClick.isAvailable()) {
+            backButton.onClick(goBack);
+        }
+    }
 
     const btnCtx = useMemo(()=> {
         const hasNav = !!setRoutes.length;
