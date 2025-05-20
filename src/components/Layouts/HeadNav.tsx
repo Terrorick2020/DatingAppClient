@@ -2,6 +2,7 @@ import { JSX, useMemo, useCallback, useEffect, useRef  } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { infoAlert } from '@/funcs/alert.funcs';
 import { closingBehavior, backButton } from '@telegram-apps/sdk';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -39,6 +40,8 @@ const DesktopHeadNav = (): JSX.Element => {
         isNavigatingRef.current = true;
 
         const backRoute = setRoutes.at(-1);
+
+        infoAlert(dispatch, String(setRoutes));
 
         if (backRoute) {
             navigate(backRoute);
