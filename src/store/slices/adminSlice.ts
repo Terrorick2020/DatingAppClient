@@ -32,6 +32,7 @@ const initialState: AdminState = {
         city: '',
         status: EProfileStatus.Noob,
         description: '',
+        complaint: null
     },
     complaintsList: [],
 };

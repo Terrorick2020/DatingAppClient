@@ -10,6 +10,19 @@ export interface ProfilesListItem {
     status: EProfileStatus
 }
 
+export interface BaseComplaintItem {
+    id: string
+    date: string
+    complGlob: string
+    complTarget: string
+}
+
+export interface TargetProfileCompalint extends BaseComplaintItem {
+    from: string
+    time: string
+    msg: string
+}
+
 export interface TargetProfile {
     id: string
     role: EProfileRoles
@@ -19,15 +32,12 @@ export interface TargetProfile {
     city: string
     status: EProfileStatus
     description: string
+    complaint: TargetProfileCompalint | null
 }
 
-export interface ComplaintListItem {
-    id: string
+export interface ComplaintListItem extends BaseComplaintItem {
     avatar: string
     name: string
-    complGlob: string
-    complTarget: string
-    date: string
 }
 
 export interface AdminState {

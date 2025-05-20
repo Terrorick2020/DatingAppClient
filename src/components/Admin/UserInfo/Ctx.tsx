@@ -12,7 +12,7 @@ import SvgMapPin from '@/assets/icon/map-pin.svg?react';
 
 
 const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
-    const { id, name, age, city, description, status, photos } = props.targetProfile;
+    const { id, name, age, city, description, status, photos, complaint } = props.targetProfile;
     
     const { text, status: statusText, addClass } = useMemo(() => {
         return statusTextMap[status];
@@ -33,7 +33,7 @@ const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
     return (
         <>
             <h3 className="headline">{`ID${id}`}</h3>
-            <UserInfoContent />
+            <UserInfoContent complaint={complaint} />
             <Photos photos={photos} handleAdd={handleAdd} handleDel={handleDel} />
             <div className="description">
                 <h4 className="headline">{headline}</h4>
