@@ -1,19 +1,17 @@
-import { JSX, memo, useState } from 'react';
+import { JSX, memo, useState, useCallback } from 'react';
+import type { PropsComplaintsListHeader } from '@/types/admin.types';
 
 import SearchInput from '@/components/UI/SearchInput';
 
 
-interface PropsComplaintsListHeader {
-    handleSearch: () => void
-}
 const ComplaintsListHeader = memo((props: PropsComplaintsListHeader): JSX.Element => {
     const [value, setValue] = useState<string>('');
 
-    const handleChange = (newValue: string) => {
+    const handleChange = useCallback((newValue: string) => {
         setValue(newValue);
 
         !newValue && props.handleSearch();
-    }
+    }, [props.handleSearch]);
 
     return (
         <>

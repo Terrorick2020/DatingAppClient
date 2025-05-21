@@ -1,11 +1,7 @@
 import { JSX, memo } from 'react';
+import type { PropsComplaintsListCtxItem } from '@/types/admin.types';
 
 
-interface PropsComplaintsListCtxItem {
-    name: string
-    date: string
-    complText: string
-}
 const ComplaintsListCtxItem = memo((props: PropsComplaintsListCtxItem): JSX.Element => {
     return (
         <div className='complaints-list__item'>

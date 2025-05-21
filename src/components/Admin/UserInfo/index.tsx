@@ -1,6 +1,7 @@
 import { JSX, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { createSelector } from 'reselect';
 import { RootDispatch } from '@/store';
 import { getProfileByIdAsync } from '@/store/slices/adminSlice';
 import { type IState } from '@/types/store.types';
@@ -10,22 +11,34 @@ import UserInfoCtx from './Ctx';
 import UserInfoBtns from './Btns';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectAdmin = (state: IState) => state.admin;
+
+const selectComplListState = createSelector(
+    [selectSettings, selectAdmin],
+    (settings, admin) => ({
+      isLoad: settings.load,
+      targetProfile: admin.targetProfile,
+    })
+);
+
 const UserInfoContent = (): JSX.Element => {
     const { id } = useParams();
 
-    const targetProfile = useSelector((state: IState) => state.admin.targetProfile);
-    const isLoad = useSelector((state: IState) => state.settings.load);
+    const { isLoad, targetProfile } = useSelector(selectComplListState);
 
     const dispatch = useDispatch<RootDispatch>();
+
+    if(!id) return (<></>);
 
     useEffect(
         () => {
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
 
-            id && dispatch(getProfileByIdAsync(id));
+            dispatch(getProfileByIdAsync(id));
         },
-        [id, dispatch]
+        [id]
     )
 
     if(isLoad) return (

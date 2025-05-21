@@ -1,4 +1,4 @@
-import { JSX, MouseEvent, useState } from 'react';
+import { JSX, MouseEvent, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSearchType, setSearchId } from '@/store/slices/adminSlice';
 import { EProfileRoles } from '@/types/store.types';
@@ -20,19 +20,30 @@ const UsersListHeader = (): JSX.Element => {
 
     const dispatch = useDispatch<RootDispatch>();
 
-    const handleChangeRole = async (_: MouseEvent<HTMLElement>, newValue: EProfileRoles | null): Promise<void> => {
-        newValue && dispatch(setSearchType( newValue )) && await dispatch( getProfilesListAsync() );
-    }
+    const handleChangeRole = useCallback(
+        async (_: MouseEvent<HTMLElement>, newValue: EProfileRoles | null): Promise<void> => {
+            if (!newValue) return;
+            dispatch(setSearchType( newValue ));
+            await dispatch( getProfilesListAsync() );
+        },
+        [dispatch]
+    );
 
-    const handleInputChange = async (newValue: string): Promise<void> => {
-        dispatch( setSearchId( newValue ) );
+    const handleInputChange = useCallback(
+        async (newValue: string): Promise<void> => {
+            dispatch( setSearchId( newValue ) );
 
-        !newValue && await dispatch( getProfilesListAsync() );
-    }
+            !newValue && await dispatch( getProfilesListAsync() );
+        },
+        [dispatch]
+    );
 
-    const handleSerch = async () => await dispatch( getProfilesListAsync() );
+    const handleSearch = useCallback(
+        async () => await dispatch(getProfilesListAsync()),
+        [dispatch]
+    );
 
-    const handleOpen = (): void => setOpen(true);
+    const handleOpen = useCallback(() => setOpen(true), []);
 
     return (
         <>
@@ -52,8 +63,8 @@ const UsersListHeader = (): JSX.Element => {
                     placeholder="Поиск пользователя по ID..."
                     inpType='number'
                     handleInputChange={handleInputChange}
-                    handleClearInput={handleSerch}
-                    handleInputKeyDown={handleSerch}
+                    handleClearInput={handleSearch}
+                    handleInputKeyDown={handleSearch}
                 />
                 {
                     adminState.searchType === EProfileRoles.Psych &&

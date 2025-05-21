@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { serchProfileStatusAsync, setTargetProfileId } from '@/store/slices/adminSlice';
 import { statusTextMap, userItemActivCtx } from '@/constant/admin';
 import { addRoute } from '@/store/slices/settingsSlice';
-import type { ProfilesListItem, UserItemActivCtx } from '@/types/admin.types';
+import type { PropsUserListItem, UserItemActivCtx } from '@/types/admin.types';
 import type { RootDispatch } from '@/store';
 
 import MenuBtn from '@/components/UI/MenuBtn';
@@ -13,11 +13,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import SvgMoreCircle from '@/assets/icon/more-circle.svg';
 
 
-interface PropsUserListItem {
-    item: ProfilesListItem
-    toUserInfo: string
-    setOpenDel: (value: boolean) => void
-}
 const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
     const [loading, setLoading] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -43,6 +38,7 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
             await dispatch(serchProfileStatusAsync({
                 id: props.item.id,
                 targetValue: activeCtx.targetStat,
+                delComplaint: false
             }));
         } finally {
             setLoading(false);
@@ -67,29 +63,27 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
     };
 
     return (
-        <>
-            <div className="users-list__item">
-                <div className="text">
-                    <h3 className="name">{props.item.name}</h3>
-                    <span className={`label ${statusTextMap[props.item.status].addClass}`}>
-                        {loading && <CircularProgress />}
-                        {statusTextMap[props.item.status].status}
-                    </span>
-                </div>
-                <MenuBtn
-                    anchorEl={anchorEl}
-                    setAnchorEl={setAnchorEl}
-                    handleClose={handleClose}
-                    btnIcon={SvgMoreCircle}
-                    btnAddClass="admin-ul-btn"
-                    menuAddClass="admin-ul-menu"
-                >
-                    <MenuItem disabled={loading} onClick={hadleBlock}>{activeCtx.text}</MenuItem>
-                    <MenuItem onClick={handleEdit}>Редактировать</MenuItem>
-                    <MenuItem onClick={handleOpenDeletePanel}>Удалить</MenuItem>
-                </MenuBtn>
+        <div className="users-list__item">
+            <div className="text">
+                <h3 className="name">{props.item.name}</h3>
+                <span className={`label ${statusTextMap[props.item.status].addClass}`}>
+                    {loading && <CircularProgress />}
+                    {statusTextMap[props.item.status].status}
+                </span>
             </div>
-        </>
+            <MenuBtn
+                anchorEl={anchorEl}
+                setAnchorEl={setAnchorEl}
+                handleClose={handleClose}
+                btnIcon={SvgMoreCircle}
+                btnAddClass="admin-ul-btn"
+                menuAddClass="admin-ul-menu"
+            >
+                <MenuItem disabled={loading} onClick={hadleBlock}>{activeCtx.text}</MenuItem>
+                <MenuItem onClick={handleEdit}>Редактировать</MenuItem>
+                <MenuItem onClick={handleOpenDeletePanel}>Удалить</MenuItem>
+            </MenuBtn>
+        </div>
     )
 })
 

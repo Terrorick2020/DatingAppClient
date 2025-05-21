@@ -77,3 +77,28 @@ export interface UserItemActivCtx {
     text: string
     targetStat: EProfileStatus
 }
+
+export interface PropsComplaintsListHeader {
+    handleSearch: () => void
+}
+
+export interface PropsComplaintsListCtxItem {
+    name: string
+    date: string
+    complText: string
+}
+
+export interface PropsUserInfoComplaint {
+    complaint: TargetProfileCompalint | null
+}
+
+export interface PropsUsersListDialog {
+    open: boolean
+    hadleClose: () => void
+}
+
+export interface PropsUserListItem {
+    item: ProfilesListItem
+    toUserInfo: string
+    setOpenDel: (value: boolean) => void
+}

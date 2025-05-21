@@ -83,7 +83,7 @@ const UserInfoBtns = memo((props: PropsUserInfoComponent): JSX.Element => {
                         loading={loadingButton === btn.id}
                         className={btn.className}
                         variant="contained"
-                        disabled={btn.disabled}
+                        disabled={btn.disabled || !!loadingButton}
                         onClick={btn.onClick}
                     >
                         {btn.label}
