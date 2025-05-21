@@ -22,15 +22,13 @@ const FillingQuestPhotos = (): JSX.Element => {
     }
 
     return (
-        <>
-            <div className="widgets__photo">
-                <h4 className="headline">Мои фото</h4>
-                <div className="items">
-                    <Photos photos={photos} handleAdd={handleAdd} handleDel={handleDel} />
-                </div>
-                {photErr.value && <p className="err-msg">{photErr.msg}</p>}
+        <div className="widgets__photo">
+            <h4 className="headline">Мои фото</h4>
+            <div className="items">
+                <Photos photos={photos} handleAdd={handleAdd} handleDel={handleDel} />
             </div>
-        </>
+            {photErr.value && <p className="err-msg">{photErr.msg}</p>}
+        </div>
     )
 }
 

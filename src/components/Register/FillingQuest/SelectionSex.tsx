@@ -22,26 +22,24 @@ const FillingQuestSelectionSex = (): JSX.Element => {
     }
 
     return (
-        <>
-            <div className="widgets__selection-sex">
-                <h4 className="headline">Выберите, кого вы ищите</h4>
-                <ToggleButtonGroup
-                    className="select"
-                    spacing={3}
-                    value={profileInfo.selSex}
-                    onChange={handleOnChangeSelSex}
-                >
-                    {selSexVars.map(item => (
-                        <IconButton
-                            className="select__item"
-                            key={`select__item-${item.id}`}
-                            disabled={item.isDisabled}
-                            value={item.value}
-                        >{item.label}</IconButton>
-                    ))}
-                </ToggleButtonGroup>
-            </div>
-        </>
+        <div className="widgets__selection-sex">
+            <h4 className="headline">Выберите, кого вы ищите</h4>
+            <ToggleButtonGroup
+                className="select"
+                spacing={3}
+                value={profileInfo.selSex}
+                onChange={handleOnChangeSelSex}
+            >
+                {selSexVars.map(item => (
+                    <IconButton
+                        className="select__item"
+                        key={`select__item-${item.id}`}
+                        disabled={item.isDisabled}
+                        value={item.value}
+                    >{item.label}</IconButton>
+                ))}
+            </ToggleButtonGroup>
+        </div>
     )
 }
 

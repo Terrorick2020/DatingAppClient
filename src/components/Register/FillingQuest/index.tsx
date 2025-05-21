@@ -115,49 +115,45 @@ const FillingQuestContent = (): JSX.Element => {
         navigate(toEPPlans);
     }
 
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
+
     return (
         <>
-            {
-                isLoad
-                    ?
-                    <div className="loader">
-                        <MyLoader />
-                    </div>
-                    :
-                    <>
-                        <GeoConfirmation />
-                        <div className="filling-quest__header">
-                            <FillingQuestHeader />
-                        </div>
-                        <div className="filling-quest__ctx">
-                            <div className="widgets">
-                                <Slide
-                                    triggerOnce
-                                    direction={EAnimeDirection.Left}
-                                    duration={ANIME_DURATION}
-                                >
-                                    <FillingQuestPhotos />
-                                    <FillingQuestInputs />
-                                    <FillingQuestMySex />
-                                    <FillingQuestAge />
-                                    <FillingQuestBio />
-                                    <FillingQuestInterests />
-                                    <FillingQuestSelectionSex />
-                                </Slide>
-                            </div>
-                            <div className="link" onClick={handleRoute}>
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    loadingPosition="start"
-                                    loading={regLoad}
-                                >
-                                    {regLoad ? 'Регистрация...' : 'Продолжить'}
-                                </Button>
-                            </div>
-                        </div>
-                    </>
-            }
+            <GeoConfirmation />
+            <div className="filling-quest__header">
+                <FillingQuestHeader />
+            </div>
+            <div className="filling-quest__ctx">
+                <div className="widgets">
+                    <Slide
+                        triggerOnce
+                        direction={EAnimeDirection.Left}
+                        duration={ANIME_DURATION}
+                    >
+                        <FillingQuestPhotos />
+                        <FillingQuestInputs />
+                        <FillingQuestMySex />
+                        <FillingQuestAge />
+                        <FillingQuestBio />
+                        <FillingQuestInterests />
+                        <FillingQuestSelectionSex />
+                    </Slide>
+                </div>
+                <div className="link" onClick={handleRoute}>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        loadingPosition="start"
+                        loading={regLoad}
+                    >
+                        {regLoad ? 'Регистрация...' : 'Продолжить'}
+                    </Button>
+                </div>
+            </div>
         </>
     )
 }

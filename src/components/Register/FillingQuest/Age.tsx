@@ -43,23 +43,21 @@ const FillingQuestAge = (): JSX.Element => {
     }
 
     return (
-        <>
-            <div className="widgets__age">
-                <h4>Сколько вам лет</h4>
-                    <TextField
-                        className="age-input"
-                        id="age-input"
-                        fullWidth
-                        placeholder="Возвраст"
-                        value={profileInfo.age || ''}
-                        onChange={handleChangeAge}
-                        error={fQErrors.ageErr.value}
-                        helperText={fQErrors.ageErr.msg}
-                    />
-                <p className={`description ${fQErrors.ageErr.value ? 'red-flag' : ''}`}
-                >Минимальный возраст для регистрации: 18 лет</p>
-            </div>
-        </>
+        <div className="widgets__age">
+            <h4>Сколько вам лет</h4>
+                <TextField
+                    className="age-input"
+                    id="age-input"
+                    fullWidth
+                    placeholder="Возвраст"
+                    value={profileInfo.age || ''}
+                    onChange={handleChangeAge}
+                    error={fQErrors.ageErr.value}
+                    helperText={fQErrors.ageErr.msg}
+                />
+            <p className={`description ${fQErrors.ageErr.value ? 'red-flag' : ''}`}
+            >Минимальный возраст для регистрации: 18 лет</p>
+        </div>
     )
 }
 

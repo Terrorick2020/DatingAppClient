@@ -49,66 +49,64 @@ const FillingQuestInputs = (): JSX.Element => {
     const handleOpenPanel = (): void => setOpen(!open);
 
     return (
-        <>
-            <div className="widgets__inputs">
-                <h4>Ваше имя</h4>
-                <TextField
-                    className="name-input"
-                    id="name-input"
-                    fullWidth
-                    placeholder="Имя"
-                    value={profileInfo.name}
-                    onChange={handleChangeName}
-                    error={fQErrors.nameErr.value}
-                    helperText={fQErrors.nameErr.msg}
-                />
-                <h4 className="city-headline">Ваш город</h4>
-                <FormControl>
-                    <InputLabel className="sel-label" htmlFor="city-input" shrink={false}>Выбирите город</InputLabel>
-                    <Select
-                        IconComponent={(props) => (
-                            <CustomSelIcon
-                                {...props}
-                                handleClick={handleOpenPanel}
-                            />
-                        )}
-                        labelId="city-input"
-                        id="city-input"
-                        MenuProps={{
-                            PaperProps: {
-                              sx: {
-                                backgroundColor: '#2B2B2B',
-                                color: '#FFFFFF',
-                                borderRadius: 2,
-                                '& .MuiMenuItem-root.Mui-selected': {
-                                    backgroundColor: '#D7FF81',
-                                    color: '#121112',
-                                },
-                                '& .MuiMenuItem-root.Mui-selected:hover': {
-                                    backgroundColor: '#D7FF81',
-                                    color: '#121112',
-                                },
-                              },
+        <div className="widgets__inputs">
+            <h4>Ваше имя</h4>
+            <TextField
+                className="name-input"
+                id="name-input"
+                fullWidth
+                placeholder="Имя"
+                value={profileInfo.name}
+                onChange={handleChangeName}
+                error={fQErrors.nameErr.value}
+                helperText={fQErrors.nameErr.msg}
+            />
+            <h4 className="city-headline">Ваш город</h4>
+            <FormControl>
+                <InputLabel className="sel-label" htmlFor="city-input" shrink={false}>Выбирите город</InputLabel>
+                <Select
+                    IconComponent={(props) => (
+                        <CustomSelIcon
+                            {...props}
+                            handleClick={handleOpenPanel}
+                        />
+                    )}
+                    labelId="city-input"
+                    id="city-input"
+                    MenuProps={{
+                        PaperProps: {
+                            sx: {
+                            backgroundColor: '#2B2B2B',
+                            color: '#FFFFFF',
+                            borderRadius: 2,
+                            '& .MuiMenuItem-root.Mui-selected': {
+                                backgroundColor: '#D7FF81',
+                                color: '#121112',
                             },
-                        }}
-                        open={open}
-                        onOpen={() => setOpen(true)}
-                        onClose={() => setOpen(false)}
-                        value={profileInfo.city}
-                        onChange={handleChangeCity}
+                            '& .MuiMenuItem-root.Mui-selected:hover': {
+                                backgroundColor: '#D7FF81',
+                                color: '#121112',
+                            },
+                            },
+                        },
+                    }}
+                    open={open}
+                    onOpen={() => setOpen(true)}
+                    onClose={() => setOpen(false)}
+                    value={profileInfo.city}
+                    onChange={handleChangeCity}
 
-                    >
-                        {districtsList.map(item => (
-                            <MenuItem
-                                key={`menu-city-item-${item.id}`}
-                                value={item.value}
-                            >{item.label}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                {fQErrors.cityErr.value && <p className="city-err">{fQErrors.cityErr.msg}</p>}
-            </div>
-        </>
+                >
+                    {districtsList.map(item => (
+                        <MenuItem
+                            key={`menu-city-item-${item.id}`}
+                            value={item.value}
+                        >{item.label}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+            {fQErrors.cityErr.value && <p className="city-err">{fQErrors.cityErr.msg}</p>}
+        </div>
     )
 }
 

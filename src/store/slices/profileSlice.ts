@@ -4,7 +4,8 @@ import type {
     SendGeoData,
     EveningPlans,
     PhotoItem,
-    EveningPlansItem
+    EveningPlansItem,
+    WebAppUser
 } from '@/types/profile.types';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -12,8 +13,10 @@ import { EProfileRoles, ESex,  EProfileStatus, ELineStatus, IState } from '@/typ
 import { setLoad, setApiRes } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
 import { EApiStatus } from '@/types/settings.type';
+import { INITIAL_ENDPOINT } from '@/config/env.config';
 
 import axios from 'axios';
+import api from '@/config/fetch.config';
 import PngLeady from '@/assets/img/leady.png';
 
 
@@ -52,26 +55,37 @@ const initialState: ProfileState = {
 export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( data: string ): Promise<null | undefined> => {
-        const url = new URL(data)
-        const params = new URLSearchParams(url.hash.substring(1))
-        const tgData = params.get('tgWebAppData')
+        const url = new URL(data);
+        const params = new URLSearchParams(url.hash.substring(1));
 
-        if (!tgData) return null
+        try {
+            // const tgData = params.get('tgWebAppData');
 
-        const parsedData = Object.fromEntries(new URLSearchParams(tgData))
+            // if (!tgData) return null;
 
-        if (parsedData.user) {
-            parsedData.user = JSON.parse(parsedData.user)
-        }
-        
-        await axios.post(
-            'http://localhost:3000/auth',
-            {
-                data: parsedData,
+            // const parsedData = Object.fromEntries(new URLSearchParams(tgData));
+
+            // if(!parsedData.user) return null;
+
+            // const user: WebAppUser = JSON.parse(parsedData.user);
+
+            // const data = {
+            //     telegramId: String(user.id)
+            // }
+
+            const data = {
+                telegramId: '234351'
             }
-        )
+
+            const responce = await api.post(INITIAL_ENDPOINT, data);
+
+            console.log( responce )
+            return null;
+        } catch (error) {
+            throw error;
+        }
     }
-)
+);
 
 export const sendSelfGeoAsync = createAsyncThunk(
     'profile/send-self-geo',

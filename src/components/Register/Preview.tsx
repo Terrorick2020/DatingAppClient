@@ -9,14 +9,11 @@ import SvgWhiteHeart from '@/assets/icon/white-heart.svg';
 import SvgTriangle from '@/assets/icon/triangle.svg?react';
 
 
+const regGlobRoute = appRoutes.register.global;
+const regFillQuestRoute = appRoutes.register.inner.fillQuest;
+const toFillQuest = `${regGlobRoute}/${regFillQuestRoute}`;
+
 const PreviewContent = (): JSX.Element => {
-    const regGlobRoute = appRoutes.register.global;
-    // const regLangRoute = appRoutes.register.inner.lang;
-    // const toLang = `${regGlobRoute}/${regLangRoute}`;
-
-    const regFillQuestRoute = appRoutes.register.inner.fillQuest;
-    const toFillQuest = `${regGlobRoute}/${regFillQuestRoute}`;
-
     useEffect(
         () => {
             const langHtml = document.getElementById('preview');

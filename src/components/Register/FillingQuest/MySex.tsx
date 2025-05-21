@@ -21,21 +21,19 @@ const FillingQuestMySex = (): JSX.Element => {
     }
 
     return (
-        <>
-            <div className="widgets__my-sex">
-                <h4 className="headline">Выберите ваш пол</h4>
-                <ToggleButtonGroup
-                    className="select"
-                    id="select-my-sex"
-                    spacing={ 2 }
-                    value={ profileInfo.sex }
-                    onChange={handleOnChangeSex}
-                >
-                    <IconButton className="select__item" value={ESex.Male}>Мужчина</IconButton>
-                    <IconButton className="select__item" value={ESex.Female}>Женщина</IconButton>
-                </ToggleButtonGroup>
-            </div>
-        </>
+        <div className="widgets__my-sex">
+            <h4 className="headline">Выберите ваш пол</h4>
+            <ToggleButtonGroup
+                className="select"
+                id="select-my-sex"
+                spacing={ 2 }
+                value={ profileInfo.sex }
+                onChange={handleOnChangeSex}
+            >
+                <IconButton className="select__item" value={ESex.Male}>Мужчина</IconButton>
+                <IconButton className="select__item" value={ESex.Female}>Женщина</IconButton>
+            </ToggleButtonGroup>
+        </div>
     )
 }
 

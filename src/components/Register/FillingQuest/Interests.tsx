@@ -41,28 +41,26 @@ const FillingQuestInterests = (): JSX.Element => {
     )
 
     return (
-        <>
-            <div className="widgets__interests">
-                <h4 className="headline">Вы хотите найти</h4>
-                <ToggleButtonGroup
-                    className="select"
-                    id="select-interests"
-                    spacing={5}
-                    value={profileInfo.interest}
-                    onChange={handleChangeInterest}
-                >
-                    {interestsVars.map( (item: InterestsVarsItem) => (
-                        <IconButton
-                            className="select__item"
-                            key={`interest__${item.id}`}
-                            value={item.value}
-                        >
-                            {item.label}
-                        </IconButton>
-                    ))}
-                </ToggleButtonGroup>
-            </div>
-        </>
+        <div className="widgets__interests">
+            <h4 className="headline">Вы хотите найти</h4>
+            <ToggleButtonGroup
+                className="select"
+                id="select-interests"
+                spacing={5}
+                value={profileInfo.interest}
+                onChange={handleChangeInterest}
+            >
+                {interestsVars.map( (item: InterestsVarsItem) => (
+                    <IconButton
+                        className="select__item"
+                        key={`interest__${item.id}`}
+                        value={item.value}
+                    >
+                        {item.label}
+                    </IconButton>
+                ))}
+            </ToggleButtonGroup>
+        </div>
     )
 }
 

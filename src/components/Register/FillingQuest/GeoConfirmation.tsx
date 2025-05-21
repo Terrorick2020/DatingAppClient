@@ -38,37 +38,35 @@ const GeoConfirmation = (): JSX.Element => {
     }
 
     return (
-        <>
-            <Modal
-                id="geo-modal"
-                open={open}
-                aria-labelledby="geo-modal-modal-title"
-                aria-describedby="geo-modal-modal-description"
-            >
-                <Box className="geo-modal">
-                    <h6 className="headline">Стандартный диалог с разрешением гео</h6>
-                    <div className="btns">
-                        <Button
-                            className="btn bad"
-                            variant="contained"
-                            onClick={handleBad}
-                        >
-                            Отклонить
-                        </Button>
-                        <Button
-                            fullWidth
-                            className="btn success"
-                            variant="contained"
-                            loadingPosition="start"
-                            loading={isLoad}
-                            onClick={handleSuccess}
-                        >
-                            {isLoad ? 'Загрузка...' : 'Разрешить'}
-                        </Button>
-                    </div>
-                </Box>
-            </Modal>
-        </>
+        <Modal
+            id="geo-modal"
+            open={open}
+            aria-labelledby="geo-modal-modal-title"
+            aria-describedby="geo-modal-modal-description"
+        >
+            <Box className="geo-modal">
+                <h6 className="headline">Стандартный диалог с разрешением гео</h6>
+                <div className="btns">
+                    <Button
+                        className="btn bad"
+                        variant="contained"
+                        onClick={handleBad}
+                    >
+                        Отклонить
+                    </Button>
+                    <Button
+                        fullWidth
+                        className="btn success"
+                        variant="contained"
+                        loadingPosition="start"
+                        loading={isLoad}
+                        onClick={handleSuccess}
+                    >
+                        {isLoad ? 'Загрузка...' : 'Разрешить'}
+                    </Button>
+                </div>
+            </Box>
+        </Modal>
     )
 }
 

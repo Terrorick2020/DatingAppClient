@@ -13,12 +13,12 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 
+const regGlobRoute = appRoutes.register.global;
+const regFillQuestRoute = appRoutes.register.inner.fillQuest;
+const toFillQuest = `${regGlobRoute}/${regFillQuestRoute}`;
+
 const LangContent = (): JSX.Element => {
     const dispatch = useDispatch()
-
-    const regGlobRoute = appRoutes.register.global;
-    const regFillQuestRoute = appRoutes.register.inner.fillQuest;
-    const toFillQuest = `${regGlobRoute}/${regFillQuestRoute}`;
 
     const handleLanguageChange = (event: ChangeEvent<HTMLInputElement>) => {
         dispatch( setLang( event.target.value as ELanguage ) );
