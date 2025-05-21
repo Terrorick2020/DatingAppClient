@@ -1,13 +1,19 @@
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
+import { addRoute, initInterestsVariantsAsync } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { setFQErrors } from '@/store/slices/settingsSlice';
+import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { RootDispatch } from '@/store';
-import { useNavigate } from 'react-router-dom';
+import { ANIME_DURATION } from '@/constant/settings';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Slide } from 'react-awesome-reveal';
 import { appRoutes } from '@/config/routes.config';
-import { addRoute, resetRoutes } from '@/store/slices/settingsSlice';
 import { signUpProfileAsync } from '@/store/slices/profileSlice';
-import { type IState, EProfileRoles } from '@/types/store.types';
+import { EAnimeDirection } from '@/types/settings.type';
+import { type IState } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
+import MyLoader from '@/components/UI/MyLoader';
 import GeoConfirmation from './GeoConfirmation';
 import FillingQuestHeader from './Header';
 import FillingQuestPhotos from './Photos';
@@ -19,21 +25,16 @@ import FillingQuestInterests from './Interests';
 import FillingQuestSelectionSex from './SelectionSex';
 
 
-const FillingQuestContent = () => {
-    const profInfo = useSelector((state: IState) => state.profile.info);
+const FillingQuestContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
-    const [_confirmation, setConfirmation] = useState<boolean>(false);
+    const profileInfo = useSelector((state: IState) => state.profile.info);
+    const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
+    
+    const [regLoad, setRegLoad] = useState<boolean>(false);
 
-    // const regGlobRoute = appRoutes.register.global;
-    // const regFillQuestRoute = appRoutes.register.inner.geo;
-    // const toGeo = `${regGlobRoute}/${regFillQuestRoute}`;
-    const questionnairesGlobRoute = appRoutes.questionnaires.global;
-    const questionnairesSliderRoute = appRoutes.questionnaires.inner.slider;
-    const toSlider = `${questionnairesGlobRoute}/${questionnairesSliderRoute}`;
-
-    const adminGlobRoute = appRoutes.admin.global;
-    const changeRoute = appRoutes.admin.inner.nav;
-    const toChange = `${adminGlobRoute}/${changeRoute}`;
+    const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(
         () => {
@@ -43,50 +44,113 @@ const FillingQuestContent = () => {
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
 
-            // const geoModalHtml = document.getElementById('geo-modal');
-            // if ( geoModalHtml ) {
-            //     geoModalHtml.style.animationDelay = '1s';
-            //     geoModalHtml.style.animation = 'slideModalDown 1s ease-in-out forwards';
-            // }
+            dispatch(initInterestsVariantsAsync());
         },
         []
     )
 
-    const dispatch = useDispatch<RootDispatch>();
-    const navigate = useNavigate();
-
     const handleRoute = async (): Promise<void> => {
-        await dispatch(signUpProfileAsync());
+        const ePGlobRoute = appRoutes.eveningPlans.global;
+        const ePPlansRoute = appRoutes.eveningPlans.inner.plans;
+        const toEPPlans = `${ePGlobRoute}/${ePPlansRoute}`;
 
-        navigate(toSlider);
-        dispatch(resetRoutes());
-        profInfo.role === EProfileRoles.Admin && dispatch(addRoute(toChange));
+        if(!profileInfo.photos.length) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                photErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        if(!profileInfo.name) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                nameErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        if(!profileInfo.age) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                ageErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        if(!profileInfo.city) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                cityErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        if(!profileInfo.bio) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                cityErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+        }
+
+        const hasErrors = Object.values(fQErrors).some(item => item.value);
+        
+        if(hasErrors) return;
+
+        setRegLoad(true);
+        await dispatch(signUpProfileAsync());
+        setRegLoad(false);
+        dispatch(addRoute(location.pathname));
+        navigate(toEPPlans);
     }
+
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
 
     return (
         <>
-            <GeoConfirmation setConfirmation={setConfirmation} />
+            <GeoConfirmation />
             <div className="filling-quest__header">
                 <FillingQuestHeader />
             </div>
             <div className="filling-quest__ctx">
                 <div className="widgets">
-                    <FillingQuestPhotos />
-                    <FillingQuestInputs />
-                    <FillingQuestMySex />
-                    <FillingQuestAge />
-                    <FillingQuestBio />
-                    <FillingQuestInterests />
-                    <FillingQuestSelectionSex />
+                    <Slide
+                        triggerOnce
+                        direction={EAnimeDirection.Left}
+                        duration={ANIME_DURATION}
+                    >
+                        <FillingQuestPhotos />
+                        <FillingQuestInputs />
+                        <FillingQuestMySex />
+                        <FillingQuestAge />
+                        <FillingQuestBio />
+                        <FillingQuestInterests />
+                        <FillingQuestSelectionSex />
+                    </Slide>
                 </div>
                 <div className="link" onClick={handleRoute}>
                     <Button
                         fullWidth
                         variant="contained"
                         loadingPosition="start"
-                        loading={isLoad}
+                        loading={regLoad}
                     >
-                        {isLoad ? 'Регистрация...' : 'Продолжить'}
+                        {regLoad ? 'Регистрация...' : 'Продолжить'}
                     </Button>
                 </div>
             </div>
@@ -94,4 +158,4 @@ const FillingQuestContent = () => {
     )
 }
 
-export default FillingQuestContent
+export default FillingQuestContent;

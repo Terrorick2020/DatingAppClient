@@ -1,8 +1,5 @@
-import { MouseEvent } from 'react';
+import { JSX, MouseEvent, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { appRoutes } from '@/config/routes.config';
-import { addRoute } from '@/store/slices/settingsSlice';
 import { setSearchType, setSearchId } from '@/store/slices/adminSlice';
 import { EProfileRoles } from '@/types/store.types';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
@@ -11,38 +8,42 @@ import { type IState } from '@/types/store.types';
 
 import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 import SearchInput from '@/components/UI/SearchInput';
+import LinkMsg from '@/components/UI/LinkMsg';
 import IconButton from '@mui/joy/IconButton';
 import Button from '@mui/material/Button';
 
 
-const UsersListHeader = () => {
+const UsersListHeader = (): JSX.Element => {
     const adminState = useSelector((state: IState) => state.admin);
+
+    const [open, setOpen] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
 
-    const handleChangeRole = async (_: MouseEvent<HTMLElement>, newValue: EProfileRoles | null): Promise<void> => {
-        newValue && dispatch(setSearchType( newValue )) && await dispatch( getProfilesListAsync() );
-    }
+    const handleChangeRole = useCallback(
+        async (_: MouseEvent<HTMLElement>, newValue: EProfileRoles | null): Promise<void> => {
+            if (!newValue) return;
+            dispatch(setSearchType( newValue ));
+            await dispatch( getProfilesListAsync() );
+        },
+        [dispatch]
+    );
 
-    const handleInputChange = async (newValue: string): Promise<void> => {
-        dispatch( setSearchId( newValue ) );
+    const handleInputChange = useCallback(
+        async (newValue: string): Promise<void> => {
+            dispatch( setSearchId( newValue ) );
 
-        !newValue && await dispatch( getProfilesListAsync() );
-    }
+            !newValue && await dispatch( getProfilesListAsync() );
+        },
+        [dispatch]
+    );
 
-    const handleSerch = async () => await dispatch( getProfilesListAsync() );
+    const handleSearch = useCallback(
+        async () => await dispatch(getProfilesListAsync()),
+        [dispatch]
+    );
 
-    const adminGlobRoute = appRoutes.admin.global;
-    const adminAddPhys   = appRoutes.admin.inner.physAdd;
-    const toAddPhys      = `${adminGlobRoute}/${adminAddPhys}`;
-
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    const handleNavToAddPhys = (): void => {
-        dispatch(addRoute(location.pathname));
-        navigate(toAddPhys);
-    }
+    const handleOpen = useCallback(() => setOpen(true), []);
 
     return (
         <>
@@ -62,14 +63,15 @@ const UsersListHeader = () => {
                     placeholder="Поиск пользователя по ID..."
                     inpType='number'
                     handleInputChange={handleInputChange}
-                    handleClearInput={handleSerch}
-                    handleInputKeyDown={handleSerch}
+                    handleClearInput={handleSearch}
+                    handleInputKeyDown={handleSearch}
                 />
                 {
                     adminState.searchType === EProfileRoles.Psych &&
-                    <Button className="persone-btn" variant="contained" onClick={handleNavToAddPhys}>Добавить</Button>
+                    <Button className="persone-btn" variant="contained" onClick={handleOpen}>Добавить</Button>
                 }
             </div>
+            <LinkMsg link={adminState.link} open={open} setOpen={setOpen} />
         </>
     )
 }

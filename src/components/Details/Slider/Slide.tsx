@@ -1,6 +1,12 @@
+import { JSX, memo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setComplOpen } from '@/store/slices/settingsSlice';
+import { ageToStr } from '@/funcs/general.funcs';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
+
 import ScrollBar from '@/components/UI/ScrollBar';
 import Button from '@mui/material/Button';
-
 import SvgMapPin from '@/assets/icon/map-pin.svg';
 import SvgBlock from '@/assets/icon/block.svg?react';
 
@@ -10,9 +16,16 @@ interface PropsDetailsSlide {
     toRightScroll: () => void
     len:     number
     index:   number
-    content: any
 }
-const DetailsSlide = (props: PropsDetailsSlide) => {
+const DetailsSlide = memo((props: PropsDetailsSlide): JSX.Element => {
+    const targetUser = useSelector((state: IState) => state.questionnaires.targetUser);
+
+    if(!targetUser) return (<></>);
+
+    const dispatch = useDispatch<RootDispatch>();
+
+    const handleComplaint = () => dispatch(setComplOpen(true));
+
     return (
         <>
             <div className="slide__ctx">
@@ -26,10 +39,12 @@ const DetailsSlide = (props: PropsDetailsSlide) => {
                             startIcon={
                                 <img src={SvgMapPin} alt="map-pin" />
                             }
+                        >{ targetUser.city }</Button>
+                        <Button
+                            className="nav-btn icon-btn"
+                            variant="contained"
+                            onClick={handleComplaint}
                         >
-                            Санкт-Петербург
-                        </Button>
-                        <Button className="nav-btn icon-btn" variant="contained">
                             <SvgBlock />
                         </Button>
                     </nav>
@@ -39,11 +54,13 @@ const DetailsSlide = (props: PropsDetailsSlide) => {
                     <span onClick={props.toRightScroll}></span>
                 </main>
                 <footer>
-                    <h4 className="headline">Виктория, 20 лет</h4>
+                    <h4 className="headline">
+                        {`${targetUser.name}, ${ageToStr(targetUser.age)}`}
+                    </h4>
                 </footer>
             </div>
         </>
     )
-}
+})
 
-export default DetailsSlide
+export default DetailsSlide;

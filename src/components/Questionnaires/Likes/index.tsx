@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { initLikesListAsync } from '@/store/slices/likesSlice';
 import { type RootDispatch } from '@/store';
@@ -8,7 +8,7 @@ import LikesCard from './Card';
 import MyLoader from '@/components/UI/MyLoader';
 
 
-const LikesContent = () => {
+const LikesContent = (): JSX.Element => {
     const likesList = useSelector((state: IState) => state.likes.likesList);
     const isLoad = useSelector((state: IState) => state.settings.load);
 

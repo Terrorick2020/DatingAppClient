@@ -1,8 +1,13 @@
-import { useEffect, useMemo } from 'react';
+import {
+    setComplOpen,
+    initComplaintsVarsAsync,
+    resetComplaint,
+    setComplaint
+} from '@/store/slices/settingsSlice';
+
+import { JSX, memo, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setComplOpen } from '@/store/slices/settingsSlice';
-import { initComplaintsVarsAsync } from '@/store/slices/settingsSlice';
-import { EComplaintType } from '@/types/settings.type';
+import { EComplaintType, EComplaintStep } from '@/types/settings.type';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
 
@@ -12,7 +17,16 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
-const CtxVars = {
+interface ComplaintDrawerCtxVars {
+    [EComplaintType.Load]: () => JSX.Element,
+    [EComplaintType.Content]: {
+        [EComplaintStep.FStep]: () => JSX.Element,
+        [EComplaintStep.SStep]: () => JSX.Element,
+        [EComplaintStep.TStep]: () => JSX.Element,
+    }
+}
+
+const CtxVars: ComplaintDrawerCtxVars = {
     [EComplaintType.Load]: () => {
         return (
             <>
@@ -22,25 +36,54 @@ const CtxVars = {
             </>
         )
     },
-    [EComplaintType.List]: ComplaintDrawerList,
-    [EComplaintType.TxtArea]: ComplaintDrawerTxtArea,
+    [EComplaintType.Content]: {
+        [EComplaintStep.FStep]: ComplaintDrawerList,
+        [EComplaintStep.SStep]: ComplaintDrawerList,
+        [EComplaintStep.TStep]: ComplaintDrawerTxtArea,
+    },
 }
 
-const СomplaintDrawer = () => {
-    const {open, type} = useSelector((state: IState) => state.settings.complaint);
+interface PropsComplaintDrawer {
+    id: string
+}
+const ComplaintDrawer = memo((props: PropsComplaintDrawer): JSX.Element => {
+    const complaint = useSelector((state: IState) => state.settings.complaint);
 
     const dispatch = useDispatch<RootDispatch>();
 
-    useEffect( () => { dispatch(initComplaintsVarsAsync(null)) }, [open] );
+    useEffect(
+        () => {
+            if(complaint.open) {
+                dispatch(setComplaint({
+                    ...complaint,
+                    to: props.id,
+                }));
 
-    const CurrentComponent = useMemo( () => CtxVars[type], [type] );
+                dispatch(initComplaintsVarsAsync());
+            }
+
+            !complaint.open && dispatch(resetComplaint());
+        },
+        [complaint.open]
+    );
+
+    const CurrentComponent = useMemo(
+        () => {
+            const ctx = CtxVars[complaint.type];
+
+            if( typeof ctx === 'function') return ctx;
+
+            return ctx[complaint.step]
+        },
+        [complaint.type, complaint.step]
+    );
 
     return (
         <>
             <SwipeableDrawer
                 className="complaint-drawer"
                 anchor="bottom"
-                open={open}
+                open={complaint.open}
                 onOpen={() => dispatch(setComplOpen(true))}
                 onClose={() => dispatch(setComplOpen(false))}
             >
@@ -52,6 +95,6 @@ const СomplaintDrawer = () => {
             </SwipeableDrawer>
         </>
     )
-}
+})
 
-export default СomplaintDrawer;
+export default ComplaintDrawer;

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { appRoutes } from '@/config/routes.config';
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -6,10 +7,9 @@ import { dellRoute } from '@/store/slices/settingsSlice';
 import LikeBtn from '@/components/UI/LikeBtn';
 import Button from '@mui/material/Button';
 
+const ID = 1;
 
-const DetailsFixed = () => {
-    const id = 1;
-
+const DetailsFixed = (): JSX.Element => {
     const clickLike = (id: number) => {
         const heartHtml = document.getElementById(`heart-${ id }`);
         if ( heartHtml ) heartHtml.style.animation = 'heart-top 1.5s ease-in-out forwards';
@@ -32,17 +32,17 @@ const DetailsFixed = () => {
             <div className="btns">
                 <NavLink to={ toSlider } onClick={ handleRoute }>
                     <Button
-                        className="lemon-fon"
+                        className="lemon-fon bg-dark"
                         variant="contained"
                     >
                         Назад
                     </Button>
                 </NavLink>
-                <LikeBtn id={id} clickLike={clickLike} />
+                <LikeBtn id={ID} clickLike={clickLike} />
             </div>
             <div className="void"></div>
         </>
     )
 }
 
-export default DetailsFixed
+export default DetailsFixed;

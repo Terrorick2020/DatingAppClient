@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { appRoutes } from './config/routes.config';
 
@@ -5,12 +6,15 @@ import DefautlLayout from './layouts/Default';
 import QuestLayout from './layouts/Questionnaires';
 import RegisterLayout from './layouts/Register';
 import AdminLayout from './layouts/Admin';
+import EPLayout from './layouts/EviningPlans';
 
 import RegLangPage from './pages/Register/Lang';
 import RegPreviewPage from './pages/Register/Preview';
 import RegFillingQuestPage from './pages/Register/FillingQuest';
-import RegGeoPage from './pages/Register/Geo';
-import RegEveningPlansPage from './pages/Register/EveningPlans';
+import RegMediaPage from './pages/Register/Media';
+
+import EPPlansPage from './pages/EveningPlans/Plans';
+import EPLocationPage from './pages/EveningPlans/Location';
 
 import QuestChatsPage from './pages/Questionnaires/Chats';
 import QuestLikesPage from './pages/Questionnaires/Likes';
@@ -25,7 +29,7 @@ import TargetPsych from './pages/Psychologist';
 import AdminChangePage from './pages/Admin/Change';
 import AdminUsersListPage from './pages/Admin/UsersList';
 import AdminUserInfoPage from './pages/Admin/UserInfo';
-import AdminPhysAddPage from './pages/Admin/PhysAdd';
+import AdminComplaintsListPage from './pages/Admin/ComplaintsList';
 
 import NotFoundPage from './pages/NotFound';
 import BlockedPage from './pages/Blocked';
@@ -34,8 +38,9 @@ import ErrorPage from './pages/Error';
 import './assets/scss/index.scss';
 
 
-const App = () => {
+const App = (): JSX.Element => {
   const regRoutes   = appRoutes.register;
+  const epRoutes    = appRoutes.eveningPlans;
   const questRoutes = appRoutes.questionnaires;
   const adminRoutes = appRoutes.admin;
   
@@ -48,8 +53,12 @@ const App = () => {
             <Route path={ regRoutes.inner.preview } element={ <RegPreviewPage /> } />
             <Route path={ regRoutes.inner.lang } element={ <RegLangPage /> } />
             <Route path={ regRoutes.inner.fillQuest } element={ <RegFillingQuestPage /> } />
-            <Route path={ regRoutes.inner.geo } element={ <RegGeoPage /> } />
-            <Route path={ regRoutes.inner.eveningPlans } element={ <RegEveningPlansPage /> } />
+            <Route path={ regRoutes.inner.media } element={ <RegMediaPage /> } />
+          </Route>
+
+          <Route path={ epRoutes.global } element={ <EPLayout /> }>
+            <Route path={ epRoutes.inner.plans } element={ <EPPlansPage /> } />
+            <Route path={ epRoutes.inner.location } element={ <EPLocationPage /> } />
           </Route>
 
           <Route path={ questRoutes.global } element={ <QuestLayout /> } >
@@ -68,13 +77,13 @@ const App = () => {
             <Route path={ adminRoutes.inner.nav } element={ <AdminChangePage /> } />
             <Route path={ adminRoutes.inner.usersList } element={ <AdminUsersListPage /> } />
             <Route path={ adminRoutes.inner.userInfo } element={ <AdminUserInfoPage /> } />
-            <Route path={ adminRoutes.inner.physAdd } element={ <AdminPhysAddPage /> } />
+            <Route path={ adminRoutes.inner.compalintsList } element={ <AdminComplaintsListPage /> } />
           </Route>
 
-          <Route path={ appRoutes.notFound } element={ <NotFoundPage /> } />
           <Route path={ appRoutes.blocked } element={ <BlockedPage /> } />
           <Route path={ appRoutes.error } element={ <ErrorPage /> } />
-
+          <Route path={ appRoutes.notFound } element={ <NotFoundPage /> } />
+          
         </Route>
       </Routes>
     </>

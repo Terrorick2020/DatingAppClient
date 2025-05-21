@@ -1,0 +1,30 @@
+#root {
+    .MuiIconButton-root {
+        background: transparent;
+
+        &:hover {
+            background: transparent;
+            filter: drop-shadow(0 0 10px rgb(162, 162, 162));
+        }
+
+        &:active {
+            scale: 0.97;
+        }
+
+        &.notify {
+            background: inherit;
+            color: inherit;
+
+            .MuiSvgIcon-root {
+                color: inherit;
+                opacity: 0.8;
+                transition: opacity 0.1s ease;
+            }
+
+            &:hover .MuiSvgIcon-root{
+                opacity: 1;
+                filter: drop-shadow(0 0 0.8rem rgb(209, 209, 209));
+            }
+        }
+    }
+}

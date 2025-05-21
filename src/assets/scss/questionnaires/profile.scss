@@ -1,15 +1,108 @@
 @use "../components/mixins";
 
+
+:root {
+    --prof-vert-gap: clamp(1.2rem, 5vw, 1.5rem);
+}
+
 .profile {
     width: 100%;
-    height: 72vh;
+    height: 100%;
+    padding-inline: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
 
     &__ctx {
         width: 100%;
         height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
+
+        .headline {
+            font-weight: 900;
+        }
+
+        .content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            gap: var(--prof-vert-gap);
+            padding-top: 1.5rem;
+            padding-bottom: 1rem;
+            
+            [class$="-box"] {
+                background-color: #FFFFFF1F;
+                width: 100%;
+                border-radius: 1.75rem;
+                padding: var(--prof-vert-gap);
+                display: flex;
+                flex-direction: column;
+                gap: var(--prof-vert-gap);
+
+                .headline {
+                    font-weight: 700;
+                    font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+                }
+
+                .description {
+                    font-weight: 400;
+                    font-size: clamp(0.8rem, 3.5vw, 1rem);
+
+                    &.opacity {
+                        opacity: 0.5;
+                        margin-top: clamp(0.2rem, 1vh, 0.5rem);
+                    }
+                }
+            }
+
+            .profile-box .info {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+                align-items: center;
+                gap: clamp(1rem, 3vw, 1.5rem);
+            }
+
+            .plans-box {
+                .title {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .plans {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: var(--prof-vert-gap);
+
+                    .chips {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 0.7rem;
+                    }
+                }
+            }
+
+            .link-box {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                cursor: pointer;
+
+                &:hover {
+                    box-shadow: 0 0 0.5rem #ebffbf6b;
+                }
+
+                &:active {
+                    scale: 0.99;
+                }
+            }
+        }
     }
 }

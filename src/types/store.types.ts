@@ -6,6 +6,7 @@ import { LikesState } from './likes.types';
 import { ProfileState } from './profile.types';
 import { QuestState } from './quest.types';
 
+
 export enum EProfileRoles {
     User  = 'User',
     Admin = 'Admin',
@@ -33,6 +34,11 @@ export enum LinkTooltipText {
     Copy = 'Copy',
     Copied = 'Copied',
     Error = 'Error',
+}
+
+export enum LinkPageType {
+    FillingQuest = 'FillingQuest',
+    EveningPlans = 'EveningPlans',
 }
 
 export interface IState {

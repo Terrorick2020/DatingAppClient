@@ -1,29 +1,42 @@
-import { useMemo } from 'react';
+import { JSX, useMemo, memo, useCallback } from 'react';
 import { ageToStr } from '@/funcs/general.funcs';
+import { useDispatch } from 'react-redux';
+import { addPhotoToUserAsync, delPhotoToUserAsync } from '@/store/slices/adminSlice';
 import { statusTextMap } from '@/constant/admin';
-import { type PropsUserInfoComponent } from '@/types/admin.types';
+import type { PropsUserInfoComponent } from '@/types/admin.types';
+import type { RootDispatch } from '@/store';
 
 import Photos from '@/components/UI/Photos';
+import UserInfoContent from './ComplaintInfo';
 import SvgMapPin from '@/assets/icon/map-pin.svg?react';
 
 
-const UserInfoCtx = (props: PropsUserInfoComponent) => {
-    const { id, name, age, city, description, status } = props.targetProfile;
+const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
+    const { id, name, age, city, description, status, photos, complaint } = props.targetProfile;
     
     const { text, status: statusText, addClass } = useMemo(() => {
         return statusTextMap[status];
     }, [status]);
 
-    const ageStr = useMemo(() => ageToStr(age), [age]);
+    const headline = useMemo(() => `${name}, ${ageToStr(age)}`, [name, age]);
+
+    const dispatch = useDispatch<RootDispatch>();
+
+    const handleAdd = useCallback(async (photo: File): Promise<void> => {
+        await dispatch(addPhotoToUserAsync(photo));
+    }, [dispatch]);
+
+    const handleDel = useCallback(async (id: string): Promise<void> => {
+        await dispatch(delPhotoToUserAsync(id));
+    }, [dispatch]);
 
     return (
         <>
             <h3 className="headline">{`ID${id}`}</h3>
-            <Photos />
+            <UserInfoContent complaint={complaint} />
+            <Photos photos={photos} handleAdd={handleAdd} handleDel={handleDel} />
             <div className="description">
-                <h4 className="headline">
-                    {`${name}, ${ageStr}`}
-                </h4>
+                <h4 className="headline">{headline}</h4>
                 <div className="labels">
                     <div className="item">
                         <SvgMapPin />
@@ -37,6 +50,6 @@ const UserInfoCtx = (props: PropsUserInfoComponent) => {
             </div>
         </>
     )
-}
+})
 
 export default UserInfoCtx;

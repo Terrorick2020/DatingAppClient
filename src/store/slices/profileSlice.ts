@@ -1,15 +1,29 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { EProfileRoles, ESex,  EProfileStatus, ELineStatus } from '@/types/store.types';
-import { setLoad } from './settingsSlice';
+import type {
+    ProfileState,
+    ProfileSelf,
+    SendGeoData,
+    EveningPlans,
+    PhotoItem,
+    EveningPlansItem,
+    WebAppUser
+} from '@/types/profile.types';
+
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { EProfileRoles, ESex,  EProfileStatus, ELineStatus, IState } from '@/types/store.types';
+import { setLoad, setApiRes } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
-import type { ProfileState, ProfileSelf, SendGeoData } from '@/types/profile.types';
+import { EApiStatus } from '@/types/settings.type';
+import { INITIAL_ENDPOINT } from '@/config/env.config';
 
 import axios from 'axios';
+import api from '@/config/fetch.config';
+import PngLeady from '@/assets/img/leady.png';
 
 
 const initialState: ProfileState = {
     info: {
         id: '10234231',
+        photos: [],
         enableGeo: false,
         lineStat: ELineStatus.Online,
         role: EProfileRoles.User,
@@ -23,32 +37,55 @@ const initialState: ProfileState = {
         interest: '',
         selSex: ESex.All,
     },
-    addLink: 'Hello world!',
+    addLink: 'https://t.me/BotFather',
+    eveningPlans: {
+        isCurrent: true,
+        plan: {
+            value: '',
+            description: '',
+        },
+        location: {
+            value: '',
+            description: '',
+        },
+    },
+    selPsych: ''
 }
 
 export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
-    async ( data: string, _thunkAPI ) => {
-        const url = new URL(data)
-        const params = new URLSearchParams(url.hash.substring(1))
-        const tgData = params.get('tgWebAppData')
+    async ( data: string ): Promise<null | undefined> => {
+        const url = new URL(data);
+        const params = new URLSearchParams(url.hash.substring(1));
 
-        if (!tgData) return null
+        try {
+            // const tgData = params.get('tgWebAppData');
 
-        const parsedData = Object.fromEntries(new URLSearchParams(tgData))
+            // if (!tgData) return null;
 
-        if (parsedData.user) {
-            parsedData.user = JSON.parse(parsedData.user)
-        }
-        
-        await axios.post(
-            'http://localhost:3000/auth',
-            {
-                data: parsedData,
+            // const parsedData = Object.fromEntries(new URLSearchParams(tgData));
+
+            // if(!parsedData.user) return null;
+
+            // const user: WebAppUser = JSON.parse(parsedData.user);
+
+            // const data = {
+            //     telegramId: String(user.id)
+            // }
+
+            const data = {
+                telegramId: '234351'
             }
-        )
+
+            const responce = await api.post(INITIAL_ENDPOINT, data);
+
+            console.log( responce )
+            return null;
+        } catch (error) {
+            throw error;
+        }
     }
-)
+);
 
 export const sendSelfGeoAsync = createAsyncThunk(
     'profile/send-self-geo',
@@ -61,16 +98,52 @@ export const sendSelfGeoAsync = createAsyncThunk(
     }
 )
 
+export const saveSelfPhotoAsync = createAsyncThunk(
+    'profile/save-self-phooto',
+    async (photo: File): Promise<PhotoItem> => {
+        try {
+            await delay(2000);
+
+            const photoUrl = URL.createObjectURL(photo);
+            const newPhoto: PhotoItem = {
+                id: `${Date.now()}`,
+                photo: photoUrl
+            };
+
+            return newPhoto;
+        } catch (error) {
+            throw error;
+        }
+    }
+)
+
+export const deleteSelfPhotoAsync = createAsyncThunk(
+    'profile/delete-self-photo',
+    async (id: string): Promise<string> => {
+        try {
+            await delay(2000);
+
+            return id;
+        } catch (error) {
+            throw error;
+        }
+    }
+)
+
 export const signUpProfileAsync = createAsyncThunk(
     'profile/sign-up-profile',
     async (_, {dispatch}): Promise<ProfileSelf> => {
         try {
-            dispatch(setLoad(true));
-
             await delay(2000);
 
             const responce = {
                 id: '10234231',
+                photos: [
+                    {
+                        id: 'sdvsdvdv',
+                        photo: PngLeady,
+                    }
+                ],
                 enableGeo: false,
                 lineStat: ELineStatus.Online,
                 role: EProfileRoles.User,
@@ -85,12 +158,16 @@ export const signUpProfileAsync = createAsyncThunk(
                 selSex: ESex.All,
             };
 
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Регистрация прошла успешно',
+                status: EApiStatus.Success,
+                timestamp: Date.now(),
+            }));
+    
             return responce;
-
-        } catch (error) {
-            throw error;
-        } finally {
-            dispatch(setLoad(false));
+        } catch ( error ) {
+            throw error
         }
     }
 )
@@ -105,14 +182,20 @@ export const getSelfProfile = createAsyncThunk(
 
             const responce = {
                 id: '10234231',
+                photos: [
+                    {
+                        id: 'sdvsdvdv',
+                        photo: PngLeady,
+                    }
+                ],
                 enableGeo: false,
                 lineStat: ELineStatus.Online,
                 role: EProfileRoles.User,
                 status: EProfileStatus.Noob,
                 username: '',
-                name: '',
-                age: null,
-                city: '',
+                name: 'Вктория',
+                age: 20,
+                city: 'Санкт-Петербург',
                 sex: ESex.Male,
                 bio: '',
                 interest: '',
@@ -129,13 +212,54 @@ export const getSelfProfile = createAsyncThunk(
     }
 )
 
+export const saveSelfPlansAsync = createAsyncThunk(
+    'profile/save-self-plans',
+    async (_, {dispatch, getState}): Promise<EveningPlans> => {
+        try {
+            await delay(2000);
+
+            const rootState = getState() as IState;
+            const eveningPlans = rootState.profile.eveningPlans;
+
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Обновление планов прошло успешно',
+                status: EApiStatus.Success,
+                timestamp: Date.now(),
+            }));
+
+            return eveningPlans;
+        } catch (error) {
+            throw error;
+        }
+    }
+);
+
+export const selectSelfPsychAsync = createAsyncThunk(
+    'profile/select-self-psych',
+    async (id: string): Promise<string> => {
+        try {
+            await delay(2000);
+
+            return id;
+        } catch (error) {
+            throw error;
+        }
+    }
+);
+
 const profileSlice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
-        setInfo: (state, action) => {
-            const newInfo: ProfileSelf = action.payload;
-            state.info = newInfo;
+        setInfo: (state, action: PayloadAction<ProfileSelf>) => {
+            state.info = action.payload;
+        },
+        setPlan: (state, action: PayloadAction<EveningPlansItem>) => {
+            state.eveningPlans.plan = action.payload;
+        },
+        setLocation: (state, action: PayloadAction<EveningPlansItem>) => {
+            state.eveningPlans.location = action.payload;
         },
     },
     extraReducers: builder => {
@@ -162,11 +286,35 @@ const profileSlice = createSlice({
             console.log("Ошибка при отправке личного geo");
         })
 
+        //Отправка сообщения на добавление фотографии пользвателя
+        builder.addCase(saveSelfPhotoAsync.pending, _ => {
+            console.log("Отправка сообщения на добавление фотографии пользвателя");
+        })
+        builder.addCase(saveSelfPhotoAsync.fulfilled, (state, action: PayloadAction<PhotoItem>) => {
+            console.log("Успешная отправка сообщения на добавление фотографии пользвателя");
+            state.info.photos.push(action.payload);
+        })
+        builder.addCase(saveSelfPhotoAsync.rejected, _ => {
+            console.log("Ошибка при отправке сообщения на добавление фотографии пользвателя");
+        })
+
+        //Отправка сообщения на удаление фотографии пользвателя
+        builder.addCase(deleteSelfPhotoAsync.pending, _ => {
+            console.log("Отправка сообщения на удаление фотографии пользвателя");
+        })
+        builder.addCase(deleteSelfPhotoAsync.fulfilled, (state, action: PayloadAction<string>) => {
+            console.log("Успешная отправка сообщения на удаление фотографии пользвателя");
+            state.info.photos = state.info.photos.filter(item => item.id !== action.payload);
+        })
+        builder.addCase(deleteSelfPhotoAsync.rejected, _ => {
+            console.log("Ошибка при отправке сообщения на удаление фотографии пользвателя");
+        })
+
         // Регистрация профиля пользователя
         builder.addCase(signUpProfileAsync.pending, _ => {
             console.log("Регистрация профиля пользователя");
         })
-        builder.addCase(signUpProfileAsync.fulfilled, ( state, action ) => {
+        builder.addCase(signUpProfileAsync.fulfilled, ( state, action: PayloadAction<ProfileSelf> ) => {
             console.log("Успешная регистрация профиля пользователя");
             state.info = action.payload;
         })
@@ -178,15 +326,27 @@ const profileSlice = createSlice({
         builder.addCase(getSelfProfile.pending, _ => {
             console.log("Получение текущего профиля пользователя");
         })
-        builder.addCase(getSelfProfile.fulfilled, ( state, action ) => {
+        builder.addCase(getSelfProfile.fulfilled, ( state, action: PayloadAction<ProfileSelf> ) => {
             console.log("Успешное получение текущего профиля пользователя");
             state.info = action.payload;
         })
         builder.addCase(getSelfProfile.rejected, _ => {
             console.log("Ошибка получения текущего профиля пользователя");
         })
+
+        // Выбор специалиста
+        builder.addCase(selectSelfPsychAsync.pending, _ => {
+            console.log("Выбор специалиста");
+        })
+        builder.addCase(selectSelfPsychAsync.fulfilled, ( state, action: PayloadAction<string> ) => {
+            console.log("Успешный выбор специалиста");
+            state.selPsych = action.payload;
+        })
+        builder.addCase(selectSelfPsychAsync.rejected, _ => {
+            console.log("Ошибка выбора специалиста");
+        })
     }
 })
 
-export const { setInfo } = profileSlice.actions;
+export const { setInfo, setPlan, setLocation } = profileSlice.actions;
 export default profileSlice.reducer;

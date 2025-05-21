@@ -1,3 +1,4 @@
+import { JSX, memo } from 'react';
 import { appRoutes } from '@/config/routes.config';
 import { useSelector } from 'react-redux';
 import { ageToStr } from '@/funcs/general.funcs';
@@ -7,22 +8,18 @@ import type { IState } from '@/types/store.types';
 import ListBlock from '@/components/UI/ListBlock';
 
 
-const PsychList = () => {
+interface PropsPsychList {
+    preText: string
+}
+const PsychList = memo((props: PropsPsychList): JSX.Element => {
     const psychList = useSelector((state: IState) => state.psych.psychList);
-    const serchPsychQuery = useSelector((state: IState) => state.psych.serchPsychQuery);
 
     const globTargetPsychRoute = appRoutes.targetPsych;
 
     return (
         <>
             <h6 className="headline">
-                {
-                    serchPsychQuery
-                        ?
-                        'Найденные специалисты'
-                        :
-                        'Все специалисты'
-                }
+                { props.preText }
             </h6>
             {
                 psychList.length
@@ -54,6 +51,6 @@ const PsychList = () => {
             }
         </>
     )
-}
+})
 
 export default PsychList;

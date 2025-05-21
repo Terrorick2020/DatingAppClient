@@ -1,20 +1,40 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { initTargetUserAsync } from '@/store/slices/questionnairesSlice';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
-import DetailsSlider from './Slider'
-import DetailsInfo from './Info'
-import DetailsFixed from './Fixed'
+import DetailsSlider from './Slider';
+import DetailsInfo from './Info';
+import DetailsFixed from './Fixed';
+import ComplaintDrawer from '@/components/Layouts/ComplaintDrawer';
+import MyLoader from '@/components/UI/MyLoader';
 
 
-const DetailsContent = () => {
+const DetailsContent = (): JSX.Element => {
+    const { id } = useParams();
+
+    if(id === undefined) return (<></>);
+
+    const isLoad = useSelector((state: IState) => state.settings.load);
+
+    const dispatch = useDispatch<RootDispatch>();
+
     useEffect(
         () => {
-            const detailsHtml = document.getElementById('details');
-            if ( detailsHtml ) detailsHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
-
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
+
+            dispatch(initTargetUserAsync(id));
         },
         []
+    )
+
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
     )
 
     return (
@@ -28,8 +48,9 @@ const DetailsContent = () => {
             <div className="details__fixed">
                 <DetailsFixed />
             </div>
+            <ComplaintDrawer id={id} />
         </>
     )
 }
 
-export default DetailsContent
+export default DetailsContent;

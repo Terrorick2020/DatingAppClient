@@ -2,6 +2,17 @@ export function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export async function fadeOutPreloader() {
+	const preloader = document.getElementById( 'preloader' );
+
+	if ( preloader ) {
+		preloader.style.animation = "fadeOut 2s ease-in-out forwards";
+
+		await delay(2000);
+
+		preloader.style.display = "none";
+	}
+}
 
 export function ageToStr(age: number | null): string {
     if ( !age ) return 'лет';
@@ -29,4 +40,25 @@ export function formatDateToUser(dateStr: string): string {
 		day: 'numeric',
 		month: 'long',
 	});
+}
+
+export function formatTime (seconds: number): string {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
+
+export function formatTimeLeft(seconds: number): string {
+	const hours = Math.floor(seconds / 3600);
+	const minutes = Math.floor((seconds % 3600) / 60);
+	return `${hours.toString().padStart(2, '0')}ч. ${minutes.toString().padStart(2, '0')}м.`;
+}
+
+export function formatTimeLeftOther(seconds: number, withSecond: boolean = false): string {
+	const hours = Math.floor(seconds / 3600);
+	const minutes = Math.floor((seconds % 3600) / 60);
+	const secs = seconds % 60;
+	return `${hours.toString().padStart(2, '0')}:${minutes
+	  .toString()
+	  .padStart(2, '0')}${withSecond ? ':' + secs.toString().padStart(2, '0') : ''}`;
 }

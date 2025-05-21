@@ -1,7 +1,9 @@
+import { JSX } from 'react'
+
 import SvgLogo from '@/assets/icon/logo.svg?react'
 
 
-const LogoHeader = () => {
+const LogoHeader = (): JSX.Element => {
     const userAgent = navigator.userAgent.toLowerCase()
 
     const predMobile  = userAgent.includes('iphone') || userAgent.includes('android')

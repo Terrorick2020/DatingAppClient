@@ -1,5 +1,6 @@
 @use "../components/mixins";
 
+
 .slider {
     width: 100%;
     max-width: 800px;
@@ -8,7 +9,7 @@
 
     &__poster {
         width: 100%;
-        height: 72vh;
+        height: 100%;
         align-self: start;
         padding-bottom: 2vh;
         display: flex;
@@ -22,6 +23,7 @@
             width: 100%;
             max-width: 800px;
             height: 70vh;
+            height: 100%;
             overflow: hidden;
             display: flex;
             justify-content: center;

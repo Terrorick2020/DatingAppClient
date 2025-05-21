@@ -1,21 +1,16 @@
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import { useSwipeable } from 'react-swipeable'
+import { useSelector } from 'react-redux';
+import type { IState } from '@/types/store.types';
 
 import DetailsSlide from './Slide'
 
-import PngLeady from '@/assets/img/leady.png'
-import PngWoman from '@/assets/img/woman.png'
 
+const DetailsSlider = (): JSX.Element => {
+    const photos = useSelector((state: IState) => state.questionnaires.targetUser?.photos);
 
-const items = [
-    { img: PngWoman, name: "Виктория, 20", location: "Санкт-Петербург" },
-    { img: PngLeady, name: "Александра, 22", location: "Москва" },
-    { img: PngWoman, name: "Екатерина, 25", location: "Казань" },
-]
-
-const DetailsSlider = () => {
-    const [index, setIndex] = useState(0)
-    const [fade, setFade] = useState(true)
+    const [index, setIndex] = useState(0);
+    const [fade, setFade] = useState(true);
 
     const changeSlide = (newIndex: number) => {
         setFade(false)
@@ -31,8 +26,10 @@ const DetailsSlider = () => {
         trackMouse: true,
     })
 
-    const toLeftScroll = () => changeSlide((index - 1 + items.length) % items.length);
-    const toRightScroll = () => changeSlide((index + 1) % items.length);
+    if(typeof photos === 'undefined') return (<></>);
+
+    const toLeftScroll = () => changeSlide((index - 1 + photos.length) % photos.length);
+    const toRightScroll = () => changeSlide((index + 1) % photos.length);
 
     return (
         <>
@@ -40,16 +37,15 @@ const DetailsSlider = () => {
                 <div
                     className="slide"
                     style={{
-                        backgroundImage: `url(${items[index].img})`,
+                        backgroundImage: `url(${photos[index]})`,
                         opacity: fade ? 1 : 0,
                     }}
                 >
                     <DetailsSlide
                         toLeftScroll={toLeftScroll}
                         toRightScroll={toRightScroll}
-                        len={items.length}
+                        len={photos.length}
                         index={index}
-                        content={null}
                     />
                 </div>
             </div>
@@ -57,4 +53,4 @@ const DetailsSlider = () => {
     )
 }
 
-export default DetailsSlider
+export default DetailsSlider;

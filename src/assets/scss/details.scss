@@ -1,3 +1,6 @@
+@use "./components/mixins";
+
+
 .details {
     width: 100%;
     height: 100%;
@@ -7,6 +10,7 @@
         width: 100%;
         margin-top: 12.1vh;
         height: 80vh;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
         .container {
             width: 100%;
@@ -129,6 +133,7 @@
         justify-content: center;
         align-items: center;
         gap: 1.25rem;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
         .poster {
             width: 100%;
@@ -198,13 +203,6 @@
                 align-items: center;
                 flex-wrap: wrap;
                 gap: 0.8rem;
-
-                .item {
-                    padding: 0.5rem;
-                    background: #FFFFFF1A;
-                    border-radius: 3.5rem;
-                    font-size: 14px;
-                }
             }
 
             .text {
@@ -228,6 +226,7 @@
 
     &__fixed {
         width: 100%;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
         
         .void {
             width: 100%;
@@ -243,10 +242,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            
-            .lemon-fon {
-                background: #0E0E0E !important;
-            }
         }
     }
 }

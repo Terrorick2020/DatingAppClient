@@ -13,11 +13,28 @@ export interface SliderItem {
     photos: string[]
 }
 
-export interface LikesItemTimer {
-    value: string
-    isCritical: boolean
+export interface DetailsTargetUserPlans {
+    targetTime: string
+    district: string
+    place: string
+    description: string
+}
+
+export interface DetailsTargetUser {
+    id: string
+    photos: string[]
+    city: string
+    name: string
+    age: number
+    plans: DetailsTargetUserPlans
+    bio: string
 }
 
 export interface QuestState {
     sliderList: SliderItem[]
+    targetUser: DetailsTargetUser | null
+}
+
+export interface PropsProfileInfo {
+    handleRoute: () => void
 }

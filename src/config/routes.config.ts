@@ -1,5 +1,5 @@
 export const appRoutes = {
-    notFound: '/not-found',
+    notFound: '*',
     blocked: '/blocked',
     error: '/error',
     register: {
@@ -8,8 +8,14 @@ export const appRoutes = {
             preview: '',
             lang: 'lang',
             fillQuest: 'filling-questionnaire',
-            geo: 'geo',
-            eveningPlans: 'evening-plans',
+            media: 'media',
+        },
+    },
+    eveningPlans: {
+        global: '/evening-plans',
+        inner: {
+            plans: 'plans',
+            location: 'location',
         },
     },
     questionnaires: {
@@ -31,7 +37,7 @@ export const appRoutes = {
             nav: 'change',
             usersList: 'users-list',
             userInfo: 'user-info/:id',
-            physAdd: 'phys-add',
+            compalintsList: 'complaints-list',
         },
     },
 }

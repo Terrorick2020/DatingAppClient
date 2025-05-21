@@ -1,0 +1,50 @@
+#root {
+    --track-rail-h: 10px;
+    --rail-color: #FFFFFF;
+    --track-color: #D7FF81;
+    --thumb-color: #BC96FF;
+
+    .MuiSlider-root {
+        &.media {
+            .MuiSlider-rail {
+                background: var(--rail-color);
+                border-color: var(--rail-color);
+                height: var(--track-rail-h);
+            }
+
+            .MuiSlider-track {
+                background: var(--track-color);
+                border-color: var(--track-color);
+                height: var(--track-rail-h);
+            }
+
+            &.thumb-show {
+                .MuiSlider-thumb {
+                    opacity: 1;
+                }
+            }
+
+            .MuiSlider-thumb {
+                background: var(--thumb-color);
+                border-color: var(--thumb-color);
+                transition: box-shadow 0.2s ease, opacity 0.4s ease;
+                opacity: 0;
+
+                &:hover,
+                &.Mui-focusVisible,
+                &:focus {
+                  box-shadow: 0 0 0 0.3rem #bc96ff3b;
+                }
+
+                &:active {
+                    box-shadow: 0 0 0 0.6rem #bc96ff3b;
+                }
+
+                .MuiSlider-valueLabel {
+                    background: var(--thumb-color);
+                    color: #121112;
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
 import { configureStore, combineReducers, Reducer } from '@reduxjs/toolkit';
+import type { IState } from '@/types/store.types';
 
 import adminReducer from './slices/adminSlice';
 import chatsReducer from './slices/chatsSlice';
@@ -7,8 +8,7 @@ import profileReducer from './slices/profileSlice';
 import questionnairesReducer from './slices/questionnairesSlice';
 import psychReducer from './slices/psychSlice';
 import settingsReducer from './slices/settingsSlice';
-
-import { type IState } from '@/types/store.types';
+import myMiddleware from './middleware';
 
 
 const rootReducer: Reducer<IState> = combineReducers({
@@ -18,12 +18,14 @@ const rootReducer: Reducer<IState> = combineReducers({
     profile: profileReducer,
     questionnaires: questionnairesReducer,
     psych: psychReducer,
-    settings: settingsReducer,
-})
+    settings:  settingsReducer,
+});
 
 const store = configureStore({
     reducer: rootReducer,
-})
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(myMiddleware),
+});
 
 export type RootDispatch = typeof store.dispatch;
 export default store;

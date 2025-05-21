@@ -1,3 +1,6 @@
+@use "../components/mixins";
+
+
 :root {
     --photos-bg: #2B2B2B;
     --photos-btn-bg: #FF4365;
@@ -23,7 +26,33 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-    
+
+            @keyframes post-load {
+                0% {
+                    display: none;
+                }
+
+                1% {
+                    display: block;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    background-blend-mode: multiply;
+                }
+
+                99% {
+                    background-color: transparent;
+                    background-blend-mode: multiply;
+                }
+
+                100% {
+                    background-color: transparent;
+                    background-blend-mode: normal;
+                }
+            }
+
+            &.custom {
+                animation: post-load 0.5s ease forwards;
+            }
+
             &.add {
                 width: 26vw;
                 height: 28vw;
@@ -32,7 +61,8 @@
                 justify-content: center;
                 align-items: center;
                 border: 2px dashed #D7FF81;
-    
+                @include mixins.fadeIn(0.5s, ease-in-out, 0s, forwards);
+
                 .btn {
                     cursor: pointer;
                     position: absolute;
@@ -47,7 +77,19 @@
                     min-width: 2.4rem;
                 }
             }
-    
+
+            &.load {
+                background-blend-mode: multiply;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .MuiCircularProgress-root {
+                    color: #BC96FF;
+                }
+            }
+
             .delete {
                 position: absolute;
                 width: 6vw;
@@ -66,4 +108,3 @@
         }
     }
 }
-

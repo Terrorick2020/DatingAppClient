@@ -1,3 +1,5 @@
+import { JSX, memo } from 'react';
+
 import SvgCheckDoubleFill from '@/assets/icon/check-double-fill.svg?react';
 
 
@@ -8,7 +10,7 @@ export interface PropsChatMsg {
     time: string
     isChecked: boolean
 }
-const ChatMsg = (props: PropsChatMsg) => {
+const ChatMsg = memo((props: PropsChatMsg): JSX.Element => {
     return (
         <>
             <div className={`msg  ${props.isSelf && 'self'}`}>
@@ -22,6 +24,6 @@ const ChatMsg = (props: PropsChatMsg) => {
             </div>
         </>
     )
-}
+})
 
 export default ChatMsg;

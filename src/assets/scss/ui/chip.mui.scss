@@ -1,7 +1,37 @@
 #root {
     .MuiChip-root {
-        border-radius: 8px;
-        color: #FFFFFF;
-        background: #212121;
+        border-radius: 3.75rem;
+        height: clamp(1.5rem, 4vh, 1.8rem);
+
+        &.purple {
+            background: #BC96FF;
+            color: #371F7D;
+        }
+
+        &.blure {
+            background: #FFFFFF1A;
+            color: #FFFFFF;
+        }
+
+        &.crimson {
+            background: #FF4365;
+            color: #FFFFFF;
+        }
+
+        &.black {
+            background: #1B1A1B;
+            color: #FFFFFF;
+        }
+
+        &.plans-timeout {
+            background: #0E0E0E;
+            border: 1px solid #6F6F6F;
+            width: 190px;
+            height: 40px;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 0.75rem;
+            user-select: none;
+        }
     }
 }

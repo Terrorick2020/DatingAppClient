@@ -32,155 +32,18 @@
         align-self: start;
         width: 100%;
         height: var(--quest-outlet-h);
+        padding-top: clamp(2.8rem, var(--nav-bar-h), 5rem);
+
+        &:has(.profile), &:has(.psychologists) {
+            .quest-nav-head {
+                display: none;
+            }
+        }
     }
 
     .nav-bar {
         align-self: end;
         width: 100%;
         height: var(--nav-bar-h);
-    }
-
-    .match {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: var(--match-bg);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        animation: fadeInSlotDown 1s ease-in-out forwards;
-
-        .container {
-            width: 100%;
-            max-width: 800px;
-            height: 100vh;
-            display: grid;
-            grid-template-rows: 3fr 2.5fr 3fr;
-
-            .header, .footer {
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-
-            .header {
-                background-image: url("/icons/preloader-header.svg");
-                background-position: bottom;
-                display: flex;
-                justify-content: center;
-                align-items: end;
-
-                .headline {
-                    font-weight: 900;
-                }
-            }
-
-            .main {
-                width: 100%;
-                padding-inline: 1.25rem;
-
-                .cards {
-                    width: 100%;
-                    padding-inline: 2vw;
-                    padding-block: 4vh;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: center;
-                    align-items: center;
-
-                    .item {
-                        width: 9.86vw;
-                        min-width: 7.5rem;
-                        height: 25.11vh;
-                        min-height: 11.25rem;
-                        border-radius: 1.25rem;
-                        background-repeat: no-repeat;
-                        background-size: cover;
-                        background-position: center;
-
-                        &.female {
-                            rotate: -15deg;
-                            z-index: 1;
-                        }
-
-                        &.male {
-                            rotate: 15deg;
-                        }
-                    }
-                }
-
-                .text {
-                    width: 100%;
-                    text-align: center;
-                    font-weight: 400;
-
-                    .caps {
-                        font-size: 1.5rem;
-                        font-weight: 500;
-                    }
-
-                    .no-wrap {
-                        white-space: nowrap;
-
-                        &::before {
-                            content: ' ';
-                        }
-                    }
-                }
-
-                .chat-input {
-                    margin-top: 1rem;
-                }
-            }
-
-            .footer {
-                background-image: url("/icons/preloader-footer.svg");
-                background-position: top;
-            }
-        }
-    }
-
-    .quest-nav-head {
-        width: 100%;
-        max-width: 800px;
-        height: 11vh;
-        display: grid;
-        padding-inline: 1rem;
-        grid-template-columns: 1fr 1fr;
-        align-items: end;
-        justify-content: space-between;
-        margin-top: 6vh;
-        padding-bottom: 1vh;
-        align-self: start;
-
-        @media (max-height: 660px) {
-            margin-top: 9vh;
-        }
-
-        .plans {
-            width: 100%;
-            justify-self: left;
-
-            .MuiButton-root {
-                justify-self: left;
-                white-space: nowrap;
-                scale: 0.9;
-                translate: -10px 0;
-            }
-        }
-
-        .widgets {
-            width: 100%;
-            justify-self: right;
-            display: flex;
-            justify-content: end;
-            gap: 1vw;
-
-            .MuiButton-root {
-                scale: 0.9;
-            }
-        }
     }
 }

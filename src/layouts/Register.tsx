@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
+
 const RegisterLayout = () => {
     return (
         <>
@@ -10,4 +11,4 @@ const RegisterLayout = () => {
     )
 }
 
-export default RegisterLayout
+export default RegisterLayout;
