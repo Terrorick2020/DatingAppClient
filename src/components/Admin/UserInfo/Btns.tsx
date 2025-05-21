@@ -41,7 +41,7 @@ const UserInfoBtns = memo((props: PropsUserInfoComponent): JSX.Element => {
                 id: UserInfoBtnId.DelCompl,
                 label: 'Удалить жалобу',
                 onClick: () => handleClick(EProfileStatus.Noob, UserInfoBtnId.DelCompl),
-                disabled: !isPro,
+                disabled: false,
                 className: 'link__btn take-away-pro',
             },
         ] : [

@@ -4,14 +4,12 @@ import { delay } from '@/funcs/general.funcs';
 import { infoAlert, warningAlert } from '@/funcs/alert.funcs';
 import { validImageTypes, maxImgSize } from '@/constant/ui';
 import type { RootDispatch } from '@/store';
+import type { PropsPhotosAddItem } from '@/types/ui.types';
 
 import PhotosCropperDialog from './CropperDialog';
 import SvgAdd from '@/assets/icon/add.svg';
 
 
-interface PropsPhotosAddItem {
-    handleAdd: (photo: File) => void
-}
 const PhotosAddItem = memo((props: PropsPhotosAddItem): JSX.Element => {
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);

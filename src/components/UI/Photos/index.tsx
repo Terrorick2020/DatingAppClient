@@ -1,6 +1,6 @@
-import { JSX, memo, useState } from 'react';
+import { JSX, memo, useState, useCallback } from 'react';
 import { delay } from '@/funcs/general.funcs';
-import type { PhotoItem } from '@/types/profile.types';
+import type { PropsPhotos, DelDialogState } from '@/types/ui.types';
 
 import PhotosItem from './Item';
 import PhotosAddItem from './AddItem';
@@ -8,15 +8,6 @@ import PhotosLoadItem from './LoadItem';
 import PhotosDelDialog from './DelDialog';
 
 
-interface PropsPhotos {
-  photos: PhotoItem[]
-  handleAdd: (photo: File) => void
-  handleDel: (id: string) => void
-}
-export interface DelDialogState {
-    open: boolean
-    targetId: string
-}
 const Photos = memo((props: PropsPhotos): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
   const [photo, setPhoto] = useState<string>('');
@@ -25,7 +16,7 @@ const Photos = memo((props: PropsPhotos): JSX.Element => {
     targetId: '',
   });
   
-  const handleAdd = async (photo: File): Promise<void> => {
+  const handleAdd = useCallback(async (photo: File): Promise<void> => {
     setPhoto(URL.createObjectURL(photo));
     setLoading(true);
 
@@ -36,14 +27,11 @@ const Photos = memo((props: PropsPhotos): JSX.Element => {
     await delay(100);
 
     setPhoto('');
-  };
+  }, [props.handleAdd]);
 
-  const setOpen = (open: boolean) => {
-    setDelDialogState({
-        ...delDialogState,
-        open,
-    })
-  }
+  const setOpen = useCallback((open: boolean) => {
+    setDelDialogState(prev => ({ ...prev, open }));
+  }, []);
 
   return (
     <>

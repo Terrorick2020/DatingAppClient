@@ -1,14 +1,12 @@
 import { JSX, memo } from 'react';
-import { type PropsTimer } from "@/types/ui.types"
+import type { PropsTimer } from '@/types/ui.types';
 
 
 const Timer = memo((props: PropsTimer): JSX.Element => {
     return (
-        <>
-            <span className={`timer ${props.isCritical && 'critical'}`}>
-                { props.value }
-            </span>
-        </>
+        <span className={`timer ${props.isCritical && 'critical'}`}>
+            { props.value }
+        </span>
     )
 })
 

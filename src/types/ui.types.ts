@@ -1,4 +1,5 @@
-import { ReactNode } from 'react';
+import { ReactNode, MouseEvent } from 'react';
+import { PhotoItem } from './profile.types';
 
 
 export enum PlanLabelSvgType {
@@ -62,4 +63,65 @@ export interface PropsChatPatternDialog {
     img: string
     setOpen: (value: boolean) => void
     children: ReactNode
+}
+
+export interface PropsMenuBtn {
+    anchorEl: null | HTMLElement
+    setAnchorEl: (value: null | HTMLElement) => void
+    handleClose: (e: MouseEvent<HTMLLIElement>) => void
+    btnIcon: string
+    btnAddClass: string
+    menuAddClass: string
+    children: ReactNode
+}
+
+export interface PropsCustomSelIcon {
+    handleClick: () => void
+}
+
+export interface PropsAdmineFotter {
+    handleSearch: () => void
+}
+
+export interface PropsPhotosLoadItem {
+    photo: string
+}
+
+export interface DelDialogState {
+    open: boolean
+    targetId: string
+}
+
+export interface PropsPhotos {
+  photos: PhotoItem[]
+  handleAdd: (photo: File) => void
+  handleDel: (id: string) => void
+}
+
+export interface PropsPhotosItem {
+    item: PhotoItem
+    setDelDialogState: (value: DelDialogState) => void
+}
+
+export interface PropsPhotosDelDialog {
+    id: string
+    open: boolean
+    setOpen: (value: boolean) => void
+    handleDel: (id: string) => void
+}
+
+export interface PropsPhotosCropperDialog {
+    open: boolean
+    setOpen: (value: boolean) => void
+    photo: string
+    handleAdd: (photo: File) => void
+}
+
+export interface CropState {
+    x: number
+    y: number
+}
+
+export interface PropsPhotosAddItem {
+    handleAdd: (photo: File) => void
 }

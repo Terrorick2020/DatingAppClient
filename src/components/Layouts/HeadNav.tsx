@@ -79,7 +79,7 @@ const DesktopHeadNav = (): JSX.Element => {
         <>
             <div className="desc-head-nav">
                 <Button
-                    className="btn text-fon rounded"
+                    className="btn text-fon min rounded"
                     variant="contained"
                     startIcon={ <btnCtx.svg /> }
                     onClick={ btnCtx.func }

@@ -7,6 +7,7 @@ import {
 } from 'react';
 
 import { getCroppedImg } from '@/funcs/img.funcs';
+import type { PropsPhotosCropperDialog, CropState } from '@/types/ui.types';
 
 import Cropper, { Area } from 'react-easy-crop';
 import Dialog from '@mui/material/Dialog';
@@ -16,16 +17,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
 
-interface PropsPhotosCropperDialog {
-    open: boolean
-    setOpen: (value: boolean) => void
-    photo: string
-    handleAdd: (photo: File) => void
-}
-interface CropState {
-    x: number
-    y: number
-}
 const PhotosCropperDialog = memo((props: PropsPhotosCropperDialog): JSX.Element => {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
     const [dLoading, setDLoading] = useState<boolean>(false);
@@ -80,48 +71,46 @@ const PhotosCropperDialog = memo((props: PropsPhotosCropperDialog): JSX.Element 
     }, [props.photo]);
 
     return (
-        <>
-            <Dialog
-                keepMounted
-                className="base-confirm cropper-confirm"
-                aria-describedby="alert-dialog-photos-cropper"
-                open={props.open}
-                onClose={handleClose}
-                slots={{ transition: Slide }}
-                slotProps={{
-                    transition: {
-                    direction: 'up',
-                    },
-                }}
-            >
-                <DialogContent>
-                    <Cropper
-                        image={props.photo}
-                        crop={crop}
-                        zoom={zoom}
-                        aspect={5 / 6}
-                        onCropChange={setCrop}
-                        onCropComplete={onCropComplete}
-                        onZoomChange={setZoom}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        className="exit-btn"
-                        onClick={handleClose}
-                    >Отмена</Button>
-                    <Button
-                        fullWidth
-                        loadingPosition="start"
-                        className="save-btn"
-                        loading={dLoading}
-                        onClick={handleCropPhoto}
-                    >
-                        {dLoading ? 'Сохранение..' : 'Сохранить'}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </>
+        <Dialog
+            keepMounted
+            className="base-confirm cropper-confirm"
+            aria-describedby="alert-dialog-photos-cropper"
+            open={props.open}
+            onClose={handleClose}
+            slots={{ transition: Slide }}
+            slotProps={{
+                transition: {
+                direction: 'up',
+                },
+            }}
+        >
+            <DialogContent>
+                <Cropper
+                    image={props.photo}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={5 / 6}
+                    onCropChange={setCrop}
+                    onCropComplete={onCropComplete}
+                    onZoomChange={setZoom}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button
+                    className="exit-btn"
+                    onClick={handleClose}
+                >Отмена</Button>
+                <Button
+                    fullWidth
+                    loadingPosition="start"
+                    className="save-btn"
+                    loading={dLoading}
+                    onClick={handleCropPhoto}
+                >
+                    {dLoading ? 'Сохранение..' : 'Сохранить'}
+                </Button>
+            </DialogActions>
+        </Dialog>
     )
 })
 

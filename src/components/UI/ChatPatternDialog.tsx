@@ -10,26 +10,24 @@ const ChatPatternDialog = memo((props: PropsChatPatternDialog): JSX.Element => {
     const handleClose = (): void => props.setOpen(false);
 
     return (
-        <>
-            <Dialog
-                keepMounted
-                className="base-confirm chat-confirm"
-                aria-describedby="alert-dialog-slide-description-link-confirm"
-                open={props.open}
-                onClose={handleClose}
-                slots={{ transition: Slide }}
-                slotProps={{
-                    transition: {
-                    direction: 'up',
-                    },
-                }}
-            >
-                <DialogTitle>
-                    <img src={props.img} alt="link-confirm" />
-                </DialogTitle>
-                { props.children }
-            </Dialog>
-        </>
+        <Dialog
+            keepMounted
+            className="base-confirm chat-confirm"
+            aria-describedby="alert-dialog-slide-description-link-confirm"
+            open={props.open}
+            onClose={handleClose}
+            slots={{ transition: Slide }}
+            slotProps={{
+                transition: {
+                direction: 'up',
+                },
+            }}
+        >
+            <DialogTitle>
+                <img src={props.img} alt="link-confirm" />
+            </DialogTitle>
+            { props.children }
+        </Dialog>
     )
 })
 

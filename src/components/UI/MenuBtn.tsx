@@ -1,20 +1,12 @@
-import { ReactNode, MouseEvent, JSX, memo } from 'react';
+import { MouseEvent, JSX, memo } from 'react';
+import type { PropsMenuBtn } from '@/types/ui.types';
 
 import IconButton from '@mui/joy/IconButton';
 import Menu from '@mui/material/Menu';
 
 
-interface PropsMenuBtn {
-    anchorEl: null | HTMLElement
-    setAnchorEl: (value: null | HTMLElement) => void
-    handleClose: (e: MouseEvent<HTMLLIElement>) => void
-    btnIcon: string
-    btnAddClass: string
-    menuAddClass: string
-    children: ReactNode
-}
 const MenuBtn = memo((props: PropsMenuBtn): JSX.Element => {
-    const open = Boolean(props.anchorEl);
+    const open = !!props.anchorEl;
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>): void => {
         event.stopPropagation();

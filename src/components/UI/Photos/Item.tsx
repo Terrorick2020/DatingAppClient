@@ -1,36 +1,29 @@
-import { JSX, memo } from 'react';
-import type { PhotoItem } from '@/types/profile.types';
-import type { DelDialogState } from '.';
+import { JSX, memo, useCallback  } from 'react';
+import type { PropsPhotosItem } from '@/types/ui.types';
 
 import SvgClose from '@/assets/icon/close.svg?react';
 
 
-interface PropsPhotosItem {
-    item: PhotoItem
-    setDelDialogState: (value: DelDialogState) => void
-}
 const PhotosItem = memo((props: PropsPhotosItem): JSX.Element => {
-    const handleClick = (): void => {
+    const handleClick = useCallback((): void => {
         props.setDelDialogState({
             open: true,
             targetId: props.item.id,
         })
-    }
+    }, [props.setDelDialogState, props.item.id]);
 
     return (
-        <>
-            <li
-                className="photos__item custom"
-                style={{ backgroundImage: `url(${props.item.photo})` }}
+        <li
+            className="photos__item custom"
+            style={{ backgroundImage: `url(${props.item.photo})` }}
+        >
+            <span
+                className="delete"
+                onClick={handleClick}
             >
-                <span
-                    className="delete"
-                    onClick={handleClick}
-                >
-                <SvgClose />
-                </span>
-            </li>
-        </>
+            <SvgClose />
+            </span>
+        </li>
     )
 })
 

@@ -1,11 +1,9 @@
 import { useState, memo, useEffect, JSX } from 'react';
+import type { PropsPhotosLoadItem } from '@/types/ui.types';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
 
-interface PropsPhotosLoadItem {
-    photo: string
-}
 const PhotosLoadItem = memo((props: PropsPhotosLoadItem): JSX.Element => {
     const [progress, setProgress] = useState(0);
 
@@ -21,15 +19,13 @@ const PhotosLoadItem = memo((props: PropsPhotosLoadItem): JSX.Element => {
     );
 
     return (
-        <>
-            <li
-                className="photos__item load"
-                key={`photos__load-item-${props.photo}`}
-                style={{ backgroundImage: `url(${props.photo})` }}
-            >
-                <CircularProgress variant="determinate" value={progress} />
-            </li>
-        </>
+        <li
+            className="photos__item load"
+            key={`photos__load-item-${props.photo}`}
+            style={{ backgroundImage: `url(${props.photo})` }}
+        >
+            <CircularProgress variant="determinate" value={progress} />
+        </li>
     )
 })
 

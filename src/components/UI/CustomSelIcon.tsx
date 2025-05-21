@@ -1,11 +1,9 @@
 import { JSX, memo } from 'react';
+import type { PropsCustomSelIcon } from '@/types/ui.types';
 
 import SvgMapPin from '@/assets/icon/map-pin.svg?react';
 
 
-interface PropsCustomSelIcon {
-    handleClick: () => void
-}
 const CustomSelIcon = memo((props: PropsCustomSelIcon): JSX.Element => {
     return (
         <>
