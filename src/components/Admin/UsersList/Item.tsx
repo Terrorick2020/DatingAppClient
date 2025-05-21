@@ -1,4 +1,12 @@
-import { JSX, useState, MouseEvent, useMemo, memo } from 'react';
+import {
+    JSX, 
+    memo,
+    useMemo,
+    useState,
+    MouseEvent,
+    useCallback,
+} from 'react';
+
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { serchProfileStatusAsync, setTargetProfileId } from '@/store/slices/adminSlice';
@@ -31,7 +39,7 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
         setAnchorEl(null);
     };
 
-    const sendBlockReq = async (): Promise<void> => {
+    const sendBlockReq = useCallback(async (): Promise<void> => {
         setLoading(true);
 
         try {
@@ -43,24 +51,24 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
         } finally {
             setLoading(false);
         }
-    }
+    }, [dispatch, props.item.id, activeCtx.targetStat]);
 
-    const hadleBlock = (event: MouseEvent<HTMLLIElement>): void => {
+    const hadleBlock = useCallback((event: MouseEvent<HTMLLIElement>): void => {
         sendBlockReq();
         handleClose(event);
-    };
+    }, [sendBlockReq, handleClose]);
 
-    const handleEdit = (event: MouseEvent<HTMLLIElement>): void => {
+    const handleEdit = useCallback((event: MouseEvent<HTMLLIElement>): void => {
         navigate(props.toUserInfo);
         dispatch(addRoute(location.pathname));
         handleClose(event);
-    };
+    }, [navigate, props.toUserInfo, location.pathname, dispatch, handleClose]);
 
-    const handleOpenDeletePanel = (event: MouseEvent<HTMLLIElement>): void => {
+    const handleOpenDeletePanel = useCallback((event: MouseEvent<HTMLLIElement>): void => {
         dispatch(setTargetProfileId(props.item.id));
         props.setOpenDel(true);
         handleClose(event);
-    };
+    }, [dispatch, props.item.id, props.setOpenDel, handleClose]);
 
     return (
         <div className="users-list__item">
