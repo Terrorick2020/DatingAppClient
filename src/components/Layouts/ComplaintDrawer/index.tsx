@@ -8,8 +8,9 @@ import {
 import { JSX, memo, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { EComplaintType, EComplaintStep } from '@/types/settings.type';
-import { type RootDispatch } from '@/store';
-import { type IState } from '@/types/store.types';
+import type { PropsComplaintDrawer } from '@/types/ui.types';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import ComplaintDrawerList from './List';
 import ComplaintDrawerTxtArea from './TextArea';
@@ -43,9 +44,6 @@ const CtxVars: ComplaintDrawerCtxVars = {
     },
 }
 
-interface PropsComplaintDrawer {
-    id: string
-}
 const ComplaintDrawer = memo((props: PropsComplaintDrawer): JSX.Element => {
     const complaint = useSelector((state: IState) => state.settings.complaint);
 
@@ -79,21 +77,19 @@ const ComplaintDrawer = memo((props: PropsComplaintDrawer): JSX.Element => {
     );
 
     return (
-        <>
-            <SwipeableDrawer
-                className="complaint-drawer"
-                anchor="bottom"
-                open={complaint.open}
-                onOpen={() => dispatch(setComplOpen(true))}
-                onClose={() => dispatch(setComplOpen(false))}
-            >
-                <header className="header">
-                    <h4 className="headline">Пожаловаться</h4>
-                    <p className="text">Это останется между нами</p>
-                </header>
-                <CurrentComponent />
-            </SwipeableDrawer>
-        </>
+        <SwipeableDrawer
+            className="complaint-drawer"
+            anchor="bottom"
+            open={complaint.open}
+            onOpen={() => dispatch(setComplOpen(true))}
+            onClose={() => dispatch(setComplOpen(false))}
+        >
+            <header className="header">
+                <h4 className="headline">Пожаловаться</h4>
+                <p className="text">Это останется между нами</p>
+            </header>
+            <CurrentComponent />
+        </SwipeableDrawer>
     )
 })
 

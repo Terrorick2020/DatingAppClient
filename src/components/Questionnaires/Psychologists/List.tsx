@@ -3,14 +3,12 @@ import { appRoutes } from '@/config/routes.config';
 import { useSelector } from 'react-redux';
 import { ageToStr } from '@/funcs/general.funcs';
 import { lineStatusAttr } from '@/constant/settings';
+import type { PropsPsychList } from '@/types/quest.types';
 import type { IState } from '@/types/store.types';
 
 import ListBlock from '@/components/UI/ListBlock';
 
 
-interface PropsPsychList {
-    preText: string
-}
 const PsychList = memo((props: PropsPsychList): JSX.Element => {
     const psychList = useSelector((state: IState) => state.psych.psychList);
 
@@ -22,7 +20,7 @@ const PsychList = memo((props: PropsPsychList): JSX.Element => {
                 { props.preText }
             </h6>
             {
-                psychList.length
+                !!psychList.length
                     ?
                     <div className="list">
                         {psychList.map(item =>(

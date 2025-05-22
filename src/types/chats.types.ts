@@ -86,3 +86,12 @@ export interface PropsChatMsg {
     time: string
     isChecked: boolean
 }
+
+export interface PropsChatsListItem {
+    item: ChatsListItem
+}
+
+export interface PropsChatsHeaderItem {
+    item: ChatsFavListItem
+    toChat: (id: string) => void
+}

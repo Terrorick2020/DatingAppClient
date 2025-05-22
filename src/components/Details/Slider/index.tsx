@@ -1,13 +1,21 @@
 import { JSX, useCallback, useState } from 'react'
 import { useSwipeable } from 'react-swipeable'
 import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import type { IState } from '@/types/store.types';
 
 import DetailsSlide from './Slide'
 
 
+const selectQuest = (state: IState) => state.questionnaires;
+
+const selectPhotos = createSelector(
+    [selectQuest],
+    (questionnaires) => questionnaires.targetUser?.photos ?? []
+);
+
 const DetailsSlider = (): JSX.Element => {
-    const photos = useSelector((state: IState) => state.questionnaires.targetUser?.photos ?? []);
+    const photos = useSelector(selectPhotos);
 
     const [index, setIndex] = useState<number>(0);
     const [fade, setFade] = useState<boolean>(true);
@@ -33,6 +41,8 @@ const DetailsSlider = (): JSX.Element => {
     const toRightScroll = useCallback((): void => {
         changeSlide((index + 1) % photos.length);
     }, [index, photos.length, changeSlide]);
+
+    if(!photos.length) return (<></>)
 
     return (
         <div {...handlers} className="container">

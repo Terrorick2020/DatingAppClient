@@ -113,3 +113,11 @@ export interface SettingsState {
     districtsVars: BaseVarsItem[]
     badge: BadgeBlock
 }
+
+export interface PropsLocationDistrict {
+  districtsVars: BaseVarsItem[]
+}
+
+export interface PropsPlansVars {
+    plansVars: BaseVarsItem[]
+}

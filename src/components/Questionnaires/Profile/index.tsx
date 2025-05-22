@@ -51,25 +51,21 @@ const ProfileContent = (): JSX.Element => {
         dispatch(addRoute(location.pathname));
     }
 
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
+
     return (
-        <>
-            {
-                isLoad
-                    ?
-                    <div className="loader">
-                        <MyLoader />
-                    </div>
-                    :
-                    <div className="profile__ctx">
-                        <h4 className="headline">Мой профиль</h4>
-                        <div className="content">
-                            <ProfileInfo handleRoute={handleInfoRoute} />
-                            <ProfilePlans handleRoute={handlePlansRoute} />
-                            <ProfileLink />
-                        </div>
-                    </div>
-            }
-        </>
+        <div className="profile__ctx">
+            <h4 className="headline">Мой профиль</h4>
+            <div className="content">
+                <ProfileInfo handleRoute={handleInfoRoute} />
+                <ProfilePlans handleRoute={handlePlansRoute} />
+                <ProfileLink />
+            </div>
+        </div>
     )
 }
 

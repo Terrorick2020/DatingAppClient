@@ -34,28 +34,26 @@ const LocationDetails = (): JSX.Element => {
     };
 
     return (
-        <>
-            <TextField
-                className="details-input"
-                id="location-textarea"
-                multiline
-                fullWidth
-                minRows={4}
-                maxRows={6}
-                placeholder="Подробнее о месте встречи"
-                slotProps={{
-                    input: {
-                        inputProps: {
-                            maxLength: 200,
-                        },
+        <TextField
+            className="details-input"
+            id="location-textarea"
+            multiline
+            fullWidth
+            minRows={4}
+            maxRows={6}
+            placeholder="Подробнее о месте встречи"
+            slotProps={{
+                input: {
+                    inputProps: {
+                        maxLength: 200,
                     },
-                }}
-                value={location.description}
-                onChange={handleChangeDesc}
-                error={fEPErrors.descDistErr.value}
-                helperText={fEPErrors.descDistErr.msg}
-            />
-        </>
+                },
+            }}
+            value={location.description}
+            onChange={handleChangeDesc}
+            error={fEPErrors.descDistErr.value}
+            helperText={fEPErrors.descDistErr.msg}
+        />
     )
 }
 

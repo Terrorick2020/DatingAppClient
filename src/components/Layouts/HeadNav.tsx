@@ -76,22 +76,20 @@ const DesktopHeadNav = (): JSX.Element => {
     if(isTgMobile) return (<></>);
 
     return (
-        <>
-            <div className="desc-head-nav">
-                <Button
-                    className="btn text-fon min rounded"
-                    variant="contained"
-                    startIcon={ <btnCtx.svg /> }
-                    onClick={ btnCtx.func }
-                >{btnCtx.text}</Button>
-                <Button 
-                    className="btn text-fon rounded"
-                    variant="contained"
-                    startIcon={<SvgArrowDown />}
-                    endIcon={<SvgOther />}
-                />
-            </div>
-        </>
+        <div className="desc-head-nav">
+            <Button
+                className="btn text-fon min rounded"
+                variant="contained"
+                startIcon={ <btnCtx.svg /> }
+                onClick={ btnCtx.func }
+            >{btnCtx.text}</Button>
+            <Button 
+                className="btn text-fon rounded"
+                variant="contained"
+                startIcon={<SvgArrowDown />}
+                endIcon={<SvgOther />}
+            />
+        </div>
     )
 }
 

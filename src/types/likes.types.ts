@@ -30,3 +30,12 @@ export interface LikesState {
     likesList: LikesItem[]
     match: LikesMatch
 }
+
+
+export interface PropsLikesCard {
+    likesItem: LikesItem
+}
+export interface LikesCardIsLoading {
+    reject: boolean
+    accept: boolean
+}

@@ -15,11 +15,11 @@ import SvgBlock from '@/assets/icon/block.svg?react';
 const DetailsSlide = memo((props: PropsDetailsSlide): JSX.Element => {
     const targetUser = useSelector((state: IState) => state.questionnaires.targetUser);
 
-    if(!targetUser) return (<></>);
-
     const dispatch = useDispatch<RootDispatch>();
 
     const handleComplaint = () => dispatch(setComplOpen(true));
+
+    if(!targetUser) return (<></>);
 
     return (
         <div className="slide__ctx">

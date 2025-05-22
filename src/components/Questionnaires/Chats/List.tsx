@@ -11,19 +11,17 @@ const ChatsList = (): JSX.Element => {
     const chatsList = useSelector((state: IState) => state.chats.chatsList);
 
     return (
-        <>
-            <div className="list">
-                {chatsList.map(item =>(
-                    <ListBlock
-                        img={item.avatar}
-                        route={appRoutes.targetChat.replace(':id', `${item.id}`)}
-                        key={`chats-list-item-${item.id}`}
-                    >
-                        <ChatsListItem item={item}/>
-                    </ListBlock>
-                ))}
-            </div>
-        </>
+        <div className="list">
+            {chatsList.map(item =>(
+                <ListBlock
+                    img={item.avatar}
+                    route={appRoutes.targetChat.replace(':id', `${item.id}`)}
+                    key={`chats-list-item-${item.id}`}
+                >
+                    <ChatsListItem item={item}/>
+                </ListBlock>
+            ))}
+        </div>
     )
 }
 

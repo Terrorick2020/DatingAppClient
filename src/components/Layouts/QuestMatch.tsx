@@ -51,45 +51,43 @@ const QuestMatch = (): JSX.Element => {
     }
 
     return (
-        <>
-            <SwipeableDrawer
-                className="match-drawer"
-                anchor="top"
-                open={match.value}
-                onOpen={handleOpen}
-                onClose={handleClose}
-            >
-                <div className="match">
-                    <header className="header">
-                        <h2 className="headline">Это мэтч!</h2>
-                    </header>
-                    <main className="main">
-                        <div className="cards">
-                            <div className="item female"
-                                style={{
-                                    backgroundImage: `url(${profileInfo.photos[0].photo})`
-                                }}
-                            />
-                            <div className="item male"
-                                style={{
-                                    backgroundImage: `url(${match.from.avatar})`
-                                }}
-                            />
-                        </div>
-                        <h6 className="text">
-                            <span className="caps">Вы</span> и <span className="caps">Виктория</span> 
-                            <span className="no-wrap">понравились друг другу</span>
-                        </h6>
-                        <ChatInput
-                            message={message}
-                            handleChange={handleChange}
-                            handleClick={handleAcceptMatch}
+        <SwipeableDrawer
+            className="match-drawer"
+            anchor="top"
+            open={match.value}
+            onOpen={handleOpen}
+            onClose={handleClose}
+        >
+            <div className="match">
+                <header className="header">
+                    <h2 className="headline">Это мэтч!</h2>
+                </header>
+                <main className="main">
+                    <div className="cards">
+                        <div className="item female"
+                            style={{
+                                backgroundImage: `url(${profileInfo.photos[0].photo})`
+                            }}
                         />
-                    </main>
-                    <footer className="footer"></footer>
-                </div>
-            </SwipeableDrawer>
-        </>
+                        <div className="item male"
+                            style={{
+                                backgroundImage: `url(${match.from.avatar})`
+                            }}
+                        />
+                    </div>
+                    <h6 className="text">
+                        <span className="caps">Вы</span> и <span className="caps">Виктория</span> 
+                        <span className="no-wrap">понравились друг другу</span>
+                    </h6>
+                    <ChatInput
+                        message={message}
+                        handleChange={handleChange}
+                        handleClick={handleAcceptMatch}
+                    />
+                </main>
+                <footer className="footer"></footer>
+            </div>
+        </SwipeableDrawer>
     )
 }
 

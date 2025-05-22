@@ -9,7 +9,6 @@ import ChatsList from './List';
 import MyLoader from '@/components/UI/MyLoader';
 
 
-
 const ChatsContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
 
@@ -28,24 +27,20 @@ const ChatsContent = (): JSX.Element => {
         []
     )
 
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
+
     return (
         <>
-            {
-                isLoad
-                    ?
-                    <div className="loader">
-                        <MyLoader />
-                    </div>
-                    :
-                    <>
-                        <div className="chats__head">
-                            <ChatsHeader />
-                        </div>
-                        <div className="chats__ctx">
-                            <ChatsList />
-                        </div>
-                   </>
-            }
+            <div className="chats__head">
+                <ChatsHeader />
+            </div>
+            <div className="chats__ctx">
+                <ChatsList />
+            </div>
         </>
     )
 }

@@ -33,28 +33,26 @@ const PlansDetails = (): JSX.Element => {
     };
 
     return (
-        <>
-            <TextField
-                className="details-input"
-                id="plans-textarea"
-                multiline
-                fullWidth
-                minRows={4}
-                maxRows={6}
-                placeholder="Напишите подробнее о планах"
-                slotProps={{
-                    input: {
-                        inputProps: {
-                            maxLength: 200,
-                        },
+        <TextField
+            className="details-input"
+            id="plans-textarea"
+            multiline
+            fullWidth
+            minRows={4}
+            maxRows={6}
+            placeholder="Напишите подробнее о планах"
+            slotProps={{
+                input: {
+                    inputProps: {
+                        maxLength: 200,
                     },
-                }}
-                value={plan.description}
-                onChange={handleChangeDesc}
-                error={fEPErrors.descPlanErr.value}
-                helperText={fEPErrors.descPlanErr.msg}
-            />
-        </>
+                },
+            }}
+            value={plan.description}
+            onChange={handleChangeDesc}
+            error={fEPErrors.descPlanErr.value}
+            helperText={fEPErrors.descPlanErr.msg}
+        />
     )
 }
 
