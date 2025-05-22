@@ -9,15 +9,15 @@ import MyLoader from '@/components/UI/MyLoader';
 import UserListItem from './Item';
 
 
+const adminGlobRoute      = appRoutes.admin.global;
+const adminUserInfoRoute  = appRoutes.admin.inner.userInfo;
+const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`;
+
 const UsersListMain = (): JSX.Element => {
     const adminState = useSelector((state: IState) => state.admin);
     const isLoad = useSelector((state: IState) => state.settings.load);
 
     const [openDel, setOpenDel] = useState<boolean>(false);
-
-    const adminGlobRoute      = appRoutes.admin.global;
-    const adminUserInfoRoute  = appRoutes.admin.inner.userInfo;
-    const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`;
 
     if(isLoad) return (
         <div className="loader">

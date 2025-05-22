@@ -38,3 +38,10 @@ export interface QuestState {
 export interface PropsProfileInfo {
     handleRoute: () => void
 }
+
+export interface PropsDetailsSlide {
+    toLeftScroll: () => void
+    toRightScroll: () => void
+    len:     number
+    index:   number
+}
