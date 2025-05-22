@@ -54,7 +54,7 @@ export const getChatByIdAsync = createAsyncThunk(
     }
 )
 
-export const delteChatByIDAsync = createAsyncThunk(
+export const deleteChatByIDAsync = createAsyncThunk(
     'chats/delete-chat-by-id',
     async (id: string): Promise<boolean> => {
         await delay(2000);
@@ -94,13 +94,13 @@ const chatsSlice = createSlice({
         })
 
         // Удаление чата по id
-        builder.addCase(delteChatByIDAsync.pending, _ => {
+        builder.addCase(deleteChatByIDAsync.pending, _ => {
             console.log("Удаление чата по id");
         })
-        builder.addCase(delteChatByIDAsync.fulfilled, _ => {
+        builder.addCase(deleteChatByIDAsync.fulfilled, _ => {
             console.log("Успешное удаление чата по id");
         })
-        builder.addCase(delteChatByIDAsync.rejected, _ => {
+        builder.addCase(deleteChatByIDAsync.rejected, _ => {
             console.log("Ошибка удаления чата по id");
         })
 }

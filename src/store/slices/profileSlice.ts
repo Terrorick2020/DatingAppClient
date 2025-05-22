@@ -5,7 +5,7 @@ import type {
     EveningPlans,
     PhotoItem,
     EveningPlansItem,
-    WebAppUser
+    // WebAppUser
 } from '@/types/profile.types';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -56,7 +56,8 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( data: string ): Promise<null | undefined> => {
         const url = new URL(data);
-        const params = new URLSearchParams(url.hash.substring(1));
+        new URLSearchParams(url.hash.substring(1));
+        // const _params = new URLSearchParams(url.hash.substring(1));
 
         try {
             // const tgData = params.get('tgWebAppData');

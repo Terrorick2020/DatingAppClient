@@ -34,7 +34,7 @@ const DesktopHeadNav = (): JSX.Element => {
     const goBack = () => {
         const backRoute = setRoutes.at(-1);
 
-        if(!backRoute) return;
+        if(backRoute === undefined || !backRoute) return;
 
         navigate(backRoute);
         dispatch(dellRoute());

@@ -18,6 +18,7 @@ const ChatContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
 
     const [message, setMessage] = useState<string>('');
+    const [end, _setEnd] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -65,7 +66,7 @@ const ChatContent = (): JSX.Element => {
                     handleClick={handleSendMsg}
                 />
             </footer>
-            <ChatDialogSessionEnd open={false} setOpen={(_: boolean) => {}} />
+            <ChatDialogSessionEnd open={end} setOpen={(_: boolean) => {}} />
         </>
     )
 }

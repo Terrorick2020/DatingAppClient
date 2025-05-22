@@ -5,8 +5,9 @@ import { appRoutes } from '@/config/routes.config';
 import { lineStatusAttr } from '@/constant/settings';
 import { setComplOpen, addRoute } from '@/store/slices/settingsSlice';
 import { ageToStr } from '@/funcs/general.funcs';
-import { type RootDispatch } from '@/store';
-import { type IState } from '@/types/store.types';
+import type { PropsChatHeader } from '@/types/chats.types';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import MenuBtn from '@/components/UI/MenuBtn';
 import ComplaintDrawer from '@/components/Layouts/ComplaintDrawer';
@@ -18,9 +19,6 @@ import SvgChatWarn from '@/assets/icon/chat-warn.svg?react';
 import SvgChatTrash from '@/assets/icon/chat-trash.svg?react';
 
 
-interface PropsChatHeader {
-    id: string
-}
 const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
     const chatInterlocutor = useSelector((state: IState) => state.chats.targetChat.interlocutor);
 
@@ -91,7 +89,7 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
                     <span className="text">Удалить чат</span>
                 </MenuItem>
             </MenuBtn>
-            <ChatDialogDelete open={openDel} id={props.id} hadleClose={() => setOpenDel(false)} />
+            <ChatDialogDelete open={openDel} id={props.id} handleClose={() => setOpenDel(false)} />
             <ComplaintDrawer id={props.id} />
         </>
     )
