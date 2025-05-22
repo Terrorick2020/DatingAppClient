@@ -30,36 +30,34 @@ const ComplaintDrawerTxtArea = (): JSX.Element => {
     };
 
     return (
-        <>
-            <div className="compl-txt-area">
-                <TextField
-                    id="compl-input"
-                    multiline
-                    fullWidth
-                    minRows={5}
-                    maxRows={10}
-                    placeholder="Напишите Вашу жалобу"
-                    slotProps={{
-                        input: {
-                            inputProps: {
-                                maxLength: 200,
-                            },
+        <div className="compl-txt-area">
+            <TextField
+                id="compl-input"
+                multiline
+                fullWidth
+                minRows={5}
+                maxRows={10}
+                placeholder="Напишите Вашу жалобу"
+                slotProps={{
+                    input: {
+                        inputProps: {
+                            maxLength: 200,
                         },
-                    }}
-                    value={complaint.query}
-                    onChange={handleChange}
-                />
-                <Button
-                    fullWidth
-                    variant="contained"
-                    loadingPosition="start"
-                    loading={isLoad}
-                    onClick={handleSend}
-                >
-                    {isLoad ? 'Отправление...' : 'Отправить'}
-                </Button>
-            </div>
-        </>
+                    },
+                }}
+                value={complaint.query}
+                onChange={handleChange}
+            />
+            <Button
+                fullWidth
+                variant="contained"
+                loadingPosition="start"
+                loading={isLoad}
+                onClick={handleSend}
+            >
+                {isLoad ? 'Отправление...' : 'Отправить'}
+            </Button>
+        </div>
     )
 }
 

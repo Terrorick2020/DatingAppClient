@@ -56,3 +56,42 @@ export interface ChatsState {
     chatsList: ChatsListItem[]
     targetChat: TargetChat
 }
+
+export interface PropsChatDay {
+    id: number
+    selfId: string
+    day: string
+    dayListMsg: TargetChatDayMsg[]
+}
+
+export interface PropsChatDialogDelete {
+    open: boolean
+    id: string
+    handleClose: () => void
+}
+
+export interface PropsChatDialogSessionEnd {
+    open: boolean
+    setOpen: (value: boolean) => void
+}
+
+export interface PropsChatHeader {
+    id: string
+}
+
+export interface PropsChatMsg {
+    id: number
+    isSelf: boolean
+    msg: string
+    time: string
+    isChecked: boolean
+}
+
+export interface PropsChatsListItem {
+    item: ChatsListItem
+}
+
+export interface PropsChatsHeaderItem {
+    item: ChatsFavListItem
+    toChat: (id: string) => void
+}

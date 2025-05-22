@@ -13,7 +13,7 @@ import { appRoutes } from '@/config/routes.config';
 import { ageToStr, formatTimeLeftOther } from '@/funcs/general.funcs';
 import { useDispatch } from 'react-redux';
 import { acceptLikingAsync, rejectLikingAsync } from '@/store/slices/likesSlice';
-import type { LikesItem } from '@/types/likes.types';
+import type { PropsLikesCard, LikesCardIsLoading } from '@/types/likes.types';
 import type { RootDispatch } from '@/store';
 
 import Timer from '@/components/UI/Timer';
@@ -25,13 +25,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const initialTimeInSeconds = 24 * 60 * 60;
 
-interface PropsLikesCard {
-    likesItem: LikesItem
-}
-interface LikesCardIsLoading {
-    reject: boolean
-    accept: boolean
-}
 const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
     const [timeLeft, setTimeLeft] = useState<number>(initialTimeInSeconds);
     const [isLoadind, setIsLoading] = useState<LikesCardIsLoading>({
@@ -89,58 +82,56 @@ const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
     }
 
     return (
-        <>
-            <div className="card" onClick={handleNavToDetails}>
-                <div className="card__content">
-                    <div
-                        className="substance"
-                        style={{
-                            backgroundImage: `url(${ props.likesItem.avatar })`,
-                        }}
-                    >
-                        <div className="time-panel">
-                            <Timer
-                                value={formatTimeLeftOther(timeLeft)}
-                                isCritical={timeLeft < 60 * 60 * 5}
-                            />
-                        </div>
-                        <div className="btns-panel">
-                            <Button
-                                size="small"
-                                className="card-btn indigo"
-                                disabled={isDisabled}
-                                onClick={rejectLiking}
-                            >
-                                {
-                                    isLoadind.reject
-                                        ?
-                                        <CircularProgress />
-                                        :
-                                        <SvgClose />
-                                }
-                            </Button>
-                            <Button
-                                size="small"
-                                className="card-btn crimson"
-                                disabled={isDisabled}
-                                onClick={acceptLiking}
-                            >
-                                {
-                                    isLoadind.accept
-                                        ?
-                                        <CircularProgress />
-                                        :
-                                        <SvgHeart />
-                                }
-                            </Button>
-                        </div>
+        <div className="card" onClick={handleNavToDetails}>
+            <div className="card__content">
+                <div
+                    className="substance"
+                    style={{
+                        backgroundImage: `url(${ props.likesItem.avatar })`,
+                    }}
+                >
+                    <div className="time-panel">
+                        <Timer
+                            value={formatTimeLeftOther(timeLeft)}
+                            isCritical={timeLeft < 60 * 60 * 5}
+                        />
                     </div>
-                    <h5 className="name">
-                        {`${props.likesItem.name}, ${ageToStr(props.likesItem.age)}`}
-                    </h5>
+                    <div className="btns-panel">
+                        <Button
+                            size="small"
+                            className="card-btn indigo"
+                            disabled={isDisabled}
+                            onClick={rejectLiking}
+                        >
+                            {
+                                isLoadind.reject
+                                    ?
+                                    <CircularProgress />
+                                    :
+                                    <SvgClose />
+                            }
+                        </Button>
+                        <Button
+                            size="small"
+                            className="card-btn crimson"
+                            disabled={isDisabled}
+                            onClick={acceptLiking}
+                        >
+                            {
+                                isLoadind.accept
+                                    ?
+                                    <CircularProgress />
+                                    :
+                                    <SvgHeart />
+                            }
+                        </Button>
+                    </div>
                 </div>
+                <h5 className="name">
+                    {`${props.likesItem.name}, ${ageToStr(props.likesItem.age)}`}
+                </h5>
             </div>
-        </>
+        </div>
     )
 })
 

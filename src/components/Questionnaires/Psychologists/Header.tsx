@@ -3,15 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { delay } from '@/funcs/general.funcs';
 import { setSerchPsychQuery } from '@/store/slices/psychSlice';
 import { initPsychList } from '@/store/slices/psychSlice';
-import { type RootDispatch } from '@/store';
-import { type IState } from '@/types/store.types';
+import type { PropsPsychHeader } from '@/types/quest.types';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import SearchInput from '@/components/UI/SearchInput';
 
 
-interface PropsPsychHeader {
-    setPreText: (value: string) => void
-}
 const PsychHeader = memo((props: PropsPsychHeader): JSX.Element => {
     const serchPsychQuery = useSelector((state: IState) => state.psych.serchPsychQuery);
 

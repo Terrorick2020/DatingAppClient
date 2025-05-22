@@ -7,6 +7,7 @@ import { dellRoute } from '@/store/slices/settingsSlice';
 import LikeBtn from '@/components/UI/LikeBtn';
 import Button from '@mui/material/Button';
 
+
 const ID = 1;
 
 const DetailsFixed = (): JSX.Element => {

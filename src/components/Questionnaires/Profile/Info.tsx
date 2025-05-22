@@ -13,29 +13,27 @@ const ProfileInfo = memo((props: PropsProfileInfo): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     
     return (
-        <>
-            <div className="profile-box">
-                <div className="info">
-                    <Avatar
-                        alt="profile-avatar"
-                        src={profileInfo.photos[0]?.photo}
-                    />
-                    <div className="text">
-                        <h4 className="headline">
-                            {`${profileInfo.name}, ${ageToStr(profileInfo.age)}`}
-                        </h4>
-                        <p className="description opacity">{profileInfo.city}</p>
-                    </div>
+        <div className="profile-box">
+            <div className="info">
+                <Avatar
+                    alt="profile-avatar"
+                    src={profileInfo.photos[0]?.photo}
+                />
+                <div className="text">
+                    <h4 className="headline">
+                        {`${profileInfo.name}, ${ageToStr(profileInfo.age)}`}
+                    </h4>
+                    <p className="description opacity">{profileInfo.city}</p>
                 </div>
-                <Button
-                    fullWidth
-                    className="lemon base-height edit"
-                    variant="contained"
-                    startIcon={<img src={SvgEdit} alt="edit" />}
-                    onClick={props.handleRoute}
-                >Редактировать профиль</Button>
             </div>
-        </>
+            <Button
+                fullWidth
+                className="lemon base-height edit"
+                variant="contained"
+                startIcon={<img src={SvgEdit} alt="edit" />}
+                onClick={props.handleRoute}
+            >Редактировать профиль</Button>
+        </div>
     )
 })
 

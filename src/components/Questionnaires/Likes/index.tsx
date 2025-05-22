@@ -27,27 +27,21 @@ const LikesContent = (): JSX.Element => {
         []
     )
 
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
+
     return (
-        <>
-            <div className="likes__ctx">
-                {
-                    isLoad
-                        ?
-                        <div className="loader">
-                            <MyLoader />
-                        </div>
-                        :
-                        <>
-                            <h4 className="headline">Симпатии</h4>
-                            <div className="cards">
-                                {likesList.map(item => (
-                                    <LikesCard likesItem={item} />
-                                ))}
-                            </div>
-                        </>
-                }
+        <div className="likes__ctx">
+            <h4 className="headline">Симпатии</h4>
+            <div className="cards">
+                {likesList.map(item => (
+                    <LikesCard likesItem={item} />
+                ))}
             </div>
-        </>
+        </div>
     )
 }
 

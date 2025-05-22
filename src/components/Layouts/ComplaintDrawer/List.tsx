@@ -33,29 +33,27 @@ const ComplaintDrawerList = (): JSX.Element => {
     }
 
     return (
-        <>
-            <Collapse
-                in={open}
-                orientation="horizontal"
-            >
-                <List>
-                    {complaint.complaintsVars.map(item => (
-                        <ListItem
-                            key={`complaint-item-${item.id}`}
-                            disablePadding
-                            onClick={() => handleSelect(item.value)}
-                        >
-                            <ListItemButton>
-                                <ListItemText primary={item.label} />
-                                <ListItemIcon>
-                                    <SvgArrowRight />
-                                </ListItemIcon>
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-            </Collapse>
-        </>
+        <Collapse
+            in={open}
+            orientation="horizontal"
+        >
+            <List>
+                {complaint.complaintsVars.map(item => (
+                    <ListItem
+                        key={`complaint-item-${item.id}`}
+                        disablePadding
+                        onClick={() => handleSelect(item.value)}
+                    >
+                        <ListItemButton>
+                            <ListItemText primary={item.label} />
+                            <ListItemIcon>
+                                <SvgArrowRight />
+                            </ListItemIcon>
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </Collapse>
     )
 }
 

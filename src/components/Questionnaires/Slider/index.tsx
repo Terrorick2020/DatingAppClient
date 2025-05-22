@@ -26,20 +26,16 @@ const SliderContent = (): JSX.Element => {
         []
     )
 
+    if(isLoad) return (
+        <div className="loader">
+            <MyLoader />
+        </div>
+    )
+
     return (
-        <>
-            <div className="slider__poster">
-                {
-                    isLoad
-                        ?
-                        <div className="loader">
-                            <MyLoader />
-                        </div>
-                        :
-                        <SliderPoster />
-                }
-            </div>
-        </>
+        <div className="slider__poster">
+            <SliderPoster />
+        </div>
     )
 }
 

@@ -125,3 +125,7 @@ export interface CropState {
 export interface PropsPhotosAddItem {
     handleAdd: (photo: File) => void
 }
+
+export interface PropsComplaintDrawer {
+    id: string
+}

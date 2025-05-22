@@ -31,28 +31,26 @@ const ProfilePlans = memo((props: PropsProfileInfo): JSX.Element => {
     }, []);
 
     return (
-        <>
-            <div className="plans-box">
-                <div className="title">
-                    <h4 className="headline">Планы на сегодня</h4>
-                    <Chip className={ !timeLeft ? 'black' : 'purple'} label={formatTimeLeft(timeLeft)}/>
-                </div>
-                <div className="plans">
-                    <div className="chips">
-                        <Chip className="blure" label={eveningPlans.plan.value || 'Не определено'} />
-                        <Chip className="blure" label={eveningPlans.location.value || 'Не определено'}/>
-                    </div>
-                    <p className="description">{eveningPlans.plan.description || 'Не определено'}</p>
-                </div>
-                <Button
-                    fullWidth
-                    className="lemon base-height edit"
-                    variant="contained"
-                    startIcon={<img src={SvgCalendar} alt="edit" />}
-                    onClick={props.handleRoute}
-                >Обновить планы</Button>
+        <div className="plans-box">
+            <div className="title">
+                <h4 className="headline">Планы на сегодня</h4>
+                <Chip className={ !timeLeft ? 'black' : 'purple'} label={formatTimeLeft(timeLeft)}/>
             </div>
-        </>
+            <div className="plans">
+                <div className="chips">
+                    <Chip className="blure" label={eveningPlans.plan.value || 'Не определено'} />
+                    <Chip className="blure" label={eveningPlans.location.value || 'Не определено'}/>
+                </div>
+                <p className="description">{eveningPlans.plan.description || 'Не определено'}</p>
+            </div>
+            <Button
+                fullWidth
+                className="lemon base-height edit"
+                variant="contained"
+                startIcon={<img src={SvgCalendar} alt="edit" />}
+                onClick={props.handleRoute}
+            >Обновить планы</Button>
+        </div>
     )
 })
 

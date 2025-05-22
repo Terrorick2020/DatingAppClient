@@ -7,16 +7,14 @@ import SvgHourglass from '@/assets/img/hourglass.png';
 
 const SAPlansTimeout = forwardRef<HTMLDivElement, SnackbarProviderProps>((_, ref) => {
     return (
-        <>
-            <Chip
-                ref={ref}
-                className="plans-timeout"
-                label="Обновите свои планы"
-                icon={
-                    <img src={SvgHourglass} alt="hourglass" />
-                }
-            />
-        </>
+        <Chip
+            ref={ref}
+            className="plans-timeout"
+            label="Обновите свои планы"
+            icon={
+                <img src={SvgHourglass} alt="hourglass" />
+            }
+        />
     )
 })
 

@@ -12,6 +12,8 @@ const DetailsInfo = (): JSX.Element => {
     const plans = useSelector((state: IState) => state.questionnaires.targetUser?.plans);
     const bio = useSelector((state: IState) => state.questionnaires.targetUser?.bio);
 
+    if(plans === undefined || bio === undefined) return (<></>);
+
     return (
         <>
             <div className="poster">
@@ -19,14 +21,14 @@ const DetailsInfo = (): JSX.Element => {
                     <PlansLabel type={ PlanLabelSvgType.ordinary } />
                     <div className="timer">
                         <img src={SvgTimerCircle} alt="timer-circle" />
-                        <p className="time">{plans?.targetTime}</p>
+                        <p className="time">{plans.targetTime}</p>
                     </div>
                 </div>
                 <div className="labels">
-                    <Chip className="blure" label={plans?.place}/>
-                    <Chip className="blure" label={plans?.district}/>
+                    <Chip className="blure" label={plans.place}/>
+                    <Chip className="blure" label={plans.district}/>
                 </div>
-                <p className="text">{plans?.description}</p>
+                <p className="text">{plans.description}</p>
             </div>
             <div className="description">
                 <h4 className="headline">Био</h4>

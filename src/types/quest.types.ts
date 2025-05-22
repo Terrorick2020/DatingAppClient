@@ -38,3 +38,26 @@ export interface QuestState {
 export interface PropsProfileInfo {
     handleRoute: () => void
 }
+
+export interface PropsDetailsSlide {
+    toLeftScroll: () => void
+    toRightScroll: () => void
+    len:     number
+    index:   number
+}
+
+export interface PropsPsychHeader {
+    setPreText: (value: string) => void
+}
+
+export interface PropsPsychList {
+    preText: string
+}
+
+export interface ISliderItemProps {
+    sliderItem: SliderItem
+    toDetails: (id: string) => void
+    nextStep: () => void
+    clickLike: (id: number) => void
+    prevStep: () => void
+}
