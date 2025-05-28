@@ -1,9 +1,9 @@
 import { JSX } from 'react';
 import { useDispatch } from 'react-redux';
+import { toMedia } from '@/config/routes.config';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useInitMediaLink } from '@/funcs/effects.funcs';
 import { LinkPageType } from '@/types/store.types';
-import { appRoutes } from '@/config/routes.config';
 import { addRoute } from '@/store/slices/settingsSlice';
 import type { RootDispatch } from '@/store';
 
@@ -17,11 +17,7 @@ const FillingQuestHeader = (): JSX.Element => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const handleClick = () => {
-        const regGlobRoute  = appRoutes.register.global;
-        const regMediaRoute = appRoutes.register.inner.media;
-        const toMedia = `${regGlobRoute}/${regMediaRoute}`;
-        
+    const handleClick = () => {        
         navigate(toMedia);
         dispatch(addRoute(location.pathname));
     }

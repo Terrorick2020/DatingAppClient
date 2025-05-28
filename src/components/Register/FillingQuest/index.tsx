@@ -1,16 +1,19 @@
 import { JSX, useEffect, useState } from 'react';
-import { addRoute, initInterestsVariantsAsync } from '@/store/slices/settingsSlice';
+import { addRoute, initFillingQuestAsync } from '@/store/slices/settingsSlice';
+import { type FQBtnTextItem, KeyFQBtnText } from '@/types/register.typs';
+import { setLoad } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { toPlans } from '@/config/routes.config';
 import { setFQErrors } from '@/store/slices/settingsSlice';
 import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { RootDispatch } from '@/store';
 import { ANIME_DURATION } from '@/constant/settings';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { fQBtnText } from '@/constant/register';
 import { Slide } from 'react-awesome-reveal';
-import { appRoutes } from '@/config/routes.config';
-import { signUpProfileAsync } from '@/store/slices/profileSlice';
-import { EAnimeDirection } from '@/types/settings.type';
-import { type IState } from '@/types/store.types';
+import { signUpProfileAsync, getSelfProfile } from '@/store/slices/profileSlice';
+import { type FQErrorsItem, EAnimeDirection } from '@/types/settings.type';
+import type { IState } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
 import MyLoader from '@/components/UI/MyLoader';
@@ -31,10 +34,24 @@ const FillingQuestContent = (): JSX.Element => {
     const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
     
     const [regLoad, setRegLoad] = useState<boolean>(false);
+    const [btnCtx, setBtnCtx] = useState<FQBtnTextItem>(fQBtnText[KeyFQBtnText.First]);
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const initFQCtx = async (): Promise<void> => {
+        dispatch(setLoad(true));
+
+        const profRes = await dispatch(getSelfProfile()).unwrap();
+
+        if(profRes && profRes !== 'error') {
+            setBtnCtx(fQBtnText[KeyFQBtnText.Other]);
+        }
+
+        await dispatch(initFillingQuestAsync());
+        dispatch(setLoad(false));
+    }
 
     useEffect(
         () => {
@@ -44,76 +61,78 @@ const FillingQuestContent = (): JSX.Element => {
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
 
-            dispatch(initInterestsVariantsAsync());
+            initFQCtx();
         },
         []
-    )
+    );
 
     const handleRoute = async (): Promise<void> => {
-        const ePGlobRoute = appRoutes.eveningPlans.global;
-        const ePPlansRoute = appRoutes.eveningPlans.inner.plans;
-        const toEPPlans = `${ePGlobRoute}/${ePPlansRoute}`;
+        const errObj: { [key: string]: FQErrorsItem } = {};
 
         if(!profileInfo.photos.length) {
-            dispatch(setFQErrors({
-                ...fQErrors,
-                photErr: {
-                    value: true,
-                    msg: EMPTY_INPUT_ERR_MSG,
-                }
-            }))
+            errObj['photErr'] = {
+                value: true,
+                msg: EMPTY_INPUT_ERR_MSG,
+            }
         }
 
         if(!profileInfo.name) {
-            dispatch(setFQErrors({
-                ...fQErrors,
-                nameErr: {
-                    value: true,
-                    msg: EMPTY_INPUT_ERR_MSG,
-                }
-            }))
+            errObj['nameErr'] = {
+                value: true,
+                msg: EMPTY_INPUT_ERR_MSG,
+            }
         }
 
         if(!profileInfo.age) {
-            dispatch(setFQErrors({
-                ...fQErrors,
-                ageErr: {
-                    value: true,
-                    msg: EMPTY_INPUT_ERR_MSG,
-                }
-            }))
+            errObj['ageErr'] = {
+                value: true,
+                msg: EMPTY_INPUT_ERR_MSG,
+            }
         }
 
-        if(!profileInfo.city) {
-            dispatch(setFQErrors({
-                ...fQErrors,
-                cityErr: {
-                    value: true,
-                    msg: EMPTY_INPUT_ERR_MSG,
-                }
-            }))
+        if(!profileInfo.town) {
+            errObj['cityErr'] = {
+                value: true,
+                msg: EMPTY_INPUT_ERR_MSG,
+            }
         }
 
         if(!profileInfo.bio) {
+            errObj['bioErr'] = {
+                value: true,
+                msg: EMPTY_INPUT_ERR_MSG,
+            }
+
             dispatch(setFQErrors({
                 ...fQErrors,
-                cityErr: {
+                bioErr: {
                     value: true,
                     msg: EMPTY_INPUT_ERR_MSG,
                 }
             }))
         }
 
-        const hasErrors = Object.values(fQErrors).some(item => item.value);
+        const hasErrors = Object.values(errObj).some(item => item.value);
         
-        if(hasErrors) return;
+        if(hasErrors) {
+            dispatch(setFQErrors({
+                ...fQErrors,
+                ...errObj,
+            }))
+
+            return;
+        };
 
         setRegLoad(true);
-        await dispatch(signUpProfileAsync());
+        const response = await dispatch(signUpProfileAsync()).unwrap();
+        
+        if(response && response !== 'error') {
+            dispatch(addRoute(location.pathname));
+            navigate(toPlans);
+        };
+
         setRegLoad(false);
-        dispatch(addRoute(location.pathname));
-        navigate(toEPPlans);
-    }
+    };
 
     if(isLoad) return (
         <div className="loader">
@@ -150,7 +169,7 @@ const FillingQuestContent = (): JSX.Element => {
                         loadingPosition="start"
                         loading={regLoad}
                     >
-                        {regLoad ? 'Регистрация...' : 'Продолжить'}
+                        {regLoad ? btnCtx.loadText : btnCtx.text}
                     </Button>
                 </div>
             </div>

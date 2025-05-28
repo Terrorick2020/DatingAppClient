@@ -1,4 +1,4 @@
-import { JSX, MouseEvent, useEffect } from 'react';
+import { JSX, MouseEvent, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfo } from '@/store/slices/profileSlice';
 import { selSexVarsBase } from '@/constant/settings';
@@ -32,13 +32,19 @@ const FillingQuestInterests = (): JSX.Element => {
             const targetSex = interestsVar.find( item => !item.isDisabled )!.value;
 
             dispatch(setSelSexVars(interestsVar));
+
             dispatch(setInfo({
                 ...profileInfo,
                 selSex: targetObject?.isOppos ? targetSex : profileInfo.selSex,
             }))
         },
         [profileInfo.interest, profileInfo.sex]
-    )
+    );
+
+    const interestValue = useMemo(
+        () => typeof profileInfo.interest === 'string' ? profileInfo.interest : '',
+        [profileInfo.interest],
+    );
 
     return (
         <div className="widgets__interests">
@@ -47,7 +53,7 @@ const FillingQuestInterests = (): JSX.Element => {
                 className="select"
                 id="select-interests"
                 spacing={5}
-                value={profileInfo.interest}
+                value={interestValue}
                 onChange={handleChangeInterest}
             >
                 {interestsVars.map( (item: InterestsVarsItem) => (

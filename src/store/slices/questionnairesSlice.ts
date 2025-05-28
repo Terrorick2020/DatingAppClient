@@ -1,8 +1,12 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { USERS_ENDPOINT, USER_ENDPOINT } from '@/config/env.config';
 import { setLoad } from './settingsSlice';
-import { delay } from '@/funcs/general.funcs';
-import { slidersList, targetUser } from '@/constant/quest';
 import type { QuestState, SliderItem, DetailsTargetUser } from '@/types/quest.types';
+import type { FetchResponse } from '@/types/fetch.type';
+import type { AxiosResponse } from 'axios';
+import { IState, AsyncThunkRes } from '@/types/store.types';
+
+import api from '@/config/fetch.config';
 
 
 const initialState: QuestState = {
@@ -12,15 +16,24 @@ const initialState: QuestState = {
 
 export const initSliderListAsync = createAsyncThunk(
     'questionnaires/init-slider-list',
-    async (_, {dispatch}): Promise<SliderItem[]> => {
+    async (_, {dispatch}): Promise<AsyncThunkRes<SliderItem[]>> => {
         try {
             dispatch(setLoad(true));
 
-            await delay(2000);
+            const usersEndpoint = USERS_ENDPOINT();
 
-            return slidersList;
+            const response: AxiosResponse<FetchResponse<SliderItem[]>> = await api.get(usersEndpoint);
+
+            if(
+                response.status === 200 &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) return response.data.data;
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
             dispatch(setLoad(false));
         }
@@ -29,15 +42,25 @@ export const initSliderListAsync = createAsyncThunk(
 
 export const initTargetUserAsync = createAsyncThunk(
     'questionnaires/init-terget-user',
-    async (_id: string, {dispatch}): Promise<DetailsTargetUser> => {
+    async (_id: string, {getState, dispatch}): Promise<AsyncThunkRes<DetailsTargetUser>> => {
         try {
             dispatch(setLoad(true));
 
-            await delay(2000);
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
 
-            return targetUser;
+            const response = await api.get(`${USER_ENDPOINT}/${telegramId}`);
+
+            if(
+                response.status === 200 &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) return response.data.data;
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
             dispatch(setLoad(false));
         }
@@ -53,9 +76,11 @@ const questionnairesSlice = createSlice({
         builder.addCase(initSliderListAsync.pending, _ => {
             console.log("Получение списка анкет");
         })
-        builder.addCase(initSliderListAsync.fulfilled, ( state, action: PayloadAction<SliderItem[]> ) => {
+        builder.addCase(initSliderListAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<SliderItem[]>> ) => {
             console.log("Успешное получение списка анкет");
-            state.sliderList = action.payload;
+            if(!!action.payload && action.payload !== 'error') {
+                state.sliderList = action.payload;
+            }
         })
         builder.addCase(initSliderListAsync.rejected, _ => {
             console.log("Ошибка получения списка анкет");
@@ -65,9 +90,11 @@ const questionnairesSlice = createSlice({
         builder.addCase(initTargetUserAsync.pending, _ => {
             console.log("Получение информации о целевой анкете");
         })
-        builder.addCase(initTargetUserAsync.fulfilled, ( state, action: PayloadAction<DetailsTargetUser> ) => {
+        builder.addCase(initTargetUserAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<DetailsTargetUser>> ) => {
             console.log("Успешное получение информации о целевой анкете");
-            state.targetUser = action.payload;
+            if(!!action.payload && action.payload !== 'error') {
+                state.targetUser = action.payload;
+            }
         })
         builder.addCase(initTargetUserAsync.rejected, _ => {
             console.log("Ошибка получения информации о целевой анкете");

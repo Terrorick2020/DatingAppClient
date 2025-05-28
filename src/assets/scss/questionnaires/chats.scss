@@ -9,9 +9,12 @@
     display: grid;
     grid-template-rows: 1fr 5fr;
 
-    &:has(.loader) {
+    &:has(.loader),
+    &:has(.empty)
+    {
         grid-template-rows: 1fr;
     }
+
 
     &__head {
         width: 100%;
@@ -61,14 +64,24 @@
     }
 
     &__ctx {
-        padding-block: 1rem 3rem;
+        margin-top: 0.5rem;
         width: 100%;
         height: 100%;
-        margin-top: 1rem;
         overflow: auto;
+        position: relative;
         @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
+        .shadow {
+            position: fixed;
+            width: 100%;
+            height: 1rem;
+            background: linear-gradient(#000000, transparent);
+            left: 0;
+            z-index: 100;
+        }
+
         .list {
+            margin-block: 1.5rem;
             width: 100%;
             display: flex;
             flex-direction: column;

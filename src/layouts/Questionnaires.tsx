@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { JSX, useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
@@ -9,7 +9,7 @@ import QuestNavBar from '@/components/Layouts/QuestNavBar';
 import SAPlansTimeout from '@/components/Layouts/PlansTimeout';
 
 
-const QuestLayout = () => {
+const QuestLayout = (): JSX.Element => {
     const isCurrent = useSelector((state: IState) => state.profile.eveningPlans.isCurrent);
 
     const snackbarKeyRef = useRef<string | number | null>(null);

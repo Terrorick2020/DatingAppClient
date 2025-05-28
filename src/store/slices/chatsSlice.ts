@@ -1,8 +1,25 @@
+import type {
+    ChatsState,
+    ChatsCtx,
+    TargetChat,
+    ChatsFavListItem,
+    ChatsListItem
+} from '@/types/chats.types';
+
+import {
+    CHATS_ENDPOINT,
+    CHATS_METADATA_ENDPOINT,
+    CHATS_MSG_ENDPOINT,
+    CHATS_DEL_ENDPOINT
+} from '@/config/env.config';
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { delay } from '@/funcs/general.funcs';
-import { chatsFavList, chatsList, targetChat } from '@/constant/chats';
 import { setLoad } from './settingsSlice';
-import type { ChatsState, ChatsCtx, TargetChat } from '@/types/chats.types';
+import type { FetchResponse } from '@/types/fetch.type';
+import type { AxiosResponse } from 'axios';
+import type { AsyncThunkRes } from '@/types/store.types';
+
+import api from '@/config/fetch.config';
 
 
 const initialState: ChatsState = {
@@ -17,65 +34,122 @@ const initialState: ChatsState = {
 
 export const initChatsCtxAsync = createAsyncThunk(
     'chats/init-chats-ctx',
-    async (_, {dispatch}): Promise<ChatsCtx> => {
+    async (_, {dispatch }): Promise<AsyncThunkRes<ChatsCtx>> => {
         try {
             dispatch(setLoad(true));
 
-            await delay(2000);
+            const [chatsRes, favChatsRes]: [
+                AxiosResponse<FetchResponse<ChatsListItem[]>>,
+                AxiosResponse<FetchResponse<ChatsFavListItem[]>>
+            ] = await Promise.all([
+                api.get(CHATS_ENDPOINT),
+                api.get(CHATS_ENDPOINT),
+            ]);
 
-            return {
-                chatsFavList: chatsFavList,
-                chatsList: chatsList,
-            };
+            if(
+                chatsRes.status === 200 &&
+                chatsRes.data.data &&
+                chatsRes.data.data !== 'None' &&
+                chatsRes.data.success &&
+                favChatsRes.status === 200 &&
+                favChatsRes.data.data &&
+                favChatsRes.data.data !== 'None' &&
+                favChatsRes.data.success
+            ) return {
+                chatsFavList: favChatsRes.data.data,
+                chatsList: chatsRes.data.data,
+            }
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 export const getChatByIdAsync = createAsyncThunk(
     'chats/get-chat-by-id',
-    async (id: string, {dispatch}): Promise<TargetChat> => {
+    async (id: string, {dispatch}): Promise<AsyncThunkRes<TargetChat>> => {
         try {
             dispatch(setLoad(true));
 
-            if( !id ) throw Error('Не передан id');
+            if( !id ) throw new Error('Не передан id');
 
-            await delay(2000);
+            const metaEndpoint = CHATS_METADATA_ENDPOINT(id);
+            const dialogEndpoint = CHATS_MSG_ENDPOINT(id);
 
-            return targetChat;
+            const [chatMetaRes, chatDialogRes]: [
+                AxiosResponse<FetchResponse<any>>,
+                AxiosResponse<FetchResponse<any>>,
+            ] = await Promise.all([
+                api.get(metaEndpoint),
+                api.get(dialogEndpoint),
+            ]);
+
+            if(
+                chatMetaRes.status === 200 &&
+                chatMetaRes.data.data &&
+                chatMetaRes.data.data !== 'None' &&
+                chatMetaRes.data.success &&
+                chatDialogRes.status === 200 &&
+                chatDialogRes.data.data &&
+                chatDialogRes.data.data !== 'None' &&
+                chatDialogRes.data.success
+            ) return {
+                id,
+                interlocutor: chatMetaRes.data.data,
+                chatDialog: chatMetaRes.data.data,
+            }
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 export const deleteChatByIDAsync = createAsyncThunk(
     'chats/delete-chat-by-id',
-    async (id: string): Promise<boolean> => {
-        await delay(2000);
-        return !!id;
+    async (id: string): Promise<AsyncThunkRes<boolean>> => {
+        try {
+            if( !id ) throw new Error('Не передан id');
+
+            const delEndpoint = CHATS_DEL_ENDPOINT(id);
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.delete(delEndpoint);
+
+            if(
+                response.status === 200 &&
+                response.data.data &&
+                response.data.success
+            ) return true;
+
+            return null;
+        } catch (error) {
+            return 'error';
+        }
     }
-)
+);
 
 const chatsSlice = createSlice({
     name: 'chats',
     initialState,
-    reducers: {
-    },
+    reducers: {},
     extraReducers: builder => {
         // Получение списков чатов и особых пользоватеоей
         builder.addCase(initChatsCtxAsync.pending, _ => {
             console.log("Получение списков чатов и особых пользоватеоей");
         })
-        builder.addCase(initChatsCtxAsync.fulfilled, ( state, action: PayloadAction<ChatsCtx> ) => {
+        builder.addCase(initChatsCtxAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<ChatsCtx>> ) => {
             console.log("Успешное получение списков чатов и особых пользоватеоей");
-            state.chatsFavList = action.payload.chatsFavList;
-            state.chatsList = action.payload.chatsList;
+            if(!!action.payload && action.payload !== 'error') {
+                state.chatsFavList = action.payload.chatsFavList;
+                state.chatsList = action.payload.chatsList;
+            }
         })
         builder.addCase(initChatsCtxAsync.rejected, _ => {
             console.log("Ошибка получение списков чатов и особых пользоватеоей");
@@ -85,9 +159,11 @@ const chatsSlice = createSlice({
         builder.addCase(getChatByIdAsync.pending, _ => {
             console.log("Получение чата по id");
         })
-        builder.addCase(getChatByIdAsync.fulfilled, ( state, action: PayloadAction<TargetChat> ) => {
+        builder.addCase(getChatByIdAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<TargetChat>> ) => {
             console.log("Успешное получение чата по id");
-            state.targetChat = action.payload;
+            if(!!action.payload && action.payload !== 'error') {
+                state.targetChat = action.payload;
+            }
         })
         builder.addCase(getChatByIdAsync.rejected, _ => {
             console.log("Ошибка получения чата по id");
@@ -97,13 +173,20 @@ const chatsSlice = createSlice({
         builder.addCase(deleteChatByIDAsync.pending, _ => {
             console.log("Удаление чата по id");
         })
-        builder.addCase(deleteChatByIDAsync.fulfilled, _ => {
+        builder.addCase(deleteChatByIDAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<boolean>> ) => {
             console.log("Успешное удаление чата по id");
+            if(!!action.payload && action.payload !== 'error') {
+                state.targetChat = {
+                    id: '',
+                    interlocutor: null,
+                    chatDialog: [],
+                }
+            }
         })
         builder.addCase(deleteChatByIDAsync.rejected, _ => {
             console.log("Ошибка удаления чата по id");
         })
-}
+    }
 })
 
 export const {} = chatsSlice.actions;

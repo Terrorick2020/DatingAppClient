@@ -1,8 +1,13 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { LIKES_ENDPOINT } from '@/config/env.config';
 import { delay } from '@/funcs/general.funcs';
-import { likesList } from '@/constant/likes';
 import { setLoad } from './settingsSlice';
+import { type FetchResponse, EFetchLikesTProps } from '@/types/fetch.type';
 import type { LikesState, LikesItem, LikesMatch } from '@/types/likes.types';
+import type { AxiosResponse } from 'axios';
+import type { IState, AsyncThunkRes } from '@/types/store.types';
+
+import api from '@/config/fetch.config';
 
 
 const initialState: LikesState = {
@@ -15,15 +20,26 @@ const initialState: LikesState = {
 
 export const initLikesListAsync = createAsyncThunk(
     'likes/init-likes-list',
-    async (_, {dispatch}): Promise<LikesItem[]> => {
+    async (_, { getState, dispatch }): Promise<AsyncThunkRes<LikesItem[]>> => {
         try {
             dispatch(setLoad(true));
 
-            await delay(2000);
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
 
-            return likesList;
+            const response: AxiosResponse<FetchResponse<LikesItem[]>> =
+                await api.get(`${LIKES_ENDPOINT}?telegramId=${telegramId}&type=${EFetchLikesTProps.Received}`);
+
+            if(
+                response.status === 200 &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) return response.data.data;
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
             dispatch(setLoad(false));
         }
@@ -76,9 +92,11 @@ const likesSlice = createSlice({
         builder.addCase(initLikesListAsync.pending, _ => {
             console.log("Получение списка симпатий");
         })
-        builder.addCase(initLikesListAsync.fulfilled, ( state, action: PayloadAction<LikesItem[]> ) => {
+        builder.addCase(initLikesListAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<LikesItem[]>> ) => {
             console.log("Успешное получение списка симпатий");
-            state.likesList = action.payload;
+            if(!!action.payload && action.payload !== 'error') {
+                state.likesList = action.payload;
+            }
         })
         builder.addCase(initLikesListAsync.rejected, _ => {
             console.log("Ошибка получение списка симпатий");

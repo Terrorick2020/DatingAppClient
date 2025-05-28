@@ -1,5 +1,6 @@
 import { JSX, ChangeEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { setInfo } from '@/store/slices/profileSlice';
 import { setFQErrors } from '@/store/slices/settingsSlice';
 import { AGE_PATTERN } from '@/constant/settings';
@@ -23,7 +24,7 @@ const FillingQuestAge = (): JSX.Element => {
             ...fQErrors,
             ageErr: {
                 value: !newAgeValue || ( !!age && age < 18 ),
-                msg: '',
+                msg: !newAgeValue ? EMPTY_INPUT_ERR_MSG : '',
             }
         }))
 
@@ -55,10 +56,10 @@ const FillingQuestAge = (): JSX.Element => {
                     error={fQErrors.ageErr.value}
                     helperText={fQErrors.ageErr.msg}
                 />
-            <p className={`description ${fQErrors.ageErr.value ? 'red-flag' : ''}`}
-            >Минимальный возраст для регистрации: 18 лет</p>
+            {!fQErrors.ageErr.msg &&<p className={`description ${fQErrors.ageErr.value ? 'red-flag' : ''}`}
+            >Минимальный возраст для регистрации: 18 лет</p>}
         </div>
     )
 }
 
-export default FillingQuestAge
+export default FillingQuestAge;

@@ -14,7 +14,7 @@ import { delay } from '@/funcs/general.funcs';
 import type { PhotoItem } from '@/types/profile.types';
 import type { IState } from '@/types/store.types';
 
-// import axios from 'axios';
+import api from '@/config/fetch.config';
 
 
 const initialState: AdminState = {
@@ -60,8 +60,6 @@ export const getProfilesListAsync = createAsyncThunk(
             }
     
             if ( adminState.searchId ) return response.filter( item => item.id.includes( adminState.searchId ) );
-    
-            console.log( response )
 
             return response;
 

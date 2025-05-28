@@ -1,13 +1,12 @@
+import { JSX } from 'react';
 import { Outlet } from 'react-router-dom';
 
 
-const RegisterLayout = () => {
+const RegisterLayout = (): JSX.Element => {
     return (
-        <>
-            <div className="reg-layout">
-                <Outlet />
-            </div>
-        </>
+        <div className="reg-layout">
+            <Outlet />
+        </div>
     )
 }
 

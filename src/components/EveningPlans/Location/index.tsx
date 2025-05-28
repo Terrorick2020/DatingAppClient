@@ -1,9 +1,11 @@
-import { JSX, useState, useEffect } from 'react';
+import { JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { resetRoutes, initDistrictsVarsAsync } from '@/store/slices/settingsSlice';
-import { appRoutes } from '@/config/routes.config';
+import { toSlider } from '@/config/routes.config';
+import { resetRoutes, setEPErrors } from '@/store/slices/settingsSlice';
+import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveSelfPlansAsync } from '@/store/slices/profileSlice';
+import type { FEPHasErrors } from '@/types/settings.type';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -14,31 +16,60 @@ import LocationDetails from './Details';
 
 const EveningPlansLocationCtx = (): JSX.Element => {
     const districtsVars = useSelector((state: IState) => state.settings.districtsVars);
+    const fEPErrors = useSelector((state: IState) => state.settings.fEPErrors);
+    const selfEPLocation = useSelector((state: IState) => state.profile.eveningPlans.location);
 
     const [appLoad, setAppLoad] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
 
-    useEffect(
-        () => {
-            !districtsVars.length && dispatch(initDistrictsVarsAsync());
-            console.log(districtsVars  )
-        },
-        [districtsVars]
-    )
-
     const handleRoute = async (): Promise<void> => {
         setAppLoad(true);
 
-        await dispatch(saveSelfPlansAsync());
+        const errObj: FEPHasErrors = {};
 
-        const questGlobRoute = appRoutes.questionnaires.global;
-        const questSliderRoute = appRoutes.questionnaires.inner.slider;
-        const toSlider = `${questGlobRoute}/${questSliderRoute}`;
+        if(!selfEPLocation.value) {
+            errObj['districtErr'] = {
+                value: true,
+                msg: EMPTY_INPUT_ERR_MSG,
+            }
+        };
+
+        if(!selfEPLocation.description) {
+            errObj['descDistErr'] = {
+                value: true,
+                msg: EMPTY_INPUT_ERR_MSG,
+            }
+        }
+
+        const hasErrors = Object.values(errObj).some(item => item.value);
+
+        if(hasErrors) {
+            dispatch(setEPErrors({
+                ...fEPErrors,
+                ...errObj,
+            }))
+
+            setAppLoad(false);
+
+            return;
+        }
+
+        const response = await dispatch(saveSelfPlansAsync()).unwrap();
+
+        if(response === 'error') {
+            setAppLoad(false);
+
+            return;
+        } else if (!response) {
+            setAppLoad(false);
+            
+            return;
+        }
 
         setAppLoad(false);
-        dispatch(resetRoutes())
+        dispatch(resetRoutes());
         navigate(toSlider);
     }
 

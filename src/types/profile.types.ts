@@ -12,14 +12,14 @@ export interface ProfileSelf {
     lineStat: ELineStatus
     role: EProfileRoles
     status: EProfileStatus
-    username: string
     name: string
     age: number | null
-    city: string
+    town: string
     sex: ESex
     bio: string
     interest: string
     selSex: ESex
+    referralCode: string
 }
 
 export interface EveningPlansItem {
@@ -29,6 +29,7 @@ export interface EveningPlansItem {
 
 export interface EveningPlans {
     isCurrent: boolean
+    remains: number | null
     plan: EveningPlansItem
     location: EveningPlansItem
 }
@@ -57,4 +58,9 @@ export interface WebAppUser {
   added_to_attachment_menu?: boolean
   allows_write_to_pm?: boolean
   photo_url?: string
+}
+
+export interface SavePhotoAsyncThuncData {
+    photo: File,
+    setUploadProgress: (value: number) => void
 }

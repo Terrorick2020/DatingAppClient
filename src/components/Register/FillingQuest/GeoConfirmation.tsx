@@ -1,9 +1,9 @@
 import { JSX, useState } from 'react';
-import { delay } from '@/funcs/general.funcs';
-// import { useDispatch } from 'react-redux';
-// import { sendSelfGeoAsync } from '@/store/slices/profileSlice';
-// import { requestGeolocation } from '@/funcs/geo.funcs';
-// import { type RootDispatch } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { sendSelfGeoAsync } from '@/store/slices/profileSlice';
+import { requestGeolocation } from '@/funcs/geo.funcs';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -11,10 +11,12 @@ import Button from '@mui/material/Button';
 
 
 const GeoConfirmation = (): JSX.Element => {
-    const [open, setOpen] = useState<boolean>(true);
+    const geoEnable = useSelector((state:IState) => state.profile.info.enableGeo);
+
+    const [open, setOpen] = useState<boolean>(geoEnable);
     const [isLoad, setIsLoad] = useState<boolean>(false);
 
-    // const dispatch = useDispatch<RootDispatch>();
+    const dispatch = useDispatch<RootDispatch>();
 
     const handleBad = (): void => {
         setOpen(false);
@@ -22,16 +24,14 @@ const GeoConfirmation = (): JSX.Element => {
     const handleSuccess = async (): Promise<void> => {
         setIsLoad(true);
 
-        await delay(2000);
+        const geo = await requestGeolocation();
 
-        // const geo = await requestGeolocation();
-
-        // if(!geo) {
-        //     setIsLoad(false);
-        //     return;
-        // }
+        if(!geo) {
+            setIsLoad(false);
+            return;
+        }
         
-        // await dispatch(sendSelfGeoAsync(geo));
+        await dispatch(sendSelfGeoAsync(geo));
         
         setIsLoad(false);
         setOpen(false);

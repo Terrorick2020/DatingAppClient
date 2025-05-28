@@ -1,10 +1,10 @@
-import { JSX, useEffect } from 'react';
+import { JSX } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { appRoutes } from '@/config/routes.config';
-import { addRoute, initPlansVarsAsync } from '@/store/slices/settingsSlice';
+import { toLocation } from '@/config/routes.config';
+import { addRoute, setEPErrors } from '@/store/slices/settingsSlice';
+import { EMPTY_INPUT_ERR_MSG, ANIME_DURATION } from '@/constant/settings';
 import { Slide } from 'react-awesome-reveal';
 import { useDispatch, useSelector } from 'react-redux';
-import { ANIME_DURATION } from '@/constant/settings';
 import { EAnimeDirection } from '@/types/settings.type';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -17,25 +17,28 @@ import PlansDetails from './Details';
 
 const EveningPlansPlansCtx = (): JSX.Element => {
     const plansVars = useSelector((state: IState) => state.settings.plansVars);
+    const fEPErrors = useSelector((state: IState) => state.settings.fEPErrors);
+    const selfEPPlans = useSelector((state: IState) => state.profile.eveningPlans.plan);
 
     const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(
-        () => {
-            !plansVars.length && dispatch(initPlansVarsAsync());
-        },
-        [plansVars]
-    );
-
     const handleRoute = async (): Promise<void> => {
-        const ePGlobRoute = appRoutes.eveningPlans.global;
-        const ePLocationRoute = appRoutes.eveningPlans.inner.location;
-        const toEPLocation = `${ePGlobRoute}/${ePLocationRoute}`;
+        if(!selfEPPlans.description) {
+            dispatch(setEPErrors({
+                ...fEPErrors,
+                descPlanErr: {
+                    value: true,
+                    msg: EMPTY_INPUT_ERR_MSG,
+                }
+            }))
+
+            return;
+        };
 
         dispatch(addRoute(location.pathname));
-        navigate(toEPLocation);
+        navigate(toLocation);
     }
 
     return (

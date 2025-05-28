@@ -85,6 +85,8 @@ export interface PropsAdmineFotter {
 
 export interface PropsPhotosLoadItem {
     photo: string
+    progress: number
+    setProgress: (value: number) => void
 }
 
 export interface DelDialogState {
@@ -94,7 +96,7 @@ export interface DelDialogState {
 
 export interface PropsPhotos {
   photos: PhotoItem[]
-  handleAdd: (photo: File) => void
+  handleAdd: (photo: File, setUploadProgress: (value: number) => void) => Promise<void>
   handleDel: (id: string) => void
 }
 

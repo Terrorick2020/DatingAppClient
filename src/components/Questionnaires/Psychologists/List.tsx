@@ -45,7 +45,9 @@ const PsychList = memo((props: PropsPsychList): JSX.Element => {
                         ))}
                     </div>
                     :
-                    <h4 className="empty">Ничего не найдено</h4>
+                    <div className="empty">
+                        <h4 className="headline">Ничего не найдено</h4>
+                    </div>
             }
         </>
     )

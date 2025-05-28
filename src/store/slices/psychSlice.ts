@@ -87,7 +87,7 @@ export const initPsychList = createAsyncThunk(
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 export const getPsycByIdhAsync = createAsyncThunk(
     'psychologists/get-target-psych',
@@ -106,7 +106,7 @@ export const getPsycByIdhAsync = createAsyncThunk(
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 const psychSlice = createSlice({
     name: 'psychologists',

@@ -7,27 +7,42 @@ import {
     type FQErrors,
     type FEPErrors,
     type SettingsState,
-    type InterestsVarsItem,
     type BaseVarsItem,
+    type InterestsVarsItem,
     type SetApiRes,
     type SelSexVarsItem,
     type BadgeBlock,
+    type InitEPCtxAsyncRes,
 } from '@/types/settings.type';
 
 import {
-    interestsVarsList,
     complaintsVarsList,
     targetComplaintsVarsList,
     dfltErrItem,
-    plansVarsList,
-    districtsVarsList,
     badgeEmptyItem,
 } from '@/constant/settings';
+
+import {
+    LinkPageType,
+    type IState,
+    type AsyncThunkRes,
+    type InitFillingQuestRes,
+} from '@/types/store.types';
+
+import {
+    HELP_INTERESTS_ENDPOINT,
+    HELP_CITYES_ENDPOINT,
+    HELP_REGIONS_ENDPOINT,
+    HELP_PLANS_ENDPOINT,
+} from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setInfo } from './profileSlice';
 import { delay } from '@/funcs/general.funcs';
-import { type IState, LinkPageType } from '@/types/store.types';
+import type { FetchResponse } from '@/types/fetch.type';
+import type { AxiosResponse } from 'axios';
+
+import api from '@/config/fetch.config';
 
 
 export const initialState: SettingsState = {
@@ -52,6 +67,7 @@ export const initialState: SettingsState = {
         districtErr: dfltErrItem,
         descDistErr: dfltErrItem,
     },
+    cityesVars: [],
     interestsVars: [],
     selSexVars: [],
     complaint: {
@@ -73,32 +89,58 @@ export const initialState: SettingsState = {
     }
 }
 
-export const initInterestsVariantsAsync = createAsyncThunk(
+export const initFillingQuestAsync = createAsyncThunk(
     'settings/init-interest-variants',
-    async (_, { getState, dispatch  }): Promise<InterestsVarsItem[]> => {
+    async (_, { getState, dispatch  }): Promise<AsyncThunkRes<InitFillingQuestRes>> => {
+        const rootState = getState() as IState;
+        const isLoad = rootState.settings.load;
+
+        let needSetLoad = !isLoad;
+
         try {
-            dispatch(setLoad(true));
+            if(needSetLoad) dispatch(setLoad(true));
 
-            await delay(2000);
+            const [cityesRes, interestsRes]: [
+                cityes: AxiosResponse<FetchResponse<BaseVarsItem[]>>,
+                interests: AxiosResponse<FetchResponse<InterestsVarsItem[]>>,
+            ] = await Promise.all([
+                api.get(HELP_CITYES_ENDPOINT),
+                api.get(HELP_INTERESTS_ENDPOINT),
+            ]);
 
-            const response = interestsVarsList;
+            if(
+                cityesRes.status === 200 &&
+                cityesRes.data.data &&
+                cityesRes.data.data !== 'None' &&
+                cityesRes.data.success &&
+                interestsRes.status === 200 &&
+                interestsRes.data.data &&
+                interestsRes.data.data !== 'None' &&
+                interestsRes.data.success
+            ) {
+                const response: InitFillingQuestRes = {
+                    cityes: cityesRes.data.data,
+                    interests: interestsRes.data.data,
+                };
 
-            const rootState = getState() as IState;
-            const profileState = rootState.profile;
-    
-            if( !profileState.info.interest ) {
-                dispatch(setInfo({
-                    ...profileState.info,
-                    interest: response[0].value,
-                }))
-            }
-    
-            return response;
+                const profileState = rootState.profile;
+
+                if( !profileState.info.interest ) {
+                    dispatch(setInfo({
+                        ...profileState.info,
+                        interest: response.interests[0].value,
+                    }))
+                }
+
+                return response
+            };
+
+            return null;
 
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
-            dispatch(setLoad(false));
+            if(needSetLoad) dispatch(setLoad(false));
         }
     }
 )
@@ -152,34 +194,67 @@ export const sendComplaintAsync = createAsyncThunk(
     },
 )
 
-export const initPlansVarsAsync = createAsyncThunk(
-    'settings/init-plans-vars',
-    async (_, {dispatch}): Promise<BaseVarsItem[]> => {
+export const initEPCtxAsync = createAsyncThunk(
+    'settings/init-ep-ctx',
+    async (_, {getState, dispatch}): Promise<AsyncThunkRes<InitEPCtxAsyncRes>> => {
         try {
             dispatch(setLoad(true));
 
-            await delay(2000);
+            const rootState = getState() as IState;
+            const cityesVars = rootState.settings.cityesVars;
 
-            return plansVarsList;
-        } catch (error) {
-            throw error;
-        } finally {
-            dispatch(setLoad(false));
-        }
-    }
-)
+            let cityesVarsRes: BaseVarsItem[] = [];
 
-export const initDistrictsVarsAsync = createAsyncThunk(
-    'settings/init-districts-vars',
-    async (_, {dispatch}): Promise<BaseVarsItem[]> => {
-        try {
-            dispatch(setLoad(true));
+            if( !cityesVars.length ) {
+                const cityesRes: AxiosResponse<FetchResponse<BaseVarsItem[]>> = await api.get(HELP_CITYES_ENDPOINT);
 
-            await delay(2000);
+                if(
+                    cityesRes.status === 200 &&
+                    cityesRes.data.data &&
+                    cityesRes.data.data !== 'None' &&
+                    cityesRes.data.success
+                ) cityesVarsRes = cityesRes.data.data;
+            } else {
+                cityesVarsRes = cityesVars;
+            }
 
-            return districtsVarsList;
-        } catch (error) {
-            throw error;
+            if(!cityesVarsRes.length) return 'error';
+
+            const targetCity = cityesVarsRes.find(
+                item => item.value === rootState.profile.info.town
+            );
+
+            if(!targetCity?.id) return 'error';
+
+            const data = {
+                cityId: targetCity.id,
+            }
+
+            const [plansRes, districtsRes]: [
+                plansRes: AxiosResponse<FetchResponse<BaseVarsItem[]>>,
+                districtsRes: AxiosResponse<FetchResponse<BaseVarsItem[]>>,
+            ] = await Promise.all([
+                api.get(HELP_PLANS_ENDPOINT),
+                api.post(HELP_REGIONS_ENDPOINT, data),
+            ]);
+
+            if (
+                plansRes.status === 200 &&
+                plansRes.data.data &&
+                plansRes.data.data !== 'None' &&
+                plansRes.data.success &&
+                districtsRes.status === 201 &&
+                districtsRes.data.data &&
+                districtsRes.data.data !== 'None' &&
+                districtsRes.data.success
+            ) return {
+                plans: plansRes.data.data,
+                districts: districtsRes.data.data,
+            }
+
+            return null;
+        } catch (error: any) {
+            return 'error';
         } finally {
             dispatch(setLoad(false));
         }
@@ -188,11 +263,9 @@ export const initDistrictsVarsAsync = createAsyncThunk(
 
 export const initMediaLinkAsync = createAsyncThunk(
     'settings/init-media-link',
-    async (linkType: LinkPageType): Promise<string> => {
+    async (_linkType: LinkPageType): Promise<string> => {
         try {
             await delay(2000);
-
-            console.log( linkType );
 
             return 'https://storage.yandexcloud.net/photodatingapp/1.MOV?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=YCAJE2WAntPULZcEo0LlklLMu%2F20250429%2Fru-central1%2Fs3%2Faws4_request&X-Amz-Date=20250429T165117Z&X-Amz-Expires=108000&X-Amz-Signature=6dc73f2a9ed9d1a4703f787fd4aec4131ee3c3ea75c8adffbcdbae10db54d5ed&X-Amz-SignedHeaders=host';
         } catch (error) {
@@ -265,18 +338,24 @@ const settingsSlice = createSlice({
         },
         setBadge: (state, action: PayloadAction<BadgeBlock>) => {
             state.badge = action.payload
-        }
+        },
+        setCityes: (state, action: PayloadAction<BaseVarsItem[]>) => {
+            state.cityesVars = action.payload;
+        },
     },
     extraReducers: builder => {
         // Получение варианетов интересов
-        builder.addCase(initInterestsVariantsAsync.pending, _ => {
+        builder.addCase(initFillingQuestAsync.pending, _ => {
             console.log("Получение варианетов интересов");
         })
-        builder.addCase(initInterestsVariantsAsync.fulfilled, ( state, action: PayloadAction<InterestsVarsItem[]> ) => {
+        builder.addCase(initFillingQuestAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<InitFillingQuestRes>> ) => {
             console.log("Варианты интересов успешно полученый");
-            state.interestsVars = action.payload;
+            if(!!action.payload && action.payload !== 'error') {
+                state.cityesVars = action.payload.cityes;
+                state.interestsVars = action.payload.interests;
+            }
         })
-        builder.addCase(initInterestsVariantsAsync.rejected, _ => {
+        builder.addCase(initFillingQuestAsync.rejected, _ => {
             console.log("Ошибка получния вариантов интереесов");
         })
 
@@ -292,28 +371,26 @@ const settingsSlice = createSlice({
             console.log("Ошибка получния вариантов жалоб");
         })
 
-        // Получение варианетов планов
-        builder.addCase(initPlansVarsAsync.pending, _ => {
-            console.log("Получение варианетов планов");
+        // Получение вариантов планов и районов
+        builder.addCase(initEPCtxAsync.pending, _ => {
+            console.log("Получение вариантов планов и районов");
         })
-        builder.addCase(initPlansVarsAsync.fulfilled, ( state, action: PayloadAction<BaseVarsItem[]> ) => {
-            console.log("Варианты планов успешно получены");
-            state.plansVars = action.payload;
+        builder.addCase(initEPCtxAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<InitEPCtxAsyncRes>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получния вариантов планов и районов");
+                    break;
+                case null:
+                    console.log("Варианты планов и районов не получены");
+                    break;
+                default:
+                    state.plansVars = action.payload.plans;
+                    state.districtsVars = action.payload.districts;
+                    break;
+            }
         })
-        builder.addCase(initPlansVarsAsync.rejected, _ => {
-            console.log("Ошибка получния вариантов планов");
-        })
-
-        // Получение варианетов районов
-        builder.addCase(initDistrictsVarsAsync.pending, _ => {
-            console.log("Получение варианетов районов");
-        })
-        builder.addCase(initDistrictsVarsAsync.fulfilled, ( state, action: PayloadAction<BaseVarsItem[]> ) => {
-            console.log("Варианты районов успешно получены");
-            state.districtsVars = action.payload;
-        })
-        builder.addCase(initDistrictsVarsAsync.rejected, _ => {
-            console.log("Ошибка получния вариантов районов");
+        builder.addCase(initEPCtxAsync.rejected, _ => {
+            console.log("Ошибка получния вариантов планов и районов");
         })
 
         // Получение ссылки видео
@@ -346,5 +423,6 @@ export const {
     setComplStep,
     setComplaint,
     resetComplaint,
+    setCityes,
 } = settingsSlice.actions;
 export default settingsSlice.reducer;

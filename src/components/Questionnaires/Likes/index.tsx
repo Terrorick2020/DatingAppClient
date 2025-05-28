@@ -33,6 +33,15 @@ const LikesContent = (): JSX.Element => {
         </div>
     )
 
+    if(!likesList.length) return (
+        <div className="empty">
+            <h4 className="headline">
+                Пока никто не проявил к Вам симпатии. <br/>
+                Обратитесь к анкетам, чтобы это исправить
+            </h4>
+        </div>
+    )
+
     return (
         <div className="likes__ctx">
             <h4 className="headline">Симпатии</h4>

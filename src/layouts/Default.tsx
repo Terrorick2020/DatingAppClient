@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { JSX, memo, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
@@ -12,7 +12,7 @@ import HeadNav from '@/components/Layouts/HeadNav';
 import LogoHeader from '@/components/Layouts/LogoHeader';
 
 
-const DefaultLayout = memo(() => {
+const DefaultLayout = memo((): JSX.Element => {
     const apiRes = useSelector((state: IState) => state.settings.apiRes);
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -38,15 +38,13 @@ const DefaultLayout = memo(() => {
     }, [apiRes] );
 
     return (
-        <>
-            <div className="default-layout">
-                <div className="box">
-                    <HeadNav />
-                    <LogoHeader />
-                    <Outlet />
-                </div>
+        <div className="default-layout">
+            <div className="box">
+                <HeadNav />
+                <LogoHeader />
+                <Outlet />
             </div>
-        </>
+        </div>
     )
 })
 

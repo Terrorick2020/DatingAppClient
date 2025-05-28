@@ -10,3 +10,19 @@ export interface PropsMediaContentBg {
     handlePlaying: () => void
     handleSeekBy: (seconds: number) => void
 }
+
+export enum KeyFQBtnText {
+    First = 'first',
+    Other = 'other',
+}
+
+export interface FQBtnTextItem {
+    text: string
+    loadText: string
+    mark: KeyFQBtnText
+}
+
+export interface FillQuestBtnText  {
+    [KeyFQBtnText.First]: FQBtnTextItem
+    [KeyFQBtnText.Other]: FQBtnTextItem
+}

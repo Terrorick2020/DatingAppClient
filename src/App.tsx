@@ -38,55 +38,53 @@ import ErrorPage from './pages/Error';
 import './assets/scss/index.scss';
 
 
-const App = (): JSX.Element => {
-  const regRoutes   = appRoutes.register;
-  const epRoutes    = appRoutes.eveningPlans;
-  const questRoutes = appRoutes.questionnaires;
-  const adminRoutes = appRoutes.admin;
-  
+const regRoutes   = appRoutes.register;
+const epRoutes    = appRoutes.eveningPlans;
+const questRoutes = appRoutes.questionnaires;
+const adminRoutes = appRoutes.admin;
+
+const App = (): JSX.Element => {  
   return (
-    <>
-      <Routes>
-        <Route element={ <DefautlLayout /> }>
+    <Routes>
+      <Route element={ <DefautlLayout /> }>
 
-          <Route path={ regRoutes.global } element={ <RegisterLayout /> } >
-            <Route path={ regRoutes.inner.preview } element={ <RegPreviewPage /> } />
-            <Route path={ regRoutes.inner.lang } element={ <RegLangPage /> } />
-            <Route path={ regRoutes.inner.fillQuest } element={ <RegFillingQuestPage /> } />
-            <Route path={ regRoutes.inner.media } element={ <RegMediaPage /> } />
-          </Route>
-
-          <Route path={ epRoutes.global } element={ <EPLayout /> }>
-            <Route path={ epRoutes.inner.plans } element={ <EPPlansPage /> } />
-            <Route path={ epRoutes.inner.location } element={ <EPLocationPage /> } />
-          </Route>
-
-          <Route path={ questRoutes.global } element={ <QuestLayout /> } >
-            <Route path={ questRoutes.inner.chats } element={ <QuestChatsPage /> } />
-            <Route path={ questRoutes.inner.likes } element={ <QuestLikesPage /> } />
-            <Route path={ questRoutes.inner.profile } element={ <QuestProfilePage /> } />
-            <Route path={ questRoutes.inner.psychologists } element={ <QuestPsychologistsPage /> } />
-            <Route path={ questRoutes.inner.slider } element={ <QuestSliderPage /> } />
-          </Route>
-
-          <Route path={ appRoutes.details } element={ <DetailsPage /> } />
-          <Route path={ appRoutes.targetChat } element={ <TargetChat /> } />
-          <Route path={ appRoutes.targetPsych } element={ <TargetPsych /> } />
-
-          <Route path={ adminRoutes.global } element={ <AdminLayout /> } >
-            <Route path={ adminRoutes.inner.nav } element={ <AdminChangePage /> } />
-            <Route path={ adminRoutes.inner.usersList } element={ <AdminUsersListPage /> } />
-            <Route path={ adminRoutes.inner.userInfo } element={ <AdminUserInfoPage /> } />
-            <Route path={ adminRoutes.inner.compalintsList } element={ <AdminComplaintsListPage /> } />
-          </Route>
-
-          <Route path={ appRoutes.blocked } element={ <BlockedPage /> } />
-          <Route path={ appRoutes.error } element={ <ErrorPage /> } />
-          <Route path={ appRoutes.notFound } element={ <NotFoundPage /> } />
-          
+        <Route path={ regRoutes.global } element={ <RegisterLayout /> } >
+          <Route path={ regRoutes.inner.preview } element={ <RegPreviewPage /> } />
+          <Route path={ regRoutes.inner.lang } element={ <RegLangPage /> } />
+          <Route path={ regRoutes.inner.fillQuest } element={ <RegFillingQuestPage /> } />
+          <Route path={ regRoutes.inner.media } element={ <RegMediaPage /> } />
         </Route>
-      </Routes>
-    </>
+
+        <Route path={ epRoutes.global } element={ <EPLayout /> }>
+          <Route path={ epRoutes.inner.plans } element={ <EPPlansPage /> } />
+          <Route path={ epRoutes.inner.location } element={ <EPLocationPage /> } />
+        </Route>
+
+        <Route path={ questRoutes.global } element={ <QuestLayout /> } >
+          <Route path={ questRoutes.inner.chats } element={ <QuestChatsPage /> } />
+          <Route path={ questRoutes.inner.likes } element={ <QuestLikesPage /> } />
+          <Route path={ questRoutes.inner.profile } element={ <QuestProfilePage /> } />
+          <Route path={ questRoutes.inner.psychologists } element={ <QuestPsychologistsPage /> } />
+          <Route path={ questRoutes.inner.slider } element={ <QuestSliderPage /> } />
+        </Route>
+
+        <Route path={ appRoutes.details } element={ <DetailsPage /> } />
+        <Route path={ appRoutes.targetChat } element={ <TargetChat /> } />
+        <Route path={ appRoutes.targetPsych } element={ <TargetPsych /> } />
+
+        <Route path={ adminRoutes.global } element={ <AdminLayout /> } >
+          <Route path={ adminRoutes.inner.nav } element={ <AdminChangePage /> } />
+          <Route path={ adminRoutes.inner.usersList } element={ <AdminUsersListPage /> } />
+          <Route path={ adminRoutes.inner.userInfo } element={ <AdminUserInfoPage /> } />
+          <Route path={ adminRoutes.inner.compalintsList } element={ <AdminComplaintsListPage /> } />
+        </Route>
+
+        <Route path={ appRoutes.blocked } element={ <BlockedPage /> } />
+        <Route path={ appRoutes.error } element={ <ErrorPage /> } />
+        <Route path={ appRoutes.notFound } element={ <NotFoundPage /> } />
+        
+      </Route>
+    </Routes>
   )
 }
 

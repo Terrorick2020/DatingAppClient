@@ -11,6 +11,7 @@ import MyLoader from '@/components/UI/MyLoader';
 
 const ChatsContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
+    const chatsListLen = useSelector((state: IState) => state.chats.chatsList.length);
 
     const dispatch = useDispatch<RootDispatch>();
     
@@ -33,12 +34,22 @@ const ChatsContent = (): JSX.Element => {
         </div>
     )
 
+    if(!chatsListLen) return (
+        <div className="empty">
+            <h4 className="headline">
+                У Вас пока нет чатов. <br/>
+                Отправляйте симпатии, чтобы это исправить
+            </h4>
+        </div>
+    )
+
     return (
         <>
             <div className="chats__head">
                 <ChatsHeader />
             </div>
             <div className="chats__ctx">
+                <div className="shadow"></div>
                 <ChatsList />
             </div>
         </>

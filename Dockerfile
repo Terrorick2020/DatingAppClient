@@ -4,7 +4,7 @@ RUN apk add --no-cache nodejs npm
 
 WORKDIR /client
 
-COPY package.json ./
+COPY package.json .
 
 RUN bun install --no-progress
 

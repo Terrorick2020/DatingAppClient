@@ -47,6 +47,12 @@ export interface FEPErrors {
     descDistErr: FQErrorsItem
 }
 
+export interface FEPHasErrors {
+    descPlanErr?: FQErrorsItem
+    districtErr?: FQErrorsItem
+    descDistErr?: FQErrorsItem
+}
+
 export interface BaseVarsItem {
     id: number
     value: string
@@ -105,6 +111,7 @@ export interface SettingsState {
     apiRes: SetApiRes
     fQErrors: FQErrors
     fEPErrors: FEPErrors
+    cityesVars: BaseVarsItem[]
     interestsVars: InterestsVarsItem[]
     selSexVars: SelSexVarsItem[]
     complaint: Complaint
@@ -120,4 +127,9 @@ export interface PropsLocationDistrict {
 
 export interface PropsPlansVars {
     plansVars: BaseVarsItem[]
+}
+
+export interface InitEPCtxAsyncRes {
+    plans: BaseVarsItem[]
+    districts: BaseVarsItem[]
 }

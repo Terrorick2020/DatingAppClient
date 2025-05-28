@@ -7,7 +7,10 @@ import {
 } from 'react';
 
 import { getCroppedImg } from '@/funcs/img.funcs';
+import { warningAlert } from '@/funcs/alert.funcs';
+import { useDispatch } from 'react-redux';
 import type { PropsPhotosCropperDialog, CropState } from '@/types/ui.types';
+import type { RootDispatch } from '@/store';
 
 import Cropper, { Area } from 'react-easy-crop';
 import Dialog from '@mui/material/Dialog';
@@ -22,6 +25,8 @@ const PhotosCropperDialog = memo((props: PropsPhotosCropperDialog): JSX.Element 
     const [dLoading, setDLoading] = useState<boolean>(false);
     const [crop, setCrop] = useState<CropState>({ x: 0, y: 0 });
     const [zoom, setZoom] = useState<number>(1);
+
+    const dispatch = useDispatch<RootDispatch>();
 
     useEffect(() => {
         if (props.open) {
@@ -53,13 +58,13 @@ const PhotosCropperDialog = memo((props: PropsPhotosCropperDialog): JSX.Element 
 
             const blob = await getCroppedImg(props.photo, croppedAreaPixels, 400, 480);
             
-            if (!blob) return;
+            if (!blob) throw new Error('Ошибка обрезки картинци');
 
             const photo = new File([blob], 'cropped.jpg', { type: 'image/jpeg' });
 
             props.handleAdd(photo);
         } catch (error) {
-            console.error('Ошибка при обрезке изображения:', error);
+            warningAlert(dispatch, 'Ошибка при обрезке изображения');
         } finally {
             setDLoading(false);
             handleClose();

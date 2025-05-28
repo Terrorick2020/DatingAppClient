@@ -1,27 +1,50 @@
-import { Suspense, lazy } from 'react';
-import { initProfileAsync } from '@/store/slices/profileSlice';
-import { delay } from './funcs/general.funcs';
+import { Suspense, useEffect, lazy } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { EProfileRoles } from './types/store.types';
+import { toChange, toPreview, toSlider } from './config/routes.config';{ }
+import { setNavigate, navigate } from './config/fetch.config';
+import { initProfileAsync, getSelfProfile } from '@/store/slices/profileSlice';
+import { delay, fadeOutPreloader } from './funcs/general.funcs';
 
 import store from './store';
 import AppPreloader from './components/AppPreloader';
 
 
 async function delayForLazy( promise: Promise<any> ) {
-    await delay(2000);
+    const start = performance.now();
 
-    await store.dispatch( initProfileAsync( window.location.href ) );
+    const [response, selfRes, resPromise] = await Promise.all([
+        store.dispatch(initProfileAsync()).unwrap(),
+        store.dispatch(getSelfProfile()).unwrap(),
+        promise,
+    ]);
 
-    const resPromise = await promise;
+    // if(navigate) {
+    //     if(response === 'error') {
+    //         navigate(response);
+    //     } else if (response === null) {
+    //         navigate(toPreview);
+    //     } else {
+    //         switch(response.role) {
+    //             case EProfileRoles.User:
+    //                 navigate(toSlider);
+    //                 break;
+    //             case EProfileRoles.Admin:
+    //                 navigate(toChange);
+    //                 break;
+    //             case EProfileRoles.Psych:
+    //                 navigate('error');
+    //                 break;
+    //         }
+    //     }
+    // }
 
-    const preloader = document.getElementById( 'preloader' );
+    const elapsed = performance.now() - start;
+    const remainingDelay = Math.max(0, 2000 - elapsed);
 
-    if ( preloader ) {
-        preloader.style.animation = "fadeOut 2s ease-in-out forwards";
+    if (remainingDelay > 0) await delay(remainingDelay);
 
-        await delay(2000);
-
-        preloader.style.display = "none";
-    }
+    await fadeOutPreloader();
 
     return resPromise;
 }
@@ -29,12 +52,14 @@ async function delayForLazy( promise: Promise<any> ) {
 const AppLazy = lazy(() => delayForLazy(import('./App')));
 
 const AppSuspense = () => {
+    const navigate = useNavigate();
+
+    useEffect( () => setNavigate(navigate), [] )
+
     return (
-        <>
-            <Suspense fallback={ <AppPreloader /> } >
-                <AppLazy />
-            </Suspense>
-        </>
+        <Suspense fallback={ <AppPreloader /> } >
+            <AppLazy />
+        </Suspense>
     )
 }
 

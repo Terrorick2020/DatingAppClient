@@ -1,5 +1,5 @@
 import { AdminState } from './admin.types';
-import { SettingsState } from './settings.type';
+import { SettingsState, InterestsVarsItem, BaseVarsItem } from './settings.type';
 import { PsychState } from './psych.types';
 import { ChatsState } from './chats.types';
 import { LikesState } from './likes.types';
@@ -49,4 +49,11 @@ export interface IState {
     questionnaires: QuestState
     psych:          PsychState
     settings:       SettingsState
+}
+
+export type AsyncThunkRes<T> = T | null | 'error'
+
+export interface InitFillingQuestRes {
+    cityes: BaseVarsItem[]
+    interests: InterestsVarsItem[]
 }

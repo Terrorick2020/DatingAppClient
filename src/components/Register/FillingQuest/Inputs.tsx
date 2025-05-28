@@ -1,5 +1,4 @@
 import { ChangeEvent, JSX, useState } from 'react';
-import { districtsList } from '@/constant/profiles';
 import { useSelector, useDispatch } from 'react-redux';
 import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { setFQErrors } from '@/store/slices/settingsSlice';
@@ -17,6 +16,7 @@ import CustomSelIcon from '@/components/UI/CustomSelIcon';
 const FillingQuestInputs = (): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
+    const cityesVarsList = useSelector((state: IState) => state.settings.cityesVars);
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -42,7 +42,15 @@ const FillingQuestInputs = (): JSX.Element => {
     const handleChangeCity = (event: SelectChangeEvent): void => {
         dispatch(setInfo({
             ...profileInfo,
-            city: event.target.value,
+            town: event.target.value,
+        }))
+
+        dispatch(setFQErrors({
+            ...fQErrors,
+            cityErr: {
+                value: false,
+                msg: '',
+            }
         }))
     }
 
@@ -90,14 +98,24 @@ const FillingQuestInputs = (): JSX.Element => {
                             },
                         },
                     }}
+                    sx={{
+                        ...(fQErrors.cityErr.value && {
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#FF4365',
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#FF4365',
+                            },
+                        })
+                    }}
                     open={open}
                     onOpen={() => setOpen(true)}
                     onClose={() => setOpen(false)}
-                    value={profileInfo.city}
+                    value={profileInfo.town}
                     onChange={handleChangeCity}
 
                 >
-                    {districtsList.map(item => (
+                    {cityesVarsList.map(item => (
                         <MenuItem
                             key={`menu-city-item-${item.id}`}
                             value={item.value}

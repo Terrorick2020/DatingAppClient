@@ -10,6 +10,7 @@ import PhotosDelDialog from './DelDialog';
 
 const Photos = memo((props: PropsPhotos): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
   const [photo, setPhoto] = useState<string>('');
   const [delDialogState, setDelDialogState] = useState<DelDialogState>({
     open: false,
@@ -20,13 +21,14 @@ const Photos = memo((props: PropsPhotos): JSX.Element => {
     setPhoto(URL.createObjectURL(photo));
     setLoading(true);
 
-    await props.handleAdd(photo);
+    await props.handleAdd(photo, setProgress);
 
     setLoading(false);
 
     await delay(100);
 
     setPhoto('');
+    setProgress(0);
   }, [props.handleAdd]);
 
   const setOpen = useCallback((open: boolean) => {
@@ -46,7 +48,7 @@ const Photos = memo((props: PropsPhotos): JSX.Element => {
 
             {props.photos.length < 3 && (
                 <>
-                    {loading && <PhotosLoadItem photo={photo} />}
+                    {loading && <PhotosLoadItem photo={photo} progress={progress} setProgress={setProgress} />}
                     {!photo && <PhotosAddItem handleAdd={handleAdd} />}
                 </>
             )}
