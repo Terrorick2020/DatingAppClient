@@ -1,4 +1,6 @@
 import { JSX, useState } from 'react';
+import { useSelector } from 'react-redux';
+import type { IState } from '@/types/store.types';
 
 import IconButton from '@mui/joy/IconButton';
 import LinkMsg from '@/components/UI/LinkMsg';
@@ -6,6 +8,8 @@ import SvgLink from '@/assets/icon/link-white.svg';
 
 
 const ProfileLink = (): JSX.Element => {
+    const addLink = useSelector((state: IState) => state.profile.addLink);
+
     const [open, setOpen] = useState<boolean>(false);
 
     const handleOpen = (): void => setOpen(true);
@@ -21,7 +25,7 @@ const ProfileLink = (): JSX.Element => {
                     <img src={SvgLink} alt="link" />
                 </IconButton>
             </div>
-            <LinkMsg link={'https://t.me/BotFather'} open={open} setOpen={setOpen} />
+            <LinkMsg link={addLink} open={open} setOpen={setOpen} />
         </>
     )
 }

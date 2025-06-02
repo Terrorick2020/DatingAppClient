@@ -34,7 +34,7 @@ const FillingQuestBio = (): JSX.Element => {
 
     return (
         <div className="widgets__bio">
-            <h4 className="headline">Био <span className="count">{profileInfo.bio.length}/500</span></h4>
+            <h4 className="headline">Био <span className="count">{profileInfo?.bio?.length ?? 0}/500</span></h4>
             <TextField
                 className="bio-input"
                 id="bio-input"

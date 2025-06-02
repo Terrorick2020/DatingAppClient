@@ -44,46 +44,65 @@ export const initLikesListAsync = createAsyncThunk(
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 export const acceptLikingAsync = createAsyncThunk(
     'likes/accept-liking',
-    async (id: string): Promise<boolean> => {
+    async (toUserId: string, { getState }): Promise<AsyncThunkRes<boolean>> => {
         try {
-            await delay(2000);
+            const rootState = getState() as IState;
+            const fromUserId = rootState.profile.info.id;
 
-            return !!id;
+            const data = {
+                fromUserId,
+                toUserId,
+            }
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.post(LIKES_ENDPOINT, data);
+
+            return response.data.success;
         } catch (error) {
-            throw error;
+            return 'error';
         }
     }
 );
 
 export const rejectLikingAsync = createAsyncThunk(
     'likes/reject-liking',
-    async (id: string): Promise<boolean> => {
+    async (id: string, { getState }): Promise<AsyncThunkRes<boolean>> => {
         try {
-            await delay(2000);
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
 
-            return !!id;
+            const delLikingEndpoint = `${LIKES_ENDPOINT}/${telegramId}/${id}`;
+
+            const response: AxiosResponse<FetchResponse<string>> = await api.delete(delLikingEndpoint);
+
+            return response.data.success;
         } catch (error) {
-            throw error;
+            return 'error';
         }
     }
 );
 
 export const acceptMatchAsync = createAsyncThunk(
     'likes/accept-match',
-    async (): Promise<void> => {
-        await delay(2000);
+    async (): Promise<AsyncThunkRes<void>> => {
+        try {
+            await delay(2000);
+
+            return null;
+        } catch (error) {
+            return 'error';
+        }
     }
-)
+);
 
 const likesSlice = createSlice({
     name: 'likes',
     initialState,
     reducers: {
-        setMatch: (state, action: PayloadAction<LikesMatch>) => {
+        setMatch: (state, action: PayloadAction<LikesMatch>): void => {
             state.match = action.payload;
         }
     },
@@ -93,9 +112,17 @@ const likesSlice = createSlice({
             console.log("Получение списка симпатий");
         })
         builder.addCase(initLikesListAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<LikesItem[]>> ) => {
-            console.log("Успешное получение списка симпатий");
-            if(!!action.payload && action.payload !== 'error') {
-                state.likesList = action.payload;
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получение списка симпатий");
+                    break;
+                case null:
+                    console.log("Симпатии не получены");
+                    break;
+                default:
+                    state.likesList = action.payload;
+                    console.log("Успешное получение списка симпати");
+                    break;
             }
         })
         builder.addCase(initLikesListAsync.rejected, _ => {
@@ -106,8 +133,18 @@ const likesSlice = createSlice({
         builder.addCase(acceptLikingAsync.pending, _ => {
             console.log("Принятие симпатии");
         })
-        builder.addCase(acceptLikingAsync.fulfilled, _ => {
-            console.log("Успешное принятие симпатии");
+        builder.addCase(acceptLikingAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<boolean>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка принятия симпатии");
+                    break;
+                case null:
+                    console.log("Симпатия не принята");
+                    break;
+                default:
+                    console.log("Успешное принятие симпатии");
+                    break;
+            }
         })
         builder.addCase(acceptLikingAsync.rejected, _ => {
             console.log("Ошибка принятия симпатии");
@@ -117,8 +154,18 @@ const likesSlice = createSlice({
         builder.addCase(rejectLikingAsync.pending, _ => {
             console.log("Отклонение симпантии");
         })
-        builder.addCase(rejectLikingAsync.fulfilled, _ => {
-            console.log("Успешное отклонение симпантии");
+        builder.addCase(rejectLikingAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<boolean>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка отклонения симпантии");
+                    break;
+                case null:
+                    console.log("Симпатия не откланене");
+                    break;
+                default:
+                    console.log("Успешное отклонение симпантии");
+                    break;
+            }
 
         })
         builder.addCase(rejectLikingAsync.rejected, _ => {
@@ -129,8 +176,18 @@ const likesSlice = createSlice({
         builder.addCase(acceptMatchAsync.pending, _ => {
             console.log("Ответ на симпатию");
         })
-        builder.addCase(acceptMatchAsync.fulfilled, _ => {
-            console.log("Успешный ответ на симпатию");
+        builder.addCase(acceptMatchAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<void>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка ответа на симпатию");
+                    break;
+                case null:
+                    console.log("На симпатию не удалось ответить");
+                    break;
+                default:
+                    console.log("Успешный ответ на симпатию");
+                    break;
+            }
 
         })
         builder.addCase(acceptMatchAsync.rejected, _ => {

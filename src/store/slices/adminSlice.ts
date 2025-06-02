@@ -6,13 +6,28 @@ import type {
     ComplaintListItem,
 } from '@/types/admin.types';
 
+import {
+    EProfileRoles,
+    EProfileStatus,
+    type AsyncThunkRes,
+    type IState,
+} from '@/types/store.types';
+
+import {
+    USER_ENDPOINT,
+    PHOTO_LINK,
+    COMPLS_ENDPOINT,
+    DELETE_PHOTO,
+    UPLOAD_PHOTO,
+} from '@/config/env.config';
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { EProfileRoles, EProfileStatus } from '@/types/store.types';
-import { resUsersList, resPsychsList, targetsUsers, complaintList } from '@/constant/admin';
+import { complaintList } from '@/constant/admin';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
-import type { PhotoItem } from '@/types/profile.types';
-import type { IState } from '@/types/store.types';
+import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
+import type { FetchResponse, FetchSavePhotoRes, } from '@/types/fetch.type';
+import type { AxiosResponse, AxiosProgressEvent } from 'axios';
 
 import api from '@/config/fetch.config';
 
@@ -21,7 +36,7 @@ const initialState: AdminState = {
     searchType: EProfileRoles.User,
     searchId: '',
     password: '',
-    link: 'https://t.me/BotFather',
+    link: '',
     profilesList: [],
     targetProfile: {
         id: '',
@@ -39,32 +54,45 @@ const initialState: AdminState = {
 
 export const getProfilesListAsync = createAsyncThunk(
     'admin/get-profiles-list',
-    async (_, { getState, dispatch }): Promise<ProfilesListItem[]> => {
+    async (_, { getState, dispatch }): Promise<AsyncThunkRes<ProfilesListItem[]>> => {
         try {
             dispatch(setLoad(true));
 
-            await delay(1000);
+            const response: AxiosResponse<FetchResponse<any>> = await api.get(USER_ENDPOINT);
 
-            const rootState = getState() as IState;
-            const adminState = rootState.admin;
+            if(
+                response.status === 200 &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) {
+                let result: ProfilesListItem[] = [];
 
-            let response: ProfilesListItem[] = [];
+                const rootState = getState() as IState;
+                const adminState = rootState.admin;
 
-            switch ( adminState.searchType ) {
-            case EProfileRoles.User:
-                response = resUsersList;
-                break;
-            case EProfileRoles.Psych:
-                response = resPsychsList;
-                break;
+                for(let item of response.data.data) {
+                    result.push({
+                        id: item.telegramId,
+                        role: item.role,
+                        avatar: PHOTO_LINK(item.photos[0].key),
+                        name: item.name,
+                        status: item.status
+                    })
+                }
+
+                console.log( result )
+
+                result = result.filter(item => item.role === adminState.searchType);
+
+                if ( adminState.searchId ) result = result.filter( item => item.id.includes( adminState.searchId ) );
+
+                return result;
             }
-    
-            if ( adminState.searchId ) return response.filter( item => item.id.includes( adminState.searchId ) );
 
-            return response;
-
+            return null;
         } catch ( error ) {
-            throw error;
+            return 'error';
         } finally {
             dispatch(setLoad(false));
         }
@@ -73,37 +101,57 @@ export const getProfilesListAsync = createAsyncThunk(
 
 export const getUniqueLinkAsync = createAsyncThunk(
     'admin/get-unique-link',
-    async (_, { dispatch }): Promise<string> =>{
+    async (): Promise<AsyncThunkRes<string>> =>{
         try {
-            dispatch(setLoad(true));
-
             await delay(1000);
     
             const response = 'https://t.me/a/psych/s/3339d25d-5fdfd-4dfdf8d-b442-30aadfdf2b4e8';
     
             return response;
-
         } catch ( error ) {
-            throw error;
-        } finally {
-            dispatch(setLoad(false));
+            return 'error';
         }
     }
 );
 
 export const getProfileByIdAsync = createAsyncThunk(
     'admin/get-profile-by-id',
-    async (id: string, { dispatch }): Promise<TargetProfile> => {
+    async (id: string, { dispatch }): Promise<AsyncThunkRes<TargetProfile>> => {
         try {
             dispatch(setLoad(true));
 
-            await delay(1500);
+            const response: AxiosResponse<FetchResponse<any>> = await api.get(`${USER_ENDPOINT}/${id}`);
 
-            const response = targetsUsers[id];
+            console.log( response )
 
-            return response;
+            if(
+                response.status === 200 &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) {
+                const data = response.data.data;
+
+                const photos = data.photos.map((item: any) => ({id: item.id, photo: item.url}));
+
+                const result: TargetProfile = {
+                    id: data.telegramId,
+                    role: data.role,
+                    photos,
+                    name: data.name,
+                    age: data.age,
+                    city: data.town,
+                    status: data.status,
+                    description: data.bio,
+                    complaint: null,
+                };
+
+                return result;
+            }
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
             dispatch(setLoad(false));
         }
@@ -112,89 +160,155 @@ export const getProfileByIdAsync = createAsyncThunk(
 
 export const addPhotoToUserAsync = createAsyncThunk(
     'admin/add-photo-to-user',
-    async (photo: File): Promise<PhotoItem> => {
+    async (data: SavePhotoAsyncThuncData, {getState}): Promise<AsyncThunkRes<PhotoItem>> => {
         try {
             await delay(2000);
 
-            const photoUrl = URL.createObjectURL(photo);
-            const newPhoto: PhotoItem = {
-                id: `${Date.now()}`,
-                photo: photoUrl
-            };
+            const rootState = getState() as IState;
+            const toUser = rootState.admin.targetProfile.id;
+    
+            const formData = new FormData();
+            formData.append('photo', data.photo);
+            formData.append('telegramId', toUser);
+    
+            const response: AxiosResponse<FetchResponse<FetchSavePhotoRes>> = await api.post(UPLOAD_PHOTO, formData, {
+                onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+                    if (progressEvent.total) {
+                      const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                      data.setUploadProgress(percent);
+                    }
+                }
+            });
 
-            return newPhoto;
+            if(
+                response.status === 201 &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) {
+                const photoUrl = URL.createObjectURL(data.photo);
+
+                return {
+                    id: String(response.data.data.photoId),
+                    photo: photoUrl,
+                } as PhotoItem;
+            }
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         }
     }
 );
 
 export const delPhotoToUserAsync = createAsyncThunk(
     'admin/del-photo-to-user',
-    async (id: string): Promise<string> => {
+    async (id: string, { getState }): Promise<AsyncThunkRes<string>> => {
         try {
             await delay(2000);
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
 
-            return id;
+            const data = {
+                telegramId,
+                photoId: id,
+            }
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.post(DELETE_PHOTO, data);
+
+            if(
+                response.status === 200 &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) return id;
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         }
     }
 );
 
 export const serchProfileStatusAsync = createAsyncThunk(
     'admin/serch-profile-status',
-    async ({ id, targetValue, delComplaint: _ }: DataSerchProfStat, { getState, dispatch }): Promise<EProfileStatus> => {
-        const rootState = getState() as IState;
-        const adminState = rootState.admin;
+    async (
+        { id, targetValue, delComplaint: _ }: DataSerchProfStat,
+        { getState, dispatch }
+    ): Promise<AsyncThunkRes<EProfileStatus>> => {
+        try {
+            const rootState = getState() as IState;
+            const adminState = rootState.admin;
 
-        const newProfilesList = adminState.profilesList.map(
-            item => ({
-                ...item,
-                status: item.id === id ? targetValue : item.status,
-            })
-        )
+            const newProfilesList = adminState.profilesList.map(
+                item => ({
+                    ...item,
+                    status: item.id === id ? targetValue : item.status,
+                })
+            );
 
-        dispatch(setNewProfilesList(newProfilesList));
+            dispatch(setNewProfilesList(newProfilesList));
 
-        await delay(500);
+            await delay(500);
 
-        const response = targetValue;
+            const response = targetValue;
 
-        return response;
+            return response;
+        } catch (error) {
+            return 'error';
+        }
     }
 );
 
 export const deleteUserAsync = createAsyncThunk(
     'admin/delete-user',
-    async (_, { getState }): Promise<ProfilesListItem[]> => {
+    async (_, { getState }): Promise<AsyncThunkRes<ProfilesListItem[]>> => {
         try {
-
             const rootState = getState() as IState;
             const adminState = rootState.admin;
 
-            const newProfilesList = adminState.profilesList.filter(item => item.id !== adminState.targetProfile.id);
+            const url = `${USER_ENDPOINT}/${adminState.targetProfile.id}`;
 
-            await delay(500);
+            const response: AxiosResponse<FetchResponse<any>> = await api.delete(url);
 
-            return newProfilesList
+            if(
+                response.status === 200 &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) {
+                const newProfilesList = adminState.profilesList.filter(
+                    item => item.id !== adminState.targetProfile.id
+                );
+
+                return newProfilesList;
+            }
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         }
     }
 );
 
 export const initComplaintListAsync = createAsyncThunk(
     'admin/init-complaint-list',
-    async (_, {dispatch}): Promise<ComplaintListItem[]> => {
+    async (_, { dispatch, getState }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
         try {
             dispatch(setLoad(true));
 
-            await delay(2000);
+            const rootState = getState() as IState;
+            const tgId = rootState.profile.info.id;
+
+            const url = `${COMPLS_ENDPOINT}?telegramId=${tgId}&type=admin`;
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
+
+            console.log( response )
 
             return complaintList;
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
             dispatch(setLoad(false));
         }
@@ -226,9 +340,19 @@ const adminSlice = createSlice({
         builder.addCase(getProfilesListAsync.pending, _ => {
             console.log("Получение списка пользователей");
         })
-        builder.addCase(getProfilesListAsync.fulfilled, ( state, action: PayloadAction<ProfilesListItem[]> ) => {
-            console.log("Успешное получение списка пользователей");
-            state.profilesList = action.payload;
+        builder.addCase(getProfilesListAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<ProfilesListItem[]>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения списка пользователей");
+                    break;
+                case null:
+                    console.log("Список пользователей не получен");
+                    break;
+                default:
+                    state.profilesList = action.payload;
+                    console.log("Успешное получение списка пользователей");
+                    break;
+            }
         }),
         builder.addCase(getProfilesListAsync.rejected, _ => {
             console.log("Ошибка получения списка пользователей");
@@ -238,9 +362,19 @@ const adminSlice = createSlice({
         builder.addCase(addPhotoToUserAsync.pending, _ => {
             console.log("Добавление фотографии пользователю");
         })
-        builder.addCase(addPhotoToUserAsync.fulfilled, ( state, action: PayloadAction<PhotoItem> ) => {
-            console.log("Успешное добавление фотографии пользователю");
-            state.targetProfile.photos.push(action.payload);
+        builder.addCase(addPhotoToUserAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<PhotoItem>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка добавления фотографии пользователю");
+                    break;
+                case null:
+                    console.log("Фотография пользователю не добавлена");
+                    break;
+                default:
+                    state.targetProfile.photos.push(action.payload);
+                    console.log("Успешное добавление фотографии пользователю");
+                    break;
+            }
         }),
         builder.addCase(addPhotoToUserAsync.rejected, _ => {
             console.log("Ошибка добавления фотографии пользователю");
@@ -250,11 +384,22 @@ const adminSlice = createSlice({
         builder.addCase(delPhotoToUserAsync.pending, _ => {
             console.log("Удаление фотографии пользователю");
         })
-        builder.addCase(delPhotoToUserAsync.fulfilled, ( state, action: PayloadAction<string> ) => {
-            console.log("Успешное удаление фотографии пользователю");
-            state.targetProfile.photos = state.targetProfile.photos.filter(
-                item => item.id !== action.payload
-            );
+        builder.addCase(delPhotoToUserAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<string>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка удаления фотографии пользователю");
+                    break;
+                case null:
+                    console.log("Фотография пользователя не удалена");
+                    break;
+                default:
+                    state.targetProfile.photos = state.targetProfile.photos.filter(
+                        item => item.id !== action.payload
+                    );
+
+                    console.log("Успешное удаление фотографии пользователю");
+                    break;
+            }
         }),
         builder.addCase(delPhotoToUserAsync.rejected, _ => {
             console.log("Ошибка удаления фотографии пользователю");
@@ -264,9 +409,19 @@ const adminSlice = createSlice({
         builder.addCase(getUniqueLinkAsync.pending, _ => {
             console.log("Получение уникальной ссылки");
         })
-        builder.addCase(getUniqueLinkAsync.fulfilled, ( state, action: PayloadAction<string> ) => {
-            console.log("Успешное получение уникальной ссылки");
-            state.link = action.payload;
+        builder.addCase(getUniqueLinkAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<string>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения уникальной ссылки");
+                    break;
+                case null:
+                    console.log("Уникальная ссылка не получена");
+                    break;
+                default:
+                    state.link = action.payload;
+                    console.log("Успешное получение уникальной ссылки");
+                    break;
+            }
         }),
         builder.addCase(getUniqueLinkAsync.rejected, _ => {
             console.log("Ошибка получения уникальной ссылки");
@@ -276,9 +431,19 @@ const adminSlice = createSlice({
         builder.addCase(getProfileByIdAsync.pending, _ => {
             console.log("Получение целевого пользователя");
         })
-        builder.addCase(getProfileByIdAsync.fulfilled, ( state, action: PayloadAction<TargetProfile> ) => {
-            console.log("Успешное получение целевого пользователя");
-            state.targetProfile = action.payload;
+        builder.addCase(getProfileByIdAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<TargetProfile>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения целевого пользователя");
+                    break;
+                case null:
+                    console.log("Целевой пользователь не получен");
+                    break;
+                default:
+                    state.targetProfile = action.payload;
+                    console.log("Успешное получение целевого пользователя");
+                    break;
+            }
         }),
         builder.addCase(getProfileByIdAsync.rejected, _ => {
             console.log("Ошибка получения целевого пользователя");
@@ -288,9 +453,19 @@ const adminSlice = createSlice({
         builder.addCase(serchProfileStatusAsync.pending, _ => {
             console.log("Изменение статуса пользователя");
         })
-        builder.addCase(serchProfileStatusAsync.fulfilled, ( state, action: PayloadAction<EProfileStatus> ) => {
-            console.log("Успешное изменение статуса пользователя");
-            state.targetProfile.status = action.payload;
+        builder.addCase(serchProfileStatusAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<EProfileStatus>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка изменения статуса пользователя");
+                    break;
+                case null:
+                    console.log("Статус пользователя не изменён");
+                    break;
+                default:
+                    state.targetProfile.status = action.payload;
+                    console.log("Успешное изменение статуса пользователя");
+                    break;
+            }
         }),
         builder.addCase(serchProfileStatusAsync.rejected, _ => {
             console.log("Ошибка изменения статуса пользователя");
@@ -300,9 +475,19 @@ const adminSlice = createSlice({
         builder.addCase(deleteUserAsync.pending, _ => {
             console.log("Удаление пользователя");
         })
-        builder.addCase(deleteUserAsync.fulfilled, ( state, action: PayloadAction<ProfilesListItem[]> ) => {
-            console.log("Успешное удаление пользователя");
-            state.profilesList = action.payload;
+        builder.addCase(deleteUserAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<ProfilesListItem[]>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка удаления пользователя");
+                    break;
+                case null:
+                    console.log("Пользователь не удалён");
+                    break;
+                default:
+                    state.profilesList = action.payload;
+                    console.log("Успешное удаление пользователя");
+                    break;
+            }
         }),
         builder.addCase(deleteUserAsync.rejected, _ => {
             console.log("Ошибка удаления пользователя");
@@ -312,9 +497,19 @@ const adminSlice = createSlice({
         builder.addCase(initComplaintListAsync.pending, _ => {
             console.log("Получение списка жалоб");
         })
-        builder.addCase(initComplaintListAsync.fulfilled, ( state, action: PayloadAction<ComplaintListItem[]> ) => {
-            console.log("Успешное получение списка жалоб");
-            state.complaintsList = action.payload;
+        builder.addCase(initComplaintListAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<ComplaintListItem[]>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения списка жалоб");
+                    break;
+                case null:
+                    console.log("Список жалоб не получен");
+                    break;
+                default:
+                    state.complaintsList = action.payload;
+                    console.log("Успешное получение списка жалоб");
+                    break;
+            }
         }),
         builder.addCase(initComplaintListAsync.rejected, _ => {
             console.log("Ошибка получения списка жалоб");

@@ -112,7 +112,7 @@ const psychSlice = createSlice({
     name: 'psychologists',
     initialState,
     reducers: {
-        setSerchPsychQuery: (state, action: PayloadAction<string>) => {
+        setSerchPsychQuery: (state, action: PayloadAction<string>): void => {
             state.serchPsychQuery = action.payload;
         }
     },

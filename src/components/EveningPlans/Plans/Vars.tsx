@@ -21,6 +21,8 @@ const PlansVars = memo((props: PropsPlansVars): JSX.Element => {
         }))
     }
 
+    if(!props.plansVars.length) return (<></>);
+
     return (
         <div className="vars">
             <h4 className="headline">Ваши планы на сегодня</h4>
@@ -42,7 +44,7 @@ const PlansVars = memo((props: PropsPlansVars): JSX.Element => {
                     ))}
             </ToggleButtonGroup>
         </div>
-    )
+    );
 })
 
 export default PlansVars;

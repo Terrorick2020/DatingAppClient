@@ -19,8 +19,8 @@ export interface ClearBtnProps {
 }
 
 export interface PropsLikeBtn {
-    id: number
-    clickLike: (id: number) => void
+    id: string
+    clickLike?: () => void
 }
 
 export interface PropsListBlock {

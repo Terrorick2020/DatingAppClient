@@ -46,7 +46,7 @@ const DetailsContent = (): JSX.Element => {
                 <DetailsInfo />
             </div>
             <div className="details__fixed">
-                <DetailsFixed />
+                <DetailsFixed id={id} />
             </div>
             <ComplaintDrawer id={id} />
         </>

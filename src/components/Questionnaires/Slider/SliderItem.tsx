@@ -14,6 +14,8 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
     const [index, setIndex] = useState<number>( 0 );
     const [fade, setFade] = useState<boolean>(true);
 
+    const disOpt = props.sliderItem.photos.length <= 1;
+
     const changeImg = (newIndex: number) => {
         if ( newIndex < 0 ) newIndex = props.sliderItem.photos.length - 1;
         if ( newIndex >= props.sliderItem.photos.length ) newIndex = 0;
@@ -25,8 +27,8 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
         }, 200);
     };
 
-    const nextPhoto = () => changeImg( index + 1 );
-    const prevPhoto = () => changeImg( index - 1 );
+    const nextPhoto = () => !disOpt && changeImg( index + 1 );
+    const prevPhoto = () => !disOpt && changeImg( index - 1 );
 
     const name = useMemo(
         () => `${props.sliderItem.name}, ${ageToStr(props.sliderItem.age)}`,
@@ -60,7 +62,7 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
                     <h4 className="headline">
                         { name }
                     </h4>
-                    <p className="description">{ props.sliderItem.description }</p>
+                    {/* <p className="description">{ props.sliderItem.description }</p> */}
                 </div>
                 <div className="panel">
                     <PlansLabel type={PlanLabelSvgType.ordinary}/>
@@ -72,7 +74,7 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
                         variant="contained"
                         onClick={ props.prevStep }
                     >Назад</Button>
-                    <LikeBtn id={+props.sliderItem.id} clickLike={props.clickLike} />
+                    <LikeBtn id={props.sliderItem.id} clickLike={props.clickLike} />
                     <Button
                         className="lemon"
                         variant="contained"

@@ -1,29 +1,15 @@
 import { JSX } from 'react';
-import { appRoutes } from '@/config/routes.config';
 import { NavLink } from 'react-router-dom';
+import { toSlider } from '@/config/routes.config';
 import { useDispatch } from 'react-redux';
 import { dellRoute } from '@/store/slices/settingsSlice';
+import type { PropsDetailsFixed } from '@/types/quest.types';
 
 import LikeBtn from '@/components/UI/LikeBtn';
 import Button from '@mui/material/Button';
 
 
-const ID = 1;
-
-const DetailsFixed = (): JSX.Element => {
-    const clickLike = (id: number) => {
-        const heartHtml = document.getElementById(`heart-${ id }`);
-        if ( heartHtml ) heartHtml.style.animation = 'heart-top 1.5s ease-in-out forwards';
-        
-        setTimeout(() => {
-            if ( heartHtml ) heartHtml.style.animation = 'none';
-        }, 1500)
-    }
-
-    const questionnairesGlobRoute = appRoutes.questionnaires.global;
-    const questionnairesSliderRoute = appRoutes.questionnaires.inner.slider;
-    const toSlider = `${questionnairesGlobRoute}/${questionnairesSliderRoute}`;
-
+const DetailsFixed = (props: PropsDetailsFixed): JSX.Element => {
     const dispatch = useDispatch();
 
     const handleRoute = () => dispatch(dellRoute());
@@ -35,11 +21,9 @@ const DetailsFixed = (): JSX.Element => {
                     <Button
                         className="lemon-fon bg-dark"
                         variant="contained"
-                    >
-                        Назад
-                    </Button>
+                    >Назад</Button>
                 </NavLink>
-                <LikeBtn id={ID} clickLike={clickLike} />
+                <LikeBtn id={props.id} />
             </div>
             <div className="void"></div>
         </>

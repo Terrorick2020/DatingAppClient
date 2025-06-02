@@ -56,6 +56,8 @@ const FillingQuestInputs = (): JSX.Element => {
 
     const handleOpenPanel = (): void => setOpen(!open);
 
+    if(!cityesVarsList.length) return(<></>);
+
     return (
         <div className="widgets__inputs">
             <h4>Ваше имя</h4>

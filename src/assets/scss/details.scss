@@ -81,6 +81,7 @@
 
                             .nav-btn {
                                 background: #00000075 !important;
+                                -webkit-tap-highlight-color: transparent;
 
                                 svg {
                                     path, rect {
@@ -104,6 +105,7 @@
                             height: 100%;
                             cursor: pointer;
                             user-select: none;
+                            -webkit-tap-highlight-color: transparent;
 
                             &:active {
                                 background: transparent;
@@ -242,6 +244,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            -webkit-tap-highlight-color: transparent;
         }
     }
 }

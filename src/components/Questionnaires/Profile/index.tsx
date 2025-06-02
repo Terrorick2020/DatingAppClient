@@ -1,9 +1,9 @@
 import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { appRoutes } from '@/config/routes.config';
+import { toPlans, toFillQuest } from '@/config/routes.config';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getSelfProfile } from '@/store/slices/profileSlice';
+import { initEPCtxAsync } from '@/store/slices/settingsSlice';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
 
@@ -28,26 +28,18 @@ const ProfileContent = (): JSX.Element => {
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
 
-            dispatch(getSelfProfile());
+            dispatch(initEPCtxAsync());
         },
         []
     )
 
     const handleInfoRoute = (): void => {
-        const regGlobRoute = appRoutes.register.global;
-        const regFillingQuestRoute = appRoutes.register.inner.fillQuest;
-        const toFillingQuest = `${regGlobRoute}/${regFillingQuestRoute}`;
-
-        navigate(toFillingQuest);
+        navigate(toFillQuest);
         dispatch(addRoute(location.pathname));
     }
 
     const handlePlansRoute = (): void => {
-        const ePGlobRoute = appRoutes.eveningPlans.global;
-        const ePPlansRoute = appRoutes.eveningPlans.inner.plans;
-        const toEPPlans = `${ePGlobRoute}/${ePPlansRoute}`;
-
-        navigate(toEPPlans);
+        navigate(toPlans);
         dispatch(addRoute(location.pathname));
     }
 

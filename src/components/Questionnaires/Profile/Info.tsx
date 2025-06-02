@@ -1,4 +1,4 @@
-import { JSX, memo } from 'react';
+import { JSX, memo, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { ageToStr } from '@/funcs/general.funcs';
 import type { PropsProfileInfo } from '@/types/quest.types';
@@ -11,6 +11,17 @@ import SvgEdit from '@/assets/icon/edit.svg';
 
 const ProfileInfo = memo((props: PropsProfileInfo): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
+    const cityesVars = useSelector((state: IState) => state.settings.cityesVars);
+
+    const [city, setCity] = useState<string>('');
+
+    useEffect(() => {
+        const targetCity = cityesVars.find(
+            item => item.value === profileInfo.town
+        );
+
+        setCity(targetCity?.label || 'Поиск...');
+    }, [])
     
     return (
         <div className="profile-box">
@@ -23,7 +34,7 @@ const ProfileInfo = memo((props: PropsProfileInfo): JSX.Element => {
                     <h4 className="headline">
                         {`${profileInfo.name}, ${ageToStr(profileInfo.age)}`}
                     </h4>
-                    <p className="description opacity">{profileInfo.city}</p>
+                    <p className="description opacity">{city}</p>
                 </div>
             </div>
             <Button

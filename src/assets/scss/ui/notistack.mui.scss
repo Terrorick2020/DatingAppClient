@@ -4,13 +4,13 @@
         display: flex;
         justify-content: center;
 
+        &:has(.notistack-Snackbar .plans-timeout) {
+            margin-top: 14vh;
+        }
+
         .notistack-Snackbar {
             display: flex;
             justify-content: center;
-
-            .plans-timeout {
-                margin-top: 15vh;
-            }
 
             .notistack-MuiContent {
                 align-items: center;

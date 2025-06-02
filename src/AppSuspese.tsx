@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { EProfileRoles } from './types/store.types';
 import { toChange, toPreview, toSlider } from './config/routes.config';{ }
 import { setNavigate, navigate } from './config/fetch.config';
-import { initProfileAsync, getSelfProfile } from '@/store/slices/profileSlice';
+import { initProfileAsync, getSelfProfile, getSelfPlansAsync } from '@/store/slices/profileSlice';
 import { delay, fadeOutPreloader } from './funcs/general.funcs';
 
 import store from './store';
@@ -13,9 +13,10 @@ import AppPreloader from './components/AppPreloader';
 async function delayForLazy( promise: Promise<any> ) {
     const start = performance.now();
 
-    const [response, selfRes, resPromise] = await Promise.all([
+    const [response, selfRes, plansRes, resPromise] = await Promise.all([
         store.dispatch(initProfileAsync()).unwrap(),
         store.dispatch(getSelfProfile()).unwrap(),
+        store.dispatch(getSelfPlansAsync()).unwrap(),
         promise,
     ]);
 

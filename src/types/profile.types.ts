@@ -27,6 +27,11 @@ export interface EveningPlansItem {
     description: string
 }
 
+export interface EveningPlansMeta {
+    isCurrent: boolean
+    remains: number | null
+}
+
 export interface EveningPlans {
     isCurrent: boolean
     remains: number | null

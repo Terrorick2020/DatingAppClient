@@ -1,5 +1,12 @@
+import {
+    toChats,
+    toLikes,
+    toSlider,
+    toPsych,
+    toProfile,
+} from '@/config/routes.config';
+
 import { JSX, useState } from 'react';
-import { appRoutes } from '@/config/routes.config';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { IState } from '@/types/store.types';
@@ -16,26 +23,14 @@ import SvgPsychologists from '@/assets/icon/psychologists.svg?react';
 import SvgProfile from '@/assets/icon/profile.svg?react';
 
 
-const questGlobRoute = appRoutes.questionnaires.global;
-
-const chatsRoute = appRoutes.questionnaires.inner.chats;
-const likesRoute = appRoutes.questionnaires.inner.likes;
-const sliderRoute = appRoutes.questionnaires.inner.slider;
-const physRoute = appRoutes.questionnaires.inner.psychologists;
-const profileRoute = appRoutes.questionnaires.inner.profile;
-
-const toChats = `${questGlobRoute}/${chatsRoute}`;
-const toLikes = `${questGlobRoute}/${likesRoute}`;
-const toSlider = `${questGlobRoute}/${sliderRoute}`;
-const toPhys = `${questGlobRoute}/${physRoute}`;
-const toProfile = `${questGlobRoute}/${profileRoute}`;
-
 const QuestNavBar = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
+    const isCurrentPlans = useSelector((state: IState) => state.profile.eveningPlans.isCurrent);
+    const badgeCtx = useSelector((state: IState) => state.settings.badge);
 
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     const [value, setValue] = useState(location.pathname);
 
     return (
@@ -51,7 +46,11 @@ const QuestNavBar = (): JSX.Element => {
                     label="Чаты"
                     value={toChats}
                     icon={
-                        <Badge badgeContent={4} color="error">
+                        <Badge
+                            color="error"
+                            badgeContent={badgeCtx.chats.content}
+                            invisible={!badgeCtx.chats.value}
+                        >
                             <SvgChats />
                         </Badge>
                     }
@@ -62,7 +61,11 @@ const QuestNavBar = (): JSX.Element => {
                     label="Симпатии"
                     value={toLikes}
                     icon={
-                        <Badge badgeContent={4} color="error">
+                        <Badge
+                            color="error"
+                            badgeContent={badgeCtx.likes.content} 
+                            invisible={!badgeCtx.likes.value}
+                        >
                             <SvgLikes />
                         </Badge>
                     }
@@ -78,16 +81,20 @@ const QuestNavBar = (): JSX.Element => {
                 />
                 <BottomNavigationAction
                     label="Пси-помощь"
-                    value={toPhys}
+                    value={toPsych}
                     icon={<SvgPsychologists />}
-                    onClick={() => navigate(toPhys)}
+                    onClick={() => navigate(toPsych)}
                     disabled={isLoad}
                 />
                 <BottomNavigationAction
                     label="Профиль"
                     value={toProfile}
                     icon={
-                        <Badge badgeContent={'❕'} color="error">
+                        <Badge
+                            color="error"
+                            badgeContent={'❕'}
+                            invisible={isCurrentPlans}
+                        >
                             <SvgProfile />
                         </Badge>
                     }

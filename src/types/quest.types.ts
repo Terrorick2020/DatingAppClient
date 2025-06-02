@@ -58,6 +58,15 @@ export interface ISliderItemProps {
     sliderItem: SliderItem
     toDetails: (id: string) => void
     nextStep: () => void
-    clickLike: (id: number) => void
+    clickLike: () => void
     prevStep: () => void
+}
+
+export interface PlansLabelsState {
+    plan: string
+    location: string
+}
+
+export interface PropsDetailsFixed {
+    id: string
 }

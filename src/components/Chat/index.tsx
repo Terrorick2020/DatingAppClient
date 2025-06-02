@@ -2,6 +2,8 @@ import { JSX, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getChatByIdAsync } from '@/store/slices/chatsSlice';
+import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
+import { WS_MSGS } from '@/config/env.config';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
 
@@ -24,18 +26,23 @@ const ChatContent = (): JSX.Element => {
 
     if ( !id ) return (<></>);
 
-    useEffect(
-        () => {
-            const chatHtml = document.getElementById('target-chat');
-            if ( chatHtml ) chatHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+    useEffect( () => {
+        const chatHtml = document.getElementById('target-chat');
+        if ( chatHtml ) chatHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
-            const logoHeader = document.getElementById('logo-header');
-            if( logoHeader ) logoHeader.style.display = 'flex';
+        const logoHeader = document.getElementById('logo-header');
+        if( logoHeader ) logoHeader.style.display = 'flex';
 
-            dispatch(getChatByIdAsync(id));
-        },
-        [id]
-    )
+        dispatch(getChatByIdAsync(id));
+    }, [id] );
+
+    useEffect( () => {
+        connectToNamespace(WS_MSGS);
+
+        return () => {
+            disconnectFromNamespace(WS_MSGS);
+        }
+    }, [] );
 
     const handleChangeMsg = (newValue: string): void => {
         setMessage(newValue);

@@ -16,8 +16,6 @@ import {
 } from '@/types/settings.type';
 
 import {
-    complaintsVarsList,
-    targetComplaintsVarsList,
     dfltErrItem,
     badgeEmptyItem,
 } from '@/constant/settings';
@@ -34,6 +32,9 @@ import {
     HELP_CITYES_ENDPOINT,
     HELP_REGIONS_ENDPOINT,
     HELP_PLANS_ENDPOINT,
+    HELP_GLOB_COMPLAINTS_ENDPOINT,
+    HELP_DESC_COMPLAINTS_ENDPOINT,
+    COMPLS_ENDPOINT,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -76,6 +77,7 @@ export const initialState: SettingsState = {
         step: EComplaintStep.FStep,
         to: '',
         value: '',
+        valueGlob: '',
         query: '',
         complaintsVars: [],
     },
@@ -85,9 +87,8 @@ export const initialState: SettingsState = {
     badge: {
         chats: badgeEmptyItem,
         likes: badgeEmptyItem,
-        profile: badgeEmptyItem,
-    }
-}
+    },
+};
 
 export const initFillingQuestAsync = createAsyncThunk(
     'settings/init-interest-variants',
@@ -143,24 +144,41 @@ export const initFillingQuestAsync = createAsyncThunk(
             if(needSetLoad) dispatch(setLoad(false));
         }
     }
-)
+);
 
 export const initComplaintsVarsAsync = createAsyncThunk(
     'settings/init-complaints-variants',
-    async (_, { dispatch, getState }): Promise<BaseVarsItem[]> => {
+    async (_, { dispatch, getState }): Promise<AsyncThunkRes<BaseVarsItem[]>> => {
         const rootState = getState() as IState;
         const compalint = rootState.settings.complaint;
 
         try {
             dispatch(setComplCtx(EComplaintType.Load));
 
-            await delay(2000);
+            let result: BaseVarsItem[] | null = null;
+            let response: AxiosResponse<FetchResponse<BaseVarsItem[]>> | null = null;
 
-            if (!compalint.value) return complaintsVarsList;
+            if (!compalint.value) {
+                response = await api.get(HELP_GLOB_COMPLAINTS_ENDPOINT);
+            } else {
+                const data = { globVal: compalint.value };
+
+                response = await api.post(HELP_DESC_COMPLAINTS_ENDPOINT, data);
+
+                !compalint.valueGlob && dispatch(setGlobValueComplaint(compalint.value));
+            }
+
+            if(
+                response &&
+                [200, 201].includes(response.status) &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) result = response.data.data;
     
-            return targetComplaintsVarsList;
+            return result;
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
             if (compalint.value) {
                 switch (compalint.step) {
@@ -176,23 +194,39 @@ export const initComplaintsVarsAsync = createAsyncThunk(
             dispatch(setComplCtx(EComplaintType.Content));
         }
     }
-)
+);
 
 export const sendComplaintAsync = createAsyncThunk(
     'settings/send-complaint',
-    async (_, {dispatch, getState}) => {
+    async (_, {dispatch, getState}): Promise<AsyncThunkRes<'success'>> => {
         try {
             const rootState = getState() as IState;
-            rootState.settings.complaint;
+            const telegramId = rootState.profile.info.id;
+            const complaint = rootState.settings.complaint;
 
-            await delay(2000);
+            const data = {
+                fromUserId: telegramId,
+                reportedUserId: complaint.to,
+                type: `${complaint.valueGlob}, ${complaint.value}`,
+                description: complaint.query,
+                // reportedContentId: "msg_123456",
+            };
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.post(COMPLS_ENDPOINT, data);
+
+            if(
+                response.status === 201 &&
+                response.data.success
+            ) return 'success';
+
+            return null;
         } catch (error) {
-            throw error;
+            return 'error';
         } finally {
             dispatch(resetComplaint());
         }
     },
-)
+);
 
 export const initEPCtxAsync = createAsyncThunk(
     'settings/init-ep-ctx',
@@ -213,7 +247,11 @@ export const initEPCtxAsync = createAsyncThunk(
                     cityesRes.data.data &&
                     cityesRes.data.data !== 'None' &&
                     cityesRes.data.success
-                ) cityesVarsRes = cityesRes.data.data;
+                ) {
+                    cityesVarsRes = cityesRes.data.data;
+
+                    dispatch(setCityes(cityesRes.data.data));
+                }
             } else {
                 cityesVarsRes = cityesVars;
             }
@@ -259,47 +297,52 @@ export const initEPCtxAsync = createAsyncThunk(
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 export const initMediaLinkAsync = createAsyncThunk(
     'settings/init-media-link',
-    async (_linkType: LinkPageType): Promise<string> => {
+    async (_linkType: LinkPageType): Promise<AsyncThunkRes<string>> => {
         try {
             await delay(2000);
 
-            return 'https://storage.yandexcloud.net/photodatingapp/1.MOV?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=YCAJE2WAntPULZcEo0LlklLMu%2F20250429%2Fru-central1%2Fs3%2Faws4_request&X-Amz-Date=20250429T165117Z&X-Amz-Expires=108000&X-Amz-Signature=6dc73f2a9ed9d1a4703f787fd4aec4131ee3c3ea75c8adffbcdbae10db54d5ed&X-Amz-SignedHeaders=host';
+            return 'https://storage.yandexcloud.net/photodatingapp/' +
+                    '1.MOV?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=' +
+                    'YCAJE2WAntPULZcEo0LlklLMu%2F20250429%2Fru-central1%2Fs3%' +
+                    '2Faws4_request&X-Amz-Date=20250429T165117Z&X-Amz-Expires' +
+                    '=108000&X-Amz-Signature=6dc73f2a9ed9d1a4703f787fd4aec413' +
+                    '1ee3c3ea75c8adffbcdbae10db54d5ed&X-Amz-SignedHeaders=host';
         } catch (error) {
-            throw error;
+            return 'error';
         }
     }
-)
+);
 
 const settingsSlice = createSlice({
     name: 'settings',
     initialState,
     reducers: {
-        setLang: (state, action: PayloadAction<ELanguage>) => {
+        setLang: (state, action: PayloadAction<ELanguage>): void => {
             state.lang = action.payload;
         },
-        addRoute: (state, action: PayloadAction<string>) => {
+        addRoute: (state, action: PayloadAction<string>): void => {
             state.routes.push(action.payload);
         },
-        dellRoute: (state) => {
+        dellRoute: (state): void => {
             state.routes.pop();
         },
-        resetRoutes: (state) => {
+        resetRoutes: (state): void => {
             state.routes = [];
         },
-        setSelSexVars: (state, action: PayloadAction<SelSexVarsItem[]>) => {
+        setSelSexVars: (state, action: PayloadAction<SelSexVarsItem[]>): void => {
             state.selSexVars = action.payload;
         },
-        setLoad: (state, action: PayloadAction<boolean>) => {
+        setLoad: (state, action: PayloadAction<boolean>): void => {
             state.load = action.payload;
         },
-        setApiRes: (state, action: PayloadAction<SetApiRes>) => {
+        setApiRes: (state, action: PayloadAction<SetApiRes>): void => {
             state.apiRes = action.payload;
         },
-        resetApiRes: (state) => {
+        resetApiRes: (state): void => {
             state.apiRes = {
                 value: false,
                 msg: '',
@@ -307,39 +350,43 @@ const settingsSlice = createSlice({
                 timestamp: null,
             };
         },
-        setFQErrors: (state, action: PayloadAction<FQErrors>) => {
+        setFQErrors: (state, action: PayloadAction<FQErrors>): void => {
             state.fQErrors = action.payload;
         },
-        setEPErrors: (state, action: PayloadAction<FEPErrors>) => {
+        setEPErrors: (state, action: PayloadAction<FEPErrors>): void => {
             state.fEPErrors = action.payload;
         },
-        setComplOpen: (state, action: PayloadAction<boolean>) => {
+        setComplOpen: (state, action: PayloadAction<boolean>): void => {
             state.complaint.open = action.payload;
         },
-        setComplCtx: (state, action: PayloadAction<EComplaintType>) => {
+        setComplCtx: (state, action: PayloadAction<EComplaintType>): void => {
             state.complaint.type = action.payload;
         },
-        setComplStep: (state, action: PayloadAction<EComplaintStep>) => {
+        setComplStep: (state, action: PayloadAction<EComplaintStep>): void => {
             state.complaint.step = action.payload;
         },
-        setComplaint: (state, action: PayloadAction<Complaint>) => {
+        setComplaint: (state, action: PayloadAction<Complaint>): void => {
             state.complaint = action.payload;
         },
-        resetComplaint: (state) => {
+        resetComplaint: (state): void => {
             state.complaint = {
                 open: false,
                 type: EComplaintType.Load,
                 step: EComplaintStep.FStep,
                 to: '',
                 value: '',
+                valueGlob: '',
                 query: '',
                 complaintsVars: [],
             }
         },
-        setBadge: (state, action: PayloadAction<BadgeBlock>) => {
+        setGlobValueComplaint: (state, action: PayloadAction<string>): void => {
+            state.complaint.valueGlob = action.payload;
+        },
+        setBadge: (state, action: PayloadAction<BadgeBlock>): void => {
             state.badge = action.payload
         },
-        setCityes: (state, action: PayloadAction<BaseVarsItem[]>) => {
+        setCityes: (state, action: PayloadAction<BaseVarsItem[]>): void => {
             state.cityesVars = action.payload;
         },
     },
@@ -349,10 +396,18 @@ const settingsSlice = createSlice({
             console.log("Получение варианетов интересов");
         })
         builder.addCase(initFillingQuestAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<InitFillingQuestRes>> ) => {
-            console.log("Варианты интересов успешно полученый");
-            if(!!action.payload && action.payload !== 'error') {
-                state.cityesVars = action.payload.cityes;
-                state.interestsVars = action.payload.interests;
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получния вариантов интереесов");
+                    break;
+                case null:
+                    console.log("Варианты интересов не получены");
+                    break;
+                default:
+                    state.cityesVars = action.payload.cityes;
+                    state.interestsVars = action.payload.interests;
+                    console.log("Варианты интересов успешно полученый");
+                    break;
             }
         })
         builder.addCase(initFillingQuestAsync.rejected, _ => {
@@ -363,9 +418,19 @@ const settingsSlice = createSlice({
         builder.addCase(initComplaintsVarsAsync.pending, _ => {
             console.log("Получение варианетов жалоб");
         })
-        builder.addCase(initComplaintsVarsAsync.fulfilled, ( state, action: PayloadAction<BaseVarsItem[]> ) => {
-            console.log("Варианты жалоб успешно получены");
-            state.complaint.complaintsVars = action.payload;
+        builder.addCase(initComplaintsVarsAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<BaseVarsItem[]>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получния вариантов жалоб");
+                    break;
+                case null:
+                    console.log("Варианты жалоб не получены");
+                    break;
+                default:
+                    state.complaint.complaintsVars = action.payload;
+                    console.log("Варианты жалоб успешно получены");
+                    break;
+            }
         })
         builder.addCase(initComplaintsVarsAsync.rejected, _ => {
             console.log("Ошибка получния вариантов жалоб");
@@ -386,6 +451,7 @@ const settingsSlice = createSlice({
                 default:
                     state.plansVars = action.payload.plans;
                     state.districtsVars = action.payload.districts;
+                    console.log("Варианты планов и районов успешно загружены");
                     break;
             }
         })
@@ -397,15 +463,25 @@ const settingsSlice = createSlice({
         builder.addCase(initMediaLinkAsync.pending, _ => {
             console.log("Получение ссылки видео");
         })
-        builder.addCase(initMediaLinkAsync.fulfilled, ( state, action: PayloadAction<string> ) => {
-            console.log("Успешное получение ссылки видео");
-            state.mediaLink = action.payload;
+        builder.addCase(initMediaLinkAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<string>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения ссылки видео");
+                    break;
+                case null:
+                    console.log("Ссылка на видео не получена");
+                    break;
+                default:
+                    state.mediaLink = action.payload;
+                    console.log("Успешное получение ссылки видео");
+                    break;
+            }
         })
         builder.addCase(initMediaLinkAsync.rejected, _ => {
             console.log("Ошибка получения ссылки видео");
         })
     }
-})
+});
 
 export const {
     setLang,
@@ -422,6 +498,7 @@ export const {
     setComplCtx,
     setComplStep,
     setComplaint,
+    setGlobValueComplaint,
     resetComplaint,
     setCityes,
 } = settingsSlice.actions;

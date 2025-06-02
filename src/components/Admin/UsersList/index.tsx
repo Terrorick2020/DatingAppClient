@@ -1,6 +1,7 @@
 import { JSX, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
+import { getUniqueLinkAsync } from '@/store/slices/adminSlice';
 import { type RootDispatch } from '@/store';
 
 import AdmineFooter from '@/components/UI/AdmineFooter';
@@ -11,7 +12,10 @@ import UsersListMain from './Main';
 const UsersListContent = (): JSX.Element => {
     const dispatch = useDispatch<RootDispatch>();
 
-    useEffect( () => { dispatch(getProfilesListAsync()) }, [] );
+    useEffect(() => { 
+        dispatch(getProfilesListAsync());
+        dispatch(getUniqueLinkAsync());
+    }, []);
 
     const handleSearch = async (): Promise<void> => {
         await dispatch( getProfilesListAsync() )

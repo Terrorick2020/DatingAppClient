@@ -17,7 +17,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoad } from './settingsSlice';
 import type { FetchResponse } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
-import type { AsyncThunkRes } from '@/types/store.types';
+import type { AsyncThunkRes, IState } from '@/types/store.types';
 
 import api from '@/config/fetch.config';
 
@@ -34,17 +34,22 @@ const initialState: ChatsState = {
 
 export const initChatsCtxAsync = createAsyncThunk(
     'chats/init-chats-ctx',
-    async (_, {dispatch }): Promise<AsyncThunkRes<ChatsCtx>> => {
+    async (_, {dispatch, getState}): Promise<AsyncThunkRes<ChatsCtx>> => {
         try {
             dispatch(setLoad(true));
+
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
 
             const [chatsRes, favChatsRes]: [
                 AxiosResponse<FetchResponse<ChatsListItem[]>>,
                 AxiosResponse<FetchResponse<ChatsFavListItem[]>>
             ] = await Promise.all([
-                api.get(CHATS_ENDPOINT),
-                api.get(CHATS_ENDPOINT),
+                api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`),
+                api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`),
             ]);
+
+            console.log(chatsRes, favChatsRes)
 
             if(
                 chatsRes.status === 200 &&
@@ -97,7 +102,7 @@ export const getChatByIdAsync = createAsyncThunk(
                 chatDialogRes.data.data &&
                 chatDialogRes.data.data !== 'None' &&
                 chatDialogRes.data.success
-            ) return {
+            )  return {
                 id,
                 interlocutor: chatMetaRes.data.data,
                 chatDialog: chatMetaRes.data.data,
@@ -111,6 +116,34 @@ export const getChatByIdAsync = createAsyncThunk(
         }
     }
 );
+
+export const createChatAsync = createAsyncThunk(
+    'chats/create-chat',
+    async (toUser: string, {getState}): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+
+            const data = {
+                telegramId,
+                toUser,
+            };
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.post(CHATS_ENDPOINT, data);
+
+            if(
+                response.status === 200 &&
+                response.data.data &&
+                response.data.data !== 'None' &&
+                response.data.success
+            ) return 'success';
+
+            return null;
+        } catch {
+            return 'error';
+        }
+    }
+)
 
 export const deleteChatByIDAsync = createAsyncThunk(
     'chats/delete-chat-by-id',
@@ -145,14 +178,22 @@ const chatsSlice = createSlice({
             console.log("Получение списков чатов и особых пользоватеоей");
         })
         builder.addCase(initChatsCtxAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<ChatsCtx>> ) => {
-            console.log("Успешное получение списков чатов и особых пользоватеоей");
-            if(!!action.payload && action.payload !== 'error') {
-                state.chatsFavList = action.payload.chatsFavList;
-                state.chatsList = action.payload.chatsList;
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получение списков чатов и особых пользователей");
+                    break;
+                case null:
+                    console.log("Списки чатов и особых пользователей не получен");
+                    break;
+                default:
+                    state.chatsFavList = action.payload.chatsFavList;
+                    state.chatsList = action.payload.chatsList;
+                    console.log("Успешное получение списков чатов и особых пользователей");
+                    break;
             }
         })
         builder.addCase(initChatsCtxAsync.rejected, _ => {
-            console.log("Ошибка получение списков чатов и особых пользоватеоей");
+            console.log("Ошибка получение списков чатов и особых пользователей");
         })
 
         // Получение чата по id
@@ -160,27 +201,66 @@ const chatsSlice = createSlice({
             console.log("Получение чата по id");
         })
         builder.addCase(getChatByIdAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<TargetChat>> ) => {
-            console.log("Успешное получение чата по id");
-            if(!!action.payload && action.payload !== 'error') {
-                state.targetChat = action.payload;
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения чата по id");
+                    break;
+                case null:
+                    console.log("Чат по id не получен");
+                    break;
+                default:
+                    state.targetChat = action.payload;
+                    console.log("Успешное получение чата по id");
+                    break;
             }
         })
         builder.addCase(getChatByIdAsync.rejected, _ => {
             console.log("Ошибка получения чата по id");
         })
 
+        // Создание чата
+        builder.addCase(createChatAsync.pending, _ => {
+            console.log("Создание чата");
+        })
+        builder.addCase(createChatAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<'success'>>) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка создания чата");
+                    break;
+                case null:
+                    console.log("Чат не создан");
+                    break;
+                default:
+                    console.log("Успешное создание чата");
+                    break;
+            }
+        })
+        builder.addCase(createChatAsync.rejected, _ => {
+            console.log("Ошибка создания чата");
+        })
+
+
         // Удаление чата по id
         builder.addCase(deleteChatByIDAsync.pending, _ => {
             console.log("Удаление чата по id");
         })
         builder.addCase(deleteChatByIDAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<boolean>> ) => {
-            console.log("Успешное удаление чата по id");
-            if(!!action.payload && action.payload !== 'error') {
-                state.targetChat = {
-                    id: '',
-                    interlocutor: null,
-                    chatDialog: [],
-                }
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка удаления чата по id");
+                    break;
+                case null:
+                    console.log("Чат по id не удалён");
+                    break;
+                default:
+                    state.targetChat = {
+                        id: '',
+                        interlocutor: null,
+                        chatDialog: [],
+                    };
+
+                    console.log("Успешное удаление чата по id");
+                    break;
             }
         })
         builder.addCase(deleteChatByIDAsync.rejected, _ => {

@@ -1,4 +1,4 @@
-import { JSX, memo, SyntheticEvent, useState } from 'react';
+import { JSX, memo, SyntheticEvent, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocation } from '@/store/slices/profileSlice';
 import { setEPErrors } from '@/store/slices/settingsSlice';
@@ -42,12 +42,27 @@ const LocationDistrict = memo((props: PropsLocationDistrict): JSX.Element => {
     }));
   };
 
+  useEffect(
+    () => {
+      if(location.value) {
+
+        const targetValue = props.districtsVars.find(
+          item => item.value === location.value
+        );
+
+        setValue(targetValue?.label || '');
+      }
+    },
+    [props.districtsVars]
+  );
+
   return (
     <Autocomplete
       id="autocomplite-district"
       className="district-input"
       options={props.districtsVars.map((option) => option.label)}
       inputValue={value}
+      value={value || null}
       onInputChange={handleInputChange}
       onChange={handleChange}
       noOptionsText="Ничего не найдено"

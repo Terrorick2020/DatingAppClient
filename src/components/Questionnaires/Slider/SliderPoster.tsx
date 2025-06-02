@@ -16,7 +16,11 @@ const SliderPoster = (): JSX.Element => {
   const [offset, setOffset] = useState<number>(0);
   const [isSwiped, setIsSwiped] = useState<boolean>(false);
 
+  const disOpt = sliderList.length <= 1;
+
   const changeSlide = (newIndex: number) => {
+    if(disOpt) return;
+
     if (newIndex < 0) newIndex = sliderList.length - 1;
     if (newIndex >= sliderList.length) newIndex = 0;
     setIndex(newIndex);
@@ -26,38 +30,39 @@ const SliderPoster = (): JSX.Element => {
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
+      if(disOpt) return;
+
       changeSlide(index + 1);
       Math.abs(offset) < 5 && setIsSwiped(true);
     },
     onSwipedRight: () => {
+      if(disOpt) return;
+
       changeSlide(index - 1);
       Math.abs(offset) < 5 && setIsSwiped(true);
     },
     onSwipedUp: () => {
+      if(disOpt) return;
+
       if( offset < -50 ) changeSlide(index - 1);
       if( offset > 50 ) changeSlide(index - 1);
     },
     onSwipedDown: () => {
+      if(disOpt) return;
+
       if( offset < -50 ) changeSlide(index - 1);
       if( offset > 50 ) changeSlide(index - 1);
     },
     onSwiping: (eventData) => {
+      if(disOpt) return;
+
       setOffset(eventData.deltaX)
     },
     trackMouse: true,
   });
 
-  const nextStep = () => changeSlide(index + 1)
-
-  const clickLike = (id: number) => {
-    const heartHtml = document.getElementById(`heart-${ id }`);
-    if ( heartHtml ) heartHtml.style.animation = 'heart-top 1.5s ease-in-out forwards';
-    
-    setTimeout(() => {
-        if ( heartHtml ) heartHtml.style.animation = 'none';
-
-        nextStep();
-    }, 1500)
+  const nextStep = (): void => {
+    changeSlide(index + 1);
   }
 
   const prevStep = (): void => changeSlide(index - 1);
@@ -74,6 +79,12 @@ const SliderPoster = (): JSX.Element => {
       dispatch(addRoute(location.pathname));
     }, 100); 
   }
+
+  if(!sliderList.length) return (
+    <div className="empty">
+        <h4 className="headline">Не смогли подобрать подходящих Вам людей</h4>
+    </div>
+  )
 
   return (
     <div className="poster__ctx">
@@ -98,7 +109,7 @@ const SliderPoster = (): JSX.Element => {
                 sliderItem={item}
                 toDetails={toDetails}
                 nextStep={nextStep}
-                clickLike={clickLike}
+                clickLike={nextStep}
                 prevStep={prevStep}
               />
             </div>

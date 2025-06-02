@@ -89,6 +89,7 @@ export interface Complaint {
     step: EComplaintStep
     to: string
     value: string
+    valueGlob: string
     query: string
     complaintsVars: BaseVarsItem[]
 }
@@ -101,7 +102,6 @@ export interface BadgeBlockItem {
 export interface BadgeBlock {
     chats: BadgeBlockItem
     likes: BadgeBlockItem
-    profile: BadgeBlockItem
 }
 
 export interface SettingsState {

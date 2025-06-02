@@ -8,7 +8,7 @@ const ScrollBar = memo((props: PropsScrollBar): JSX.Element => {
             {Array.from({ length: props.len }).map((_, i) => (
                 <span
                     key={i}
-                    className={`item ${ i === props.index && 'selected' }`}
+                    className={`item ${ i === props.index ? 'selected' : '' }`}
                 ></span>
             ))}
         </div>

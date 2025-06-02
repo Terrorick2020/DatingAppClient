@@ -1,7 +1,9 @@
 import { JSX, memo, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { setPlanMeta } from '@/store/slices/profileSlice';
 import { formatTimeLeft } from '@/funcs/general.funcs';
-import type { PropsProfileInfo } from '@/types/quest.types';
+import type { PropsProfileInfo, PlansLabelsState } from '@/types/quest.types';
+import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
@@ -9,40 +11,66 @@ import Chip from '@mui/material/Chip';
 import SvgCalendar from '@/assets/icon/calendar.svg';
 
 
-const initialTimeInSeconds = 24 * 60 * 60;
-
 const ProfilePlans = memo((props: PropsProfileInfo): JSX.Element => {
-    const eveningPlans = useSelector((state: IState) => state.profile.eveningPlans)
+    const eveningPlans = useSelector((state: IState) => state.profile.eveningPlans);
+    const plansVars = useSelector((state: IState) => state.settings.plansVars);
+    const districtsVars = useSelector((state: IState) => state.settings.districtsVars);
 
-    const [timeLeft, setTimeLeft] = useState<number>(initialTimeInSeconds);
+    const [plans, setPlans] = useState<PlansLabelsState>({
+        plan: '',
+        location: '',
+    });
+
+    const dispatch = useDispatch<RootDispatch>();
+
+    const initLabels = (): void => {
+        const targetPlan = plansVars.find(
+            item => item.value === eveningPlans.plan.value
+        );
+
+        const targetLocation = districtsVars.find(
+            item => item.value === eveningPlans.location.value
+        );
+
+        setPlans({
+            plan: targetPlan?.label || 'Не определено',
+            location: targetLocation?.label || 'Не определено',
+        })
+    }
 
     useEffect(() => {
         const timer = setInterval(() => {
-          setTimeLeft((prevTime) => {
-            if (prevTime <= 1) {
-              clearInterval(timer);
-              return 0;
-            }
-            return prevTime - 1;
-          });
+            if(!eveningPlans.isCurrent) return;
+
+            const isCurrent = !!eveningPlans.remains && eveningPlans.remains > 0;
+            const remains = isCurrent && eveningPlans.remains ? eveningPlans.remains - 1 : null;
+
+            dispatch(setPlanMeta({ isCurrent, remains }));
         }, 1000);
-    
+
         return () => clearInterval(timer);
     }, []);
+
+    useEffect(() => {initLabels()}, [plansVars])
 
     return (
         <div className="plans-box">
             <div className="title">
                 <h4 className="headline">Планы на сегодня</h4>
-                <Chip className={ !timeLeft ? 'black' : 'purple'} label={formatTimeLeft(timeLeft)}/>
+                <Chip
+                    className={ eveningPlans.isCurrent ? 'purple' : 'black' }
+                    label={formatTimeLeft(eveningPlans.remains || 0)}
+                />
             </div>
-            <div className="plans">
-                <div className="chips">
-                    <Chip className="blure" label={eveningPlans.plan.value || 'Не определено'} />
-                    <Chip className="blure" label={eveningPlans.location.value || 'Не определено'}/>
+            {
+                eveningPlans.isCurrent && <div className="plans">
+                    <div className="chips">
+                        <Chip className="blure" label={plans.plan || 'Не определено'} />
+                        <Chip className="blure" label={plans.location || 'Не определено'}/>
+                    </div>
+                    <p className="description">{eveningPlans.plan.description || 'Не определено'}</p>
                 </div>
-                <p className="description">{eveningPlans.plan.description || 'Не определено'}</p>
-            </div>
+            }
             <Button
                 fullWidth
                 className="lemon base-height edit"

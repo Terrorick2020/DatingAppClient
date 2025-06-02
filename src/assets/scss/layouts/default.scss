@@ -53,6 +53,13 @@
             z-index: 7;
         }
 
+        &:has(.complaints-list),
+        &:has(.users-list) {
+            .logo-header::after {
+                display: none;
+            }
+        }
+
         .logo-header {
             width: 100%;
             height: var(--box-header-height);
@@ -69,12 +76,10 @@
             &::after {
                 content: '';
                 position: absolute;
-                bottom: 0;
+                bottom: -1.8rem;
                 width: 100%;
-                height: 0.5rem;
-                filter: blur(5px);
-                background: linear-gradient(#000000, transparent);
-                box-shadow: 0 0.5rem 0.5rem #000000c9;
+                height: 2rem;
+                background: linear-gradient(#000000, #000000, transparent);
             }
 
             .logo {

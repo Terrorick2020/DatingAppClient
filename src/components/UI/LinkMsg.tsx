@@ -1,4 +1,4 @@
-import { JSX, memo, useMemo } from 'react';
+import { JSX, memo, useMemo, useState } from 'react';
 import { shareURL } from '@telegram-apps/sdk';
 import type { PropsLinkMsg } from '@/types/ui.types';
 
@@ -12,13 +12,21 @@ import Slide from '@mui/material/Slide';
 import SvgLinkConfirm from '@/assets/icon/link-confirm.svg';
 import SvgCopy from '@/assets/icon/copy.svg';
 import SvgLink from '@/assets/icon/link.svg';
+import CheckIcon from '@mui/icons-material/Check';
 
 
 const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
+    const [copied, setCopied] = useState<boolean>(false);
+
     const handleClose = (): void => props.setOpen(false);
 
-    const handleCopy = async (): Promise<void> =>
+    const handleCopy = async (): Promise<void> => {
         await navigator.clipboard.writeText(props.link);
+
+        setCopied(true);
+
+        setTimeout(() => { setCopied(false) }, 2000);
+    };
 
     const handleShare = async (): Promise<void> => {
         const text = 'Попробуй приложение!';
@@ -34,9 +42,13 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
 
             await navigator.share(shareData);
         }
-    }
+    };
 
     const shareIsWorked = useMemo(() => shareURL.isAvailable() || navigator.share, []);
+    const CopySvg = useMemo(
+        () => copied ? <CheckIcon /> : <img src={SvgCopy} alt="copy" />,
+        [copied]
+    );
 
     return (
         <Dialog
@@ -68,7 +80,7 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
                     <IconButton
                         onClick={handleCopy}
                     >
-                        <img src={SvgCopy} alt="copy" />
+                        { CopySvg }
                     </IconButton>
                 </div>
             </DialogContent>

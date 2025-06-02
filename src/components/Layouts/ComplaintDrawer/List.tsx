@@ -23,12 +23,16 @@ const ComplaintDrawerList = (): JSX.Element => {
 
     const handleSelect = async (value: string): Promise<void> => {
         setOpen(false);
+
         await delay(130);
+
         dispatch(setComplaint({
             ...complaint,
             value,
         }));
+
         await dispatch(initComplaintsVarsAsync());
+        
         setOpen(true);
     }
 

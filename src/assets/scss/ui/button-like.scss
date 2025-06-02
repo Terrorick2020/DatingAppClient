@@ -2,6 +2,10 @@
     .icon-btn {
         &.like-btn {
             background: #FF4365 !important;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
             width: 38px !important;
             justify-self: center;
             z-index: 100;

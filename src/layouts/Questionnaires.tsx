@@ -2,6 +2,8 @@ import { JSX, useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
+import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
+import { WS_MATCH, WS_LIKES, WS_CHATS } from '@/config/env.config';
 import type { IState } from '@/types/store.types';
 
 import QuestMatch from '@/components/Layouts/QuestMatch';
@@ -40,6 +42,23 @@ const QuestLayout = (): JSX.Element => {
         },
         [isCurrent]
     );
+
+    useEffect(() => {
+        connectToNamespace(WS_MATCH);
+        connectToNamespace(WS_CHATS);
+        connectToNamespace(WS_LIKES);
+
+        return () => {
+            disconnectFromNamespace(WS_MATCH);
+            disconnectFromNamespace(WS_CHATS);
+            disconnectFromNamespace(WS_LIKES);
+
+            if (snackbarKeyRef.current) {
+                closeSnackbar(snackbarKeyRef.current);
+                snackbarKeyRef.current = null;
+            }
+        };
+    }, []);
 
     return (
         <>

@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { EApiStatus } from '@/types/settings.type';
 import { SNACK_TIMEOUT } from '@/constant/settings';
+import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
+import { WS_COMPL } from '@/config/env.config';
 import type { IState } from '@/types/store.types';
 
 import IconButton from '@mui/joy/IconButton';
@@ -36,6 +38,14 @@ const DefaultLayout = memo((): JSX.Element => {
     useEffect( () => {
         apiRes.value && showSnackAlert(apiRes.msg, apiRes.status, SNACK_TIMEOUT);
     }, [apiRes] );
+
+    useEffect( () => {
+        connectToNamespace(WS_COMPL);
+
+        return () => {
+            disconnectFromNamespace(WS_COMPL);
+        }
+    }, [] );
 
     return (
         <div className="default-layout">

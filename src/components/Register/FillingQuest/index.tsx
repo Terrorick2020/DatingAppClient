@@ -50,6 +50,7 @@ const FillingQuestContent = (): JSX.Element => {
         }
 
         await dispatch(initFillingQuestAsync());
+
         dispatch(setLoad(false));
     }
 
@@ -124,7 +125,7 @@ const FillingQuestContent = (): JSX.Element => {
         };
 
         setRegLoad(true);
-        const response = await dispatch(signUpProfileAsync()).unwrap();
+        const response = await dispatch(signUpProfileAsync(btnCtx.mark)).unwrap();
         
         if(response && response !== 'error') {
             dispatch(addRoute(location.pathname));

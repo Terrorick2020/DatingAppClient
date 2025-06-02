@@ -66,3 +66,13 @@ export interface UsersEndpointParams {
   sex?: ESex | null
   interestId?: number | string | null
 }
+
+export interface RegEndpointResUser {
+	coordinates: number[] | null
+	enableGeo: boolean
+	telegramId: string
+	town: string
+}
+export interface RegEndpointRes {
+	user: RegEndpointResUser
+}

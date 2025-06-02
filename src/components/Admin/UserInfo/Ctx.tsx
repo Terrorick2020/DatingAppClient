@@ -22,8 +22,8 @@ const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
 
     const dispatch = useDispatch<RootDispatch>();
 
-    const handleAdd = useCallback(async (photo: File): Promise<void> => {
-        await dispatch(addPhotoToUserAsync(photo));
+    const handleAdd = useCallback(async (photo: File, setUploadProgress: (value: number) => void): Promise<void> => {
+        await dispatch(addPhotoToUserAsync({photo, setUploadProgress}));
     }, [dispatch]);
 
     const handleDel = useCallback(async (id: string): Promise<void> => {
