@@ -1,4 +1,4 @@
-import { JSX, memo, useState, useMemo } from 'react';
+import { JSX, memo, useState } from 'react';
 import { PlanLabelSvgType } from '@/types/ui.types';
 import { ageToStr } from '@/funcs/general.funcs';
 import type { ISliderItemProps } from '@/types/quest.types';
@@ -30,11 +30,6 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
     const nextPhoto = () => !disOpt && changeImg( index + 1 );
     const prevPhoto = () => !disOpt && changeImg( index - 1 );
 
-    const name = useMemo(
-        () => `${props.sliderItem.name}, ${ageToStr(props.sliderItem.age)}`,
-        [props.sliderItem.name, props.sliderItem.age]
-    )
-
    return (
         <div
             className="slide"
@@ -60,9 +55,9 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
             <footer className="slide__footer">
                 <div className="text" onClick={() => props.toDetails(props.sliderItem.id) }>
                     <h4 className="headline">
-                        { name }
+                        <span className="name">{`${props.sliderItem.name}, `}</span>
+                        <span className="age">{ageToStr(props.sliderItem.age)}</span>
                     </h4>
-                    {/* <p className="description">{ props.sliderItem.description }</p> */}
                 </div>
                 <div className="panel">
                     <PlansLabel type={PlanLabelSvgType.ordinary}/>

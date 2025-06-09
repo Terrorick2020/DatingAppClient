@@ -1,4 +1,7 @@
 import { JSX, memo } from 'react';
+import { Slide } from 'react-awesome-reveal';
+import { EAnimeDirection } from '@/types/settings.type';
+import { ANIME_DURATION } from '@/constant/settings';
 import { formatDateToUser } from '@/funcs/general.funcs';
 import type { PropsChatDay } from '@/types/chats.types';
 
@@ -13,14 +16,26 @@ const ChatDay = memo((props: PropsChatDay): JSX.Element => {
             </div>
             <div className="day__ctx">
                 {props.dayListMsg.map(item => (
-                    <ChatMsg
-                        id={item.id}
-                        key={`msg-${item.id}`}
-                        isSelf={item.from === props.selfId}
-                        msg={item.msg}
-                        time={item.time}
-                        isChecked={item.isChecked}
-                    />
+                    <Slide
+                        triggerOnce
+                        direction={
+                            item.from === props.selfId
+                                ? 
+                                EAnimeDirection.Right 
+                                : 
+                                EAnimeDirection.Left
+                        }
+                        duration={ANIME_DURATION}
+                    >
+                        <ChatMsg
+                            id={item.id}
+                            key={`msg-${item.id}`}
+                            isSelf={item.from === props.selfId}
+                            msg={item.msg}
+                            time={item.time}
+                            isChecked={item.isChecked}
+                        />
+                    </Slide>
                 ))}
             </div>
         </div>

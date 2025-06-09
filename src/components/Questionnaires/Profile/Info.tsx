@@ -32,7 +32,8 @@ const ProfileInfo = memo((props: PropsProfileInfo): JSX.Element => {
                 />
                 <div className="text">
                     <h4 className="headline">
-                        {`${profileInfo.name}, ${ageToStr(profileInfo.age)}`}
+                        <span className="name">{`${profileInfo.name},`}</span>
+                        <span className="age">{ageToStr(profileInfo.age)}</span>
                     </h4>
                     <p className="description opacity">{city}</p>
                 </div>

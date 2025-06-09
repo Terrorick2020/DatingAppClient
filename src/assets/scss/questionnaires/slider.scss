@@ -167,13 +167,21 @@
                                         width: 100%;
                                         font-size: clamp(1.3rem, 3vw, 1.6rem);
                                         font-weight: 700;
-                                    }
-            
-                                    .description {
-                                        width: 100%;
-                                        font-size: clamp(0.8rem, 3vw, 1rem);
-                                        margin-top: 0.5rem;
-                                        font-weight: 400;
+                                        display: grid;
+                                        grid-template-columns: auto 1fr;
+                                        gap: 0.4rem;
+                                        
+                                        .name, .age {
+                                            width: 100%;
+                                            font-size: inherit;
+                                            white-space: nowrap;
+                                        }
+
+                                        .name {
+                                            overflow: hidden;
+                                            text-overflow: ellipsis;
+                                            display: block;
+                                        }
                                     }
                                 }
             

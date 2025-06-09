@@ -133,8 +133,9 @@ const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
                         </Button>
                     </div>
                 </div>
-                <h5 className="name">
-                    {`${props.likesItem.name}, ${ageToStr(props.likesItem.age)}`}
+                <h5 className="text">
+                    <span className="name">{`${props.likesItem.name}, `}</span>
+                    <span className="age">{ageToStr(props.likesItem.age)}</span>
                 </h5>
             </div>
         </div>

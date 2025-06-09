@@ -68,7 +68,8 @@ const ProfilePlans = memo((props: PropsProfileInfo): JSX.Element => {
                         <Chip className="blure" label={plans.plan || 'Не определено'} />
                         <Chip className="blure" label={plans.location || 'Не определено'}/>
                     </div>
-                    <p className="description">{eveningPlans.plan.description || 'Не определено'}</p>
+                    <p className="description">Локация: {eveningPlans.location.description || 'Не определено'}</p>
+                    <p className="description">Планы: {eveningPlans.plan.description || 'Не определено'}</p>
                 </div>
             }
             <Button
