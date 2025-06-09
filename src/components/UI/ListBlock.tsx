@@ -1,6 +1,6 @@
 import { JSX, memo, useCallback  } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ANIME_DURATION } from '@/constant/settings';
+import { ANIME_DURATION, ANIME_DELAY } from '@/constant/settings';
 import { useDispatch } from 'react-redux';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { Slide } from "react-awesome-reveal";
@@ -24,6 +24,7 @@ const ListBlock = memo((props: PropsListBlock): JSX.Element => {
         <Slide
             triggerOnce
             direction={EAnimeDirection.Left}
+            delay={ANIME_DELAY}
             duration={ANIME_DURATION}
         >
             <div className="list-block" onClick={handleClick}>

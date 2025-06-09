@@ -12,6 +12,7 @@ import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
 import { ageToStr, formatTimeLeftOther } from '@/funcs/general.funcs';
 import { useDispatch } from 'react-redux';
+import { deleteById } from '@/store/slices/likesSlice';
 import { acceptLikingAsync, rejectLikingAsync } from '@/store/slices/likesSlice';
 import type { PropsLikesCard, LikesCardIsLoading } from '@/types/likes.types';
 import type { RootDispatch } from '@/store';
@@ -23,10 +24,8 @@ import SvgHeart from '@/assets/icon/heart-white.svg?react';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
-const initialTimeInSeconds = 24 * 60 * 60;
-
 const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
-    const [timeLeft, setTimeLeft] = useState<number>(initialTimeInSeconds);
+    const [timeLeft, setTimeLeft] = useState<number>(props.likesItem.timer.value);
     const [isLoadind, setIsLoading] = useState<LikesCardIsLoading>({
         reject: false,
         accept: false,
@@ -41,16 +40,23 @@ const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft((prevTime) => {
-            if (prevTime <= 1) {
-                clearInterval(timer);
-                return 0;
-            }
-            return prevTime - 1;
+                if (prevTime <= 1) {
+                    clearInterval(timer);
+                    return 0;
+                }
+                
+                return prevTime - 1;
             });
         }, 1000);
     
         return () => clearInterval(timer);
     }, []);
+
+    useEffect(() => {
+        if (timeLeft === 0) {
+            dispatch(deleteById(props.likesItem.id));
+        }
+    }, [timeLeft]);
 
     const acceptLiking = async (event: MouseEvent<HTMLButtonElement>): Promise<void> => {
         event.stopPropagation();
@@ -93,7 +99,7 @@ const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
                     <div className="time-panel">
                         <Timer
                             value={formatTimeLeftOther(timeLeft)}
-                            isCritical={timeLeft < 60 * 60 * 5}
+                            isCritical={props.likesItem.timer.isCritical}
                         />
                     </div>
                     <div className="btns-panel">

@@ -20,6 +20,8 @@
     "@types/telegram-web-app": "^7.10.1",
     "arktype": "^2.1.15",
     "axios": "^1.8.1",
+    "dayjs": "^1.11.13",
+    "motion": "^12.16.0",
     "notistack": "^3.0.2",
     "react": "^18.3.1",
     "react-awesome-reveal": "^4.3.1",

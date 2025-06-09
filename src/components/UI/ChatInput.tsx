@@ -31,6 +31,9 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
         event.key === "Enter" && handleSendMessage();
     }, [handleSendMessage]);
 
+    const handleFocus = (): void => props.handleFocus();
+    const handleBlur  = (): void => props.handleBlur();
+
     return (
         <div className="chat-input">
             <TextField
@@ -40,12 +43,17 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
                 placeholder="Сообщение..."
                 value={props.message}
                 onChange={handleInputChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 onKeyDown={handleKeyPress}
                 slotProps={{
                     input: {
                         endAdornment: (
                             <InputAdornment position="end">
-                                <IconButton onClick={handleSendMessage}>
+                                <IconButton
+                                    onClick={handleSendMessage}
+                                    disabled={!props.message}
+                                >
                                     <img src={SvgSend} alt="send" />
                                 </IconButton>
                             </InputAdornment>

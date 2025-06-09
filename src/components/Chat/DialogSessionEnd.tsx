@@ -1,6 +1,6 @@
 import { JSX, memo } from 'react';
-import { appRoutes } from '@/config/routes.config';
 import { NavLink } from 'react-router-dom';
+import { toChats } from '@/config/routes.config';
 import type { PropsChatDialogSessionEnd } from '@/types/chats.types';
 
 import DialogActions from '@mui/material/DialogActions';
@@ -10,16 +10,12 @@ import ChatPatternDialog from '@/components/UI/ChatPatternDialog';
 import SvgClock from '@/assets/icon/clock.svg';
 
 
-const questGlobRoute = appRoutes.questionnaires.global;
-const chatsRoute = appRoutes.questionnaires.inner.chats;
-const toChats = `${questGlobRoute}/${chatsRoute}`;
-
 const ChatDialogSessionEnd = memo((props: PropsChatDialogSessionEnd): JSX.Element => {
     return (
         <ChatPatternDialog
             open={props.open}
             img={SvgClock}
-            setOpen={props.setOpen}
+            setOpen={() => props.setOpen(true)}
         >
             <DialogContent>
                 <h4 className="headline">Время истекло</h4>

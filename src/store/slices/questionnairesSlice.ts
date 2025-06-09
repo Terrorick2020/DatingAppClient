@@ -1,7 +1,17 @@
+import {
+    USERS_ENDPOINT,
+    USER_ENDPOINT,
+    HELP_CITYES_ENDPOINT,
+    HELP_PLANS_ENDPOINT,
+    HELP_REGIONS_ENDPOINT,
+    PLANS_GET_ENDPOINT,
+} from '@/config/env.config';
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { USERS_ENDPOINT, USER_ENDPOINT, PHOTO_LINK } from '@/config/env.config';
 import { setLoad } from './settingsSlice';
+import type { BaseVarsItem, DistrictVarsItem } from '@/types/settings.type';
 import type { QuestState, SliderItem, DetailsTargetUser } from '@/types/quest.types';
+import type { EveningPlans } from '@/types/profile.types';
 import type { FetchResponse } from '@/types/fetch.type';
 import type { AsyncThunkRes } from '@/types/store.types';
 import type { AxiosResponse } from 'axios';
@@ -24,6 +34,8 @@ export const initSliderListAsync = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<any>> = await api.get(usersEndpoint);
 
+            console.log(response)
+
             if(
                 response.status === 200 &&
                 response.data.data &&
@@ -33,7 +45,7 @@ export const initSliderListAsync = createAsyncThunk(
                 const resultList: SliderItem[] = [];
 
                 for(let item of response.data.data) {
-                    const photos: string[] = item.photos.map((ret: any) => PHOTO_LINK(ret.key));
+                    const photos: string[] = item.photos.map((ret: any) => ret.url);
 
                     resultList.push({
                         id: item.telegramId,
@@ -67,35 +79,66 @@ export const initTargetUserAsync = createAsyncThunk(
         try {
             dispatch(setLoad(true));
 
-            const response = await api.get(`${USER_ENDPOINT}/${id}`);
+            const response: [
+                AxiosResponse<FetchResponse<any>>,
+                AxiosResponse<FetchResponse<EveningPlans>>,
+            ] = await Promise.all([
+                api.get(`${USER_ENDPOINT}/${id}`),
+                api.get(`${PLANS_GET_ENDPOINT}/${id}`),
+            ]);
 
-            if(
-                response.status === 200 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
-                response.data.success
-            ) {
-                const data = response.data.data;
+            let allValid = response.every(res =>
+                res.status === 200 &&
+                res.data?.success &&
+                res.data?.data &&
+                res.data.data !== 'None'
+            );
 
-                const result: DetailsTargetUser = {
-                    id: data.telegramId,
-                    photos: data.photos.map((item: any) => item.url),
-                    city: data.town,
-                    name: data.name,
-                    age: data.age,
-                    plans: {
-                        targetTime: '18:00',
-                        district: 'Адмиралтейский район',
-                        place: 'Коктелтный бар',
-                        description: 'Хочу сходить в коктейльный бар, выпить пару коктейлей и пообщаться.',
-                    },
-                    bio: data.bio
-                }
+            if (!allValid) return null;
 
-                return result;
+            const userData = response[0].data.data as any;
+            const plansData = response[1].data.data as EveningPlans;
+
+            const dataRes: [
+                AxiosResponse<FetchResponse<BaseVarsItem>>,
+                AxiosResponse<FetchResponse<BaseVarsItem>>,
+                AxiosResponse<FetchResponse<DistrictVarsItem>>
+            ] = await Promise.all([
+                api.get(`${HELP_CITYES_ENDPOINT}/${userData.town}`),
+                api.get(`${HELP_PLANS_ENDPOINT}/${plansData.plan.value}`),
+                api.get(`${HELP_REGIONS_ENDPOINT}/${plansData.location.value}`),
+            ])
+
+            allValid = dataRes.every(res =>
+                res.status === 200 &&
+                res.data?.success &&
+                res.data?.data &&
+                res.data.data !== 'None'
+            );
+
+            if (!allValid) return null;
+
+            const cityData = dataRes[0].data.data as BaseVarsItem;
+            const planData = dataRes[1].data.data as BaseVarsItem;
+            const distData  = dataRes[2].data.data as DistrictVarsItem;
+
+            const result: DetailsTargetUser = {
+                id: userData.telegramId,
+                photos: userData.photos.map((item: any) => item.url),
+                city: cityData.label,
+                name: userData.name,
+                age: userData.age,
+                plans: {
+                    targetTime: '',
+                    district: distData.label,
+                    distDesc: plansData.location.description,
+                    place: planData.label,
+                    planDesc: plansData.plan.description,
+                },
+                bio: userData.bio
             }
 
-            return null;
+            return result;
         } catch (error) {
             return 'error';
         } finally {

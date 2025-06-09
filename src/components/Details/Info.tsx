@@ -21,14 +21,17 @@ const DetailsInfo = (): JSX.Element => {
                     <PlansLabel type={ PlanLabelSvgType.ordinary } />
                     <div className="timer">
                         <img src={SvgTimerCircle} alt="timer-circle" />
-                        <p className="time">{plans.targetTime}</p>
+                        {plans.targetTime && <p className="time">{plans.targetTime}</p>}
                     </div>
                 </div>
                 <div className="labels">
                     <Chip className="blure" label={plans.place}/>
                     <Chip className="blure" label={plans.district}/>
                 </div>
-                <p className="text">{plans.description}</p>
+                <div className="text-desc">
+                    <p className="text">Описание места: «{plans.distDesc}»</p>
+                    <p className="text">Описание планов: «{plans.planDesc}»</p>
+                </div>
             </div>
             <div className="description">
                 <h4 className="headline">Био</h4>

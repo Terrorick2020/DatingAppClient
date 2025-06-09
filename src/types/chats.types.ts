@@ -13,7 +13,7 @@ export interface ChatsListItem {
     name: string
     age: number
     lastMsg: string
-    timer: string
+    timer: number
     unreadMsgsCount: number
 }
 
@@ -23,7 +23,7 @@ export interface ChatsCtx {
 }
 
 export interface TargetChatDayMsg {
-    id: number
+    id: string
     from: string
     to: string
     msg: string
@@ -47,6 +47,7 @@ export interface ChatInterlocutor {
 
 export interface TargetChat {
     id: string
+    timer: number | null
     interlocutor: ChatInterlocutor | null
     chatDialog: TargetChatDay[]
 }
@@ -80,7 +81,7 @@ export interface PropsChatHeader {
 }
 
 export interface PropsChatMsg {
-    id: number
+    id: string
     isSelf: boolean
     msg: string
     time: string
@@ -94,4 +95,14 @@ export interface PropsChatsListItem {
 export interface PropsChatsHeaderItem {
     item: ChatsFavListItem
     toChat: (id: string) => void
+}
+
+export interface IncomingMsg {
+    chatId: string
+    created_at: number
+    fromUser: string
+    id: string
+    is_read: boolean
+    text: string
+    updated_at: number
 }

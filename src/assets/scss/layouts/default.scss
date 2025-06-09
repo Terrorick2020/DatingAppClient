@@ -54,7 +54,8 @@
         }
 
         &:has(.complaints-list),
-        &:has(.users-list) {
+        &:has(.users-list),
+        &:has(.target-chat) {
             .logo-header::after {
                 display: none;
             }

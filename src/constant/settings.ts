@@ -21,6 +21,8 @@ export const badgeEmptyItem: BadgeBlockItem = {
 export const AGE_PATTERN: RegExp = /\d+$/;
 
 export const ANIME_DURATION: number = 200;
+export const ANIME_DELAY: number = 200;
+export const ANIME_DAMPING: number = 0.5;
 
 export const SNACK_TIMEOUT: number = 4000;
 export const SNACK_COUNT:number = 3;

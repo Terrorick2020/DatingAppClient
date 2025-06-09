@@ -187,6 +187,8 @@
                     img {
                         width: clamp(1.375rem, 4.5vw, 1.875rem);
                         height: clamp(1.375rem, 4.5vw, 1.875rem);
+                        scale: 1.1;
+                        translate: 0.6rem 0;
                     }
         
                     .time {
@@ -207,9 +209,30 @@
                 gap: 0.8rem;
             }
 
-            .text {
+            .text-desc {
                 width: 100%;
-                text-align: start;
+
+                .text {
+                    width: 100%;
+                    text-align: start;
+                    position: relative;
+
+                    &:last-of-type {
+                        margin-top: 0.8rem;
+
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            width: 100%;
+                            height: 1px;
+                            background: #FFFFFF;
+                            opacity: 0.1;
+                            border-radius: 1rem;
+                            top: -6px;
+                            left: 0;
+                        }
+                    }
+                }
             }
         }
 

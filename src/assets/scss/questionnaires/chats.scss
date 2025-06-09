@@ -7,11 +7,10 @@
     padding-inline: 1rem;
     overflow: hidden;
     display: grid;
-    grid-template-rows: 1fr 5fr;
+    grid-template-rows: 3rem 10fr;
 
     &:has(.loader),
-    &:has(.empty)
-    {
+    &:has(.empty) {
         grid-template-rows: 1fr;
     }
 
@@ -19,7 +18,7 @@
     &__head {
         width: 100%;
         height: 100%;
-        min-height: 6.5rem;
+        padding-top: 0.5rem;
         overflow: hidden;
         @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
@@ -27,39 +26,6 @@
             width: 100%;
             height: 20%;
             font-weight: 900;
-        }
-
-        .history {
-            width: 100%;
-            height: 70%;
-            margin-top: 1rem;
-            display: flex;
-            flex-direction: row;
-            justify-content: left;
-            align-items: center;
-            overflow-x: auto;
-            gap: 1.5rem;
-
-            .item {
-                cursor: pointer;
-                transition: all 0.2s ease;
-
-                &:hover {
-                    filter: drop-shadow(0 0 0.3rem #ffffff7f);
-                }
-
-                &:active {
-                    scale: 0.98;
-                }
-                
-                .MuiBadge-badge {
-                    cursor: pointer;
-                    background: #BC96FF;
-                    color: #371F7D;
-                    bottom: 10px;
-                    right: 5px;
-                }
-            }
         }
     }
 

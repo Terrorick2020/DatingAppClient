@@ -24,6 +24,10 @@
             &:active {
                 scale: 0.95;
             }
+
+            &:disabled {
+                opacity: 0.8;
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ import { PlanLabelSvgType } from './ui.types';
 
 
 export interface LikesItemTimer {
-    value: string
+    value: number
     isCritical: boolean
 }
 

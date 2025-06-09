@@ -11,6 +11,8 @@ export enum PlanLabelSvgType {
 export interface PropsChatInput {
     message: string
     handleChange: (value: string) => void
+    handleFocus: () => void
+    handleBlur:  () => void
     handleClick: () => void
 }
 

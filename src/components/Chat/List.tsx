@@ -28,6 +28,15 @@ const ChatList = (): JSX.Element => {
         }, 0);
     }, [chatDialog]);
 
+    if(!chatDialog.length) return (
+        <div className="empty">
+            <h4 className="headline">
+                Чат пока пустой. <br/>
+                Отправте сообщение, чтобы это исправить
+            </h4>
+        </div>
+    )
+
     return (
         <div className="chat-list">
             {chatDialog.map(item => (

@@ -82,6 +82,8 @@ const QuestMatch = (): JSX.Element => {
                     <ChatInput
                         message={message}
                         handleChange={handleChange}
+                        handleFocus={() => {}}
+                        handleBlur={() => {}}
                         handleClick={handleAcceptMatch}
                     />
                 </main>

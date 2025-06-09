@@ -12,7 +12,7 @@ export const likesList: LikesItem[] = [
       avatar: PngFemale,
       planStatus: PlanLabelSvgType.success,
       timer: {
-        value: "12:34",
+        value: 123,
         isCritical: false
       },
       name: "Алексей",
@@ -23,7 +23,7 @@ export const likesList: LikesItem[] = [
       avatar: PngFemale,
       planStatus: PlanLabelSvgType.success,
       timer: {
-        value: "05:20",
+        value: 5432,
         isCritical: true
       },
       name: "Мария",
@@ -34,7 +34,7 @@ export const likesList: LikesItem[] = [
       avatar: PngWoman,
       planStatus: PlanLabelSvgType.success,
       timer: {
-        value: "23:15",
+        value: 5432,
         isCritical: false
       },
       name: "Дмитрий",
@@ -45,7 +45,7 @@ export const likesList: LikesItem[] = [
       avatar: PngFemale,
       planStatus: PlanLabelSvgType.error,
       timer: {
-        value: "01:45",
+        value: 5432,
         isCritical: true
       },
       name: "Анна",
@@ -56,7 +56,7 @@ export const likesList: LikesItem[] = [
       avatar: PngWoman,
       planStatus: PlanLabelSvgType.error,
       timer: {
-        value: "18:30",
+        value: 4567,
         isCritical: false
       },
       name: "Сергей",
@@ -67,7 +67,7 @@ export const likesList: LikesItem[] = [
       avatar: PngLeady,
       planStatus: PlanLabelSvgType.error,
       timer: {
-        value: "09:15",
+        value: 4567,
         isCritical: false
       },
       name: "Елена",
@@ -78,7 +78,7 @@ export const likesList: LikesItem[] = [
       avatar: PngFemale,
       planStatus: PlanLabelSvgType.ordinary,
       timer: {
-        value: "00:30",
+        value: 4456789,
         isCritical: true
       },
       name: "Иван",
@@ -89,7 +89,7 @@ export const likesList: LikesItem[] = [
       avatar: PngLeady,
       planStatus: PlanLabelSvgType.ordinary,
       timer: {
-        value: "14:20",
+        value: 45678,
         isCritical: false
       },
       name: "Ольга",
@@ -100,7 +100,7 @@ export const likesList: LikesItem[] = [
       avatar: PngFemale,
       planStatus: PlanLabelSvgType.ordinary,
       timer: {
-        value: "03:10",
+        value: 45678,
         isCritical: true
       },
       name: "Павел",
@@ -111,7 +111,7 @@ export const likesList: LikesItem[] = [
       avatar: PngLeady,
       planStatus: PlanLabelSvgType.ordinary,
       timer: {
-        value: "20:45",
+        value: 45678,
         isCritical: false
       },
       name: "Наталья",

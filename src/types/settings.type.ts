@@ -59,6 +59,10 @@ export interface BaseVarsItem {
     label: string
 }
 
+export interface DistrictVarsItem extends BaseVarsItem {
+    cityId: string
+}
+
 export interface InterestsVarsItem extends BaseVarsItem {
     isOppos: boolean
 }
@@ -117,12 +121,13 @@ export interface SettingsState {
     complaint: Complaint
     mediaLink: string
     plansVars: BaseVarsItem[]
-    districtsVars: BaseVarsItem[]
+    districtsVars: DistrictVarsItem[]
     badge: BadgeBlock
+    photosCashe: string[]
 }
 
 export interface PropsLocationDistrict {
-  districtsVars: BaseVarsItem[]
+  districtsVars: DistrictVarsItem[]
 }
 
 export interface PropsPlansVars {
@@ -131,5 +136,5 @@ export interface PropsPlansVars {
 
 export interface InitEPCtxAsyncRes {
     plans: BaseVarsItem[]
-    districts: BaseVarsItem[]
+    districts: DistrictVarsItem[]
 }

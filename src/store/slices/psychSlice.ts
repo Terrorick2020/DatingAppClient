@@ -3,10 +3,10 @@ import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
 import { psychTestList, targerPsychList } from '@/constant/psych';
 import { ELineStatus } from '@/types/store.types';
-import { type IState } from '@/types/store.types';
+import type { IState } from '@/types/store.types';
 import type { PsychState, PsychListItem, TargerPsych } from '@/types/psych.types';
 
-// import axios from 'axios';
+// import api from '@/config/fetch.config';
 
 
 const initialState: PsychState = {

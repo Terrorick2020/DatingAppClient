@@ -16,7 +16,7 @@ const ChatDay = memo((props: PropsChatDay): JSX.Element => {
                     <ChatMsg
                         id={item.id}
                         key={`msg-${item.id}`}
-                        isSelf={item.to === props.selfId}
+                        isSelf={item.from === props.selfId}
                         msg={item.msg}
                         time={item.time}
                         isChecked={item.isChecked}

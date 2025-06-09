@@ -4,7 +4,6 @@ import { initChatsCtxAsync } from '@/store/slices/chatsSlice';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
 
-import ChatsHeader from './Header';
 import ChatsList from './List';
 import MyLoader from '@/components/UI/MyLoader';
 
@@ -46,7 +45,7 @@ const ChatsContent = (): JSX.Element => {
     return (
         <>
             <div className="chats__head">
-                <ChatsHeader />
+                <h4 className="headline">Чаты</h4>
             </div>
             <div className="chats__ctx">
                 <div className="shadow"></div>

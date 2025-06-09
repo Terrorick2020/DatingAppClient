@@ -11,8 +11,6 @@ export const SSL_CERT = import.meta.env.VITE_SSL_CERT || '';
 export const DOMAIN   = import.meta.env.VITE_DOMAIN || '';
 export const REFERAL  = import.meta.env.VITE_REFERAL || '';
 
-export const PHOTOS_BASE = import.meta.env.VITE_PHOTOS_BASE || '';
-
 export const BASE_URL = import.meta.env.VITE_BASE_URL || '';
 export const WS_URL   = import.meta.env.VITE_WS_URL || '';
 
@@ -46,6 +44,7 @@ export const REG_ENDPOINT  = import.meta.env.VITE_REG_ENDPOINT || '';
 export const CHATS_ENDPOINT         = import.meta.env.VITE_CHATS_ENDPOINT || '';
 export const CHATS_METADATA         = import.meta.env.VITE_CHATS_METADATA || '';
 export const CHATS_MSG              = import.meta.env.VITE_CHATS_MSG || '';
+export const CHATS_ADD_MSG          = import.meta.env.VITE_CHATS_ADD_MSG || '';
 export const CHATS_MEDIA_ENDPOINT   = import.meta.env.VITE_CHATS_MEDIA_ENDPOINT || '';
 export const CHATS_READ_ENDPOINT    = import.meta.env.VITE_CHATS_READ_ENDPOINT || '';
 export const CHATS_TYPING_ENDPOINT  = import.meta.env.VITE_CHATS_TYPING_ENDPOINT || '';
@@ -86,8 +85,6 @@ if(
   !WS_MATCH ||
   !WS_MSGS  ||
 
-  !PHOTOS_BASE ||
-
   !HELP_INTERESTS_ENDPOINT       ||
   !HELP_PLANS_ENDPOINT           ||
   !HELP_CITYES_ENDPOINT          ||
@@ -112,6 +109,7 @@ if(
   !CHATS_ENDPOINT        ||
   !CHATS_METADATA        ||
   !CHATS_MSG             ||
+  !CHATS_ADD_MSG         ||
   !CHATS_MEDIA_ENDPOINT  ||
   !CHATS_READ_ENDPOINT   ||
   !CHATS_TYPING_ENDPOINT ||
@@ -145,11 +143,11 @@ if(
 };
 
 export const REFERAL_LINK = (type: EProfileRoles, referal: string): string => `${REFERAL}?type=${type}&referal=${referal}`;
-export const PHOTO_LINK = (key: string): string => PHOTOS_BASE.replace('{key}', key);
 
 export const CHATS_METADATA_ENDPOINT = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_METADATA}`;
 export const CHATS_MSG_ENDPOINT      = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_MSG}`;
 export const CHATS_DEL_ENDPOINT      = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}`;
+export const CHATS_ADD_MSG_ENDPOINT  = `${CHATS_ENDPOINT}${CHATS_ADD_MSG}`;
 
 export const USERS_ENDPOINT = ({
   page = null,

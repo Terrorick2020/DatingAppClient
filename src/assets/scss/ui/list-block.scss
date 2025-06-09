@@ -10,6 +10,8 @@
         align-items: center;
         gap: 3vw;
         transition: all 0.1s ease;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
 
         &:hover {
             box-shadow: 0 0 0.5rem #ffffff5a;

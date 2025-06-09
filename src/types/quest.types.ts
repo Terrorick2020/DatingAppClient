@@ -16,8 +16,9 @@ export interface SliderItem {
 export interface DetailsTargetUserPlans {
     targetTime: string
     district: string
+    distDesc: string
     place: string
-    description: string
+    planDesc: string
 }
 
 export interface DetailsTargetUser {

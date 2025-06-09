@@ -18,18 +18,19 @@ export const chatsFavList: ChatsFavListItem[] = [
 ];
 
 export const chatsList: ChatsListItem[] = [
-  { id: '10234231', avatar: PngLeady, name: 'Екатерина', age: 20, lastMsg: 'Сообщение от пользователя 1', timer: '11:10:41', unreadMsgsCount: 3 },
-  { id: '11234231', avatar: PngWoman, name: 'Виктория', age: 22, lastMsg: 'Сообщение от пользователя 2', timer: '11:09:41', unreadMsgsCount: 3 },
-  { id: '12234231', avatar: PngFemale, name: 'Зухра', age: 21, lastMsg: 'Сообщение от пользователя 3', timer: '11:08:41', unreadMsgsCount: 2 },
-  { id: '13234231', avatar: PngWoman, name: 'Елизавета', age: 26, lastMsg: 'Сообщение от пользователя 4', timer: '07:41', unreadMsgsCount: 4 },
-  { id: '14234231', avatar: PngFemale, name: 'Екатерина', age: 24, lastMsg: 'Сообщение от пользователя 5', timer: '11:06:41', unreadMsgsCount: 3 },
-  { id: '15234231', avatar: PngLeady, name: 'Елена', age: 23, lastMsg: 'Сообщение от пользователя 6', timer: '11:05:41', unreadMsgsCount: 1 },
-  { id: '16234231', avatar: PngFemale, name: 'Влада', age: 21, lastMsg: 'Сообщение от пользователя 7', timer: '04:41', unreadMsgsCount: 4 },
-  { id: '17234231', avatar: PngWoman, name: 'Айгуль', age: 25, lastMsg: 'Сообщение от пользователя 8', timer: '11:03:41', unreadMsgsCount: 3 },
+  { id: '10234231', avatar: PngLeady, name: 'Екатерина', age: 20, lastMsg: 'Сообщение от пользователя 1', timer: 111041, unreadMsgsCount: 3 },
+  { id: '11234231', avatar: PngWoman, name: 'Виктория', age: 22, lastMsg: 'Сообщение от пользователя 2', timer: 110941, unreadMsgsCount: 3 },
+  { id: '12234231', avatar: PngFemale, name: 'Зухра', age: 21, lastMsg: 'Сообщение от пользователя 3', timer: 110841, unreadMsgsCount: 2 },
+  { id: '13234231', avatar: PngWoman, name: 'Елизавета', age: 26, lastMsg: 'Сообщение от пользователя 4', timer: 741, unreadMsgsCount: 4 },
+  { id: '14234231', avatar: PngFemale, name: 'Екатерина', age: 24, lastMsg: 'Сообщение от пользователя 5', timer: 110641, unreadMsgsCount: 3 },
+  { id: '15234231', avatar: PngLeady, name: 'Елена', age: 23, lastMsg: 'Сообщение от пользователя 6', timer: 110541, unreadMsgsCount: 1 },
+  { id: '16234231', avatar: PngFemale, name: 'Влада', age: 21, lastMsg: 'Сообщение от пользователя 7', timer: 441, unreadMsgsCount: 4 },
+  { id: '17234231', avatar: PngWoman, name: 'Айгуль', age: 25, lastMsg: 'Сообщение от пользователя 8', timer: 110341, unreadMsgsCount: 3 },
 ];
 
 export const targetChat: TargetChat = {
     id: '11231',
+    timer: 1241321431,
     interlocutor: {
         id: '11234231',
         avatar: PngFemale,
@@ -43,7 +44,7 @@ export const targetChat: TargetChat = {
             day: '2024-07-12',
             dayListMsg: [
                 {
-                    id: 0,
+                    id: '0',
                     from: '10234231',
                     to: '11234231',
                     msg: 'Привет, как твои дела? Что у тебя нового. Чем сегодня занимался',
@@ -51,7 +52,7 @@ export const targetChat: TargetChat = {
                     isChecked: true
                 },
                 {
-                    id: 1,
+                    id: '1',
                     from: '10234231',
                     to: '11234231',
                     msg: 'Привет! Все отлично, работаю над проектом. А ты как?',
@@ -59,7 +60,7 @@ export const targetChat: TargetChat = {
                     isChecked: true
                 },
                 {
-                    id: 2,
+                    id:'2',
                     from: '11234231',
                     to: '10234231',
                     msg: 'Здорово! Я тоже занят, но решил сделать перерыв.',
@@ -73,7 +74,7 @@ export const targetChat: TargetChat = {
             day: '2024-07-13',
             dayListMsg: [
                 {
-                    id: 0,
+                    id: '0',
                     from: '11234231',
                     to: '10234231',
                     msg: 'Доброе утро! Какие планы на сегодня?',
@@ -81,7 +82,7 @@ export const targetChat: TargetChat = {
                     isChecked: true
                 },
                 {
-                    id: 1,
+                    id: '1',
                     from: '10234231',
                     to: '11234231',
                     msg: 'Привет! Думаю заняться спортом и немного почитать.',
@@ -89,7 +90,7 @@ export const targetChat: TargetChat = {
                     isChecked: true
                 },
                 {
-                    id: 2,
+                    id: '2',
                     from: '11234231',
                     to: '10234231',
                     msg: 'Отлично! Тогда вечером расскажешь, как прошло.',
@@ -97,7 +98,7 @@ export const targetChat: TargetChat = {
                     isChecked: false
                 },
                 {
-                    id: 3,
+                    id: '3',
                     from: '11234231',
                     to: '10234231',
                     msg: 'Если хочешь, можешь пойти со мной.',

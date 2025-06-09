@@ -26,3 +26,7 @@ export interface FillQuestBtnText  {
     [KeyFQBtnText.First]: FQBtnTextItem
     [KeyFQBtnText.Other]: FQBtnTextItem
 }
+
+export interface PropsFillingQuestHeader {
+    mark: KeyFQBtnText
+}

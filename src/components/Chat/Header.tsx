@@ -1,10 +1,9 @@
-import { JSX, memo, useState, MouseEvent, useMemo } from 'react';
+import { JSX, memo, useState, MouseEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
 import { lineStatusAttr } from '@/constant/settings';
 import { setComplOpen, addRoute } from '@/store/slices/settingsSlice';
-import { ageToStr } from '@/funcs/general.funcs';
 import type { PropsChatHeader } from '@/types/chats.types';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -45,13 +44,13 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
     };
     
     const handleNavToDetails = (): void => {
-        const toDetails = appRoutes.details.replace(':id', props.id);
+        if( chatInterlocutor?.id ) {
+            const toDetails = appRoutes.details.replace(':id', chatInterlocutor.id);
 
-        dispatch(addRoute(location.pathname));
-        navigate(toDetails);
+            dispatch(addRoute(location.pathname));
+            navigate(toDetails);
+        }
     }
-
-    const ageStr = useMemo(() => ageToStr(chatInterlocutor?.age ?? null), [chatInterlocutor?.age]);
 
     if(!chatInterlocutor) return (<></>)
 
@@ -65,7 +64,7 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
                 />
                 <div className="description">
                     <h6 className="name" onClick={handleNavToDetails}>
-                        {`${chatInterlocutor.name}, ${ageStr}`}
+                        {`${chatInterlocutor.name} ${chatInterlocutor?.age ? ', ' + chatInterlocutor?.age : ''}`}
                     </h6>
                     <span className={`line ${lineStatusAttr[chatInterlocutor.lineStat].addClass}`}>
                         {lineStatusAttr[chatInterlocutor.lineStat].text}
@@ -90,7 +89,7 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
                 </MenuItem>
             </MenuBtn>
             <ChatDialogDelete open={openDel} id={props.id} handleClose={() => setOpenDel(false)} />
-            <ComplaintDrawer id={props.id} />
+            <ComplaintDrawer id={chatInterlocutor.id} />
         </>
     )
 })

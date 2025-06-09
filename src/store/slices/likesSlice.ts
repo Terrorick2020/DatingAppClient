@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createChatAsync } from './chatsSlice';
 import { LIKES_ENDPOINT } from '@/config/env.config';
 import { delay } from '@/funcs/general.funcs';
 import { setLoad } from './settingsSlice';
+import { PlanLabelSvgType } from '@/types/ui.types';
 import { type FetchResponse, EFetchLikesTProps } from '@/types/fetch.type';
 import type { LikesState, LikesItem, LikesMatch } from '@/types/likes.types';
 import type { AxiosResponse } from 'axios';
@@ -27,15 +29,40 @@ export const initLikesListAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
 
-            const response: AxiosResponse<FetchResponse<LikesItem[]>> =
+            const response: AxiosResponse<FetchResponse<any>> =
                 await api.get(`${LIKES_ENDPOINT}?telegramId=${telegramId}&type=${EFetchLikesTProps.Received}`);
+
+            console.log(response)
+
+            const likesList: LikesItem[] = [];
+
+            const now = Date.now();
+
+            for(let item of response.data.data) {
+                const ms = new Date(item.createdAt).getTime()
+                const expiresAt = ms + 24 * 60 * 60 * 1000;
+                const remainingMs = expiresAt - now;
+                const remainingS = Math.max(0, Math.floor(remainingMs / 1000));
+
+                likesList.push({
+                    id: item.fromUser.telegramId,
+                    avatar: item.fromUser.photoUrl,
+                    planStatus: PlanLabelSvgType.success,
+                    timer: {
+                        value: remainingS,
+                        isCritical: remainingS < 3600 * 3,
+                    },
+                    name: item.fromUser.name,
+                    age: item.fromUser.age,
+                })
+            };
 
             if(
                 response.status === 200 &&
                 response.data.data &&
                 response.data.data !== 'None' &&
                 response.data.success
-            ) return response.data.data;
+            ) return likesList;
 
             return null;
         } catch (error) {
@@ -48,7 +75,7 @@ export const initLikesListAsync = createAsyncThunk(
 
 export const acceptLikingAsync = createAsyncThunk(
     'likes/accept-liking',
-    async (toUserId: string, { getState }): Promise<AsyncThunkRes<boolean>> => {
+    async (toUserId: string, { getState, dispatch }): Promise<AsyncThunkRes<boolean>> => {
         try {
             const rootState = getState() as IState;
             const fromUserId = rootState.profile.info.id;
@@ -56,9 +83,17 @@ export const acceptLikingAsync = createAsyncThunk(
             const data = {
                 fromUserId,
                 toUserId,
-            }
+            };
+
+            dispatch(createChatAsync(toUserId));
 
             const response: AxiosResponse<FetchResponse<any>> = await api.post(LIKES_ENDPOINT, data);
+
+            // if(
+            //     response.status === 201 &&
+            //     response.data.success &&
+            //     response.data.data.isMatch
+            // ) dispatch(createChatAsync(toUserId));
 
             return response.data.success;
         } catch (error) {
@@ -104,6 +139,13 @@ const likesSlice = createSlice({
     reducers: {
         setMatch: (state, action: PayloadAction<LikesMatch>): void => {
             state.match = action.payload;
+        },
+        deleteById: (state, action: PayloadAction<string>): void => {
+            const result = state.likesList.filter(
+                item => item.id !== action.payload 
+            );
+
+            state.likesList = result;
         }
     },
     extraReducers: builder => {
@@ -196,5 +238,5 @@ const likesSlice = createSlice({
     },
 })
 
-export const { setMatch } = likesSlice.actions;
+export const { setMatch, deleteById } = likesSlice.actions;
 export default likesSlice.reducer;

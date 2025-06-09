@@ -1,7 +1,8 @@
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFQErrors } from '@/store/slices/settingsSlice';
+import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { saveSelfPhotoAsync, deleteSelfPhotoAsync } from '@/store/slices/profileSlice';
 import { warningAlert, errorAlert } from '@/funcs/alert.funcs';
 import type { SavePhotoAsyncThuncData } from '@/types/profile.types';
@@ -46,6 +47,16 @@ const FillingQuestPhotos = (): JSX.Element => {
     const handleDel = async (id: string): Promise<void> => {
         await dispatch(deleteSelfPhotoAsync(id));
     };
+
+    useEffect(() => {
+        !photos.length && dispatch(setFQErrors({
+            ...fqErrors,
+            photErr: {
+                value: true,
+                msg: EMPTY_INPUT_ERR_MSG,
+            }
+        }))
+    }, [photos]);
 
     return (
         <div className="widgets__photo">

@@ -21,3 +21,8 @@ export const fQBtnText: FillQuestBtnText = {
         mark: KeyFQBtnText.Other,
     }
 }
+
+export const fQHeadTxt = {
+    [KeyFQBtnText.First]: 'Регистрация',
+    [KeyFQBtnText.Other]: 'Обновление профиля'
+}

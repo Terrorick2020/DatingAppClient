@@ -15,7 +15,6 @@ import {
 
 import {
     USER_ENDPOINT,
-    PHOTO_LINK,
     COMPLS_ENDPOINT,
     DELETE_PHOTO,
     UPLOAD_PHOTO,
@@ -60,6 +59,8 @@ export const getProfilesListAsync = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<any>> = await api.get(USER_ENDPOINT);
 
+            console.log( response )
+
             if(
                 response.status === 200 &&
                 response.data.data &&
@@ -75,13 +76,11 @@ export const getProfilesListAsync = createAsyncThunk(
                     result.push({
                         id: item.telegramId,
                         role: item.role,
-                        avatar: PHOTO_LINK(item.photos[0].key),
+                        avatar: item.photos[0].url,
                         name: item.name,
                         status: item.status
                     })
                 }
-
-                console.log( result )
 
                 result = result.filter(item => item.role === adminState.searchType);
 

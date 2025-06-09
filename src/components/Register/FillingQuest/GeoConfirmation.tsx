@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 const GeoConfirmation = (): JSX.Element => {
     const geoEnable = useSelector((state:IState) => state.profile.info.enableGeo);
 
-    const [open, setOpen] = useState<boolean>(geoEnable);
+    const [open, setOpen] = useState<boolean>(!geoEnable);
     const [isLoad, setIsLoad] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();

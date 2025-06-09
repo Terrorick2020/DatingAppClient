@@ -1,8 +1,9 @@
 import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { initLikesListAsync } from '@/store/slices/likesSlice';
-import { type RootDispatch } from '@/store';
-import { type IState } from '@/types/store.types';
+import { AnimatePresence, motion } from "motion/react";
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import LikesCard from './Card';
 import MyLoader from '@/components/UI/MyLoader';
@@ -46,9 +47,22 @@ const LikesContent = (): JSX.Element => {
         <div className="likes__ctx">
             <h4 className="headline">Симпатии</h4>
             <div className="cards">
-                {likesList.map(item => (
-                    <LikesCard likesItem={item} />
-                ))}
+                <AnimatePresence>
+                    {likesList.map((item, index) => (
+                        <motion.div
+                            key={`likes-list-item-${item.id}`}
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            transition={{
+                                duration: 0.5,
+                                delay: 0.3 + index * 0.2,
+                            }}
+                        >
+                            <LikesCard likesItem={item} />
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
             </div>
         </div>
     )

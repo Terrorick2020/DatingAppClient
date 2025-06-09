@@ -4,7 +4,7 @@
 .target-chat {
     width: 100%;
     height: 100vh;
-    padding-top: 12.1vh;
+    padding-top: clamp(3.2rem, var(--nav-bar-h), 5rem);
     overflow: hidden;
     display: grid;
     grid-template-rows: 1.5fr 10fr 2fr;
@@ -26,6 +26,17 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 1rem;
+            background: linear-gradient(#000000, transparent);
+            bottom: -1rem;
+            left: 0;
+        }
 
         .person {
             display: flex;
@@ -38,15 +49,20 @@
             }
 
             .description {
+                width: clamp(11rem, 55vw, 20rem);
                 display: flex;
                 flex-direction: column;
                 align-items: left;
                 justify-content: center;
-                gap: 0.2rem;
+                gap: 0.25rem;
 
                 .name {
+                    width: 100%;
                     font-size: clamp(18px, 3vw, 20px);
                     font-weight: 600;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
 
                 .line {
@@ -81,7 +97,8 @@
     &__ctx {
         width: 100%;
         height: 100%;
-        padding: 1rem;
+        padding-inline: 1rem;
+        padding-top: 1.5rem;
         overflow: auto;
 
         .chat-list {
@@ -137,6 +154,7 @@
                             max-width: 310px;
                             background: #522E99;
                             color: #F9F9FF;
+                            word-break: break-word;
                         }
 
                         &__label {
@@ -173,5 +191,16 @@
         display: flex;
         align-items: center;
         z-index: 5;
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 1rem;
+            background: linear-gradient(transparent, #00000072, #000000);
+            top: -1rem;
+            left: 0;
+        }
     }
 }

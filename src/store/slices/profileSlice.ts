@@ -7,13 +7,13 @@ import type {
     EveningPlansItem,
     EveningPlansMeta,
     SavePhotoAsyncThuncData,
+    ProfileSelfGeo,
 } from '@/types/profile.types';
 
 import type {
     FetchResponse,
     FetchGeoRes,
     FetchSavePhotoRes,
-    RegEndpointResUser,
     RegEndpointRes,
 } from '@/types/fetch.type';
 
@@ -39,8 +39,15 @@ import {
     type AsyncThunkRes 
 } from '@/types/store.types';
 
+import {
+    setLoad,
+    setApiRes,
+    addPhotoInCashe,
+    delPhotoInCashe,
+    resetPhotosCashe,
+} from './settingsSlice';
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { setLoad, setApiRes } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
 import { getTgID } from '@/funcs/tg.funcs';
 import { EApiStatus } from '@/types/settings.type';
@@ -55,6 +62,8 @@ const initialState: ProfileState = {
         id: '',
         photos: [],
         enableGeo: false,
+        latitude: null,
+        longitude: null,
         lineStat: ELineStatus.Online,
         role: EProfileRoles.User,
         status: EProfileStatus.Noob,
@@ -115,16 +124,23 @@ export const initProfileAsync = createAsyncThunk(
 
 export const sendSelfGeoAsync = createAsyncThunk(
     'profile/send-self-geo',
-    async (data: SendGeoData): Promise<AsyncThunkRes<FetchGeoRes>> => {
+    async (data: SendGeoData, {dispatch}): Promise<AsyncThunkRes<FetchGeoRes>> => {
         try {
             const response: AxiosResponse<FetchResponse<FetchGeoRes>> = await api.post(SET_GEO_ENDPOINT, data);
 
-            if(
+            if (
                 response.status === 201 &&
                 response.data.data &&
                 response.data.data !== 'None' &&
                 response.data.success
-            ) return response.data.data;
+            ) {
+                dispatch(setGeoCoords({
+                    latitude: data.latitude,
+                    longitude: data.longitude,
+                }))
+
+                return response.data.data
+            };
 
             return null;
         } catch (error) {
@@ -135,7 +151,7 @@ export const sendSelfGeoAsync = createAsyncThunk(
 
 export const saveSelfPhotoAsync = createAsyncThunk(
     'profile/save-self-photo',
-    async (data: SavePhotoAsyncThuncData, { getState }): Promise<AsyncThunkRes<PhotoItem>> => {
+    async (data: SavePhotoAsyncThuncData, { dispatch, getState }): Promise<AsyncThunkRes<PhotoItem>> => {
         try {
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
@@ -160,9 +176,12 @@ export const saveSelfPhotoAsync = createAsyncThunk(
                 response.data.success
             ) {
                 const photoUrl = URL.createObjectURL(data.photo);
+                const id = String(response.data.data.photoId);
+
+                dispatch(addPhotoInCashe(id));
 
                 return {
-                    id: String(response.data.data.photoId),
+                    id,
                     photo: photoUrl,
                 } as PhotoItem;
             }
@@ -176,9 +195,20 @@ export const saveSelfPhotoAsync = createAsyncThunk(
 
 export const deleteSelfPhotoAsync = createAsyncThunk(
     'profile/delete-self-photo',
-    async (id: string, { getState }): Promise<AsyncThunkRes<string>> => {
+    async (id: string, { dispatch, getState }): Promise<AsyncThunkRes<string>> => {
         try {
             const rootState = getState() as IState;
+
+            if(rootState.settings.photosCashe.includes(id)) {
+                dispatch(delPhotoInCashe(id));
+
+                return id;
+            };
+
+            if(rootState.profile.info.photos.length === 1) {
+                return id;
+            };
+
             const telegramId = rootState.profile.info.id;
 
             const data = {
@@ -190,13 +220,25 @@ export const deleteSelfPhotoAsync = createAsyncThunk(
 
             if(
                 response.status === 200 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
                 response.data.success
             ) return id;
 
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Нельзя удалить последнюю сохранённую фотографию',
+                status: EApiStatus.Warning,
+                timestamp: Date.now(),
+            }));
+
             return null;
         } catch (error) {
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Ошибка удаления фотограяии',
+                status: EApiStatus.Error,
+                timestamp: Date.now(),
+            }));
+
             return 'error';
         }
     }
@@ -204,11 +246,19 @@ export const deleteSelfPhotoAsync = createAsyncThunk(
 
 export const signUpProfileAsync = createAsyncThunk(
     'profile/sign-up-profile',
-    async (mark: KeyFQBtnText, { getState, dispatch }): Promise<AsyncThunkRes<RegEndpointResUser>> => {
+    async (mark: KeyFQBtnText, { getState, dispatch }): Promise<AsyncThunkRes<'success'>> => {
         try {
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
             const lang = rootState.settings.lang;
+
+            const interestsVars = rootState.settings.interestsVars;
+
+            const interestId = interestsVars.find(
+                item => item.value === profileInfo.interest
+            )?.id;
+
+            if(interestId === undefined) return null;
 
             const data = {
                 telegramId: profileInfo.id,
@@ -219,35 +269,51 @@ export const signUpProfileAsync = createAsyncThunk(
                 bio: profileInfo.bio,
                 age: profileInfo.age,
                 enableGeo: profileInfo.enableGeo,
+                ...(profileInfo.enableGeo && {
+                    latitude: profileInfo.latitude,
+                    longitude: profileInfo.longitude,
+                }),
                 lang,
                 photoIds: profileInfo.photos.map(item => +item.id),
-                interestId: 1,
+                interestId,
             }
 
-            // const res: AxiosResponse<FetchResponse<any>> = await api.patch(`${USER_ENDPOINT}/${profileInfo.id}`, data);
+            let response
+            let msg: string = '';
 
-            // console.log( data )
-
-            const response: AxiosResponse<FetchResponse<RegEndpointRes>> = await api.post(REG_ENDPOINT, data);
+            switch(mark) {
+                case KeyFQBtnText.First:
+                    response = await api.post(REG_ENDPOINT, data) as AxiosResponse<FetchResponse<RegEndpointRes>>;
+                    msg = 'Регистрация пользователя прошла успешно';
+                    break;
+                case KeyFQBtnText.Other:
+                    console.log(data)
+                    response = await api.patch(`${USER_ENDPOINT}/${profileInfo.id}`, data) as AxiosResponse<FetchResponse<any>>;
+                    msg = 'Профиль обновлён успешно';
+                    break;
+            }
 
             if(
-                response.status === 201 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
+                response &&
+                [200, 201].includes(response.status) &&
                 response.data.success
             ) {
                 dispatch(setApiRes({
                     value: true,
-                    msg: 'Регистрация прошла успешно',
+                    msg,
                     status: EApiStatus.Success,
                     timestamp: Date.now(),
                 }));
 
-                return response.data.data.user;
+                dispatch(resetPhotosCashe());
+                
+                return 'success';
             }
     
             return null;
         } catch ( error ) {
+            console.log(error)
+
             dispatch(setApiRes({
                 value: true,
                 msg: 'Произошла ошибка сервера',
@@ -277,6 +343,8 @@ export const getSelfProfile = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<any>> = await api.post(LOG_ENDPOINT, data);
 
+            console.log( response )
+
             if(
                 response.status === 200 &&
                 response.data.data &&
@@ -289,6 +357,8 @@ export const getSelfProfile = createAsyncThunk(
                     id: telegramId,
                     photos: response.data.data.photos.map((item: any) => ({id: item.id, photo: item.url})),
                     enableGeo: response.data.data.enableGeo,
+                    latitude: response.data.data.latitude || null,
+                    longitude: response.data.data.longitude || null,
                     lineStat: ELineStatus.Online,
                     role: response.data.data.role,
                     status: response.data.data.status,
@@ -411,6 +481,10 @@ const profileSlice = createSlice({
         setInfo: (state, action: PayloadAction<ProfileSelf>): void => {
             state.info = action.payload;
         },
+        setGeoCoords: (state, action: PayloadAction<ProfileSelfGeo>): void => {
+            state.info.latitude = action.payload.latitude;
+            state.info.longitude = action.payload.longitude;
+        },
         setPlan: (state, action: PayloadAction<EveningPlansItem>): void => {
             state.eveningPlans.plan = action.payload;
         },
@@ -520,7 +594,7 @@ const profileSlice = createSlice({
         builder.addCase(signUpProfileAsync.pending, _ => {
             console.log("Регистрация профиля пользователя");
         })
-        builder.addCase(signUpProfileAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<RegEndpointResUser>> ) => {
+        builder.addCase(signUpProfileAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
             switch (action.payload) {
                 case 'error':
                     console.log("Ошибка регистрации профиля пользователя");
@@ -528,7 +602,7 @@ const profileSlice = createSlice({
                 case null:
                     console.log("Регистрация профиля пользователя не прошла");
                     break;
-                default:
+                case 'success':
                     console.log("Успешная регистрация профиля пользователя");
                     break;
             }
@@ -627,5 +701,12 @@ const profileSlice = createSlice({
     }
 })
 
-export const { setInfo, setPlan, setPlanMeta, setLocation, setAddLink } = profileSlice.actions;
+export const {
+    setInfo,
+    setGeoCoords,
+    setPlan,
+    setPlanMeta,
+    setLocation,
+    setAddLink
+} = profileSlice.actions;
 export default profileSlice.reducer;

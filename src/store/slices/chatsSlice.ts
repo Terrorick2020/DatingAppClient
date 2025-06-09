@@ -2,22 +2,32 @@ import type {
     ChatsState,
     ChatsCtx,
     TargetChat,
-    ChatsFavListItem,
-    ChatsListItem
+    ChatInterlocutor,
+    IncomingMsg,
+    TargetChatDay,
 } from '@/types/chats.types';
 
 import {
     CHATS_ENDPOINT,
     CHATS_METADATA_ENDPOINT,
     CHATS_MSG_ENDPOINT,
-    CHATS_DEL_ENDPOINT
+    CHATS_DEL_ENDPOINT,
+    USER_ENDPOINT,
+    CHATS_TYPING_ENDPOINT,
+    CHATS_ADD_MSG_ENDPOINT,
 } from '@/config/env.config';
 
+import {
+    ELineStatus,
+    type AsyncThunkRes,
+    type IState,
+} from '@/types/store.types';
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { addMessageToChat } from '@/funcs/chats.funcs';
 import { setLoad } from './settingsSlice';
 import type { FetchResponse } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
-import type { AsyncThunkRes, IState } from '@/types/store.types';
 
 import api from '@/config/fetch.config';
 
@@ -27,6 +37,7 @@ const initialState: ChatsState = {
     chatsList: [],
     targetChat: {
         id: '',
+        timer: null,
         interlocutor: null,
         chatDialog: [],
     },
@@ -41,28 +52,39 @@ export const initChatsCtxAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
 
-            const [chatsRes, favChatsRes]: [
-                AxiosResponse<FetchResponse<ChatsListItem[]>>,
-                AxiosResponse<FetchResponse<ChatsFavListItem[]>>
-            ] = await Promise.all([
-                api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`),
-                api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`),
-            ]);
+            const chatsRes: AxiosResponse<FetchResponse<any>> = await api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`);
 
-            console.log(chatsRes, favChatsRes)
+            console.log(chatsRes)
 
             if(
                 chatsRes.status === 200 &&
                 chatsRes.data.data &&
                 chatsRes.data.data !== 'None' &&
-                chatsRes.data.success &&
-                favChatsRes.status === 200 &&
-                favChatsRes.data.data &&
-                favChatsRes.data.data !== 'None' &&
-                favChatsRes.data.success
-            ) return {
-                chatsFavList: favChatsRes.data.data,
-                chatsList: chatsRes.data.data,
+                chatsRes.data.success
+            ) {
+                const chatsCtx: ChatsCtx = {
+                    chatsFavList: [],
+                    chatsList: [],
+                };
+
+                const now = Date.now();
+
+                for(let item of chatsRes.data.data) {
+                    const expiresAt = item.created_at + 24 * 60 * 60 * 1000;
+                    const remainingMs = expiresAt - now;
+
+                    chatsCtx.chatsList.push({
+                        id: item.chatId,
+                        avatar: item.toUser.avatarUrl,
+                        name: item.toUser.name,
+                        age: item.toUser.age,
+                        lastMsg: item.lastMsg,
+                        timer: Math.max(0, Math.floor(remainingMs / 1000)),
+                        unreadMsgsCount: item.unread_count,
+                    })
+                }
+
+                return chatsCtx;
             }
 
             return null;
@@ -76,7 +98,7 @@ export const initChatsCtxAsync = createAsyncThunk(
 
 export const getChatByIdAsync = createAsyncThunk(
     'chats/get-chat-by-id',
-    async (id: string, {dispatch}): Promise<AsyncThunkRes<TargetChat>> => {
+    async (id: string, {dispatch, getState}): Promise<AsyncThunkRes<TargetChat>> => {
         try {
             dispatch(setLoad(true));
 
@@ -94,18 +116,59 @@ export const getChatByIdAsync = createAsyncThunk(
             ]);
 
             if(
+                chatMetaRes.status !== 200       ||
+                !chatMetaRes.data.data           ||
+                chatMetaRes.data.data === 'None' ||
+                !chatMetaRes.data.success
+            ) return null;
+
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+            const interId: string = chatMetaRes.data.data.participants.find(
+                (item: string) => item !== telegramId
+            );
+
+            const now = Date.now();
+            const expiresAt = chatMetaRes.data.data.created_at + 24 * 60 * 60 * 1000;
+            const remainingMs = expiresAt - now;
+
+            const timer = Math.max(0, Math.floor(remainingMs / 1000));
+            
+            const interRes: AxiosResponse<FetchResponse<any>> = await api.get(`${USER_ENDPOINT}/${interId}`);
+
+            if (
+                interRes.status !== 200       ||
+                !interRes.data.data           ||
+                interRes.data.data === 'None' ||
+                !interRes.data.success
+            ) return null;
+
+            const interlocutor: ChatInterlocutor = {
+                id: interRes.data.data.telegramId,
+                avatar: interRes.data.data.photos[0].url,
+                name: interRes.data.data.name,
+                age: interRes.data.data.age,
+                lineStat: ELineStatus.Offline,
+            };
+
+            console.log(chatMetaRes, chatDialogRes, interRes);
+
+            if(
                 chatMetaRes.status === 200 &&
                 chatMetaRes.data.data &&
                 chatMetaRes.data.data !== 'None' &&
                 chatMetaRes.data.success &&
-                chatDialogRes.status === 200 &&
-                chatDialogRes.data.data &&
-                chatDialogRes.data.data !== 'None' &&
-                chatDialogRes.data.success
-            )  return {
-                id,
-                interlocutor: chatMetaRes.data.data,
-                chatDialog: chatMetaRes.data.data,
+                chatDialogRes.status === 200 
+                // chatDialogRes.data.data &&
+                // chatDialogRes.data.data !== 'None' &&
+                // chatDialogRes.data.success
+            ) {
+                return {
+                    id,
+                    timer,
+                    interlocutor,
+                    chatDialog: [],
+                }
             }
 
             return null;
@@ -132,9 +195,7 @@ export const createChatAsync = createAsyncThunk(
             const response: AxiosResponse<FetchResponse<any>> = await api.post(CHATS_ENDPOINT, data);
 
             if(
-                response.status === 200 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
+                response.status === 201 &&
                 response.data.success
             ) return 'success';
 
@@ -143,7 +204,7 @@ export const createChatAsync = createAsyncThunk(
             return 'error';
         }
     }
-)
+);
 
 export const deleteChatByIDAsync = createAsyncThunk(
     'chats/delete-chat-by-id',
@@ -168,10 +229,86 @@ export const deleteChatByIDAsync = createAsyncThunk(
     }
 );
 
+export const sendMsgAsync = createAsyncThunk(
+    'chats/send-msg',
+    async (text: string, { getState }): Promise<AsyncThunkRes<TargetChatDay[]>> => {
+        try {
+            const rootState = getState() as IState;
+            const chatId = rootState.chats.targetChat.id;
+            const fromUser = rootState.profile.info.id;
+
+            const data = { chatId, fromUser, text };
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.post(CHATS_ADD_MSG_ENDPOINT, data);
+
+            if (
+                response.status !== 201       ||
+                !response.data.data           ||
+                response.data.data === 'None' ||
+                !response.data.success
+            ) return null;
+
+            const incommingMsg: IncomingMsg =  {
+                chatId: response.data.data.chatId,
+                created_at: response.data.data.created_at,
+                fromUser: response.data.data.fromUser,
+                id: response.data.data.id,
+                is_read: response.data.data.is_read,
+                text: response.data.data.text,
+                updated_at: response.data.data.updated_at,
+            }
+
+            const interlocatorId = rootState.chats.targetChat.interlocutor?.id;
+            const chatDialog = rootState.chats.targetChat.chatDialog;
+
+            const newChatDialog = addMessageToChat(chatDialog, incommingMsg, interlocatorId || 'recived');
+
+            return newChatDialog;
+        } catch (error) {
+            return 'error'
+        }
+    } 
+);
+
+export const setTypingStatAsync = createAsyncThunk(
+    'chats/set-typing-stat',
+    async (isTyping: boolean, {getState}): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const rootState = getState() as IState;
+            const chatId = rootState.chats.targetChat.id;
+            const userId = rootState.profile.info.id;
+
+            const data = { chatId, userId, isTyping };
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.post(CHATS_TYPING_ENDPOINT, data);
+
+            if(
+                response.status === 201 &&
+                response.data.success
+            ) return 'success';
+
+            return null;
+        } catch (error) {
+            return 'error'
+        }
+    } 
+);
+
 const chatsSlice = createSlice({
     name: 'chats',
     initialState,
-    reducers: {},
+    reducers: {
+        deleteFavChatById: (state, action: PayloadAction<string>): void => {
+            state.chatsFavList = state.chatsFavList.filter(
+                item => item.id === action.payload
+            )
+        },
+        deleteChatById: (state, action: PayloadAction<string>): void => {
+            state.chatsList = state.chatsList.filter(
+                item => item.id === action.payload
+            )
+        },
+    },
     extraReducers: builder => {
         // Получение списков чатов и особых пользоватеоей
         builder.addCase(initChatsCtxAsync.pending, _ => {
@@ -239,7 +376,6 @@ const chatsSlice = createSlice({
             console.log("Ошибка создания чата");
         })
 
-
         // Удаление чата по id
         builder.addCase(deleteChatByIDAsync.pending, _ => {
             console.log("Удаление чата по id");
@@ -255,6 +391,7 @@ const chatsSlice = createSlice({
                 default:
                     state.targetChat = {
                         id: '',
+                        timer: null,
                         interlocutor: null,
                         chatDialog: [],
                     };
@@ -266,8 +403,52 @@ const chatsSlice = createSlice({
         builder.addCase(deleteChatByIDAsync.rejected, _ => {
             console.log("Ошибка удаления чата по id");
         })
+
+        // sendMsgAsync, setTypingStatAsync
+        // Отправка сообщения в чат
+        builder.addCase(sendMsgAsync.pending, _ => {
+            console.log("Отправка сообщения в чат");
+        })
+        builder.addCase(sendMsgAsync.fulfilled, (state, action: PayloadAction<AsyncThunkRes<TargetChatDay[]>>) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка отправки сообщения");
+                    break;
+                case null:
+                    console.log("Сообщение не отправлено");
+                    break;
+                default:
+                    state.targetChat.chatDialog = action.payload;
+                    console.log("Успешная отправка сообщения");
+                    break;
+            }
+        })
+        builder.addCase(sendMsgAsync.rejected, _ => {
+            console.log("Ошибка отправки сообщения");
+        })
+
+        // Установка статуса : "Печатает..."
+        builder.addCase(setTypingStatAsync.pending, _ => {
+            console.log("Установка статуса : \"Печатает...\"");
+        })
+        builder.addCase(setTypingStatAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<'success'>>) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка установки статуса : \"Печатает...\"");
+                    break;
+                case null:
+                    console.log("Статус \"Печатает\" не установлен");
+                    break;
+                default:
+                    console.log("Статус \"Печатает\" успешно установлен");
+                    break;
+            }
+        })
+        builder.addCase(setTypingStatAsync.rejected, _ => {
+            console.log("Ошибка установки статуса : \"Печатает...\"");
+        })
     }
 })
 
-export const {} = chatsSlice.actions;
+export const {deleteFavChatById, deleteChatById} = chatsSlice.actions;
 export default chatsSlice.reducer;

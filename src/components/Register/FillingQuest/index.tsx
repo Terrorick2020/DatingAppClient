@@ -125,9 +125,14 @@ const FillingQuestContent = (): JSX.Element => {
         };
 
         setRegLoad(true);
+        
         const response = await dispatch(signUpProfileAsync(btnCtx.mark)).unwrap();
         
-        if(response && response !== 'error') {
+        if(
+            response &&
+            response !== 'error' &&
+            btnCtx.mark === KeyFQBtnText.First
+        ) {
             dispatch(addRoute(location.pathname));
             navigate(toPlans);
         };
@@ -145,7 +150,7 @@ const FillingQuestContent = (): JSX.Element => {
         <>
             <GeoConfirmation />
             <div className="filling-quest__header">
-                <FillingQuestHeader />
+                <FillingQuestHeader mark={btnCtx.mark} />
             </div>
             <div className="filling-quest__ctx">
                 <div className="widgets">

@@ -28,6 +28,8 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
 
             @keyframes post-load {
                 0% {

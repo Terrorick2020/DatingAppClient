@@ -8,6 +8,7 @@ import {
     type FEPErrors,
     type SettingsState,
     type BaseVarsItem,
+    type DistrictVarsItem,
     type InterestsVarsItem,
     type SetApiRes,
     type SelSexVarsItem,
@@ -88,6 +89,7 @@ export const initialState: SettingsState = {
         chats: badgeEmptyItem,
         likes: badgeEmptyItem,
     },
+    photosCashe: [],
 };
 
 export const initFillingQuestAsync = createAsyncThunk(
@@ -270,7 +272,7 @@ export const initEPCtxAsync = createAsyncThunk(
 
             const [plansRes, districtsRes]: [
                 plansRes: AxiosResponse<FetchResponse<BaseVarsItem[]>>,
-                districtsRes: AxiosResponse<FetchResponse<BaseVarsItem[]>>,
+                districtsRes: AxiosResponse<FetchResponse<DistrictVarsItem[]>>,
             ] = await Promise.all([
                 api.get(HELP_PLANS_ENDPOINT),
                 api.post(HELP_REGIONS_ENDPOINT, data),
@@ -389,6 +391,17 @@ const settingsSlice = createSlice({
         setCityes: (state, action: PayloadAction<BaseVarsItem[]>): void => {
             state.cityesVars = action.payload;
         },
+        addPhotoInCashe: (state, action: PayloadAction<string>): void => {
+            state.photosCashe.push(action.payload);
+        },
+        delPhotoInCashe: (state, action: PayloadAction<string>): void => {
+            state.photosCashe = state.photosCashe.filter(
+                item => item === action.payload
+            );
+        },
+        resetPhotosCashe: state => {
+            state.photosCashe = [];
+        }
     },
     extraReducers: builder => {
         // Получение варианетов интересов
@@ -501,5 +514,8 @@ export const {
     setGlobValueComplaint,
     resetComplaint,
     setCityes,
+    addPhotoInCashe,
+    delPhotoInCashe,
+    resetPhotosCashe,
 } = settingsSlice.actions;
 export default settingsSlice.reducer;
