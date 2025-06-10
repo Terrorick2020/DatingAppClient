@@ -74,6 +74,10 @@ export const COMPLS_ENDPOINT     = import.meta.env.VITE_COMPLS_ENDPOINT || '';
 export const COMPLS_UPT_ENDPOINT = import.meta.env.VITE_COMPLS_UPT_ENDPOINT || '';
 export const COMPLS_STATS        = import.meta.env.VITE_COMPLS_STATS || '';
 
+export const FQ_MEDIA_LINK     = import.meta.env.VITE_FQ_MEDIA_LINK || '';
+export const PL_MEDIA_LINK     = import.meta.env.VITE_PL_MEDIA_LINK || '';
+export const LO_MEDIA_LINK    = import.meta.env.VITE_LO_MEDIA_LINK || '';
+
 if(
   !BASE_URL ||
   !WS_URL   ||

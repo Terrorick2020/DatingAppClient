@@ -1,8 +1,9 @@
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toLocation } from '@/config/routes.config';
-import { addRoute, setEPErrors } from '@/store/slices/settingsSlice';
+import { addRoute, setEPErrors, setMedaiLink } from '@/store/slices/settingsSlice';
 import { EMPTY_INPUT_ERR_MSG, ANIME_DURATION } from '@/constant/settings';
+import { PL_MEDIA_LINK } from '@/config/env.config';
 import { Slide } from 'react-awesome-reveal';
 import { useDispatch, useSelector } from 'react-redux';
 import { EAnimeDirection } from '@/types/settings.type';
@@ -40,6 +41,10 @@ const EveningPlansPlansCtx = (): JSX.Element => {
         dispatch(addRoute(location.pathname));
         navigate(toLocation);
     }
+
+    useEffect(() => {
+        dispatch(setMedaiLink(PL_MEDIA_LINK));
+    }, [])
 
     return (
         <>

@@ -1,4 +1,4 @@
-import { useState, useRef, SyntheticEvent, JSX  } from 'react';
+import { useState, useRef, SyntheticEvent, JSX, useEffect  } from 'react';
 import { useSelector } from 'react-redux';
 import { formatTime } from '@/funcs/general.funcs';
 import type { MediaProgressState } from '@/types/register.typs';
@@ -17,9 +17,18 @@ const MediaContent = (): JSX.Element => {
     const [currentTime, setCurrentTime] = useState<number>(0);
     const [duration, setDuration] = useState<number>(0);
     const [showThumb, setShowThumb] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isError, setIsError] = useState<boolean>(false);
 
     const playerRef = useRef<ReactPlayer>(null);
     const inactivityTimeout = useRef<NodeJS.Timeout | null>(null);
+
+    const handleReady = (): void => setIsLoading(false);
+
+    const handleError = (): void => {
+        setIsLoading(false);
+        setIsError(true);
+    };
 
     const handleProgress = (state: MediaProgressState): void => {
         setProgress(state.played * 100);
@@ -71,6 +80,13 @@ const MediaContent = (): JSX.Element => {
         }, 2000);
     };
 
+    useEffect(() => {
+        if(!mediaLink) {
+            setIsError(true);
+            setIsLoading(false);
+        }
+    }, []);
+
     return(
         <>
             <main className="video">
@@ -84,12 +100,16 @@ const MediaContent = (): JSX.Element => {
                             ref={playerRef}
                             controls={false}
                             playing={isPlaying}
+                            onReady={handleReady}
+                            onError={handleError}
                             onProgress={handleProgress}
                             onDuration={handleDuration}
                             onEnded={handleEnd}
                         />
                         <MediaContentBg
                             isPlaying={isPlaying}
+                            isLoading={isLoading}
+                            isError={isError}
                             handlePlaying={handlePlaying}
                             handleSeekBy={handleSeekBy}
                         />

@@ -21,11 +21,10 @@ import {
     badgeEmptyItem,
 } from '@/constant/settings';
 
-import {
-    LinkPageType,
-    type IState,
-    type AsyncThunkRes,
-    type InitFillingQuestRes,
+import type {
+    IState,
+    AsyncThunkRes,
+    InitFillingQuestRes,
 } from '@/types/store.types';
 
 import {
@@ -40,7 +39,6 @@ import {
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setInfo } from './profileSlice';
-import { delay } from '@/funcs/general.funcs';
 import type { FetchResponse } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
 
@@ -301,24 +299,6 @@ export const initEPCtxAsync = createAsyncThunk(
     }
 );
 
-export const initMediaLinkAsync = createAsyncThunk(
-    'settings/init-media-link',
-    async (_linkType: LinkPageType): Promise<AsyncThunkRes<string>> => {
-        try {
-            await delay(2000);
-
-            return 'https://storage.yandexcloud.net/photodatingapp/' +
-                    '1.MOV?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=' +
-                    'YCAJE2WAntPULZcEo0LlklLMu%2F20250429%2Fru-central1%2Fs3%' +
-                    '2Faws4_request&X-Amz-Date=20250429T165117Z&X-Amz-Expires' +
-                    '=108000&X-Amz-Signature=6dc73f2a9ed9d1a4703f787fd4aec413' +
-                    '1ee3c3ea75c8adffbcdbae10db54d5ed&X-Amz-SignedHeaders=host';
-        } catch (error) {
-            return 'error';
-        }
-    }
-);
-
 const settingsSlice = createSlice({
     name: 'settings',
     initialState,
@@ -401,6 +381,9 @@ const settingsSlice = createSlice({
         },
         resetPhotosCashe: state => {
             state.photosCashe = [];
+        },
+        setMedaiLink: (state, action: PayloadAction<string>): void => {
+            state.mediaLink = action.payload;
         }
     },
     extraReducers: builder => {
@@ -471,28 +454,6 @@ const settingsSlice = createSlice({
         builder.addCase(initEPCtxAsync.rejected, _ => {
             console.log("Ошибка получния вариантов планов и районов");
         })
-
-        // Получение ссылки видео
-        builder.addCase(initMediaLinkAsync.pending, _ => {
-            console.log("Получение ссылки видео");
-        })
-        builder.addCase(initMediaLinkAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<string>> ) => {
-            switch(action.payload) {
-                case 'error':
-                    console.log("Ошибка получения ссылки видео");
-                    break;
-                case null:
-                    console.log("Ссылка на видео не получена");
-                    break;
-                default:
-                    state.mediaLink = action.payload;
-                    console.log("Успешное получение ссылки видео");
-                    break;
-            }
-        })
-        builder.addCase(initMediaLinkAsync.rejected, _ => {
-            console.log("Ошибка получения ссылки видео");
-        })
     }
 });
 
@@ -517,5 +478,6 @@ export const {
     addPhotoInCashe,
     delPhotoInCashe,
     resetPhotosCashe,
+    setMedaiLink,
 } = settingsSlice.actions;
 export default settingsSlice.reducer;

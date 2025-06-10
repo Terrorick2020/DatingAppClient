@@ -36,11 +36,6 @@ export enum LinkTooltipText {
     Error = 'Error',
 }
 
-export enum LinkPageType {
-    FillingQuest = 'FillingQuest',
-    EveningPlans = 'EveningPlans',
-}
-
 export interface IState {
     admin:          AdminState
     chats:          ChatsState

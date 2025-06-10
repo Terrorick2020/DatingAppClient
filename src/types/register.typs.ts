@@ -7,6 +7,8 @@ export interface MediaProgressState {
 
 export interface PropsMediaContentBg {
     isPlaying: boolean
+    isLoading: boolean
+    isError: boolean
     handlePlaying: () => void
     handleSeekBy: (seconds: number) => void
 }

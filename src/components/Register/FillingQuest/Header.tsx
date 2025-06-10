@@ -1,19 +1,20 @@
-import { JSX } from 'react';
-import { useDispatch } from 'react-redux';
+import { JSX, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toMedia } from '@/config/routes.config';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useInitMediaLink } from '@/funcs/effects.funcs';
-import { LinkPageType } from '@/types/store.types';
+import { setMedaiLink } from '@/store/slices/settingsSlice';
+import { FQ_MEDIA_LINK } from '@/config/env.config';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { fQHeadTxt } from '@/constant/register';
 import type { PropsFillingQuestHeader } from '@/types/register.typs';
 import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import SvgVideoHelpers from '@/assets/icon/video-helpers.svg?react';
 
 
 const FillingQuestHeader = (props: PropsFillingQuestHeader): JSX.Element => {
-    const isDisabled = useInitMediaLink(LinkPageType.FillingQuest);
+    const mediaLink = useSelector((state: IState) => state.settings.mediaLink);
     
     const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();
@@ -24,6 +25,9 @@ const FillingQuestHeader = (props: PropsFillingQuestHeader): JSX.Element => {
         dispatch(addRoute(location.pathname));
     }
 
+    useEffect(() => {
+        dispatch(setMedaiLink(FQ_MEDIA_LINK));
+    }, [])
 
     return (
         <>  
@@ -31,7 +35,7 @@ const FillingQuestHeader = (props: PropsFillingQuestHeader): JSX.Element => {
                 <h3 className="headline">{fQHeadTxt[props.mark]}</h3>
                 <p className="description">Расскажите немного о себе и о своих планах.</p>
             </div>
-            <div className={`video ${isDisabled && 'disabled'}`} onClick={handleClick}>
+            <div className={`video ${mediaLink && 'disabled'}`} onClick={handleClick}>
                 <SvgVideoHelpers />
             </div>
         </>
