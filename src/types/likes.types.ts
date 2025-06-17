@@ -17,6 +17,7 @@ export interface LikesItem {
 
 export interface LikesMatchFrom {
     id: string
+    chatId: string
     avatar: string
     name: string
 }

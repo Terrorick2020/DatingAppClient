@@ -1,11 +1,18 @@
+import {
+    LikesCltMethods,
+    MatchCltMethods,
+    type OnResNewLike,
+    type OnResNewMatch,
+} from '@/types/socket.types';
+
 import { JSX, useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { WS_LIKES } from '@/config/env.config';
+import { WS_LIKES, WS_MATCH } from '@/config/env.config';
 import { setBadge } from '@/store/slices/settingsSlice';
+import { getMatchDataAsync } from '@/store/slices/likesSlice';
 import { getNamespaceSocket, handleSocket } from '@/config/socket.config';
-import { LikesCltMethods, type OnResNewLike } from '@/types/socket.types';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -17,10 +24,13 @@ import SAPlansTimeout from '@/components/Layouts/PlansTimeout';
 const QuestLayout = (): JSX.Element => {
     const isCurrent = useSelector((state: IState) => state.profile.eveningPlans.isCurrent);
     const badgeCtx = useSelector((state: IState) => state.settings.badge);
+    const match = useSelector((state: IState) => state.likes.match);
 
     const dispatch = useDispatch<RootDispatch>();
 
     const snackbarKeyRef = useRef<string | number | null>(null);
+    const isMatchLoad = useRef<boolean>(false);
+
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const showSnackPlanTimeout = () => {
@@ -58,18 +68,43 @@ const QuestLayout = (): JSX.Element => {
             ...badgeCtx,
             likes: {
                 value: true,
-                content: badgeCtx.likes.content++,
+                content: ++badgeCtx.likes.content,
             }
         }));
     };
 
+    const handleMatchNotyfy = async (data: OnResNewMatch | null): Promise<void> => {
+        if(!data) return;
+
+        console.log(data);
+
+        dispatch(setBadge({
+            ...badgeCtx,
+            chats: {
+                value: true,
+                content: ++badgeCtx.likes.content,
+            }
+        }));
+
+        if(match.value || isMatchLoad.current) return;
+
+        isMatchLoad.current = true;
+
+        await dispatch(getMatchDataAsync(data));
+
+        isMatchLoad.current = false;
+    };
+
     useEffect(() => {
         const likeSocket = getNamespaceSocket(WS_LIKES);
+        const matchSocket = getNamespaceSocket(WS_MATCH);
 
         handleSocket<OnResNewLike>(likeSocket, LikesCltMethods.newLike, handleLikesNotify);
+        handleSocket<OnResNewMatch>(matchSocket, MatchCltMethods.newMatch, handleMatchNotyfy);
 
         return () => {
             likeSocket?.off(LikesCltMethods.newLike);
+            matchSocket?.off(MatchCltMethods.newMatch);
 
             if (snackbarKeyRef.current) {
                 closeSnackbar(snackbarKeyRef.current);

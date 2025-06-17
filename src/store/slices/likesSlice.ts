@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { createChatAsync } from './chatsSlice';
-import { LIKES_ENDPOINT } from '@/config/env.config';
-import { delay } from '@/funcs/general.funcs';
+import { LIKES_ENDPOINT, USER_ENDPOINT, CHATS_ADD_MSG_ENDPOINT } from '@/config/env.config';
 import { setLoad } from './settingsSlice';
 import { PlanLabelSvgType } from '@/types/ui.types';
 import { type FetchResponse, EFetchLikesTProps } from '@/types/fetch.type';
+import type { OnResNewMatch } from '@/types/socket.types';
 import type { LikesState, LikesItem, LikesMatch } from '@/types/likes.types';
 import type { AxiosResponse } from 'axios';
 import type { IState, AsyncThunkRes } from '@/types/store.types';
@@ -122,13 +122,65 @@ export const rejectLikingAsync = createAsyncThunk(
     }
 );
 
+export const getMatchDataAsync = createAsyncThunk(
+    'likes/get-match-data',
+    async (data: OnResNewMatch, {getState}): Promise<AsyncThunkRes<LikesMatch>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+
+            const id = telegramId === data.user1Id ? data.user2Id : data.user1Id;
+            
+            const response: AxiosResponse<FetchResponse<any>> = await api.get(`${USER_ENDPOINT}/${id}`);
+
+            if (
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+
+            const userData = response.data.data;
+
+            const result: LikesMatch = {
+                value: true,
+                from: {
+                    id,
+                    chatId: data.chatId,
+                    avatar: userData.photos[0].url,
+                    name: userData.name,
+                }
+            }
+
+            return result
+        } catch (error) {
+            return 'error';
+        }
+    }
+)
+
 export const acceptMatchAsync = createAsyncThunk(
     'likes/accept-match',
-    async (): Promise<AsyncThunkRes<void>> => {
+    async (text: string, {getState}): Promise<AsyncThunkRes<'success'>> => {
         try {
-            await delay(2000);
+            const rootState = getState() as IState;
+            const fromUser = rootState.profile.info.id;
+            const chatId = rootState.likes.match.from?.chatId;
 
-            return null;
+            if(!chatId) return 'error';
+
+            const data = { chatId, fromUser, text };
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.post(CHATS_ADD_MSG_ENDPOINT, data);
+
+            if (
+                response.status !== 201       ||
+                !response.data.data           ||
+                response.data.data === 'None' ||
+                !response.data.success
+            ) return null;
+
+            return 'success';
         } catch (error) {
             return 'error';
         }
@@ -216,11 +268,34 @@ const likesSlice = createSlice({
             console.log("Ошибка отклонения симпантии");
         })
 
+        // Получение данных о мэтче
+        builder.addCase(getMatchDataAsync.pending, _ => {
+            console.log("Получение данных о мэтче");
+        })
+        builder.addCase(getMatchDataAsync.fulfilled, (state, action: PayloadAction<AsyncThunkRes<LikesMatch>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения данных о мэтче");
+                    break;
+                case null:
+                    console.log("Данные о мэтче не получены");
+                    break;
+                default:
+                    state.match = action.payload;
+                    console.log("Успешное получение данных о мэтче не получены");
+                    break;
+            }
+
+        })
+        builder.addCase(getMatchDataAsync.rejected, _ => {
+            console.log("Ошибка получения данных о мэтче");
+        })
+
         // Ответ на симпатию
         builder.addCase(acceptMatchAsync.pending, _ => {
             console.log("Ответ на симпатию");
         })
-        builder.addCase(acceptMatchAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<void>> ) => {
+        builder.addCase(acceptMatchAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
             switch(action.payload) {
                 case 'error':
                     console.log("Ошибка ответа на симпатию");
@@ -228,7 +303,7 @@ const likesSlice = createSlice({
                 case null:
                     console.log("На симпатию не удалось ответить");
                     break;
-                default:
+                case 'success':
                     console.log("Успешный ответ на симпатию");
                     break;
             }

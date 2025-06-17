@@ -20,6 +20,10 @@ export enum LikesCltMethods {
     newLike = 'newLike',
 }
 
+export enum MatchCltMethods {
+    newMatch = 'newMatch'
+}
+
 export enum ConnectionStatus {
 	Error = 'error',
 	Success = 'success',
@@ -63,5 +67,12 @@ export interface OnResInterLineStat {
 export interface OnResNewLike {
     fromUserId: string
     toUserId: string
+    timestamp: number
+}
+
+export interface OnResNewMatch {
+    user1Id: string
+    user2Id: string
+    chatId: string
     timestamp: number
 }

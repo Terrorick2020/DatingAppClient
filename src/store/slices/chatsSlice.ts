@@ -16,6 +16,7 @@ import {
     CHATS_TYPING_ENDPOINT,
     CHATS_ADD_MSG_ENDPOINT,
     CHATS_READ_ENDPOINT,
+    CHATS_UNREAD_ENDPOINT,
     WS_MSGS,
 } from '@/config/env.config';
 
@@ -29,7 +30,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { ServerMethods, type OnResReadMsg, type OnResNewMsg } from '@/types/socket.types';
 import { addMessageToChat, markMessagesAsRead } from '@/funcs/chats.funcs';
 import { connectSocketRoom } from '@/config/socket.config';
-import { setLoad } from './settingsSlice';
+import { setLoad, setBadge } from './settingsSlice';
 import type { FetchResponse } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
 
@@ -47,6 +48,41 @@ const initialState: ChatsState = {
     },
 }
 
+export const getUnreadChatsAsync = createAsyncThunk(
+    'chats/get-unread-chats',
+    async (_, { getState, dispatch }): Promise<AsyncThunkRes<number>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+
+            const url = CHATS_UNREAD_ENDPOINT(telegramId);
+
+            const response: AxiosResponse<FetchResponse<number>> = await api.get(url);
+
+            if(
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+
+            const badgeCtx = rootState.settings.badge;
+
+            dispatch(setBadge({
+                ...badgeCtx,
+                chats: {
+                    value: true,
+                    content: response.data.data,
+                }
+            }));
+
+            return response.data.data;
+        } catch (error) {
+            return 'error';
+        }
+    }
+)
+
 export const initChatsCtxAsync = createAsyncThunk(
     'chats/init-chats-ctx',
     async (_, {dispatch, getState}): Promise<AsyncThunkRes<ChatsCtx>> => {
@@ -57,10 +93,6 @@ export const initChatsCtxAsync = createAsyncThunk(
             const telegramId = rootState.profile.info.id;
 
             const chatsRes: AxiosResponse<FetchResponse<any>> = await api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`);
-
-            console.log('-------------')
-            console.log(chatsRes)
-            console.log('-------------')
 
             if(
                 chatsRes.status === 200 &&
@@ -420,6 +452,27 @@ const chatsSlice = createSlice({
         },
     },
     extraReducers: builder => {
+        // Получение количества чатов в которых есть непрочитанные сообщения
+        builder.addCase(getUnreadChatsAsync.pending, _ => {
+            console.log("Получение чатов в которых есть непрочитанные сообщения");
+        })
+        builder.addCase(getUnreadChatsAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<number>>) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения чатов в которых есть непрочитанные сообщения");
+                    break;
+                case null:
+                    console.log("Списки чатов в которых есть непрочитанные сообщения не получены");
+                    break;
+                default:
+                    console.log("Успешное получение чатов в которых есть непрочитанные сообщения");
+                    break;
+            }
+        })
+        builder.addCase(getUnreadChatsAsync.rejected, _ => {
+            console.log("Ошибка получения чатов в которых есть непрочитанные сообщения");
+        })
+
         // Получение списков чатов и особых пользоватеоей
         builder.addCase(initChatsCtxAsync.pending, _ => {
             console.log("Получение списков чатов и особых пользоватеоей");

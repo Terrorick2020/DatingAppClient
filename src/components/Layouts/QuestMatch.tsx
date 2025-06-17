@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { acceptMatchAsync } from '@/store/slices/likesSlice';
 import { setMatch } from '@/store/slices/likesSlice';
 import { addRoute } from '@/store/slices/settingsSlice';
-import { useNavigate } from 'react-router-dom';
-import { appRoutes } from '@/config/routes.config';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { toTargetChat, toDetails } from '@/config/routes.config';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -16,39 +16,41 @@ const QuestMatch = (): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const match = useSelector((state: IState) => state.likes.match);
 
-    if(!match.value || !match.from) return (<></>);
-
     const [message, setMessage] = useState<string>('');
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleOpen = (): void => {
         dispatch(setMatch({...match, value: true}))
-    }
+    };
     
     const handleClose = (): void => {
-        dispatch(setMatch({...match, value: false}))
-    }
+        dispatch(setMatch({from: null, value: false}))
+    };
 
     const handleChange = (newValue: string) => setMessage(newValue);
 
-    const handleAcceptMatch = async (): Promise<void> => {
+    const handleNav = (path: string): void => {
+        dispatch(addRoute(location.pathname));
 
-        await dispatch(acceptMatchAsync());
+        navigate(path);
 
-        const questGlobRoute = appRoutes.questionnaires.global;
-        const questChatsRoute = appRoutes.questionnaires.inner.chats;
-        const toChats = `${questGlobRoute}/${questChatsRoute}`;
-
-        dispatch(addRoute(toChats));
-
-        const toTargetChat = appRoutes.targetChat.replace(':id', match.from!.id);
-
-        navigate(toTargetChat);
-
-        dispatch(setMatch({ value: false, from: null }));
+        handleClose();
     }
+
+    const handleAcceptMatch = async (): Promise<void> => {
+        const response = await dispatch(acceptMatchAsync(message)).unwrap();
+
+        if( response && response !== 'error' ) {
+            handleNav(toTargetChat.replace(':id', match.from!.chatId));
+        } else {
+            handleClose();
+        }
+    };
+
+    if(!match.value || !match.from) return (<></>);
 
     return (
         <SwipeableDrawer
@@ -73,6 +75,9 @@ const QuestMatch = (): JSX.Element => {
                             style={{
                                 backgroundImage: `url(${match.from.avatar})`
                             }}
+                            onClick={
+                                () => handleNav(toDetails.replace(':id', match.from!.id))
+                            }
                         />
                     </div>
                     <h6 className="text">

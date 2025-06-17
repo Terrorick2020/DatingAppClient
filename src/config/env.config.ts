@@ -54,6 +54,7 @@ export const CHATS_ADD_MSG          = import.meta.env.VITE_CHATS_ADD_MSG || '';
 export const CHATS_MEDIA_ENDPOINT   = import.meta.env.VITE_CHATS_MEDIA_ENDPOINT || '';
 export const CHATS_READ_ENDPOINT    = import.meta.env.VITE_CHATS_READ_ENDPOINT || '';
 export const CHATS_TYPING_ENDPOINT  = import.meta.env.VITE_CHATS_TYPING_ENDPOINT || '';
+export const CHATS_UNREAD           = import.meta.env.VITE_CHATS_UNREAD || '';
 
 export const REDIS               = import.meta.env.VITE_REDIS || '';
 export const REDIS_KEY_ENDPOINT  = import.meta.env.VITE_REDIS_KEY_ENDPOINT || '';
@@ -132,6 +133,7 @@ if(
   !CHATS_MEDIA_ENDPOINT  ||
   !CHATS_READ_ENDPOINT   ||
   !CHATS_TYPING_ENDPOINT ||
+  !CHATS_UNREAD          ||
 
   !REDIS               ||
   !REDIS_KEY_ENDPOINT  ||
@@ -173,6 +175,7 @@ export const REFERAL_LINK = (type: EProfileRoles, referal: string): string => `$
 export const CHATS_METADATA_ENDPOINT = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_METADATA}`;
 export const CHATS_MSG_ENDPOINT      = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_MSG}`;
 export const CHATS_DEL_ENDPOINT      = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}`;
+export const CHATS_UNREAD_ENDPOINT   = (tgId: string): string => `${CHATS_ENDPOINT}${CHATS_UNREAD}?telegramId=${tgId}`;
 export const CHATS_ADD_MSG_ENDPOINT  = `${CHATS_ENDPOINT}${CHATS_ADD_MSG}`;
 
 export const USERS_ENDPOINT = ({

@@ -2,9 +2,8 @@ import { ChangeEvent, JSX, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { useDispatch } from 'react-redux';
-
+import { toFillQuest } from '@/config/routes.config';
 import { setLang } from '@/store/slices/settingsSlice';
-import { appRoutes } from '@/config/routes.config';
 import { ELanguage } from '@/types/settings.type';
 
 import Button from '@mui/material/Button';
@@ -12,10 +11,6 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-
-const regGlobRoute = appRoutes.register.global;
-const regFillQuestRoute = appRoutes.register.inner.fillQuest;
-const toFillQuest = `${regGlobRoute}/${regFillQuestRoute}`;
 
 const LangContent = (): JSX.Element => {
     const dispatch = useDispatch()
