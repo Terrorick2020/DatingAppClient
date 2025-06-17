@@ -13,32 +13,32 @@ import AppPreloader from './components/AppPreloader';
 async function delayForLazy( promise: Promise<any> ) {
     const start = performance.now();
 
-    const [response, selfRes, plansRes, resPromise] = await Promise.all([
+    const [response, selfRes, _plansRes, resPromise] = await Promise.all([
         store.dispatch(initProfileAsync()).unwrap(),
         store.dispatch(getSelfProfile()).unwrap(),
         store.dispatch(getSelfPlansAsync()).unwrap(),
         promise,
     ]);
 
-    // if(navigate) {
-    //     if(response === 'error') {
-    //         navigate(response);
-    //     } else if (response === null) {
-    //         navigate(toPreview);
-    //     } else {
-    //         switch(response.role) {
-    //             case EProfileRoles.User:
-    //                 navigate(toSlider);
-    //                 break;
-    //             case EProfileRoles.Admin:
-    //                 navigate(toChange);
-    //                 break;
-    //             case EProfileRoles.Psych:
-    //                 navigate('error');
-    //                 break;
-    //         }
-    //     }
-    // }
+    if(navigate) {
+        if(response === 'error' || selfRes === 'error') {
+            navigate('error');
+        } else if (response === null || selfRes === null) {
+            navigate(toPreview);
+        } else {
+            switch(selfRes.role) {
+                case EProfileRoles.User:
+                    navigate(toSlider);
+                    break;
+                case EProfileRoles.Admin:
+                    navigate(toChange);
+                    break;
+                case EProfileRoles.Psych:
+                    navigate('error');
+                    break;
+            }
+        }
+    }
 
     const elapsed = performance.now() - start;
     const remainingDelay = Math.max(0, 2000 - elapsed);

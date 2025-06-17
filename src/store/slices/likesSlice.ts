@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { createChatAsync } from './chatsSlice';
 import { LIKES_ENDPOINT, USER_ENDPOINT, CHATS_ADD_MSG_ENDPOINT } from '@/config/env.config';
 import { setLoad } from './settingsSlice';
 import { PlanLabelSvgType } from '@/types/ui.types';
@@ -75,7 +74,7 @@ export const initLikesListAsync = createAsyncThunk(
 
 export const acceptLikingAsync = createAsyncThunk(
     'likes/accept-liking',
-    async (toUserId: string, { getState, dispatch }): Promise<AsyncThunkRes<boolean>> => {
+    async (toUserId: string, { getState }): Promise<AsyncThunkRes<boolean>> => {
         try {
             const rootState = getState() as IState;
             const fromUserId = rootState.profile.info.id;
@@ -89,15 +88,10 @@ export const acceptLikingAsync = createAsyncThunk(
 
             if (
                 response.status !== 201  ||
-                !response.data.success   ||
-                !response.data.data.isMatch
+                !response.data.success
             ) return null;
 
-            const chatRes = await dispatch(createChatAsync(toUserId)).unwrap();
-
-            if( chatRes === 'success' ) return !!chatRes;
-
-            return chatRes;
+            return true;
         } catch (error) {
             return 'error';
         }
