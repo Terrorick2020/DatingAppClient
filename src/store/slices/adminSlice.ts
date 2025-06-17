@@ -77,11 +77,9 @@ export const getProfilesListAsync = createAsyncThunk(
                 ? 
                 USERS_SEARCH(query, realArgs.offset, realArgs.limit)
                 :
-                USERS_ENDPOINT({page: realArgs.offset, limit: realArgs.limit});
+                USERS_ENDPOINT({page: realArgs.offset + 1, limit: realArgs.limit});
 
             const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
-
-            console.log( response )
 
             if(
                 response.status === 200 &&
@@ -90,8 +88,6 @@ export const getProfilesListAsync = createAsyncThunk(
                 response.data.success
             ) {
                 let result: ProfilesListItem[] = [];
-
-                const adminState = rootState.admin;
 
                 for(let item of response.data.data) {
                     result.push({
@@ -102,10 +98,6 @@ export const getProfilesListAsync = createAsyncThunk(
                         status: item.status
                     })
                 }
-
-                result = result.filter(item => item.role === adminState.searchType);
-
-                if ( adminState.searchId ) result = result.filter( item => item.id.includes( adminState.searchId ) );
 
                 return result;
             }
@@ -314,16 +306,30 @@ export const serchProfileStatusAsync = createAsyncThunk(
                             complaintId: item.id,
                         })
                     ) || []
-                )
+                );
 
-                console.log( uptComplRes )
+                const result = uptComplRes.some(item => 
+                    item.status !== 201 ||
+                    !item.data.success  ||
+                    !item.data.data     ||
+                    item.data.data === 'None'
+                );
+
+                if(result) return null;
+
+                dispatch(resetTargetUserCmpl());
+
+                return targetValue;
             }
 
             const url = ADMINE_SERCH_STATUS_ENDPOINT(id, targetValue);
 
             const serchStatRes: AxiosResponse<FetchResponse<any>> = await api.patch(url);
 
-            console.log( serchStatRes )
+            if (
+                serchStatRes.status !== 200 ||
+                !serchStatRes.data.success
+            ) return null;
 
             if(isDisp) {
                 const newProfilesList = adminState.profilesList.map(
@@ -417,6 +423,9 @@ const adminSlice = createSlice({
         setTargetProfileId: (state, action: PayloadAction<string>): void => {
             state.targetProfile.id = action.payload;
         },
+        resetTargetUserCmpl: state => {
+            state.targetProfile.complaint = null;
+        }
     },
     extraReducers: builder => {
         // Получение списка пользователей
@@ -600,5 +609,12 @@ const adminSlice = createSlice({
     }
 })
 
-export const { setSearchType, setSearchId, setPassword, setNewProfilesList, setTargetProfileId } = adminSlice.actions;
+export const {
+    setSearchType,
+    setSearchId,
+    setPassword,
+    setNewProfilesList,
+    setTargetProfileId,
+    resetTargetUserCmpl,
+} = adminSlice.actions;
 export default adminSlice.reducer;

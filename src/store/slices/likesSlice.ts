@@ -31,8 +31,6 @@ export const initLikesListAsync = createAsyncThunk(
             const response: AxiosResponse<FetchResponse<any>> =
                 await api.get(`${LIKES_ENDPOINT}?telegramId=${telegramId}&type=${EFetchLikesTProps.Received}`);
 
-            console.log(response);
-
             const likesList: LikesItem[] = [];
 
             const now = Date.now();

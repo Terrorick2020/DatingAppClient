@@ -164,8 +164,6 @@ export const getChatByIdAsync = createAsyncThunk(
                 !chatDialogRes.data.success
             ) return null;
 
-            console.log( chatDialogRes )
-
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
             const interId: string = chatMetaRes.data.data.participants.find(
@@ -187,8 +185,6 @@ export const getChatByIdAsync = createAsyncThunk(
                 api.get(`${USER_ENDPOINT}/${interId}`),
                 needingReaded ? api.patch(CHATS_READ_ENDPOINT, readedData) : undefined,
             ])
-
-            console.log( readedMsgsRes, interRes )
 
             if (
                 interRes.status !== 200       ||
@@ -214,8 +210,6 @@ export const getChatByIdAsync = createAsyncThunk(
 
             let chatDialog: TargetChatDay[] = []
 
-            console.log( chatDialogRes.data.data )
-
             for(let item of chatDialogRes.data.data) {
                 const incommingMsg: IncomingMsg =  {
                     chatId: item.chatId,
@@ -235,9 +229,7 @@ export const getChatByIdAsync = createAsyncThunk(
                 telegramId,    
             };
 
-            const msgsScoketRes = await connectSocketRoom(WS_MSGS, ServerMethods.JoinRoom, socketData);
-
-            console.log( 'Socket: ', msgsScoketRes)
+            await connectSocketRoom(WS_MSGS, ServerMethods.JoinRoom, socketData);
 
             const now = Date.now();
             const expiresAt = chatMetaRes.data.data.created_at + 24 * 60 * 60 * 1000;

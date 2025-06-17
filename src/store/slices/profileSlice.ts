@@ -320,8 +320,6 @@ export const signUpProfileAsync = createAsyncThunk(
     
             return null;
         } catch ( error ) {
-            console.log(error)
-
             dispatch(setApiRes({
                 value: true,
                 msg: 'Произошла ошибка сервера',
@@ -350,8 +348,6 @@ export const getSelfProfile = createAsyncThunk(
             const data = { telegramId };
 
             const response: AxiosResponse<FetchResponse<any>> = await api.post(LOG_ENDPOINT, data);
-
-            console.log( response )
 
             if(
                 response.status === 200 &&
@@ -454,8 +450,6 @@ export const saveSelfPlansAsync = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<EveningPlans>> = 
                 await api.post(PLANS_SET_ENDPOINT, data);
-
-            console.log( response )
 
             if(
                 response.status === 201 &&

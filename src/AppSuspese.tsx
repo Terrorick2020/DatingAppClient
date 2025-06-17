@@ -20,25 +20,25 @@ async function delayForLazy( promise: Promise<any> ) {
         promise,
     ]);
 
-    if(navigate) {
-        if(response === 'error') {
-            navigate('error');
-        } else if (response === null) {
-            navigate(toPreview);
-        } else if (selfRes && selfRes !== 'error') {
-            switch(selfRes.role) {
-                case EProfileRoles.User:
-                    navigate(toSlider);
-                    break;
-                case EProfileRoles.Admin:
-                    navigate(toChange);
-                    break;
-                case EProfileRoles.Psych:
-                    navigate('error');
-                    break;
-            }
-        }
-    }
+    // if(navigate) {
+    //     if(response === 'error') {
+    //         navigate('error');
+    //     } else if (response === null) {
+    //         navigate(toPreview);
+    //     } else if (selfRes && selfRes !== 'error') {
+    //         switch(selfRes.role) {
+    //             case EProfileRoles.User:
+    //                 navigate(toSlider);
+    //                 break;
+    //             case EProfileRoles.Admin:
+    //                 navigate(toChange);
+    //                 break;
+    //             case EProfileRoles.Psych:
+    //                 navigate('error');
+    //                 break;
+    //         }
+    //     }
+    // }
 
     const elapsed = performance.now() - start;
     const remainingDelay = Math.max(0, 2000 - elapsed);
