@@ -1,17 +1,13 @@
 import { JSX, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { appRoutes } from '@/config/routes.config';
-import { type IState } from '@/types/store.types';
+import { toUserInfo } from '@/config/routes.config';
+import type { IState } from '@/types/store.types';
 
 import ListBlock from '@/components/UI/ListBlock';
 import UsersListDialog from './Dialog';
 import MyLoader from '@/components/UI/MyLoader';
 import UserListItem from './Item';
 
-
-const adminGlobRoute      = appRoutes.admin.global;
-const adminUserInfoRoute  = appRoutes.admin.inner.userInfo;
-const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`;
 
 const UsersListMain = (): JSX.Element => {
     const adminState = useSelector((state: IState) => state.admin);
@@ -35,11 +31,12 @@ const UsersListMain = (): JSX.Element => {
         <>
             <div className="search-list">
                 {
-                    (adminState.profilesList.map(item => (
+                    (adminState.profilesList.map((item, index) => (
                         <ListBlock
                             img={item.avatar}
                             route={`${toUserInfo.replace(':id', '')}${item.id}`}
                             key={`admin-profile-${item.id}`}
+                            data-id={index}
                         >
                             <UserListItem
                                 item={item}

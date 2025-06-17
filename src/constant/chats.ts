@@ -40,7 +40,7 @@ export const targetChat: TargetChat = {
     },
     chatDialog: [
         {
-            id: 0,
+            id: '0',
             day: '2024-07-12',
             dayListMsg: [
                 {
@@ -70,7 +70,7 @@ export const targetChat: TargetChat = {
             ]
         },
         {
-            id: 1,
+            id: '1',
             day: '2024-07-13',
             dayListMsg: [
                 {

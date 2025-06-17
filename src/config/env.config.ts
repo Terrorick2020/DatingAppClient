@@ -76,6 +76,7 @@ export const USER_DEL_ENDPOINT = import.meta.env.VITE_USER_DEL_ENDPOINT || '';
 export const USER_DEL_SELF     = import.meta.env.VITE_USER_DEL_SELF || '';
 export const USER_PUBLIC       = import.meta.env.VITE_USER_PUBLIC || '';
 export const USER_QUESTS       = import.meta.env.VITE_USER_QUESTS || '';
+export const USER_SEARCH       = import.meta.env.VITE_USER_SEARCH || '';
 
 export const COMPLS_ENDPOINT     = import.meta.env.VITE_COMPLS_ENDPOINT || '';
 export const COMPLS_UPT_ENDPOINT = import.meta.env.VITE_COMPLS_UPT_ENDPOINT || '';
@@ -152,6 +153,7 @@ if(
   !USER_DEL_ENDPOINT ||
   !USER_DEL_SELF     ||
   !USER_PUBLIC       ||
+  !USER_SEARCH       ||
 
   !COMPLS_ENDPOINT      ||
   !COMPLS_UPT_ENDPOINT  ||
@@ -209,6 +211,7 @@ export const USERS_QUESTS_ENDPOINT = (
   limit: number,
   offset: number,
 ): string => `${USER_ENDPOINT}${USER_QUESTS}?telegramId=${telegramId}&limit=${limit}&offset=${offset}`;
+export const USERS_SEARCH = (query: string): string => `${USER_ENDPOINT}${USER_SEARCH}?query=${query}`;
 
 export const ADMINE_CMPLS_ENDPOINT = `${ADMINE_ENDPOINT}${ADMINE_CMPLS}`;
 export const ADMINE_SERCH_STATUS_ENDPOINT = (tgId: string, type: EProfileStatus): string => {

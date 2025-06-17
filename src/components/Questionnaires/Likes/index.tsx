@@ -9,6 +9,7 @@ import type { IState } from '@/types/store.types';
 
 import LikesCard from './Card';
 import MyLoader from '@/components/UI/MyLoader';
+import SvgLikesEmpty from '@/assets/icon/likes-empty.svg';
 
 
 const LikesContent = (): JSX.Element => {
@@ -39,10 +40,11 @@ const LikesContent = (): JSX.Element => {
 
     if(!likesList.length) return (
         <div className="empty">
-            <h4 className="headline">
-                Пока никто не проявил к Вам симпатии. <br/>
-                Обратитесь к анкетам, чтобы это исправить
-            </h4>
+            <img src={SvgLikesEmpty} alt="likes-empty" />
+            <h4 className="headline">Симпатий ещё нет</h4>
+            <p className="text">
+                Проявляйте активность, лайкайте других пользователей и вы встретите свой мэтч!
+            </p>
         </div>
     )
 

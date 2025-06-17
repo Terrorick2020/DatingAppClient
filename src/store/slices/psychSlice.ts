@@ -77,9 +77,9 @@ export const initPsychList = createAsyncThunk(
                 response = uniqueById;
             }
 
-            await delay(2000);
+            await delay(1000);
 
-            return response;
+            return [];
         } catch (error) {
             throw error;
         } finally {

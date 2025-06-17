@@ -22,6 +22,7 @@ import {
     ADMINE_SERCH_STATUS_ENDPOINT,
     COMPLS_UPT_ENDPOINT,
     ADMINE_CMPLS_ENDPOINT,
+    USERS_SEARCH,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -34,6 +35,7 @@ import type { AxiosResponse, AxiosProgressEvent } from 'axios';
 
 import api from '@/config/fetch.config';
 
+import { resUsersList } from '@/constant/admin';
 
 const initialState: AdminState = {
     searchType: EProfileRoles.User,
@@ -61,7 +63,14 @@ export const getProfilesListAsync = createAsyncThunk(
         try {
             dispatch(setLoad(true));
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(USER_ENDPOINT);
+            return resUsersList;
+
+            const rootState = getState() as IState;
+            const query = rootState.admin.searchId;
+
+            const url = query ? USERS_SEARCH(query) : USER_ENDPOINT;
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
 
             console.log( response )
 
@@ -73,7 +82,6 @@ export const getProfilesListAsync = createAsyncThunk(
             ) {
                 let result: ProfilesListItem[] = [];
 
-                const rootState = getState() as IState;
                 const adminState = rootState.admin;
 
                 for(let item of response.data.data) {

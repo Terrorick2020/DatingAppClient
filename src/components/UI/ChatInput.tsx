@@ -5,19 +5,36 @@ import {
     KeyboardEvent,
     useCallback,
     useState,
-    useRef,
 } from 'react';
 
-import type { PropsChatInput } from '@/types/ui.types';
+import type { PropsChatInput, EmojiData } from '@/types/ui.types';
 
 import TextField from '@mui/material/TextField';
+import Popover from '@mui/material/Popover';
 import InputAdornment from '@mui/material/InputAdornment';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import IconButton from '@mui/joy/IconButton';
 import SvgSend from '@/assets/icon/send.svg';
+import Picker from '@emoji-mart/react';
+import data from '@emoji-mart/data';
+import ru from '@emoji-mart/data/i18n/ru.json';
 
 
 const ChatInput = memo((props: PropsChatInput): JSX.Element => {
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>): void => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = (): void => {
+        setAnchorEl(null);
+    };
+
+    const handleEmojiSelect = (emoji: EmojiData): void => {
+        const newMsg = props.message + emoji.native;
+        props.handleChange(newMsg);
+    };
 
     const handleInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
@@ -38,6 +55,9 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
     const handleFocus = (): void => props.handleFocus();
     const handleBlur  = (): void => props.handleBlur();
 
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
     return (
         <div className="chat-input">
             <TextField
@@ -54,7 +74,10 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
                     input: {
                         endAdornment: (
                             <InputAdornment position="end">
-                                <IconButton>
+                                <IconButton
+                                    id={id}
+                                    onClick={handlePopoverOpen}
+                                >
                                     <SentimentSatisfiedAltIcon />
                                 </IconButton>
                                 <IconButton
@@ -68,6 +91,29 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
                     },
                 }}
             />
+            <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                onClose={handlePopoverClose}
+                disableRestoreFocus
+            >
+                <Picker
+                    theme="dark"
+                    data={data}
+                    locale="en"
+                    i18n={ru}
+                    onEmojiSelect={handleEmojiSelect}
+                />
+            </Popover>
         </div>
     )
 })

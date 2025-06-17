@@ -6,7 +6,7 @@ import {
     toProfile,
 } from '@/config/routes.config';
 
-import { JSX, useState } from 'react';
+import { JSX, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { IState } from '@/types/store.types';
@@ -32,6 +32,10 @@ const QuestNavBar = (): JSX.Element => {
     const location = useLocation();
 
     const [value, setValue] = useState(location.pathname);
+
+    useEffect(() => {
+        setValue(location.pathname);
+    }, [location.pathname]);
 
     return (
         <Box className="nav-bar">

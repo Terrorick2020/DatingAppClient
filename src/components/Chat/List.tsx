@@ -4,6 +4,7 @@ import { createSelector } from 'reselect';
 import { type IState } from '@/types/store.types';
 
 import ChatDay from './Day';
+import PngChatEmpty from '@/assets/img/chat-empty.png';
 
 
 const selectChats = (state: IState) => state.chats;
@@ -30,10 +31,9 @@ const ChatList = (): JSX.Element => {
 
     if(!chatDialog.length) return (
         <div className="empty">
-            <h4 className="headline">
-                Чат пока пустой. <br/>
-                Отправте сообщение, чтобы это исправить
-            </h4>
+            <img src={PngChatEmpty} alt="chat-empty" />
+            <h4 className="headline">Сообщений пока нет...</h4>
+            <p className="text">Отправьте первое сообщение!</p>
         </div>
     )
 

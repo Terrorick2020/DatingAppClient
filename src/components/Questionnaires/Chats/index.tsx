@@ -1,5 +1,7 @@
 import { JSX, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { toSlider } from '@/config/routes.config';
 import { initChatsCtxAsync } from '@/store/slices/chatsSlice';
 import { resetBadge } from '@/store/slices/settingsSlice';
 import { EBadgeType } from '@/types/settings.type';
@@ -8,6 +10,8 @@ import type { IState } from '@/types/store.types';
 
 import ChatsList from './List';
 import MyLoader from '@/components/UI/MyLoader';
+import Button from '@mui/material/Button';
+import SvgChatsEmpty from '@/assets/icon/chats-empty.svg';
 
 
 const ChatsContent = (): JSX.Element => {
@@ -38,10 +42,15 @@ const ChatsContent = (): JSX.Element => {
 
     if(!chatsListLen) return (
         <div className="empty">
-            <h4 className="headline">
-                У Вас пока нет чатов. <br/>
-                Отправляйте симпатии, чтобы это исправить
-            </h4>
+            <img src={SvgChatsEmpty} alt="chats-empty" />
+            <h4 className="headline">Нет чатов</h4>
+            <p className="text">
+                После взаимного мэтча чат с пользователем автоматически появится в списке.
+                Продолжайте
+            </p>
+            <NavLink className="link" to={ toSlider }>
+                <Button variant="contained">К анкетам</Button>
+            </NavLink>
         </div>
     )
 
