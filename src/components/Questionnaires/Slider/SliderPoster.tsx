@@ -1,6 +1,8 @@
 import { JSX, useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
+import { NavLink } from 'react-router-dom';
+import { toProfile } from '@/config/routes.config';
 import { useDispatch, useSelector } from 'react-redux';
 import { initSliderListAsync } from '@/store/slices/questionnairesSlice';
 import { initialArgs } from '@/constant/quest';
@@ -11,6 +13,8 @@ import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import SliderItem from './SliderItem';
+import Button from '@mui/material/Button';
+import SvgQuestsEmpty from '@/assets/icon/quests-empty.svg';
 
 
 const SliderPoster = (): JSX.Element => {
@@ -115,7 +119,12 @@ const SliderPoster = (): JSX.Element => {
 
   if(!sliderList.length) return (
     <div className="empty">
-        <h4 className="headline">Не смогли подобрать подходящих Вам людей</h4>
+      <img src={SvgQuestsEmpty} alt="quests-empty" />
+      <h4 className="headline">В вашем городе ещё никого нет!</h4>
+      <p className="text">Попробуйте изменить настройки профиля</p>
+      <NavLink className="link" to={ toProfile }>
+        <Button variant="contained">Изменить настройки</Button>
+      </NavLink>
     </div>
   )
 

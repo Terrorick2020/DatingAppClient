@@ -133,3 +133,12 @@ export interface PropsPhotosAddItem {
 export interface PropsComplaintDrawer {
     id: string
 }
+
+export interface EmojiData {
+    id: string;
+    name: string;
+    native: string;
+    shortcodes: string;
+    unified: string;
+    keywords: string[];
+}

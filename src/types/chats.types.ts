@@ -59,7 +59,7 @@ export interface ChatsState {
 }
 
 export interface PropsChatDay {
-    id: number
+    id: string
     selfId: string
     day: string
     dayListMsg: TargetChatDayMsg[]
