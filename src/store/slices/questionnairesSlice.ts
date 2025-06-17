@@ -1,5 +1,4 @@
 import {
-    USERS_ENDPOINT,
     USER_ENDPOINT,
     HELP_CITYES_ENDPOINT,
     HELP_PLANS_ENDPOINT,
@@ -48,13 +47,8 @@ export const initSliderListAsync = createAsyncThunk(
             const telegramId = rootState.profile.info.id
  
             const questEndpoint = USERS_QUESTS_ENDPOINT(telegramId, args.limit, args.offset);
-            const usersEndpoint = USERS_ENDPOINT();
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(usersEndpoint);
-
-            const res: AxiosResponse<FetchResponse<SliderItem[]>> = await api.get(questEndpoint);
-
-            console.log(response, res)
+            const response: AxiosResponse<FetchResponse<SliderItem[]>> = await api.get(questEndpoint);
 
             if (
                 response.status !== 200 ||
@@ -63,30 +57,10 @@ export const initSliderListAsync = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            const resultList: SliderItem[] = [];
-
-            for(let item of response.data.data) {
-                const photos: string[] = item.photos.map((ret: any) => ret.url);
-
-                const content = `${item.plan.label}, ${item.region.label}`;
-
-                resultList.push({
-                    id: item.telegramId,
-                    name: item.name,
-                    age: item.age,
-                    city: item.city.label,
-                    description: item.bio,
-                    plans: {
-                        date: 'Планы на сегодня',
-                        content,
-                    },
-                    photos,
-                })
-            }
 
             return {
                 isPush,
-                slides: resultList,
+                slides: response.data.data,
             };
         } catch (error) {
             return 'error';

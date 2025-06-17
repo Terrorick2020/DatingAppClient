@@ -96,7 +96,7 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
-            const telegramId = getTgID();
+            const telegramId = getTgID() || '523125';
 
             if(!telegramId) return 'error';
 
@@ -143,6 +143,13 @@ export const sendSelfGeoAsync = createAsyncThunk(
 
                 return response.data.data
             };
+
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Не удалось узнать ваш город или он не находится в разрешённом списке!',
+                status: EApiStatus.Info,
+                timestamp: Date.now(),
+            }))
 
             return null;
         } catch (error) {

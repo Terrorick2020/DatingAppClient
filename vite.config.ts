@@ -16,15 +16,15 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    // allowedHosts: ['3dating.fun'],
-    // hmr: {
-    //   host: '3dating.fun',
-    //   protocol: 'wss',
-    // },
+    allowedHosts: ['3dating.fun'],
+    hmr: {
+      host: '3dating.fun',
+      protocol: 'wss',
+    },
   },
-  // preview: {
-  //   allowedHosts: ['3dating.fun']
-  // },
+  preview: {
+    allowedHosts: ['3dating.fun']
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

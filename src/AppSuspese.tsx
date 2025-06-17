@@ -13,7 +13,7 @@ import AppPreloader from './components/AppPreloader';
 async function delayForLazy( promise: Promise<any> ) {
     const start = performance.now();
 
-    const [response, selfRes, _plansRes, resPromise] = await Promise.all([
+    const [response, selfRes, _, resPromise] = await Promise.all([
         store.dispatch(initProfileAsync()).unwrap(),
         store.dispatch(getSelfProfile()).unwrap(),
         store.dispatch(getSelfPlansAsync()).unwrap(),
@@ -21,11 +21,11 @@ async function delayForLazy( promise: Promise<any> ) {
     ]);
 
     if(navigate) {
-        if(response === 'error' || selfRes === 'error') {
+        if(response === 'error') {
             navigate('error');
-        } else if (response === null || selfRes === null) {
+        } else if (response === null) {
             navigate(toPreview);
-        } else {
+        } else if (selfRes && selfRes !== 'error') {
             switch(selfRes.role) {
                 case EProfileRoles.User:
                     navigate(toSlider);
