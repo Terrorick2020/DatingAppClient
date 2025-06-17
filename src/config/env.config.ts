@@ -211,7 +211,21 @@ export const USERS_QUESTS_ENDPOINT = (
   limit: number,
   offset: number,
 ): string => `${USER_ENDPOINT}${USER_QUESTS}?telegramId=${telegramId}&limit=${limit}&offset=${offset}`;
-export const USERS_SEARCH = (query: string): string => `${USER_ENDPOINT}${USER_SEARCH}?query=${query}`;
+
+export const USERS_SEARCH = (
+  query: string,
+  offset?: number,
+  limit?: number,
+): string => {
+  const params: string[] = [];
+
+  params.push(`query=${query}`);
+  
+  if(offset) params.push(`page=${offset}`);
+  if(limit) params.push(`limit=${limit}`);
+
+  return `${USER_ENDPOINT}${USER_SEARCH}?${params.join('&')}`;
+}
 
 export const ADMINE_CMPLS_ENDPOINT = `${ADMINE_ENDPOINT}${ADMINE_CMPLS}`;
 export const ADMINE_SERCH_STATUS_ENDPOINT = (tgId: string, type: EProfileStatus): string => {

@@ -25,10 +25,16 @@ export interface PropsLikeBtn {
     clickLike?: () => void
 }
 
+export interface ListBlockView {
+    id: number
+    handleView: (value: number) => void
+}
+
 export interface PropsListBlock extends HTMLAttributes<HTMLDivElement> {
     img: string
     route: string
     children: ReactNode
+    view?: ListBlockView
 }
 
 export interface PropsPlansLabel {
