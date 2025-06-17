@@ -35,7 +35,6 @@ import type { AxiosResponse, AxiosProgressEvent } from 'axios';
 
 import api from '@/config/fetch.config';
 
-import { resUsersList } from '@/constant/admin';
 
 const initialState: AdminState = {
     searchType: EProfileRoles.User,
@@ -62,8 +61,6 @@ export const getProfilesListAsync = createAsyncThunk(
     async (_, { getState, dispatch }): Promise<AsyncThunkRes<ProfilesListItem[]>> => {
         try {
             dispatch(setLoad(true));
-
-            return resUsersList;
 
             const rootState = getState() as IState;
             const query = rootState.admin.searchId;

@@ -58,6 +58,10 @@ export const initChatsCtxAsync = createAsyncThunk(
 
             const chatsRes: AxiosResponse<FetchResponse<any>> = await api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`);
 
+            console.log('-------------')
+            console.log(chatsRes)
+            console.log('-------------')
+
             if(
                 chatsRes.status === 200 &&
                 chatsRes.data.data &&
