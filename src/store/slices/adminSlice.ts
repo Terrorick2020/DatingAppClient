@@ -23,19 +23,21 @@ import {
     COMPLS_UPT_ENDPOINT,
     ADMINE_CMPLS_ENDPOINT,
     USERS_SEARCH,
+    USERS_ENDPOINT,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
 import { formatTimestamp } from '@/funcs/general.funcs';
+import { initialArgs } from '@/constant/quest';
+import type { InitSliderData } from '@/types/quest.types';
 import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
 import type { FetchResponse, FetchSavePhotoRes, } from '@/types/fetch.type';
 import type { AxiosResponse, AxiosProgressEvent } from 'axios';
 
 import api from '@/config/fetch.config';
 
-import { resUsersList } from '@/constant/admin';
 
 const initialState: AdminState = {
     searchType: EProfileRoles.User,
@@ -59,16 +61,23 @@ const initialState: AdminState = {
 
 export const getProfilesListAsync = createAsyncThunk(
     'admin/get-profiles-list',
-    async (_, { getState, dispatch }): Promise<AsyncThunkRes<ProfilesListItem[]>> => {
+    async (
+        args: InitSliderData | undefined,
+        { getState, dispatch }
+    ): Promise<AsyncThunkRes<ProfilesListItem[]>> => {
         try {
             dispatch(setLoad(true));
 
-            return resUsersList;
+            const realArgs = args || initialArgs;
 
             const rootState = getState() as IState;
             const query = rootState.admin.searchId;
 
-            const url = query ? USERS_SEARCH(query) : USER_ENDPOINT;
+            const url = query
+                ? 
+                USERS_SEARCH(query, realArgs.offset, realArgs.limit)
+                :
+                USERS_ENDPOINT({page: realArgs.offset, limit: realArgs.limit});
 
             const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
 

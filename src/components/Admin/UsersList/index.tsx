@@ -1,4 +1,4 @@
-import { JSX, useEffect, UIEvent } from 'react';
+import { JSX, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
 import { getUniqueLinkAsync } from '@/store/slices/adminSlice';
@@ -11,22 +11,6 @@ import UsersListMain from './Main';
 
 const UsersListContent = (): JSX.Element => {
     const dispatch = useDispatch<RootDispatch>();
-
-    const handleScroll = (e: UIEvent<HTMLDivElement>) => {
-        const target = e.currentTarget; // HTMLDivElement, по которому прокрутка
-        console.log(target); // здесь будет элемент users-list__main
-
-        // Например, получить текущую позицию прокрутки по вертикали:
-        console.log(target.scrollTop);
-
-        // Или размеры и видимую область
-        console.log(target.scrollHeight, target.clientHeight);
-
-        // Определить, дошли ли до низа
-        if (target.scrollTop + target.clientHeight >= target.scrollHeight) {
-            console.log('Прокрутили до конца вниз');
-        }
-    };
 
     useEffect(() => { 
         dispatch(getProfilesListAsync());
@@ -42,7 +26,7 @@ const UsersListContent = (): JSX.Element => {
             <header className="users-list__header">
                 <UsersListHeader />
             </header>
-            <main className="users-list__main" onScroll={handleScroll}>
+            <main className="users-list__main">
                 <UsersListMain />
             </main>
             <AdmineFooter handleSearch={handleSearch} />

@@ -1,6 +1,10 @@
-import { JSX, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { JSX, useState, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { toUserInfo } from '@/config/routes.config';
+import { initialArgs } from '@/constant/quest';
+import { getProfilesListAsync } from '@/store/slices/adminSlice';
+import type { InitSliderData } from '@/types/quest.types';
+import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import ListBlock from '@/components/UI/ListBlock';
@@ -14,6 +18,43 @@ const UsersListMain = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
 
     const [openDel, setOpenDel] = useState<boolean>(false);
+
+    const block = useRef<InitSliderData>(initialArgs);
+    const maxInd = useRef<number>(0);
+    const isDopLoad = useRef<boolean>(false);
+
+    const dispatch = useDispatch<RootDispatch>();
+
+    const handleDopLoad = async (): Promise<void> => {
+        isDopLoad.current = true;
+
+        const newData: InitSliderData = {
+            limit: block.current.limit,
+            offset: block.current.offset + initialArgs.offset,
+        };
+
+        const response = await dispatch(getProfilesListAsync(newData)).unwrap();
+
+        if(response && response !== 'error') {
+            block.current = newData;
+        }
+
+        isDopLoad.current = false;
+    }
+
+    const handleView = (value: number): void => {
+        if(maxInd.current >= value) return;
+
+        maxInd.current = value;
+        
+        const buffer = 4;
+        const shouldLoadMore = adminState.profilesList.length > 0 && 
+            value >= adminState.profilesList.length - buffer;
+
+        if(!shouldLoadMore || isDopLoad.current) return;
+
+        handleDopLoad();
+    };
 
     if(isLoad) return (
         <div className="loader">
@@ -37,6 +78,10 @@ const UsersListMain = (): JSX.Element => {
                             route={`${toUserInfo.replace(':id', '')}${item.id}`}
                             key={`admin-profile-${item.id}`}
                             data-id={index}
+                            view={{
+                                id: index,
+                                handleView: handleView,
+                            }}
                         >
                             <UserListItem
                                 item={item}
