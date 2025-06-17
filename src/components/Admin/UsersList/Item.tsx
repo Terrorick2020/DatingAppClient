@@ -46,7 +46,8 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
             await dispatch(serchProfileStatusAsync({
                 id: props.item.id,
                 targetValue: activeCtx.targetStat,
-                delComplaint: false
+                delComplaint: false,
+                isDisp: true,
             }));
         } finally {
             setLoading(false);

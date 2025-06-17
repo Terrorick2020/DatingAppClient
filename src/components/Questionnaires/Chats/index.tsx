@@ -1,8 +1,10 @@
 import { JSX, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { initChatsCtxAsync } from '@/store/slices/chatsSlice';
-import { type RootDispatch } from '@/store';
-import { type IState } from '@/types/store.types';
+import { resetBadge } from '@/store/slices/settingsSlice';
+import { EBadgeType } from '@/types/settings.type';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import ChatsList from './List';
 import MyLoader from '@/components/UI/MyLoader';
@@ -22,6 +24,7 @@ const ChatsContent = (): JSX.Element => {
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
 
+            dispatch(resetBadge(EBadgeType.Chats));
             dispatch(initChatsCtxAsync());
         },
         []

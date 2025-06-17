@@ -5,15 +5,24 @@ import {
     HELP_PLANS_ENDPOINT,
     HELP_REGIONS_ENDPOINT,
     PLANS_GET_ENDPOINT,
+    USERS_QUESTS_ENDPOINT,
 } from '@/config/env.config';
+
+import type {
+    QuestState,
+    SliderItem,
+    DetailsTargetUser,
+    InitSliderData,
+    InitSliderResData,
+} from '@/types/quest.types';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoad } from './settingsSlice';
+import { initialArgs } from '@/constant/quest';
 import type { BaseVarsItem, DistrictVarsItem } from '@/types/settings.type';
-import type { QuestState, SliderItem, DetailsTargetUser } from '@/types/quest.types';
 import type { EveningPlans } from '@/types/profile.types';
 import type { FetchResponse } from '@/types/fetch.type';
-import type { AsyncThunkRes } from '@/types/store.types';
+import type { AsyncThunkRes, IState } from '@/types/store.types';
 import type { AxiosResponse } from 'axios';
 
 import api from '@/config/fetch.config';
@@ -26,55 +35,69 @@ const initialState: QuestState = {
 
 export const initSliderListAsync = createAsyncThunk(
     'questionnaires/init-slider-list',
-    async (_, {dispatch}): Promise<AsyncThunkRes<SliderItem[]>> => {
-        try {
-            dispatch(setLoad(true));
+    async (
+        args: InitSliderData = initialArgs,
+        { dispatch, getState },
+    ): Promise<AsyncThunkRes<InitSliderResData>> => {
+        const isPush = args !== initialArgs;
 
+        try {
+            if(!isPush) dispatch(setLoad(true));
+
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id
+ 
+            const questEndpoint = USERS_QUESTS_ENDPOINT(telegramId, args.limit, args.offset);
             const usersEndpoint = USERS_ENDPOINT();
 
             const response: AxiosResponse<FetchResponse<any>> = await api.get(usersEndpoint);
 
-            console.log(response)
+            const res: AxiosResponse<FetchResponse<SliderItem[]>> = await api.get(questEndpoint);
 
-            if(
-                response.status === 200 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
-                response.data.success
-            ) {
-                const resultList: SliderItem[] = [];
+            console.log(response, res)
 
-                for(let item of response.data.data) {
-                    const photos: string[] = item.photos.map((ret: any) => ret.url);
+            if (
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
 
-                    resultList.push({
-                        id: item.telegramId,
-                        name: item.name,
-                        age: item.age,
-                        city: item.town,
-                        description: item.bio,
-                        plans: {
-                            date: 'Планы на сегодня',
-                            content: 'Бар, Адмиралтейский район',
-                        },
-                        photos,
-                    })
-                }
-    
-                return resultList;
+            const resultList: SliderItem[] = [];
+
+            for(let item of response.data.data) {
+                const photos: string[] = item.photos.map((ret: any) => ret.url);
+
+                const content = `${item.plan.label}, ${item.region.label}`;
+
+                resultList.push({
+                    id: item.telegramId,
+                    name: item.name,
+                    age: item.age,
+                    city: item.city.label,
+                    description: item.bio,
+                    plans: {
+                        date: 'Планы на сегодня',
+                        content,
+                    },
+                    photos,
+                })
             }
 
-            return null;
+            return {
+                isPush,
+                slides: resultList,
+            };
         } catch (error) {
             return 'error';
         } finally {
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 export const initTargetUserAsync = createAsyncThunk(
-    'questionnaires/init-terget-user',
+    'questionnaires/init-target-user',
     async (id: string, {dispatch}): Promise<AsyncThunkRes<DetailsTargetUser>> => {
         try {
             dispatch(setLoad(true));
@@ -145,7 +168,7 @@ export const initTargetUserAsync = createAsyncThunk(
             dispatch(setLoad(false));
         }
     }
-)
+);
 
 const questionnairesSlice = createSlice({
     name: 'questionnaires',
@@ -156,7 +179,10 @@ const questionnairesSlice = createSlice({
         builder.addCase(initSliderListAsync.pending, _ => {
             console.log("Получение списка анкет");
         })
-        builder.addCase(initSliderListAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<SliderItem[]>> ) => {
+        builder.addCase(initSliderListAsync.fulfilled, (
+            state, 
+            action: PayloadAction<AsyncThunkRes<InitSliderResData>>
+        ) => {
             switch(action.payload) {
                 case 'error':
                     console.log("Ошибка получения списка анкет");
@@ -165,7 +191,13 @@ const questionnairesSlice = createSlice({
                     console.log("Список анкет не получен");
                     break;
                 default:
-                    state.sliderList = action.payload;
+
+                    if(action.payload.isPush) {
+                        state.sliderList.push( ...action.payload.slides );
+                    } else {
+                        state.sliderList = action.payload.slides;
+                    }
+
                     console.log("Успешное получение списка анкет");
                     break;
             }

@@ -4,6 +4,7 @@ import type {
     TargetProfile,
     DataSerchProfStat,
     ComplaintListItem,
+    TargetProfileCompalint,
 } from '@/types/admin.types';
 
 import {
@@ -18,12 +19,15 @@ import {
     COMPLS_ENDPOINT,
     DELETE_PHOTO,
     UPLOAD_PHOTO,
+    ADMINE_SERCH_STATUS_ENDPOINT,
+    COMPLS_UPT_ENDPOINT,
+    ADMINE_CMPLS_ENDPOINT,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { complaintList } from '@/constant/admin';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
+import { formatTimestamp } from '@/funcs/general.funcs';
 import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
 import type { FetchResponse, FetchSavePhotoRes, } from '@/types/fetch.type';
 import type { AxiosResponse, AxiosProgressEvent } from 'axios';
@@ -119,36 +123,61 @@ export const getProfileByIdAsync = createAsyncThunk(
         try {
             dispatch(setLoad(true));
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(`${USER_ENDPOINT}/${id}`);
-
-            console.log( response )
+            const [userRes, cmplRes]: [
+                AxiosResponse<FetchResponse<any>>,
+                AxiosResponse<FetchResponse<any>>,
+            ] = await Promise.all([
+                api.get(`${USER_ENDPOINT}/${id}`),
+                api.get(`${COMPLS_ENDPOINT}?telegramId=${id}&type=received&status=UNDER_REVIEW`),
+            ]);
 
             if(
-                response.status === 200 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
-                response.data.success
-            ) {
-                const data = response.data.data;
+                userRes.status !== 200 ||
+                !userRes.data.success  ||
+                !userRes.data.data     ||
+                userRes.data.data === 'None' ||
 
-                const photos = data.photos.map((item: any) => ({id: item.id, photo: item.url}));
+                cmplRes.status !== 200 ||
+                !cmplRes.data.success  ||
+                !cmplRes.data.data     ||
+                cmplRes.data.data === 'None'
+            ) return null;
 
-                const result: TargetProfile = {
-                    id: data.telegramId,
-                    role: data.role,
-                    photos,
-                    name: data.name,
-                    age: data.age,
-                    city: data.town,
-                    status: data.status,
-                    description: data.bio,
-                    complaint: null,
-                };
+            const userData = userRes.data.data;
+            const cmplData = cmplRes.data.data;
 
-                return result;
-            }
+            const photos = userData.photos.map((item: any) => ({id: item.id, photo: item.url}));
 
-            return null;
+            let complaintList: TargetProfileCompalint[] = cmplData.map(
+                (item: any) => {
+
+                    const [date, time] = formatTimestamp(item.createdAt).split(' ');
+
+                    return {
+                        id: item.id,
+                        date,
+                        complGlob: item.globComplRes.label,
+                        complTarget: item.targetComplRes.label,
+                        from: item.fromUser.telegramId,
+                        time,
+                        msg: item.description,
+                    }
+                }
+            );
+
+            const result: TargetProfile = {
+                id: userData.telegramId,
+                role: userData.role,
+                photos,
+                name: userData.name,
+                age: userData.age,
+                city: userData.city.label,
+                status: userData.status,
+                description: userData.bio,
+                complaint: complaintList.length ? complaintList : null,
+            };
+
+            return result;
         } catch (error) {
             return 'error';
         } finally {
@@ -170,7 +199,7 @@ export const addPhotoToUserAsync = createAsyncThunk(
             formData.append('photo', data.photo);
             formData.append('telegramId', toUser);
     
-            const response: AxiosResponse<FetchResponse<FetchSavePhotoRes>> = await api.post(UPLOAD_PHOTO, formData, {
+            const uploadRes: AxiosResponse<FetchResponse<FetchSavePhotoRes>> = await api.post(UPLOAD_PHOTO, formData, {
                 onUploadProgress: (progressEvent: AxiosProgressEvent) => {
                     if (progressEvent.total) {
                       const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -179,21 +208,35 @@ export const addPhotoToUserAsync = createAsyncThunk(
                 }
             });
 
-            if(
-                response.status === 201 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
-                response.data.success
-            ) {
-                const photoUrl = URL.createObjectURL(data.photo);
+            if (
+                uploadRes.status !== 201 ||
+                !uploadRes.data.success  ||
+                !uploadRes.data.data     ||
+                uploadRes.data.data === 'None'
+            ) return null;
 
-                return {
-                    id: String(response.data.data.photoId),
-                    photo: photoUrl,
-                } as PhotoItem;
-            }
+            const oldPhotos = rootState.admin.targetProfile.photos;
+            const oldPhotId = oldPhotos.map(item => +item.id);
 
-            return null;
+            const savedData = {
+                telegramId: toUser,
+                photoIds: [...oldPhotId, uploadRes.data.data.photoId],
+            };
+
+            const savedRes: AxiosResponse<FetchResponse<any>> = await api.patch(`${USER_ENDPOINT}/${toUser}`, savedData);
+
+            if (
+                savedRes.status !== 200 ||
+                !savedRes.data.success
+            ) return null;
+
+            const photoUrl = URL.createObjectURL(data.photo);
+
+            return {
+                id: String(uploadRes.data.data.photoId),
+                photo: photoUrl,
+            } as PhotoItem;
+
         } catch (error) {
             return 'error';
         }
@@ -206,7 +249,7 @@ export const delPhotoToUserAsync = createAsyncThunk(
         try {
             await delay(2000);
             const rootState = getState() as IState;
-            const telegramId = rootState.profile.info.id;
+            const telegramId = rootState.admin.targetProfile.id;
 
             const data = {
                 telegramId,
@@ -232,27 +275,51 @@ export const delPhotoToUserAsync = createAsyncThunk(
 export const serchProfileStatusAsync = createAsyncThunk(
     'admin/serch-profile-status',
     async (
-        { id, targetValue, delComplaint: _ }: DataSerchProfStat,
+        { id, targetValue, delComplaint, isDisp }: DataSerchProfStat,
         { getState, dispatch }
     ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
             const rootState = getState() as IState;
             const adminState = rootState.admin;
 
-            const newProfilesList = adminState.profilesList.map(
-                item => ({
-                    ...item,
-                    status: item.id === id ? targetValue : item.status,
-                })
-            );
+            if(delComplaint) {
+                const targetUser = adminState.targetProfile;
 
-            dispatch(setNewProfilesList(newProfilesList));
+                const uptComplBaseData = {
+                    telegramId: rootState.profile.info.id,
+                    status: 'RESOLVED',
+                }
+ 
+                const uptComplRes: AxiosResponse<FetchResponse<any>>[] = await Promise.all(
+                    targetUser.complaint?.map(
+                        item => api.post(COMPLS_UPT_ENDPOINT, {
+                            ...uptComplBaseData,
+                            complaintId: item.id,
+                        })
+                    ) || []
+                )
 
-            await delay(500);
+                console.log( uptComplRes )
+            }
 
-            const response = targetValue;
+            const url = ADMINE_SERCH_STATUS_ENDPOINT(id, targetValue);
 
-            return response;
+            const serchStatRes: AxiosResponse<FetchResponse<any>> = await api.patch(url);
+
+            console.log( serchStatRes )
+
+            if(isDisp) {
+                const newProfilesList = adminState.profilesList.map(
+                    item => ({
+                        ...item,
+                        status: item.id === id ? targetValue : item.status,
+                    })
+                );
+
+                dispatch(setNewProfilesList(newProfilesList));
+            }
+
+            return targetValue;
         } catch (error) {
             return 'error';
         }
@@ -292,20 +359,20 @@ export const deleteUserAsync = createAsyncThunk(
 
 export const initComplaintListAsync = createAsyncThunk(
     'admin/init-complaint-list',
-    async (_, { dispatch, getState }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
+    async (_, { dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
         try {
             dispatch(setLoad(true));
 
-            const rootState = getState() as IState;
-            const tgId = rootState.profile.info.id;
+            const response: AxiosResponse<FetchResponse<ComplaintListItem[]>> = await api.get(ADMINE_CMPLS_ENDPOINT);
 
-            const url = `${COMPLS_ENDPOINT}?telegramId=${tgId}&type=admin`;
+            if (
+                response.status === 200 &&
+                response.data.success   &&
+                response.data.data      &&
+                response.data.data !== 'None'
+            ) return response.data.data;
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
-
-            console.log( response )
-
-            return complaintList;
+            return null;
         } catch (error) {
             return 'error';
         } finally {

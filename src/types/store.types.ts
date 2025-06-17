@@ -16,7 +16,7 @@ export enum EProfileRoles {
 export enum EProfileStatus {
     Pro  = 'Pro',
     Noob = 'Noob',
-    Blocked = 'Blocked'
+    Blocked = 'Blocked',
 }
 
 export enum ESex {
@@ -26,8 +26,13 @@ export enum ESex {
 }
 
 export enum ELineStatus {
-    Online = 'Onlie',
-    Offline = 'Offline',
+    Online = 'online',
+    Offline = 'offline',
+}
+
+export enum ETypingStatus {
+    Typing = 'Typing',
+    UnTyping = 'UnTyping',
 }
 
 export enum LinkTooltipText {

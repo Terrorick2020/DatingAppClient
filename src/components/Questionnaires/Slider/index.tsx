@@ -1,6 +1,7 @@
 import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootDispatch } from '@/store';
+import { initialArgs } from '@/constant/quest';
 import { initSliderListAsync } from '@/store/slices/questionnairesSlice';
 import type { IState } from '@/types/store.types';
 
@@ -21,7 +22,7 @@ const SliderContent = (): JSX.Element => {
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
 
-            dispatch(initSliderListAsync());
+            dispatch(initSliderListAsync(initialArgs));
         },
         []
     )

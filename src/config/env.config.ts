@@ -1,5 +1,5 @@
 import type { UsersEndpointParams } from '@/types/fetch.type';
-import { EProfileRoles } from '@/types/store.types';
+import { EProfileRoles, EProfileStatus } from '@/types/store.types';
 
 
 export const HOST = import.meta.env.VITE_HOST || 'localhost';
@@ -19,12 +19,18 @@ export const WS_COMPL   = import.meta.env.VITE_WS_COMPL || '';
 export const WS_LIKES   = import.meta.env.VITE_WS_LIKES || '';
 export const WS_MATCH   = import.meta.env.VITE_WS_MATCH || '';
 export const WS_MSGS    = import.meta.env.VITE_WS_MSGS  || '';
+export const WS_API     = import.meta.env.VITE_WS_API  || '';
 
 export const INITIAL_ENDPOINT = import.meta.env.VITE_INITIAL_ENDPOINT || '';
 export const SET_GEO_ENDPOINT = import.meta.env.VITE_SET_GEO_ENDPOINT || '';
 export const LIKES_ENDPOINT   = import.meta.env.VITE_LIKES_ENDPOINT || '';
 export const BILLING_ENDPOINT = import.meta.env.VITE_BILLING_ENDPOINT || '';
 export const ADMINE_ENDPOINT  = import.meta.env.VITE_ADMINE_ENDPOINT || '';
+
+export const ADMINE_BLOCK   = import.meta.env.VITE_ADMINE_BLOCK || '';
+export const ADMINE_UNBLOCK = import.meta.env.VITE_ADMINE_UNBLOCK || '';
+export const ADMINE_PRO     = import.meta.env.VITE_ADMINE_PRO || '';
+export const ADMINE_CMPLS   = import.meta.env.VITE_ADMINE_CMPLS || '';
 
 export const HELP_INTERESTS_ENDPOINT       = import.meta.env.VITE_HELP_INTERESTS_ENDPOINT || '';
 export const HELP_PLANS_ENDPOINT           = import.meta.env.VITE_HELP_PLANS_ENDPOINT || '';
@@ -69,6 +75,7 @@ export const USER_ENDPOINT     = import.meta.env.VITE_USER_ENDPOINT || '';
 export const USER_DEL_ENDPOINT = import.meta.env.VITE_USER_DEL_ENDPOINT || '';
 export const USER_DEL_SELF     = import.meta.env.VITE_USER_DEL_SELF || '';
 export const USER_PUBLIC       = import.meta.env.VITE_USER_PUBLIC || '';
+export const USER_QUESTS       = import.meta.env.VITE_USER_QUESTS || '';
 
 export const COMPLS_ENDPOINT     = import.meta.env.VITE_COMPLS_ENDPOINT || '';
 export const COMPLS_UPT_ENDPOINT = import.meta.env.VITE_COMPLS_UPT_ENDPOINT || '';
@@ -77,6 +84,8 @@ export const COMPLS_STATS        = import.meta.env.VITE_COMPLS_STATS || '';
 export const FQ_MEDIA_LINK     = import.meta.env.VITE_FQ_MEDIA_LINK || '';
 export const PL_MEDIA_LINK     = import.meta.env.VITE_PL_MEDIA_LINK || '';
 export const LO_MEDIA_LINK    = import.meta.env.VITE_LO_MEDIA_LINK || '';
+
+export const USER_STATUS = import.meta.env. VITE_USER_STATUS || '';
 
 if(
   !BASE_URL ||
@@ -105,6 +114,11 @@ if(
   !BILLING_ENDPOINT ||
   !ADMINE_ENDPOINT  ||
 
+  !ADMINE_BLOCK   ||
+  !ADMINE_UNBLOCK ||
+  !ADMINE_PRO     ||
+  !ADMINE_CMPLS   ||
+
   !UPLOAD_PHOTO ||
   !DELETE_PHOTO ||
   !LOG_ENDPOINT ||
@@ -128,20 +142,26 @@ if(
   !REDIS_CLEANUP       ||
   !REDIS_TTL           ||
 
-  !MSGS_ENDPOINT         ||
-  !MSGS_UPLOAD_ENDPOINT  ||
-  !MSGS_MEDIA_ENDPOINT   ||
-  !MSGS_TYPING_ENDPOINT  ||
-  !MSGS_READ_ENDPOINT    ||
+  !MSGS_ENDPOINT        ||
+  !MSGS_UPLOAD_ENDPOINT ||
+  !MSGS_MEDIA_ENDPOINT  ||
+  !MSGS_TYPING_ENDPOINT ||
+  !MSGS_READ_ENDPOINT   ||
 
-  !USER_ENDPOINT      ||
-  !USER_DEL_ENDPOINT  ||
-  !USER_DEL_SELF      ||
-  !USER_PUBLIC        ||
+  !USER_ENDPOINT     ||
+  !USER_DEL_ENDPOINT ||
+  !USER_DEL_SELF     ||
+  !USER_PUBLIC       ||
 
   !COMPLS_ENDPOINT      ||
   !COMPLS_UPT_ENDPOINT  ||
-  !COMPLS_STATS
+  !COMPLS_STATS         ||
+
+  !FQ_MEDIA_LINK ||
+  !PL_MEDIA_LINK ||
+  !LO_MEDIA_LINK ||
+
+  !USER_STATUS
 ) {
   throw Error('Hasn`t someone environments!');
 };
@@ -182,3 +202,31 @@ export const USERS_ENDPOINT = ({
 
   return `${USER_ENDPOINT}${queryString}`;
 }
+
+export const USER_STATUS_ENDPOINT = (tgId: string): string => `${REDIS}/${USER_STATUS.replace('{telegramId}', tgId)}`;
+export const USERS_QUESTS_ENDPOINT = (
+  telegramId: string,
+  limit: number,
+  offset: number,
+): string => `${USER_ENDPOINT}${USER_QUESTS}?telegramId=${telegramId}&limit=${limit}&offset=${offset}`;
+
+export const ADMINE_CMPLS_ENDPOINT = `${ADMINE_ENDPOINT}${ADMINE_CMPLS}`;
+export const ADMINE_SERCH_STATUS_ENDPOINT = (tgId: string, type: EProfileStatus): string => {
+  let end: string;
+
+  switch(type) {
+    case EProfileStatus.Pro:
+      end = ADMINE_PRO;
+      break;
+    case EProfileStatus.Noob:
+      end = ADMINE_UNBLOCK;
+      break;
+    case EProfileStatus.Blocked:
+      end = ADMINE_BLOCK;
+      break;
+  }
+
+  return `${ADMINE_ENDPOINT}/${tgId}${end}`;
+}
+
+export const COMLS_STATS_ENDPOINT = (tgId: string): string => `${COMPLS_ENDPOINT}${COMPLS_STATS}/${tgId}`;

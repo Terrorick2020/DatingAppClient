@@ -33,9 +33,15 @@ const ChatDialogDelete = memo((props: PropsChatDialogDelete): JSX.Element => {
 
     const handleDeleteUser = async (): Promise<void> => {
         setDLoading(true);
-        await dispatch(deleteChatByIDAsync(props.id));
+
+        const response = await dispatch(deleteChatByIDAsync(props.id)).unwrap();
+        
         setDLoading(false);
+        
+        if(!response || response === 'error') return;
+
         props.handleClose();
+        
         goBack();
     };
 

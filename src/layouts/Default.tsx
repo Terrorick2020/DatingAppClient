@@ -1,11 +1,17 @@
+import {
+    initSocketRoomsConnectAsync,
+    initSocketRoomsDisconnectAsync,
+} from '@/store/slices/settingsSlice';
+
 import { JSX, memo, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { EApiStatus } from '@/types/settings.type';
 import { SNACK_TIMEOUT } from '@/constant/settings';
 import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
-import { WS_COMPL } from '@/config/env.config';
+import { defNamespaces } from '@/config/socket.config';
+import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import IconButton from '@mui/joy/IconButton';
@@ -16,6 +22,8 @@ import LogoHeader from '@/components/Layouts/LogoHeader';
 
 const DefaultLayout = memo((): JSX.Element => {
     const apiRes = useSelector((state: IState) => state.settings.apiRes);
+
+    const dispatch = useDispatch<RootDispatch>();
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -39,11 +47,27 @@ const DefaultLayout = memo((): JSX.Element => {
         apiRes.value && showSnackAlert(apiRes.msg, apiRes.status, SNACK_TIMEOUT);
     }, [apiRes] );
 
+    const handleSocketConnect = async (): Promise<void> => {
+        await Promise.all([
+            defNamespaces.map(item => connectToNamespace(item))
+        ]);
+
+        await dispatch(initSocketRoomsConnectAsync(defNamespaces));
+    };
+
+    const handleSocketDisconnect = async (): Promise<void> => {
+        await dispatch(initSocketRoomsDisconnectAsync(defNamespaces));
+
+        await Promise.all([
+            defNamespaces.map(item => disconnectFromNamespace(item))
+        ]);
+    };
+
     useEffect( () => {
-        connectToNamespace(WS_COMPL);
+        handleSocketConnect();
 
         return () => {
-            disconnectFromNamespace(WS_COMPL);
+            handleSocketDisconnect();
         }
     }, [] );
 

@@ -32,7 +32,7 @@ export interface TargetChatDayMsg {
 }
 
 export interface TargetChatDay {
-    id: number
+    id: string
     day: string
     dayListMsg: TargetChatDayMsg[]
 }

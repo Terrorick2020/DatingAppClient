@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 import type { TargetChatDay, IncomingMsg, TargetChatDayMsg } from '@/types/chats.types';
 
@@ -32,11 +33,33 @@ export function addMessageToChat(
         ];
     } else {
         const newDay: TargetChatDay = {
-            id: Date.now(), // уникальный ID
+            id: uuidv4(),
             day,
             dayListMsg: [newMessage],
         };
 
         return [...chatDialog, newDay];
     }
+}
+
+export function markMessagesAsRead(
+  chat: TargetChatDay[],
+  lastReadMessageId: string
+): TargetChatDay[] {
+  let shouldContinue = true
+
+  for (const day of chat) {
+    for (const msg of day.dayListMsg) {
+      if (!shouldContinue) break
+
+      msg.isChecked = true
+
+      if (msg.id === lastReadMessageId) {
+        shouldContinue = false
+        break
+      }
+    }
+  }
+
+  return chat
 }

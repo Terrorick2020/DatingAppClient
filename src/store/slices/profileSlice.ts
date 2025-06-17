@@ -278,7 +278,7 @@ export const signUpProfileAsync = createAsyncThunk(
                 interestId,
             }
 
-            let response
+            let response;
             let msg: string = '';
 
             switch(mark) {
@@ -287,7 +287,6 @@ export const signUpProfileAsync = createAsyncThunk(
                     msg = 'Регистрация пользователя прошла успешно';
                     break;
                 case KeyFQBtnText.Other:
-                    console.log(data)
                     response = await api.patch(`${USER_ENDPOINT}/${profileInfo.id}`, data) as AxiosResponse<FetchResponse<any>>;
                     msg = 'Профиль обновлён успешно';
                     break;
@@ -446,6 +445,8 @@ export const saveSelfPlansAsync = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<EveningPlans>> = 
                 await api.post(PLANS_SET_ENDPOINT, data);
+
+            console.log( response )
 
             if(
                 response.status === 201 &&

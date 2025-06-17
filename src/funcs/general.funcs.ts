@@ -62,3 +62,16 @@ export function formatTimeLeftOther(seconds: number, withSecond: boolean = false
 	  .toString()
 	  .padStart(2, '0')}${withSecond ? ':' + secs.toString().padStart(2, '0') : ''}`;
 }
+
+export function formatTimestamp(createdAt: number): string {
+	const date = new Date(createdAt);
+
+	return date.toLocaleString('ru-RU', {
+		day: '2-digit',
+		month: '2-digit',
+		year: 'numeric',
+		hour: '2-digit',
+		minute: '2-digit',
+		hour12: false,
+	}).replace(',', '');
+}

@@ -1,4 +1,4 @@
-import { ESex } from './store.types';
+import { ESex, ELineStatus, ETypingStatus } from './store.types';
 
 
 export enum ELanguage {
@@ -13,6 +13,11 @@ export enum EApiStatus {
     Info = 'info',
     Warning = 'warning',
     Error = 'error',
+}
+
+export enum EBadgeType {
+    Likes = 'likes',
+    Chats = 'chats',
 }
 
 export interface SetApiRes {
@@ -100,7 +105,7 @@ export interface Complaint {
 
 export interface BadgeBlockItem {
     value: boolean
-    content: string
+    content: number
 }
 
 export interface BadgeBlock {
@@ -137,4 +142,14 @@ export interface PropsPlansVars {
 export interface InitEPCtxAsyncRes {
     plans: BaseVarsItem[]
     districts: DistrictVarsItem[]
+}
+
+
+export interface IStatusAttr {
+    addClass: string
+    text: string
+}
+
+export type LineStatusAttr = {
+    [key in ELineStatus | ETypingStatus]: IStatusAttr
 }

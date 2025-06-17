@@ -3,6 +3,7 @@ import {
     EComplaintType,
     EApiStatus,
     EComplaintStep,
+    EBadgeType,
     type Complaint,
     type FQErrors,
     type FEPErrors,
@@ -38,6 +39,8 @@ import {
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { connectSocketRoom } from '@/config/socket.config';
+import { ServerMethods } from '@/types/socket.types';
 import { setInfo } from './profileSlice';
 import type { FetchResponse } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
@@ -299,6 +302,64 @@ export const initEPCtxAsync = createAsyncThunk(
     }
 );
 
+export const initSocketRoomsConnectAsync = createAsyncThunk(
+    'settings/init-socket-rooms-connection',
+    async (namespaces: string[], {getState}): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+            
+            const socketData = {
+                roomName: telegramId,
+                telegramId,    
+            };
+
+            const responses = await Promise.all([
+                namespaces.map(
+                    item => connectSocketRoom(item, ServerMethods.JoinRoom, socketData),
+                )
+            ]);
+
+            for(let item of responses) {
+                if(!item) return null
+            }
+
+            return 'success';
+        } catch (error: any) {
+            return 'error';
+        }
+    }
+);
+
+export const initSocketRoomsDisconnectAsync = createAsyncThunk(
+    'settings/init-socket-rooms-disconnection',
+    async (namespaces: string[], {getState}): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+            
+            const socketData = {
+                roomName: telegramId,
+                telegramId,    
+            };
+
+            const responses = await Promise.all([
+                namespaces.map(
+                    item => connectSocketRoom(item, ServerMethods.LeaveRoom, socketData),
+                )
+            ]);
+
+            for(let item of responses) {
+                if(!item) return null
+            };
+
+            return 'success';
+        } catch (error: any) {
+            return 'error';
+        }
+    }
+);
+
 const settingsSlice = createSlice({
     name: 'settings',
     initialState,
@@ -368,6 +429,16 @@ const settingsSlice = createSlice({
         setBadge: (state, action: PayloadAction<BadgeBlock>): void => {
             state.badge = action.payload
         },
+        resetBadge: (state, action: PayloadAction<EBadgeType>) => {
+            switch(action.payload) {
+                case EBadgeType.Chats:
+                    state.badge.chats = badgeEmptyItem;
+                    break;
+                case EBadgeType.Likes:
+                    state.badge.likes = badgeEmptyItem;
+                    break;
+            }
+        },
         setCityes: (state, action: PayloadAction<BaseVarsItem[]>): void => {
             state.cityesVars = action.payload;
         },
@@ -391,7 +462,10 @@ const settingsSlice = createSlice({
         builder.addCase(initFillingQuestAsync.pending, _ => {
             console.log("Получение варианетов интересов");
         })
-        builder.addCase(initFillingQuestAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<InitFillingQuestRes>> ) => {
+        builder.addCase(initFillingQuestAsync.fulfilled, ( 
+            state, 
+            action: PayloadAction<AsyncThunkRes<InitFillingQuestRes>>,
+        ) => {
             switch(action.payload) {
                 case 'error':
                     console.log("Ошибка получния вариантов интереесов");
@@ -414,7 +488,10 @@ const settingsSlice = createSlice({
         builder.addCase(initComplaintsVarsAsync.pending, _ => {
             console.log("Получение варианетов жалоб");
         })
-        builder.addCase(initComplaintsVarsAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<BaseVarsItem[]>> ) => {
+        builder.addCase(initComplaintsVarsAsync.fulfilled, (
+            state,
+            action: PayloadAction<AsyncThunkRes<BaseVarsItem[]>>,
+        ) => {
             switch(action.payload) {
                 case 'error':
                     console.log("Ошибка получния вариантов жалоб");
@@ -454,6 +531,49 @@ const settingsSlice = createSlice({
         builder.addCase(initEPCtxAsync.rejected, _ => {
             console.log("Ошибка получния вариантов планов и районов");
         })
+
+        // Подключение к комнатам тунелей ws
+        // initSocketRoomsConnectAsync, initSocketRoomsDisconnectAsync
+        builder.addCase(initSocketRoomsConnectAsync.pending, _ => {
+            console.log("Подключение к комнатам тунелей ws");
+        })
+        builder.addCase(initSocketRoomsConnectAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка подключения к комнатам тунелей ws");
+                    break;
+                case null:
+                    console.log("К комнатам тунелей ws не подключены");
+                    break;
+                case 'success':
+                    console.log("К комнатам тунелей ws успешно подключены");
+                    break;
+            }
+        })
+        builder.addCase(initSocketRoomsConnectAsync.rejected, _ => {
+            console.log("Ошибка подключения к комнатам тунелей ws");
+        })
+
+        // Отключение от комнат тунелей ws
+        builder.addCase(initSocketRoomsDisconnectAsync.pending, _ => {
+            console.log("Отключение от комнат тунелей ws");
+        })
+        builder.addCase(initSocketRoomsDisconnectAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка отключения к комнатам тунелей ws");
+                    break;
+                case null:
+                    console.log("От комнат тунелей ws не отключены");
+                    break;
+                case 'success':
+                    console.log("От комнат тунелей ws успешно отключены");
+                    break;
+            }
+        })
+        builder.addCase(initSocketRoomsDisconnectAsync.rejected, _ => {
+            console.log("Ошибка отключения к комнатам тунелей ws");
+        })
     }
 });
 
@@ -479,5 +599,7 @@ export const {
     delPhotoInCashe,
     resetPhotosCashe,
     setMedaiLink,
+    setBadge,
+    resetBadge,
 } = settingsSlice.actions;
 export default settingsSlice.reducer;

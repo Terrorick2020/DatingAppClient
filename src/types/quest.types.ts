@@ -13,6 +13,16 @@ export interface SliderItem {
     photos: string[]
 }
 
+export interface InitSliderResData {
+    isPush: boolean
+    slides: SliderItem[]
+}
+
+export interface InitSliderData {
+    limit: number
+    offset: number
+}
+
 export interface DetailsTargetUserPlans {
     targetTime: string
     district: string

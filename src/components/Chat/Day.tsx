@@ -26,10 +26,10 @@ const ChatDay = memo((props: PropsChatDay): JSX.Element => {
                                 EAnimeDirection.Left
                         }
                         duration={ANIME_DURATION}
+                        key={`msg-${item.id}`}
                     >
                         <ChatMsg
                             id={item.id}
-                            key={`msg-${item.id}`}
                             isSelf={item.from === props.selfId}
                             msg={item.msg}
                             time={item.time}

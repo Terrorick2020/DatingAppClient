@@ -1,12 +1,8 @@
 import { JSX, memo } from 'react';
 import { NavLink } from 'react-router-dom';
-import { appRoutes } from '@/config/routes.config';
+import { toUserInfo } from '@/config/routes.config';
 import type { PropsUserInfoComplaint } from '@/types/admin.types';
 
-
-const adminGlobRoute      = appRoutes.admin.global;
-const adminUserInfoRoute  = appRoutes.admin.inner.userInfo;
-const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`;
 
 const UserInfoComplaint = memo(({complaint}: PropsUserInfoComplaint): JSX.Element => {
     if(!complaint) return (<></>);

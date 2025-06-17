@@ -32,7 +32,7 @@ export interface TargetProfile {
     city: string
     status: EProfileStatus
     description: string
-    complaint: TargetProfileCompalint | null
+    complaint: TargetProfileCompalint[] | null
 }
 
 export interface ComplaintListItem extends BaseComplaintItem {
@@ -60,6 +60,7 @@ export interface DataSerchProfStat {
     id: string
     targetValue: EProfileStatus
     delComplaint: boolean
+    isDisp?: boolean
 }
 
 export interface PropsUserInfoComponent {

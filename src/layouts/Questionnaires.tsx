@@ -1,9 +1,12 @@
 import { JSX, useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
-import { WS_MATCH, WS_LIKES, WS_CHATS } from '@/config/env.config';
+import { WS_LIKES } from '@/config/env.config';
+import { setBadge } from '@/store/slices/settingsSlice';
+import { getNamespaceSocket, handleSocket } from '@/config/socket.config';
+import { LikesCltMethods, type OnResNewLike } from '@/types/socket.types';
+import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import QuestMatch from '@/components/Layouts/QuestMatch';
@@ -13,6 +16,9 @@ import SAPlansTimeout from '@/components/Layouts/PlansTimeout';
 
 const QuestLayout = (): JSX.Element => {
     const isCurrent = useSelector((state: IState) => state.profile.eveningPlans.isCurrent);
+    const badgeCtx = useSelector((state: IState) => state.settings.badge);
+
+    const dispatch = useDispatch<RootDispatch>();
 
     const snackbarKeyRef = useRef<string | number | null>(null);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -43,20 +49,32 @@ const QuestLayout = (): JSX.Element => {
         [isCurrent]
     );
 
+    const handleLikesNotify = (data: OnResNewLike | null): void => {
+        if(!data) return;
+
+        console.log(data);
+
+        dispatch(setBadge({
+            ...badgeCtx,
+            likes: {
+                value: true,
+                content: badgeCtx.likes.content++,
+            }
+        }));
+    };
+
     useEffect(() => {
-        connectToNamespace(WS_MATCH);
-        connectToNamespace(WS_CHATS);
-        connectToNamespace(WS_LIKES);
+        const likeSocket = getNamespaceSocket(WS_LIKES);
+
+        handleSocket<OnResNewLike>(likeSocket, LikesCltMethods.newLike, handleLikesNotify);
 
         return () => {
-            disconnectFromNamespace(WS_MATCH);
-            disconnectFromNamespace(WS_CHATS);
-            disconnectFromNamespace(WS_LIKES);
+            likeSocket?.off(LikesCltMethods.newLike);
 
             if (snackbarKeyRef.current) {
                 closeSnackbar(snackbarKeyRef.current);
                 snackbarKeyRef.current = null;
-            }
+            };
         };
     }, []);
 

@@ -1,12 +1,17 @@
-import { JSX, memo, useState, MouseEvent } from 'react';
+import { JSX, memo, useState, MouseEvent, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
 import { lineStatusAttr } from '@/constant/settings';
 import { setComplOpen, addRoute } from '@/store/slices/settingsSlice';
+import { getNamespaceSocket, handleSocket } from '@/config/socket.config';
+import { setInterLineStatus } from '@/store/slices/chatsSlice';
+import { MsgsCltOnMeths, ChtasCltMethods } from '@/types/socket.types';
+import { WS_MSGS, WS_CHATS } from '@/config/env.config';
+import type { OnResTyping, OnResInterLineStat } from '@/types/socket.types';
 import type { PropsChatHeader } from '@/types/chats.types';
 import type { RootDispatch } from '@/store';
-import type { IState } from '@/types/store.types';
+import { type IState, ETypingStatus, ELineStatus } from '@/types/store.types';
 
 import MenuBtn from '@/components/UI/MenuBtn';
 import ComplaintDrawer from '@/components/Layouts/ComplaintDrawer';
@@ -23,10 +28,37 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [openDel, setOpenDel] = useState<boolean>(false);
+    const [isTyping, setIsTyping] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const handleTyping = (data: OnResTyping | null): void => {
+        if(!data) return;
+
+        setIsTyping(data.isTyping);
+    }
+
+    const handleUserStatus = (data: OnResInterLineStat | null): void => {
+        if(!data) return
+
+        dispatch(setInterLineStatus(data.status));
+    }
+
+
+    useEffect(() => {
+        const msgsSocket = getNamespaceSocket(WS_MSGS);
+        const chatsSocket = getNamespaceSocket(WS_CHATS);
+
+        handleSocket<OnResTyping>(msgsSocket, MsgsCltOnMeths.typingStatus, handleTyping);
+        handleSocket<OnResInterLineStat>(chatsSocket, ChtasCltMethods.userStatus, handleUserStatus);
+
+        return () => {
+            msgsSocket?.off(MsgsCltOnMeths.typingStatus);
+            chatsSocket?.off(ChtasCltMethods.userStatus);
+        }
+    }, [props.id])
 
     const handleMenuClose = (event: MouseEvent<HTMLLIElement>): void => {
         event.stopPropagation();
@@ -52,7 +84,13 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
         }
     }
 
-    if(!chatInterlocutor) return (<></>)
+    const lineMemoCtx = useMemo(() => {
+        if( isTyping ) return lineStatusAttr[ETypingStatus.Typing];
+
+        return lineStatusAttr[chatInterlocutor?.lineStat || ELineStatus.Offline];
+    }, [chatInterlocutor?.lineStat, isTyping]);
+
+    if(!chatInterlocutor || !props.id) return (<></>);
 
     return (
         <> 
@@ -66,8 +104,8 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
                     <h6 className="name" onClick={handleNavToDetails}>
                         {`${chatInterlocutor.name} ${chatInterlocutor?.age ? ', ' + chatInterlocutor?.age : ''}`}
                     </h6>
-                    <span className={`line ${lineStatusAttr[chatInterlocutor.lineStat].addClass}`}>
-                        {lineStatusAttr[chatInterlocutor.lineStat].text}
+                    <span className={`line ${lineMemoCtx.addClass}`}>
+                        {lineMemoCtx.text}
                     </span>
                 </div>
             </div>

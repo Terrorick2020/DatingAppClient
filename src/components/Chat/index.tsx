@@ -1,11 +1,31 @@
-import { JSX, useEffect, useState } from 'react';
+import {
+    getChatByIdAsync,
+    sendMsgAsync,
+    setTypingStatAsync,
+    socketAddMsgInChat,
+    getMsgAsync,
+    markedReadedMsgs,
+} from '@/store/slices/chatsSlice';
+
+import {
+    connectToNamespace,
+    disconnectFromNamespace,
+    getNamespaceSocket,
+} from '@/config/socket.config';
+
+import {
+    MsgsCltOnMeths,
+    type OnResNewMsg,
+    type OnResReadMsg,
+} from '@/types/socket.types';
+
+import { JSX, useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChatByIdAsync, sendMsgAsync, setTypingStatAsync } from '@/store/slices/chatsSlice';
-import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
 import { WS_MSGS } from '@/config/env.config';
-import { type RootDispatch } from '@/store';
-import { type IState } from '@/types/store.types';
+import type { IncomingMsg } from '@/types/chats.types';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import ChatHeader from './Header';
 import ChatList from './List';
@@ -20,45 +40,108 @@ const ChatContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
     const seconds = useSelector((state: IState) => state.chats.targetChat.timer);
 
-    const [_, setTimeLeft] = useState<number>(seconds || 0);
+    const [_, setTimeLeft] = useState<number | null>(null);
+    const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
     const [message, setMessage] = useState<string>('');
     const [end, setEnd] = useState<boolean>(false);
+
+    const lastMsgId = useRef<string | null>(null);
 
     const dispatch = useDispatch<RootDispatch>();
 
     if ( !id ) return (<></>);
 
     useEffect( () => {
+        connectToNamespace(WS_MSGS);
+
+        return () => {
+            disconnectFromNamespace(WS_MSGS);
+            if (timerId) clearInterval(timerId);
+        }
+    }, [] );
+
+    const handleNewMessage = async (data: OnResNewMsg | null) => {
+        if(!data) return;
+
+        if(data.messageId ===  lastMsgId.current) return;
+
+        lastMsgId.current = data.messageId;
+
+        const response = await dispatch(getMsgAsync(data)).unwrap();
+
+        if (!response || response === 'error') {
+            const newMsg: IncomingMsg = {
+                chatId: data.chatId,
+                fromUser: data.senderId,
+                id: data.messageId,
+                is_read: true,
+                text: data.text,
+                created_at: new Date().getTime(),
+                updated_at: data.timestamp,
+            }
+            
+            dispatch(socketAddMsgInChat(newMsg));
+        }
+    }
+
+    const handleReadMsgs = (data: OnResReadMsg | null): void => {
+        if(!data) return;
+
+        dispatch(markedReadedMsgs(data));
+    }
+
+    const handleInitCtx = async (): Promise<void> => {
+        await dispatch(getChatByIdAsync(id)).unwrap();
+
+        const socket = getNamespaceSocket(WS_MSGS);
+
+        if(!socket) return;
+
+        socket.off(MsgsCltOnMeths.newMessage);
+        socket.off(MsgsCltOnMeths.messageRead);
+
+        if (!socket.connected) {
+            socket.once('connect', () => {
+                socket.on(MsgsCltOnMeths.newMessage, handleNewMessage);
+                socket.on(MsgsCltOnMeths.messageRead, handleReadMsgs);
+            });
+        } else {
+            socket.on(MsgsCltOnMeths.newMessage, handleNewMessage);
+            socket.on(MsgsCltOnMeths.messageRead, handleReadMsgs);
+        }
+    };
+
+    useEffect(() => {
         const chatHtml = document.getElementById('target-chat');
         if ( chatHtml ) chatHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
         const logoHeader = document.getElementById('logo-header');
         if( logoHeader ) logoHeader.style.display = 'flex';
 
-        dispatch(getChatByIdAsync(id));
-    }, [id] );
+        handleInitCtx();
+    }, [id]);
 
-    useEffect( () => {
-        connectToNamespace(WS_MSGS);
+    useEffect(() => {
+        if (typeof seconds !== 'number' || seconds <= 0) return;
+
+        setTimeLeft(seconds);
 
         const timer = setInterval(() => {
             setTimeLeft((prevTime) => {
-            if (prevTime <= 1) {
-                clearInterval(timer);
-                setEnd(true);
+                if (prevTime === null || prevTime <= 1) {
+                    clearInterval(timer);
+                    setEnd(true);
+                    return 0;
+                }
 
-                return 0;
-            }
-
-            return prevTime - 1;
+                return prevTime - 1;
             });
         }, 1000);
 
-        return () => {
-            clearInterval(timer);
-            disconnectFromNamespace(WS_MSGS);
-        }
-    }, [] );
+        setTimerId(timer);
+
+        return () => clearInterval(timer);
+    }, [seconds]);
 
     const handleChangeMsg = (newValue: string): void => {
         setMessage(newValue);

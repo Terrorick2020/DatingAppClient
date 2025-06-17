@@ -4,8 +4,9 @@ import type {
     SelSexVarsBase,
     BaseVarsItem,
     BadgeBlockItem,
+    LineStatusAttr,
 } from '@/types/settings.type';
-import { ESex, ELineStatus } from '@/types/store.types';
+import { ESex, ELineStatus, ETypingStatus } from '@/types/store.types';
 
 
 export const dfltErrItem: FQErrorsItem = {
@@ -15,7 +16,7 @@ export const dfltErrItem: FQErrorsItem = {
 
 export const badgeEmptyItem: BadgeBlockItem = {
     value: false,
-    content: '',
+    content: 0,
 }
 
 export const AGE_PATTERN: RegExp = /\d+$/;
@@ -47,7 +48,7 @@ export const selSexVarsBase: SelSexVarsBase = {
     ],
 }
 
-export const lineStatusAttr = {
+export const lineStatusAttr: LineStatusAttr = {
     [ELineStatus.Online]: {
         addClass: '',
         text: 'Онлайн',
@@ -56,6 +57,14 @@ export const lineStatusAttr = {
         addClass: 'off',
         text: 'Оффлайн',
     },
+    [ETypingStatus.Typing]: {
+        addClass: 'typing',
+        text: 'Печатает',
+    },
+    [ETypingStatus.UnTyping]: {
+        addClass: '',
+        text: '',
+    }
 }
 
 export const cityesVarsList: BaseVarsItem[] = [

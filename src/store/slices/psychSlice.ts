@@ -2,8 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoad } from './settingsSlice';
 import { delay } from '@/funcs/general.funcs';
 import { psychTestList, targerPsychList } from '@/constant/psych';
-import { ELineStatus } from '@/types/store.types';
-import type { IState } from '@/types/store.types';
+import { ELineStatus, type IState } from '@/types/store.types';
 import type { PsychState, PsychListItem, TargerPsych } from '@/types/psych.types';
 
 // import api from '@/config/fetch.config';
@@ -38,11 +37,11 @@ export const initPsychList = createAsyncThunk(
             const query =psychState.serchPsychQuery.trim().toLowerCase()
 
             const retOn = {
-                value: 'Onlie',
+                value: ELineStatus.Online,
                 query: 'онлайн',
             };
             const retOff = {
-                value: 'Offline',
+                value: ELineStatus.Offline,
                 query: 'оффлайн',
             };
 

@@ -32,7 +32,7 @@ export const initLikesListAsync = createAsyncThunk(
             const response: AxiosResponse<FetchResponse<any>> =
                 await api.get(`${LIKES_ENDPOINT}?telegramId=${telegramId}&type=${EFetchLikesTProps.Received}`);
 
-            console.log(response)
+            console.log(response);
 
             const likesList: LikesItem[] = [];
 
@@ -85,17 +85,19 @@ export const acceptLikingAsync = createAsyncThunk(
                 toUserId,
             };
 
-            dispatch(createChatAsync(toUserId));
-
             const response: AxiosResponse<FetchResponse<any>> = await api.post(LIKES_ENDPOINT, data);
 
-            // if(
-            //     response.status === 201 &&
-            //     response.data.success &&
-            //     response.data.data.isMatch
-            // ) dispatch(createChatAsync(toUserId));
+            if (
+                response.status !== 201  ||
+                !response.data.success   ||
+                !response.data.data.isMatch
+            ) return null;
 
-            return response.data.success;
+            const chatRes = await dispatch(createChatAsync(toUserId)).unwrap();
+
+            if( chatRes === 'success' ) return !!chatRes;
+
+            return chatRes;
         } catch (error) {
             return 'error';
         }

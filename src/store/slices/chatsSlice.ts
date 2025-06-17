@@ -15,6 +15,8 @@ import {
     USER_ENDPOINT,
     CHATS_TYPING_ENDPOINT,
     CHATS_ADD_MSG_ENDPOINT,
+    CHATS_READ_ENDPOINT,
+    WS_MSGS,
 } from '@/config/env.config';
 
 import {
@@ -24,7 +26,9 @@ import {
 } from '@/types/store.types';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { addMessageToChat } from '@/funcs/chats.funcs';
+import { ServerMethods, type OnResReadMsg, type OnResNewMsg } from '@/types/socket.types';
+import { addMessageToChat, markMessagesAsRead } from '@/funcs/chats.funcs';
+import { connectSocketRoom } from '@/config/socket.config';
 import { setLoad } from './settingsSlice';
 import type { FetchResponse } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
@@ -53,8 +57,6 @@ export const initChatsCtxAsync = createAsyncThunk(
             const telegramId = rootState.profile.info.id;
 
             const chatsRes: AxiosResponse<FetchResponse<any>> = await api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`);
-
-            console.log(chatsRes)
 
             if(
                 chatsRes.status === 200 &&
@@ -112,15 +114,21 @@ export const getChatByIdAsync = createAsyncThunk(
                 AxiosResponse<FetchResponse<any>>,
             ] = await Promise.all([
                 api.get(metaEndpoint),
-                api.get(dialogEndpoint),
+                api.get(`${dialogEndpoint}?limit=10&offset=0`),
             ]);
 
             if(
-                chatMetaRes.status !== 200       ||
-                !chatMetaRes.data.data           ||
-                chatMetaRes.data.data === 'None' ||
-                !chatMetaRes.data.success
+                chatMetaRes.status !== 200         ||
+                !chatMetaRes.data.data             ||
+                chatMetaRes.data.data === 'None'   ||
+                !chatMetaRes.data.success          ||
+                chatDialogRes.status !== 200       ||
+                !chatDialogRes.data.data           || 
+                chatDialogRes.data.data === 'None' ||
+                !chatDialogRes.data.success
             ) return null;
+
+            console.log( chatDialogRes )
 
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
@@ -128,19 +136,36 @@ export const getChatByIdAsync = createAsyncThunk(
                 (item: string) => item !== telegramId
             );
 
-            const now = Date.now();
-            const expiresAt = chatMetaRes.data.data.created_at + 24 * 60 * 60 * 1000;
-            const remainingMs = expiresAt - now;
+            const readedData = {
+                chatId: id,
+                userId: telegramId,
+                lastReadMessageId: chatMetaRes.data.data.last_message_id,
+            };
 
-            const timer = Math.max(0, Math.floor(remainingMs / 1000));
+            const needingReaded = !!chatMetaRes.data.data.last_message_id;
             
-            const interRes: AxiosResponse<FetchResponse<any>> = await api.get(`${USER_ENDPOINT}/${interId}`);
+            const [interRes, readedMsgsRes]:[
+                AxiosResponse<FetchResponse<any>>,
+                AxiosResponse<FetchResponse<any>> | undefined,
+            ] = await Promise.all([
+                api.get(`${USER_ENDPOINT}/${interId}`),
+                needingReaded ? api.patch(CHATS_READ_ENDPOINT, readedData) : undefined,
+            ])
+
+            console.log( readedMsgsRes, interRes )
 
             if (
                 interRes.status !== 200       ||
+                !interRes.data.success        ||
                 !interRes.data.data           ||
                 interRes.data.data === 'None' ||
-                !interRes.data.success
+                
+                readedMsgsRes !== undefined && (
+                    readedMsgsRes.status !== 200 ||
+                    !readedMsgsRes.data.success  ||
+                    !readedMsgsRes.data.data
+                )
+
             ) return null;
 
             const interlocutor: ChatInterlocutor = {
@@ -148,30 +173,48 @@ export const getChatByIdAsync = createAsyncThunk(
                 avatar: interRes.data.data.photos[0].url,
                 name: interRes.data.data.name,
                 age: interRes.data.data.age,
-                lineStat: ELineStatus.Offline,
+                lineStat: interRes.data.data.isOnline ? ELineStatus.Online : ELineStatus.Offline,
             };
 
-            console.log(chatMetaRes, chatDialogRes, interRes);
+            let chatDialog: TargetChatDay[] = []
 
-            if(
-                chatMetaRes.status === 200 &&
-                chatMetaRes.data.data &&
-                chatMetaRes.data.data !== 'None' &&
-                chatMetaRes.data.success &&
-                chatDialogRes.status === 200 
-                // chatDialogRes.data.data &&
-                // chatDialogRes.data.data !== 'None' &&
-                // chatDialogRes.data.success
-            ) {
-                return {
-                    id,
-                    timer,
-                    interlocutor,
-                    chatDialog: [],
-                }
+            console.log( chatDialogRes.data.data )
+
+            for(let item of chatDialogRes.data.data) {
+                const incommingMsg: IncomingMsg =  {
+                    chatId: item.chatId,
+                    created_at: item.created_at,
+                    fromUser: item.fromUser,
+                    id: item.id,
+                    is_read: readedMsgsRes?.data.success || false,
+                    text: item.text,
+                    updated_at: item.updated_at,
+                };
+
+                chatDialog = addMessageToChat(chatDialog, incommingMsg, interlocutor.id);
             }
 
-            return null;
+            const socketData = {
+                roomName: telegramId,
+                telegramId,    
+            };
+
+            const msgsScoketRes = await connectSocketRoom(WS_MSGS, ServerMethods.JoinRoom, socketData);
+
+            console.log( 'Socket: ', msgsScoketRes)
+
+            const now = Date.now();
+            const expiresAt = chatMetaRes.data.data.created_at + 24 * 60 * 60 * 1000;
+            const remainingMs = expiresAt - now;
+
+            const timer = Math.max(0, Math.floor(remainingMs / 1000));
+
+            return {
+                id,
+                timer,
+                interlocutor,
+                chatDialog,
+            }
         } catch (error) {
             return 'error';
         } finally {
@@ -218,7 +261,7 @@ export const deleteChatByIDAsync = createAsyncThunk(
 
             if(
                 response.status === 200 &&
-                response.data.data &&
+                response.data.data      &&
                 response.data.success
             ) return true;
 
@@ -270,6 +313,50 @@ export const sendMsgAsync = createAsyncThunk(
     } 
 );
 
+export const getMsgAsync = createAsyncThunk(
+    'chats/get-msg',
+    async (data: OnResNewMsg, {getState}): Promise<AsyncThunkRes<TargetChatDay[]>> => {
+        try {
+            const rootState = getState() as IState;
+            const userId = rootState.profile.info.id;
+
+            const readedData = {
+                chatId: data.chatId,
+                userId,
+                lastReadMessageId: data.messageId,
+            };
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.patch(CHATS_READ_ENDPOINT, readedData);
+
+            if (
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data
+            ) return null;
+
+            const incommingMsg: IncomingMsg = {
+                chatId: data.chatId,
+                fromUser: data.senderId,
+                id: data.messageId,
+                is_read: true,
+                text: data.text,
+                created_at: new Date().getTime(),
+                updated_at: data.timestamp,
+            }
+
+            const newChatDialog = addMessageToChat(
+                rootState.chats.targetChat.chatDialog,
+                incommingMsg,
+                data.senderId
+            );
+
+            return newChatDialog
+        } catch (error: any) {
+            return 'error'
+        }
+    }
+);
+
 export const setTypingStatAsync = createAsyncThunk(
     'chats/set-typing-stat',
     async (isTyping: boolean, {getState}): Promise<AsyncThunkRes<'success'>> => {
@@ -307,6 +394,25 @@ const chatsSlice = createSlice({
             state.chatsList = state.chatsList.filter(
                 item => item.id === action.payload
             )
+        },
+        socketAddMsgInChat: (state, action: PayloadAction<IncomingMsg>): void => {
+            const newDialog  = addMessageToChat(
+                state.targetChat.chatDialog,
+                action.payload,
+                state.targetChat.interlocutor?.id || 'recived',
+            );
+
+            state.targetChat.chatDialog = newDialog;
+        },
+        markedReadedMsgs: (state, action: PayloadAction<OnResReadMsg>): void => {
+            if(!action.payload.msgsId.length) return;
+
+            state.targetChat.chatDialog = markMessagesAsRead(state.targetChat.chatDialog, action.payload.msgsId[0]);
+        },
+        setInterLineStatus: (state, action: PayloadAction<ELineStatus>): void => {
+            if(state.targetChat.interlocutor?.lineStat) {
+                state.targetChat.interlocutor.lineStat = action.payload;
+            }
         },
     },
     extraReducers: builder => {
@@ -404,7 +510,6 @@ const chatsSlice = createSlice({
             console.log("Ошибка удаления чата по id");
         })
 
-        // sendMsgAsync, setTypingStatAsync
         // Отправка сообщения в чат
         builder.addCase(sendMsgAsync.pending, _ => {
             console.log("Отправка сообщения в чат");
@@ -425,6 +530,28 @@ const chatsSlice = createSlice({
         })
         builder.addCase(sendMsgAsync.rejected, _ => {
             console.log("Ошибка отправки сообщения");
+        })
+
+        // Получение сообщения в чат
+        builder.addCase(getMsgAsync.pending, _ => {
+            console.log("Получение сообщения в чат");
+        })
+        builder.addCase(getMsgAsync.fulfilled, (state, action: PayloadAction<AsyncThunkRes<TargetChatDay[]>>) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения сообщения");
+                    break;
+                case null:
+                    console.log("Сообщение не получено");
+                    break;
+                default:
+                    state.targetChat.chatDialog = action.payload;
+                    console.log("Успешное получения сообщения");
+                    break;
+            }
+        })
+        builder.addCase(getMsgAsync.rejected, _ => {
+            console.log("Ошибка получения сообщения");
         })
 
         // Установка статуса : "Печатает..."
@@ -450,5 +577,5 @@ const chatsSlice = createSlice({
     }
 })
 
-export const {deleteFavChatById, deleteChatById} = chatsSlice.actions;
+export const {deleteFavChatById, deleteChatById, socketAddMsgInChat, markedReadedMsgs, setInterLineStatus} = chatsSlice.actions;
 export default chatsSlice.reducer;

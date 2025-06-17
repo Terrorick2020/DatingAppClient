@@ -1,7 +1,9 @@
 import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { initLikesListAsync } from '@/store/slices/likesSlice';
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from 'motion/react';
+import { resetBadge } from '@/store/slices/settingsSlice';
+import { EBadgeType } from '@/types/settings.type';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -23,6 +25,7 @@ const LikesContent = (): JSX.Element => {
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
 
+            dispatch(resetBadge(EBadgeType.Likes));
             dispatch(initLikesListAsync());
         },
         []

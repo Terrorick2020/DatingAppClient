@@ -1,9 +1,13 @@
-import { JSX, useState } from 'react';
+import { JSX, useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { useDispatch, useSelector } from 'react-redux';
+import { initSliderListAsync } from '@/store/slices/questionnairesSlice';
+import { initialArgs } from '@/constant/quest';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
+import type { InitSliderData } from '@/types/quest.types';
+import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import SliderItem from './SliderItem';
@@ -15,6 +19,9 @@ const SliderPoster = (): JSX.Element => {
   const [index, setIndex] = useState<number>(0);
   const [offset, setOffset] = useState<number>(0);
   const [isSwiped, setIsSwiped] = useState<boolean>(false);
+
+  const block = useRef<InitSliderData>(initialArgs);
+  const isDopLoad = useRef<boolean>(false);
 
   const disOpt = sliderList.length <= 1;
 
@@ -69,7 +76,7 @@ const SliderPoster = (): JSX.Element => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<RootDispatch>();
 
   const toDetails = (id: string): void => {
     const toDetails = appRoutes.details.replace(':id', id);
@@ -79,6 +86,32 @@ const SliderPoster = (): JSX.Element => {
       dispatch(addRoute(location.pathname));
     }, 100); 
   }
+
+  const handleDopLoad = async (): Promise<void> => {
+    const buffer = 4;
+    const shouldLoadMore = sliderList.length > 0 && index >= sliderList.length - buffer;
+
+    if (!shouldLoadMore || isDopLoad.current) return;
+
+    isDopLoad.current = true;
+
+    const newData: InitSliderData = {
+      limit: block.current.limit,
+      offset: block.current.offset + initialArgs.offset,
+    };
+
+    const response = await dispatch(initSliderListAsync(newData)).unwrap();
+
+    if (response && response !== 'error') {
+      block.current = newData;
+    }
+
+    isDopLoad.current = false;
+  };
+
+  useEffect(() => {
+    handleDopLoad();
+  }, [index]);
 
   if(!sliderList.length) return (
     <div className="empty">
