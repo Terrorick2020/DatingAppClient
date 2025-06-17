@@ -1,4 +1,4 @@
-import { ReactNode, MouseEvent } from 'react';
+import { ReactNode, MouseEvent, HTMLAttributes } from 'react';
 import { PhotoItem } from './profile.types';
 
 
@@ -25,7 +25,7 @@ export interface PropsLikeBtn {
     clickLike?: () => void
 }
 
-export interface PropsListBlock {
+export interface PropsListBlock extends HTMLAttributes<HTMLDivElement> {
     img: string
     route: string
     children: ReactNode
