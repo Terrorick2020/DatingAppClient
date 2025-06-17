@@ -8,7 +8,6 @@ import {
     useRef,
 } from 'react';
 
-import { Picker } from 'emoji-mart'
 import type { PropsChatInput } from '@/types/ui.types';
 
 import TextField from '@mui/material/TextField';
@@ -16,12 +15,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import IconButton from '@mui/joy/IconButton';
 import SvgSend from '@/assets/icon/send.svg';
-import data from '@emoji-mart/data'
 
 
 const ChatInput = memo((props: PropsChatInput): JSX.Element => {
-    const [showPicker, setShowPicker] = useState<boolean>(false);
-    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
