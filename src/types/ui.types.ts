@@ -2,6 +2,12 @@ import { ReactNode, MouseEvent, HTMLAttributes } from 'react';
 import { PhotoItem } from './profile.types';
 
 
+export enum EPopOrigHor {
+    Center = 'center',
+    Left = 'left',
+    Right = 'right',
+}
+
 export enum PlanLabelSvgType {
     ordinary = 'ordinary',
     success = 'success',

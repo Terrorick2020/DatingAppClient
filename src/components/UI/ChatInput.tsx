@@ -5,8 +5,10 @@ import {
     KeyboardEvent,
     useCallback,
     useState,
+    useEffect,
 } from 'react';
 
+import { EPopOrigHor } from '@/types/ui.types';
 import type { PropsChatInput, EmojiData } from '@/types/ui.types';
 
 import TextField from '@mui/material/TextField';
@@ -22,6 +24,8 @@ import ru from '@emoji-mart/data/i18n/ru.json';
 
 const ChatInput = memo((props: PropsChatInput): JSX.Element => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [emojiCount, setEmojiCount] = useState<number>(9);
+    const [origHor, setOrigHor] = useState<EPopOrigHor>(EPopOrigHor.Right);
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>): void => {
         setAnchorEl(event.currentTarget);
@@ -54,6 +58,24 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
 
     const handleFocus = (): void => props.handleFocus();
     const handleBlur  = (): void => props.handleBlur();
+
+    const handleResize = (): void => {
+        if(window.innerWidth < 400) {
+            setEmojiCount(6);
+            setOrigHor(EPopOrigHor.Center);
+        };
+    };
+
+    useEffect(() => {
+        if(window.innerWidth < 400) {
+            setEmojiCount(6);
+            setOrigHor(EPopOrigHor.Right);
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
@@ -93,6 +115,7 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
             />
             <Popover
                 id={id}
+                className="emoji"
                 open={open}
                 anchorEl={anchorEl}
                 anchorOrigin={{
@@ -101,7 +124,7 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
                 }}
                 transformOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'right',
+                    horizontal: origHor,
                 }}
                 onClose={handlePopoverClose}
                 disableRestoreFocus
@@ -112,6 +135,7 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
                     locale="en"
                     i18n={ru}
                     onEmojiSelect={handleEmojiSelect}
+                    perLine={emojiCount}
                 />
             </Popover>
         </div>
