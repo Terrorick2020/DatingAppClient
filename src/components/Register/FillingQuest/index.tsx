@@ -29,7 +29,10 @@ import FillingQuestSelectionSex from './SelectionSex';
 
 
 const FillingQuestContent = (): JSX.Element => {
-    const isLoad = useSelector((state: IState) => state.settings.load);
+    const [isFirstly, isLoad] = useSelector((state: IState) => [
+        state.settings.isFirstly,
+        state.settings.load
+    ]);
     const profileInfo = useSelector((state: IState) => state.profile.info);
     const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
     
@@ -43,10 +46,12 @@ const FillingQuestContent = (): JSX.Element => {
     const initFQCtx = async (): Promise<void> => {
         dispatch(setLoad(true));
 
-        const profRes = await dispatch(getSelfProfile()).unwrap();
+        if(!isFirstly) {
+            const profRes = await dispatch(getSelfProfile()).unwrap();
 
-        if(profRes && profRes !== 'error') {
-            setBtnCtx(fQBtnText[KeyFQBtnText.Other]);
+            if(profRes && profRes !== 'error') {
+                setBtnCtx(fQBtnText[KeyFQBtnText.Other]);
+            }
         }
 
         await dispatch(initFillingQuestAsync());

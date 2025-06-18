@@ -12,7 +12,10 @@ import SvgVideoHelpers from '@/assets/icon/video-how-this-worked.svg';
 
 
 const EPLayout = (): JSX.Element => {
-    const isLoad = useSelector((state: IState) => state.settings.load);
+    const [isFirstly, isLoad] = useSelector((state: IState) => [
+        state.settings.isFirstly,
+        state.settings.load
+    ]);
     const mediaLink = useSelector((state: IState) => state.settings.mediaLink);
 
     const dispatch = useDispatch<RootDispatch>();
@@ -26,7 +29,7 @@ const EPLayout = (): JSX.Element => {
 
     useEffect( () => { 
         dispatch(initEPCtxAsync());
-        dispatch(getSelfPlansAsync());
+        !isFirstly && dispatch(getSelfPlansAsync());
     }, []);
 
     if (isLoad) return (

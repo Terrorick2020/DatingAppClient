@@ -41,6 +41,7 @@ import {
 
 import {
     setLoad,
+    setIsFirstly,
     setApiRes,
     addPhotoInCashe,
     delPhotoInCashe,
@@ -110,15 +111,23 @@ export const initProfileAsync = createAsyncThunk(
             const response: AxiosResponse<FetchResponse<EProfileStatus>> = await api.post(INITIAL_ENDPOINT, data);
 
             if(
-                response.status === 200 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
-                response.data.success
-            ) return response.data.data;
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) {
+                dispatch(setIsFirstly(true));
 
-            return null;
+                return null;
+            };
+
+            dispatch(setIsFirstly(false));
+
+            return response.data.data;
 
         } catch (error) {
+            dispatch(setIsFirstly(true));
+
             return 'error';
         }
     }
