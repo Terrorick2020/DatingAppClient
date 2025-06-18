@@ -63,7 +63,11 @@ const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
 
         setIsLoading(prev => ({ ...prev, accept: true }));
 
-        await dispatch(acceptLikingAsync(props.likesItem.id));
+        const response = await dispatch(acceptLikingAsync(props.likesItem.id)).unwrap();
+
+        if(response && response !== 'error') {
+            dispatch(deleteById(props.likesItem.id));
+        }
 
         setIsLoading(prev => ({ ...prev, accept: false }));
     }

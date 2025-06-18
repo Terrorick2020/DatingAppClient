@@ -26,6 +26,8 @@ const UsersListMain = (): JSX.Element => {
     const dispatch = useDispatch<RootDispatch>();
 
     const handleDopLoad = async (): Promise<void> => {
+        if(adminState.profilesList.length % initialArgs.limit !== 0) return;
+
         isDopLoad.current = true;
 
         const newData: InitSliderData = {

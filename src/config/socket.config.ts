@@ -74,14 +74,28 @@ export const connectSocketRoom = (
   namespace: string,
   connectType: ServerMethods,
   data: ReqConnectionDto,
+  timeoutMs = 3000, // таймаут по умолчанию 3 сек
 ): Promise<ResConnectionDto | null> => {
   const socket: Socket = sockets[namespace];
 
-  if (!socket) return Promise.resolve(null);
+  if (!socket || !socket.connected) return Promise.resolve(null);
 
   return new Promise((resolve) => {
+    let isResolved = false;
+
+    const timeout = setTimeout(() => {
+      if (!isResolved) {
+        isResolved = true;
+        resolve(null);
+      }
+    }, timeoutMs);
+
     socket.emit(connectType, data, (response: ResConnectionDto) => {
-      resolve(response);
+      if (!isResolved) {
+        isResolved = true;
+        clearTimeout(timeout);
+        resolve(response);
+      }
     });
   });
 };
