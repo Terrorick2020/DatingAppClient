@@ -28,7 +28,6 @@ import {
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoad } from './settingsSlice';
-import { delay } from '@/funcs/general.funcs';
 import { formatTimestamp } from '@/funcs/general.funcs';
 import { initialArgs } from '@/constant/quest';
 import type { InitSliderData } from '@/types/quest.types';
@@ -114,9 +113,7 @@ export const getProfilesListAsync = createAsyncThunk(
 export const getUniqueLinkAsync = createAsyncThunk(
     'admin/get-unique-link',
     async (): Promise<AsyncThunkRes<string>> =>{
-        try {
-            await delay(1000);
-    
+        try {    
             const response = 'https://t.me/a/psych/s/3339d25d-5fdfd-4dfdf8d-b442-30aadfdf2b4e8';
     
             return response;
@@ -199,8 +196,6 @@ export const addPhotoToUserAsync = createAsyncThunk(
     'admin/add-photo-to-user',
     async (data: SavePhotoAsyncThuncData, {getState}): Promise<AsyncThunkRes<PhotoItem>> => {
         try {
-            await delay(2000);
-
             const rootState = getState() as IState;
             const toUser = rootState.admin.targetProfile.id;
     
@@ -256,7 +251,6 @@ export const delPhotoToUserAsync = createAsyncThunk(
     'admin/del-photo-to-user',
     async (id: string, { getState }): Promise<AsyncThunkRes<string>> => {
         try {
-            await delay(2000);
             const rootState = getState() as IState;
             const telegramId = rootState.admin.targetProfile.id;
 

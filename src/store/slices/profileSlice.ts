@@ -478,7 +478,7 @@ export const selectSelfPsychAsync = createAsyncThunk(
     'profile/select-self-psych',
     async (id: string): Promise<AsyncThunkRes<string>> => {
         try {
-            await delay(2000);
+            await delay(1000);
 
             return id;
         } catch (error) {
