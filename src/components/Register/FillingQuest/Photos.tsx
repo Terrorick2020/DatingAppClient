@@ -1,4 +1,4 @@
-import { JSX, useEffect } from 'react';
+import { JSX, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFQErrors } from '@/store/slices/settingsSlice';
@@ -15,6 +15,8 @@ import Photos from '@/components/UI/Photos';
 const FillingQuestPhotos = (): JSX.Element => {
     const photos = useSelector((state: IState) => state.profile.info.photos);
     const fqErrors = useSelector((state: IState) => state.settings.fQErrors);
+
+    const hasDelete = useRef<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
@@ -45,10 +47,14 @@ const FillingQuestPhotos = (): JSX.Element => {
     };
 
     const handleDel = async (id: string): Promise<void> => {
+        hasDelete.current = true;
+        
         await dispatch(deleteSelfPhotoAsync(id));
     };
 
     useEffect(() => {
+        if(!hasDelete.current) return;
+
         !photos.length && dispatch(setFQErrors({
             ...fqErrors,
             photErr: {

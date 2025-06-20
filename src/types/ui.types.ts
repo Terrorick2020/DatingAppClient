@@ -28,6 +28,7 @@ export interface ClearBtnProps {
 
 export interface PropsLikeBtn {
     id: string
+    isReject?: boolean
     clickLike?: () => void
 }
 

@@ -22,6 +22,7 @@ export const defNamespaces = [WS_COMPL, WS_MATCH, WS_CHATS, WS_LIKES];
 
 export const connectToNamespace = async (namespace: string, isApi?: boolean): Promise<Socket> => {
   if (!sockets[namespace]) {
+
     const socket = io(`${isApi ? BASE_URL : WS_URL}/${namespace}`, {
       autoConnect: false,
       reconnection: true,

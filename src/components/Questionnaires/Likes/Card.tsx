@@ -7,6 +7,12 @@ import {
     MouseEvent,
 } from 'react';
 
+import {
+    ERejectLikingType,
+    type PropsLikesCard,
+    type LikesCardIsLoading,
+} from '@/types/likes.types';
+
 import { useNavigate, useLocation } from 'react-router-dom';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
@@ -14,7 +20,6 @@ import { ageToStr, formatTimeLeftOther } from '@/funcs/general.funcs';
 import { useDispatch } from 'react-redux';
 import { deleteById } from '@/store/slices/likesSlice';
 import { acceptLikingAsync, rejectLikingAsync } from '@/store/slices/likesSlice';
-import type { PropsLikesCard, LikesCardIsLoading } from '@/types/likes.types';
 import type { RootDispatch } from '@/store';
 
 import Timer from '@/components/UI/Timer';
@@ -67,7 +72,7 @@ const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
 
         if(response && response !== 'error') {
             dispatch(deleteById(props.likesItem.id));
-        }
+        };
 
         setIsLoading(prev => ({ ...prev, accept: false }));
     }
@@ -77,7 +82,14 @@ const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
 
         setIsLoading(prev => ({ ...prev, reject: true }));
 
-        await dispatch(rejectLikingAsync(props.likesItem.id));
+        const response =  await dispatch(rejectLikingAsync({
+            id: props.likesItem.id,
+            type: ERejectLikingType.Reverse,
+        })).unwrap();
+
+        if(response && response !== 'error') {
+            dispatch(deleteById(props.likesItem.id));
+        };
 
         setIsLoading(prev => ({ ...prev, reject: false }));
     }
