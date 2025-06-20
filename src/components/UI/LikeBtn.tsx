@@ -1,4 +1,4 @@
-import { JSX, memo, useState, MouseEvent } from 'react';
+import { JSX, memo, useState, useEffect, useMemo, MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { acceptLikingAsync } from '@/store/slices/likesSlice';
 import type { PropsLikeBtn } from '@/types/ui.types';
@@ -6,12 +6,22 @@ import type { RootDispatch } from '@/store';
 
 import Button from '@mui/material/Button';
 import SvgHeartsBtn from '@/assets/icon/hearts-btn.svg';
+import SvgClose from '@/assets/icon/close.svg';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
     const [disabled, setDisabled] = useState<boolean>(false);
+    const [isReject, setIsReject] = useState<boolean>(false);
+    const [load, setLoad] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
+
+    useEffect(() => {
+        if(!props.isReject) return;
+
+        setIsReject(props.isReject);
+    }, [props.isReject]);
 
     const animatedBtn = (): Promise<void> => {
         return new Promise((resolve) => {
@@ -26,6 +36,7 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
             };
 
             heartHtml.addEventListener('animationend', handleAnimationEnd);
+            void heartHtml.offsetWidth;
             heartHtml.style.animation = 'heart-top 1.5s ease-in-out forwards';
         });
     };
@@ -34,32 +45,48 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
         event.currentTarget.blur();
 
         setDisabled(true);
+        setLoad(true);
 
-        const [_, _acceptRes] = await Promise.all([
-            animatedBtn(),
-            dispatch(acceptLikingAsync( props.id )).unwrap(),
-        ])
+        const acceptRes = await dispatch(acceptLikingAsync(props.id)).unwrap();
 
-        if(props.clickLike) props.clickLike();
+        if(
+            acceptRes &&
+            acceptRes !== 'error' &&
+            props.clickLike
+        ) {
+            setLoad(false);
+
+            await animatedBtn();
+
+            props.clickLike()
+        };
 
         setDisabled(false);
     }
+
+    const SvgIcon = useMemo(() => {
+        if(load) return <CircularProgress size="22px" />;
+        const imgUrl = isReject ? SvgClose :  SvgHeartsBtn;
+        const addClass = isReject ? 'reject' : 'accept';
+        
+        return <img className={ addClass } src={ imgUrl } alt="like-btn" />;
+    }, [load, isReject]);
 
     return (
         <>
             <div
                 className="heart"
-                id={ `heart-${ props.id }` }
+                id={ `heart-${props.id}` }
             >
                 <i className="fa-solid fa-heart"></i>
             </div>
             <Button
-                disabled={disabled}
-                className="icon-btn like-btn"
+                disabled={ disabled }
+                className={ `icon-btn like-btn ${isReject ? 'purple' : ''}` }
                 variant="contained"
                 onClick={ sendLiking }
-            >
-                <img src={ SvgHeartsBtn } alt="hearts-btn" />
+            >   
+                { SvgIcon }
             </Button>
         </>
     )

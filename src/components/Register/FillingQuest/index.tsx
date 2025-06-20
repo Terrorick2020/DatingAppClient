@@ -1,7 +1,7 @@
 import { JSX, useEffect, useState } from 'react';
 import { addRoute, initFillingQuestAsync } from '@/store/slices/settingsSlice';
-import { type FQBtnTextItem, KeyFQBtnText } from '@/types/register.typs';
 import { setLoad } from '@/store/slices/settingsSlice';
+import { createSelector } from 'reselect';
 import { useSelector, useDispatch } from 'react-redux';
 import { toPlans } from '@/config/routes.config';
 import { setFQErrors } from '@/store/slices/settingsSlice';
@@ -12,6 +12,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { fQBtnText } from '@/constant/register';
 import { Slide } from 'react-awesome-reveal';
 import { signUpProfileAsync, getSelfProfile } from '@/store/slices/profileSlice';
+import { type FQBtnTextItem, KeyFQBtnText } from '@/types/register.typs';
 import { type FQErrorsItem, EAnimeDirection } from '@/types/settings.type';
 import type { IState } from '@/types/store.types';
 
@@ -28,10 +29,21 @@ import FillingQuestInterests from './Interests';
 import FillingQuestSelectionSex from './SelectionSex';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectProfile = (state: IState) => state.profile;
+
+const selectComplListState = createSelector(
+    [selectSettings, selectProfile],
+    (settings, profile) => ({
+      isFirstly: settings.isFirstly,
+      isLoad: settings.load,
+      fQErrors: settings.fQErrors,
+      profileInfo: profile.info,
+    })
+);
+
 const FillingQuestContent = (): JSX.Element => {
-    const isLoad = useSelector((state: IState) => state.settings.load);
-    const profileInfo = useSelector((state: IState) => state.profile.info);
-    const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
+    const { isFirstly, isLoad, fQErrors, profileInfo } = useSelector(selectComplListState);
     
     const [regLoad, setRegLoad] = useState<boolean>(false);
     const [btnCtx, setBtnCtx] = useState<FQBtnTextItem>(fQBtnText[KeyFQBtnText.First]);
@@ -43,10 +55,12 @@ const FillingQuestContent = (): JSX.Element => {
     const initFQCtx = async (): Promise<void> => {
         dispatch(setLoad(true));
 
-        const profRes = await dispatch(getSelfProfile()).unwrap();
+        if(!isFirstly) {
+            const profRes = await dispatch(getSelfProfile()).unwrap();
 
-        if(profRes && profRes !== 'error') {
-            setBtnCtx(fQBtnText[KeyFQBtnText.Other]);
+            if(profRes && profRes !== 'error') {
+                setBtnCtx(fQBtnText[KeyFQBtnText.Other]);
+            }
         }
 
         await dispatch(initFillingQuestAsync());

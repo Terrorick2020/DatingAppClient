@@ -19,7 +19,7 @@ const PlansVars = memo((props: PropsPlansVars): JSX.Element => {
             ...plan,
             value: newValue
         }))
-    }
+    };
 
     if(!props.plansVars.length) return (<></>);
 

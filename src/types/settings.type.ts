@@ -114,6 +114,7 @@ export interface BadgeBlock {
 }
 
 export interface SettingsState {
+    isFirstly: boolean
     routes: string[]
     lang:  ELanguage
     load: boolean

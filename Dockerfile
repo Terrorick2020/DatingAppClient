@@ -1,17 +1,19 @@
-FROM oven/bun:1.0.25-alpine
-
-RUN apk add --no-cache nodejs npm
+# Сборочный этап
+FROM node:22-alpine AS builder
 
 WORKDIR /client
 
 COPY package.json .
 
-RUN bun install --no-progress
+COPY package.json ./
+RUN npm install --legacy-peer-deps
 
 COPY . .
-
 RUN npm run build
 
+# Этап продакшена — через nginx
+FROM nginx:stable-alpine
+COPY --from=builder /client/node_modules ./node_modules
+COPY --from=builder /client/dist /usr/share/nginx/html
 EXPOSE 4173
-
-CMD ["bun", "run", "preview"]
+CMD ["nginx", "-g", "daemon off;"]

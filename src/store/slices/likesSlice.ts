@@ -1,10 +1,18 @@
+import {
+    ERejectLikingType,
+    type LikesState,
+    type LikesItem,
+    type LikesMatch,
+    type RejectLikingData,
+} from '@/types/likes.types';
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { LIKES_ENDPOINT, USER_ENDPOINT, CHATS_ADD_MSG_ENDPOINT } from '@/config/env.config';
-import { setLoad } from './settingsSlice';
+import { setLoad, setApiRes } from './settingsSlice';
 import { PlanLabelSvgType } from '@/types/ui.types';
+import { EApiStatus } from '@/types/settings.type';
 import { type FetchResponse, EFetchLikesTProps } from '@/types/fetch.type';
 import type { OnResNewMatch } from '@/types/socket.types';
-import type { LikesState, LikesItem, LikesMatch } from '@/types/likes.types';
 import type { AxiosResponse } from 'axios';
 import type { IState, AsyncThunkRes } from '@/types/store.types';
 
@@ -72,7 +80,7 @@ export const initLikesListAsync = createAsyncThunk(
 
 export const acceptLikingAsync = createAsyncThunk(
     'likes/accept-liking',
-    async (toUserId: string, { getState }): Promise<AsyncThunkRes<boolean>> => {
+    async (toUserId: string, { getState, dispatch }): Promise<AsyncThunkRes<boolean>> => {
         try {
             const rootState = getState() as IState;
             const fromUserId = rootState.profile.info.id;
@@ -87,7 +95,16 @@ export const acceptLikingAsync = createAsyncThunk(
             if (
                 response.status !== 201  ||
                 !response.data.success
-            ) return null;
+            ) {
+                dispatch(setApiRes({
+                    value: true,
+                    msg: 'Не удалось отправить симпатию',
+                    status: EApiStatus.Warning,
+                    timestamp: Date.now(),
+                }));
+
+                return null;
+            }
 
             return true;
         } catch (error) {
@@ -98,14 +115,24 @@ export const acceptLikingAsync = createAsyncThunk(
 
 export const rejectLikingAsync = createAsyncThunk(
     'likes/reject-liking',
-    async (id: string, { getState }): Promise<AsyncThunkRes<boolean>> => {
+    async (data: RejectLikingData, { getState }): Promise<AsyncThunkRes<boolean>> => {
         try {
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
 
-            const delLikingEndpoint = `${LIKES_ENDPOINT}/${telegramId}/${id}`;
+            let url: string;
 
-            const response: AxiosResponse<FetchResponse<string>> = await api.delete(delLikingEndpoint);
+            switch(data.type) {
+                case ERejectLikingType.Direct:
+                    url = `${LIKES_ENDPOINT}/${telegramId}/${data.id}`;
+                    break;
+                case ERejectLikingType.Reverse:
+                    url = `${LIKES_ENDPOINT}/${data.id}/${telegramId}`;
+                    break;
+            }
+
+
+            const response: AxiosResponse<FetchResponse<null>> = await api.delete(url);
 
             return response.data.success;
         } catch (error) {

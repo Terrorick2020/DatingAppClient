@@ -66,8 +66,15 @@ const DefaultLayout = memo((): JSX.Element => {
     useEffect( () => {
         handleSocketConnect();
 
+        window.addEventListener('beforeunload', handleSocketDisconnect);
+
+        if (typeof window.Telegram?.WebApp?.onEvent === 'function') {
+            (window.Telegram.WebApp as any).onEvent('close', handleSocketDisconnect);
+        };
+
         return () => {
             handleSocketDisconnect();
+            window.removeEventListener('beforeunload', handleSocketDisconnect);
         }
     }, [] );
 

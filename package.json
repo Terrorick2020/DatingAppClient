@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "bun run vite",
-    "build": "bunx tsc -b && bun run vite build",
-    "preview": "bun run vite preview"
+    "build": "npx tsc -b && npm run vite build",
+    "build:ret": "npm run build && npx postcss dist/main.css -o dist/main.css && npx html-minifier-terser dist/index.html --collapse-whitespace --remove-comments --remove-optional-tags --minify-css true --minify-js true -o dist/index.html",
+    "preview": "npx run vite preview"
   },
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-alpha.6",
@@ -46,8 +47,11 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "cssnano": "^7.0.7",
     "globals": "^16.0.0",
-    "postcss": "^8.5.3",
+    "html-minifier-terser": "^7.2.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
     "react-material-ui-carousel": "^3.4.2",
     "sass": "^1.85.1",
     "typescript": "~5.8.2",

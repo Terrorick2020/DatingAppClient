@@ -41,7 +41,7 @@ import {
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { connectSocketRoom } from '@/config/socket.config';
 import { ServerMethods } from '@/types/socket.types';
-import { setInfo } from './profileSlice';
+import { setInfo, setPlan } from './profileSlice';
 import type { FetchResponse } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
 
@@ -49,6 +49,7 @@ import api from '@/config/fetch.config';
 
 
 export const initialState: SettingsState = {
+    isFirstly: true,
     routes: [],
     lang: ELanguage.Russian,
     load: false,
@@ -269,7 +270,7 @@ export const initEPCtxAsync = createAsyncThunk(
 
             const data = {
                 cityId: targetCity.id,
-            }
+            };
 
             const [plansRes, districtsRes]: [
                 plansRes: AxiosResponse<FetchResponse<BaseVarsItem[]>>,
@@ -288,9 +289,19 @@ export const initEPCtxAsync = createAsyncThunk(
                 districtsRes.data.data &&
                 districtsRes.data.data !== 'None' &&
                 districtsRes.data.success
-            ) return {
-                plans: plansRes.data.data,
-                districts: districtsRes.data.data,
+            ) {
+                const isFirstly = rootState.settings.isFirstly;
+                const plan = rootState.profile.eveningPlans.plan;
+
+                isFirstly && dispatch(setPlan({
+                    ...plan,
+                    value: plansRes.data.data[0].value,
+                }))
+
+                return {
+                    plans: plansRes.data.data,
+                    districts: districtsRes.data.data,
+                }
             }
 
             return null;
@@ -364,6 +375,9 @@ const settingsSlice = createSlice({
     name: 'settings',
     initialState,
     reducers: {
+        setIsFirstly: (state, action: PayloadAction<boolean>): void => {
+            state.isFirstly = action.payload;
+        },
         setLang: (state, action: PayloadAction<ELanguage>): void => {
             state.lang = action.payload;
         },
@@ -578,6 +592,7 @@ const settingsSlice = createSlice({
 });
 
 export const {
+    setIsFirstly,
     setLang,
     addRoute,
     dellRoute,

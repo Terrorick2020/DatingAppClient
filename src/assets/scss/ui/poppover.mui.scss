@@ -1,0 +1,10 @@
+.MuiPopover-root  {
+    &.emoji {
+        .MuiPaper-root {
+            div {
+                background: rgb(22, 22, 22);
+                overflow: auto;
+            }
+        }
+    }
+}

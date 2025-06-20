@@ -40,3 +40,13 @@ export interface LikesCardIsLoading {
     reject: boolean
     accept: boolean
 }
+
+export enum ERejectLikingType {
+    Direct = 'Direct',
+    Reverse = 'Reverse',
+}
+
+export interface RejectLikingData {
+    id: string
+    type: ERejectLikingType
+}

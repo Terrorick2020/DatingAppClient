@@ -34,6 +34,7 @@ const SliderPoster = (): JSX.Element => {
 
     if (newIndex < 0) newIndex = sliderList.length - 1;
     if (newIndex >= sliderList.length) newIndex = 0;
+    
     setIndex(newIndex);
     setOffset(0);
     setIsSwiped(false);
@@ -92,6 +93,8 @@ const SliderPoster = (): JSX.Element => {
   }
 
   const handleDopLoad = async (): Promise<void> => {
+    if(sliderList.length % initialArgs.limit !== 0) return;
+
     const buffer = 4;
     const shouldLoadMore = sliderList.length > 0 && index >= sliderList.length - buffer;
 

@@ -1,6 +1,7 @@
 import { JSX, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { addRoute, initEPCtxAsync } from '@/store/slices/settingsSlice';
+import { createSelector } from 'reselect';
 import { getSelfPlansAsync } from '@/store/slices/profileSlice';
 import { toMedia } from '@/config/routes.config';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,9 +12,19 @@ import MyLoader from '@/components/UI/MyLoader';
 import SvgVideoHelpers from '@/assets/icon/video-how-this-worked.svg';
 
 
+const selectSettings = (state: IState) => state.settings;
+
+const selectEPState = createSelector(
+    [ selectSettings ],
+    ( settings ) => ({
+      isFirstly: settings.isFirstly,
+      isLoad: settings.load,
+      mediaLink: settings.mediaLink,
+    })
+);
+
 const EPLayout = (): JSX.Element => {
-    const isLoad = useSelector((state: IState) => state.settings.load);
-    const mediaLink = useSelector((state: IState) => state.settings.mediaLink);
+    const { isFirstly, isLoad, mediaLink } = useSelector(selectEPState);
 
     const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();
@@ -26,7 +37,7 @@ const EPLayout = (): JSX.Element => {
 
     useEffect( () => { 
         dispatch(initEPCtxAsync());
-        dispatch(getSelfPlansAsync());
+        !isFirstly && dispatch(getSelfPlansAsync());
     }, []);
 
     if (isLoad) return (
