@@ -4,6 +4,7 @@ import {
     useState,
     useCallback,
     useEffect,
+    KeyboardEvent,
 } from 'react';
 
 import { getCroppedImg } from '@/funcs/img.funcs';
@@ -71,6 +72,17 @@ const PhotosCropperDialog = memo((props: PropsPhotosCropperDialog): JSX.Element 
         }
     };
 
+    const handleKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>): void => {
+        if (!props.open) return;
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            handleClose();
+        } else if (event.key === 'Enter') {
+            event.preventDefault();
+            handleCropPhoto();
+        }
+    }, [props.open, croppedAreaPixels]);
+
     useEffect(() => {
         return () => { URL.revokeObjectURL(props.photo) };
     }, [props.photo]);
@@ -82,6 +94,7 @@ const PhotosCropperDialog = memo((props: PropsPhotosCropperDialog): JSX.Element 
             aria-describedby="alert-dialog-photos-cropper"
             open={props.open}
             onClose={handleClose}
+            onKeyDown={handleKeyDown}
             slots={{ transition: Slide }}
             slotProps={{
                 transition: {
