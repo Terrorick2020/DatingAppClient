@@ -97,7 +97,7 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
-            const telegramId = getTgID() || '9911165';
+            const telegramId = getTgID() || '3799365';
 
             if(!telegramId) return 'error';
 
@@ -321,6 +321,8 @@ export const signUpProfileAsync = createAsyncThunk(
                     status: EApiStatus.Success,
                     timestamp: Date.now(),
                 }));
+
+                console.log(response);
 
                 dispatch(resetPhotosCashe());
                 

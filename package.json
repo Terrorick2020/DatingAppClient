@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run vite",
-    "build": "npx tsc -b && npm run vite build",
-    "build:ret": "npm run build && npx postcss dist/main.css -o dist/main.css && npx html-minifier-terser dist/index.html --collapse-whitespace --remove-comments --remove-optional-tags --minify-css true --minify-js true -o dist/index.html",
+    "build": "npx tsc -b && npm run vite build && npx postcss dist/main.css -o dist/main.css && npx html-minifier-terser dist/index.html --collapse-whitespace --remove-comments --remove-optional-tags --minify-css true --minify-js true -o dist/index.html",
     "preview": "npx run vite preview"
   },
   "dependencies": {

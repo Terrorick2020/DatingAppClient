@@ -21,6 +21,8 @@ const DetailsSlider = (): JSX.Element => {
     const [fade, setFade] = useState<boolean>(true);
 
     const changeSlide = useCallback((newIndex: number): void => {
+        if(photos.length <= 1) return;
+        
         setFade(false);
         setTimeout(() => {
             setIndex(newIndex)

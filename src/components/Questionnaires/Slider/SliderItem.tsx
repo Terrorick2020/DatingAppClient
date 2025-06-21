@@ -34,14 +34,23 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
         <div
             className="slide"
             style={{
-                backgroundImage: `url(${ props.sliderItem.photos[index] })`,
+                backgroundImage: `
+                    linear-gradient(
+                        to bottom,
+                        rgba(0, 0, 0, 1) 0%,
+                        rgba(0, 0, 0, 0) 10%,
+                        rgba(0, 0, 0, 0) 65%,
+                        rgba(0, 0, 0, 1) 100%
+                    ),
+                    url(${ props.sliderItem.photos[index] })
+                `,
                 opacity: fade ? 1 : 0.25,
             }}
         >
             <nav className="slide__nav">
-                <span className="item" onClick={ prevPhoto }></span>
-                <span className="item" onMouseUp={() => props.toDetails(props.sliderItem.id) }></span>
-                <span className="item" onClick={ nextPhoto }></span>
+                <span className="item" onClick={ prevPhoto } />
+                <span className="item" onMouseUp={() => props.toDetails(props.sliderItem.id) } />
+                <span className="item" onClick={ nextPhoto } />
             </nav>
             <header className="slide__header">
                 <ScrollBar len={props.sliderItem.photos.length} index={index} />

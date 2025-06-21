@@ -44,8 +44,8 @@ const DetailsSlide = memo((props: PropsDetailsSlide): JSX.Element => {
                 </nav>
             </header>
             <main>
-                <span onClick={props.toLeftScroll}></span>
-                <span onClick={props.toRightScroll}></span>
+                <span onClick={props.toLeftScroll} />
+                <span onClick={props.toRightScroll} />
             </main>
             <footer>
                 <h4 className="headline">

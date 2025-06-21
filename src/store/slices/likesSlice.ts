@@ -108,6 +108,13 @@ export const acceptLikingAsync = createAsyncThunk(
 
             return true;
         } catch (error) {
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Не удалось отправить симпатию',
+                status: EApiStatus.Warning,
+                timestamp: Date.now(),
+            }));
+
             return 'error';
         }
     }
@@ -115,7 +122,7 @@ export const acceptLikingAsync = createAsyncThunk(
 
 export const rejectLikingAsync = createAsyncThunk(
     'likes/reject-liking',
-    async (data: RejectLikingData, { getState }): Promise<AsyncThunkRes<boolean>> => {
+    async (data: RejectLikingData, { getState, dispatch }): Promise<AsyncThunkRes<boolean>> => {
         try {
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
@@ -134,8 +141,29 @@ export const rejectLikingAsync = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<null>> = await api.delete(url);
 
+            console.log( response );
+
+            if (
+                response.status !== 200 ||
+                !response.data.success
+            ) {
+                dispatch(setApiRes({
+                    value: true,
+                    msg: 'Не удалось отклонить симпатию',
+                    status: EApiStatus.Warning,
+                    timestamp: Date.now(),
+                }));
+            };
+
             return response.data.success;
         } catch (error) {
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Не удалось отклонить симпатию',
+                status: EApiStatus.Warning,
+                timestamp: Date.now(),
+            }));
+
             return 'error';
         }
     }

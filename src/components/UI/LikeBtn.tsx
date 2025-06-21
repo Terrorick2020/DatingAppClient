@@ -1,6 +1,7 @@
 import { JSX, memo, useState, useEffect, useMemo, MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { acceptLikingAsync } from '@/store/slices/likesSlice';
+import { acceptLikingAsync, rejectLikingAsync } from '@/store/slices/likesSlice';
+import { ERejectLikingType } from '@/types/likes.types';
 import type { PropsLikeBtn } from '@/types/ui.types';
 import type { RootDispatch } from '@/store';
 
@@ -47,22 +48,28 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
         setDisabled(true);
         setLoad(true);
 
-        const acceptRes = await dispatch(acceptLikingAsync(props.id)).unwrap();
+        const acceptRes = isReject
+            ? await dispatch(rejectLikingAsync({
+                id: props.id,
+                type: ERejectLikingType.Direct,
+              })).unwrap()
+            : await dispatch(acceptLikingAsync(props.id)).unwrap();
 
         if(
             acceptRes &&
             acceptRes !== 'error' &&
             props.clickLike
         ) {
-            setLoad(false);
-
             await animatedBtn();
+
+            setIsReject(!isReject);
 
             props.clickLike()
         };
 
+        setLoad(false);
         setDisabled(false);
-    }
+    };
 
     const SvgIcon = useMemo(() => {
         if(load) return <CircularProgress size="22px" />;
@@ -72,13 +79,19 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
         return <img className={ addClass } src={ imgUrl } alt="like-btn" />;
     }, [load, isReject]);
 
+    const AnimeIcon = useMemo(() => {
+        if(isReject) return <img src={ SvgClose } className="close" alt="anime-icon" />;
+
+        return <i className="fa-solid fa-heart" />;
+    }, [isReject]);
+
     return (
         <>
             <div
                 className="heart"
                 id={ `heart-${props.id}` }
             >
-                <i className="fa-solid fa-heart"></i>
+                { AnimeIcon }
             </div>
             <Button
                 disabled={ disabled }

@@ -12,7 +12,7 @@
             z-index: 100;
 
             &.purple {
-                background: #BC96FF;
+                background: #BC96FF !important;
             }
 
             .MuiCircularProgress-root {
@@ -59,6 +59,11 @@
             40%{
                 transform: scale(1.4);
             }
+        }
+
+        .close {
+            scale: 4;
+            animation: beat 0.7s infinite;
         }
 
         i{
