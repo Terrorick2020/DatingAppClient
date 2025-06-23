@@ -21,6 +21,8 @@ import {
 
 import { JSX, useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import { setLikeTypeBtn } from '@/store/slices/settingsSlice';
+import { ELikeBtnType } from '@/types/settings.type';
 import { useDispatch, useSelector } from 'react-redux';
 import { WS_MSGS } from '@/config/env.config';
 import type { IncomingMsg } from '@/types/chats.types';
@@ -52,6 +54,8 @@ const ChatContent = (): JSX.Element => {
     if ( !id ) return (<></>);
 
     useEffect( () => {
+        dispatch(setLikeTypeBtn(ELikeBtnType.ToChat));
+
         connectToNamespace(WS_MSGS);
 
         return () => {

@@ -50,7 +50,7 @@ import {
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { delay } from '@/funcs/general.funcs';
-import { getTgID } from '@/funcs/tg.funcs';
+import { getTgID, getRefParams } from '@/funcs/tg.funcs';
 import { EApiStatus } from '@/types/settings.type';
 import { KeyFQBtnText } from '@/types/register.typs';
 import type { AxiosResponse, AxiosProgressEvent  } from 'axios';
@@ -97,14 +97,16 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
-            const telegramId = getTgID() || '3799365';
+            const telegramId = getTgID() || '7339722';
+            const fromRefCode = getRefParams();
 
             if(!telegramId) return 'error';
 
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
-            
+
             dispatch(setInfo({...profileInfo, id: telegramId}));
+            fromRefCode && dispatch(setFromRefCode(fromRefCode));
 
             const data = { telegramId };
 
@@ -291,6 +293,9 @@ export const signUpProfileAsync = createAsyncThunk(
                     latitude: profileInfo.latitude,
                     longitude: profileInfo.longitude,
                 }),
+                ...(profileInfo.fromRefCode !== undefined && {
+                    invitedByReferralCode: profileInfo.fromRefCode,
+                }),
                 lang,
                 photoIds: profileInfo.photos.map(item => +item.id),
                 interestId,
@@ -310,7 +315,7 @@ export const signUpProfileAsync = createAsyncThunk(
                     break;
             }
 
-            if(
+            if (
                 response &&
                 [200, 201].includes(response.status) &&
                 response.data.success
@@ -321,8 +326,6 @@ export const signUpProfileAsync = createAsyncThunk(
                     status: EApiStatus.Success,
                     timestamp: Date.now(),
                 }));
-
-                console.log(response);
 
                 dispatch(resetPhotosCashe());
                 
@@ -388,10 +391,7 @@ export const getSelfProfile = createAsyncThunk(
                 }
 
                 referralCode && dispatch(
-                    setAddLink(REFERAL_LINK(
-                        response.data.data.role,
-                        referralCode,
-                    ))
+                    setAddLink(REFERAL_LINK(referralCode))
                 )
 
                 return data
@@ -512,6 +512,9 @@ const profileSlice = createSlice({
         },
         setAddLink: (state, action: PayloadAction<string>): void => {
             state.addLink = action.payload;
+        },
+        setFromRefCode: (state, action: PayloadAction<string>): void => {
+            state.info.fromRefCode = action.payload;
         }
     },
     extraReducers: builder => {
@@ -722,6 +725,7 @@ export const {
     setPlan,
     setPlanMeta,
     setLocation,
-    setAddLink
+    setAddLink,
+    setFromRefCode,
 } = profileSlice.actions;
 export default profileSlice.reducer;

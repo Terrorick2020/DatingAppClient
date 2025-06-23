@@ -44,6 +44,11 @@ h5 { @include mixins.fluid-text(24, 20) }
 h6 { @include mixins.fluid-text(20, 18) }
 p  { @include mixins.fluid-text(16, 14) }
 
+a {
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
 img, svg {
     user-select: none;
 }

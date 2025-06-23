@@ -10,7 +10,8 @@ import { Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { WS_LIKES, WS_MATCH } from '@/config/env.config';
-import { setBadge } from '@/store/slices/settingsSlice';
+import { setBadge, setLikeTypeBtn } from '@/store/slices/settingsSlice';
+import { ELikeBtnType } from '@/types/settings.type';
 import { getMatchDataAsync } from '@/store/slices/likesSlice';
 import { getNamespaceSocket, handleSocket } from '@/config/socket.config';
 import type { RootDispatch } from '@/store';
@@ -96,6 +97,8 @@ const QuestLayout = (): JSX.Element => {
     };
 
     useEffect(() => {
+        dispatch(setLikeTypeBtn(ELikeBtnType.Accepted));
+
         const likeSocket = getNamespaceSocket(WS_LIKES);
         const matchSocket = getNamespaceSocket(WS_MATCH);
 

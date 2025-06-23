@@ -1,18 +1,31 @@
-import { JSX } from 'react';
+import { JSX, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { toSlider } from '@/config/routes.config';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { dellRoute } from '@/store/slices/settingsSlice';
+import { ELikeBtnType } from '@/types/settings.type';
 import type { PropsDetailsFixed } from '@/types/quest.types';
+import type { RootDispatch } from '@/store';
+import type { IState } from '@/types/store.types';
 
 import LikeBtn from '@/components/UI/LikeBtn';
 import Button from '@mui/material/Button';
 
 
 const DetailsFixed = (props: PropsDetailsFixed): JSX.Element => {
-    const dispatch = useDispatch();
+    const likeBtnType = useSelector((state: IState) => state.settings.likeBtnType);
+
+    const dispatch = useDispatch<RootDispatch>();
 
     const handleRoute = () => dispatch(dellRoute());
+
+    const [isReject, isNoneLikeBtn] = useMemo(
+        () => [
+            likeBtnType === ELikeBtnType.Rejected,
+            likeBtnType === ELikeBtnType.ToChat,
+        ],
+        [likeBtnType]
+    );
 
     return (
         <>
@@ -21,9 +34,14 @@ const DetailsFixed = (props: PropsDetailsFixed): JSX.Element => {
                     <Button
                         className="lemon-fon bg-dark"
                         variant="contained"
-                    >Назад</Button>
+                    >К анкетам</Button>
                 </NavLink>
-                <LikeBtn id={props.id} />
+                {
+                    !isNoneLikeBtn && <LikeBtn
+                        id={ props.id }
+                        isReject={ isReject }
+                    />
+                }
             </div>
             <div className="void"></div>
         </>

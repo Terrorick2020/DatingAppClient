@@ -20,6 +20,12 @@ export enum EBadgeType {
     Chats = 'chats',
 }
 
+export enum ELikeBtnType {
+    Accepted = 'accepted',
+    Rejected = 'rejected',
+    ToChat = 'toChat',
+}
+
 export interface SetApiRes {
     value: boolean
     msg: string
@@ -58,10 +64,17 @@ export interface FEPHasErrors {
     descDistErr?: FQErrorsItem
 }
 
-export interface BaseVarsItem {
-    id: number
+export interface AbstractVarsItem {
     value: string
     label: string
+}
+
+export interface BaseVarsItem extends AbstractVarsItem {
+    id: number
+}
+
+export interface CityesVarsItem extends AbstractVarsItem {
+    id: string
 }
 
 export interface DistrictVarsItem extends BaseVarsItem {
@@ -121,7 +134,7 @@ export interface SettingsState {
     apiRes: SetApiRes
     fQErrors: FQErrors
     fEPErrors: FEPErrors
-    cityesVars: BaseVarsItem[]
+    cityesVars: CityesVarsItem[]
     interestsVars: InterestsVarsItem[]
     selSexVars: SelSexVarsItem[]
     complaint: Complaint
@@ -130,6 +143,7 @@ export interface SettingsState {
     districtsVars: DistrictVarsItem[]
     badge: BadgeBlock
     photosCashe: string[]
+    likeBtnType: ELikeBtnType
 }
 
 export interface PropsLocationDistrict {

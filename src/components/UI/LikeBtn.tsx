@@ -22,7 +22,7 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
         if(!props.isReject) return;
 
         setIsReject(props.isReject);
-    }, [props.isReject]);
+    }, []);
 
     const animatedBtn = (): Promise<void> => {
         return new Promise((resolve) => {
@@ -55,16 +55,12 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
               })).unwrap()
             : await dispatch(acceptLikingAsync(props.id)).unwrap();
 
-        if(
-            acceptRes &&
-            acceptRes !== 'error' &&
-            props.clickLike
-        ) {
+        if(acceptRes && acceptRes !== 'error') {
             await animatedBtn();
 
             setIsReject(!isReject);
 
-            props.clickLike()
+            if(props.clickLike) props.clickLike();
         };
 
         setLoad(false);
