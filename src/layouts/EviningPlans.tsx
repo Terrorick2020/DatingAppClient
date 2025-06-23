@@ -50,12 +50,14 @@ const EPLayout = (): JSX.Element => {
 
     return (
         <div className="ep-layout">
-            <header className={`ep-layout__header ${isLoad && 'opacity'}`}>
+            <header className={ `ep-layout__header ${isLoad && 'opacity'}` }>
                 <img
                     alt="help"
-                    className={ `preview-img ${mediaLink && 'disabled'}`}
-                    src={SvgVideoHelpers}
-                    onClick={handleMediaRoute}
+                    loading="lazy"
+                    decoding="async"
+                    className={ `preview-img ${mediaLink && 'disabled'}` }
+                    src={ SvgVideoHelpers }
+                    onClick={ handleMediaRoute }
                 />
             </header>
             <Outlet />

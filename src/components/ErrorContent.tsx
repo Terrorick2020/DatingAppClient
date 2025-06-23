@@ -8,7 +8,13 @@ const ErrorContent = (): JSX.Element => {
         <div className="error__ctx">
             <header className="header">
                 <div className="box">
-                    <img className="image net-error" src={SvgNetError} alt="net-error" />
+                    <img
+                        className="image net-error"
+                        alt="net-error"
+                        loading="lazy"
+                        decoding="async"
+                        src={SvgNetError}
+                    />
                     <h3 className="headline">Ошибка соединения</h3>
                     <p className="description">
                         Возможно, у вас возникли проблемы с сетью или что-то случилось с сервером.

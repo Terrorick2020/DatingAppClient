@@ -42,7 +42,12 @@ const ChatsContent = (): JSX.Element => {
 
     if(!chatsListLen) return (
         <div className="empty">
-            <img src={SvgChatsEmpty} alt="chats-empty" />
+            <img
+                src={SvgChatsEmpty}
+                alt="chats-empty"
+                loading="lazy"
+                decoding="async"
+            />
             <h4 className="headline">Нет чатов</h4>
             <p className="text">
                 После взаимного мэтча чат с пользователем автоматически появится в списке.

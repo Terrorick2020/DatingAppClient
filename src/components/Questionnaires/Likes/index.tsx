@@ -40,7 +40,12 @@ const LikesContent = (): JSX.Element => {
 
     if(!likesList.length) return (
         <div className="empty">
-            <img src={SvgLikesEmpty} alt="likes-empty" />
+            <img
+                src={SvgLikesEmpty}
+                alt="likes-empty"
+                loading="lazy"
+                decoding="async"
+            />
             <h4 className="headline">Симпатий ещё нет</h4>
             <p className="text">
                 Проявляйте активность, лайкайте других пользователей и вы встретите свой мэтч!

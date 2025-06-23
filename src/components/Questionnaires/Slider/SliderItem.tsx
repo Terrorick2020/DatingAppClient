@@ -77,7 +77,12 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
                 <ScrollBar len={props.sliderItem.photos.length} index={ index } />
                 <div className="labels">
                     <div className="label">
-                        <img src={ SvgMapPin } alt="map-pin" />
+                        <img
+                            src={ SvgMapPin }
+                            alt="map-pin"
+                            loading="lazy"
+                            decoding="async"
+                        />
                         <p>{ props.sliderItem.city }</p>
                     </div>
                 </div>

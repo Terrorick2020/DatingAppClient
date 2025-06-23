@@ -72,11 +72,11 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
         const imgUrl = isReject ? SvgClose :  SvgHeartsBtn;
         const addClass = isReject ? 'reject' : 'accept';
         
-        return <img className={ addClass } src={ imgUrl } alt="like-btn" />;
+        return <img className={ addClass } src={ imgUrl } alt="like-btn" loading="lazy" decoding="async" />;
     }, [load, isReject]);
 
     const AnimeIcon = useMemo(() => {
-        if(isReject) return <img src={ SvgClose } className="close" alt="anime-icon" />;
+        if(isReject) return <img src={ SvgClose } className="close" alt="anime-icon" loading="lazy" decoding="async" />;
 
         return <i className="fa-solid fa-heart" />;
     }, [isReject]);

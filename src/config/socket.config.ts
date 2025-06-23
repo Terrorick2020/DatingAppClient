@@ -43,7 +43,7 @@ export const connectToNamespace = async (namespace: string, isApi?: boolean): Pr
 
     const timeout = setTimeout(() => {
       reject(new Error('Socket connection timeout'));
-    }, 5000); // таймаут подключения, например 5 сек
+    }, 5000);
 
     socket.once('connect', () => {
       clearTimeout(timeout);

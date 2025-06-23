@@ -106,7 +106,12 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
                                     onClick={handleSendMessage}
                                     disabled={!props.message}
                                 >
-                                    <img src={SvgSend} alt="send" />
+                                    <img
+                                        src={SvgSend}
+                                        alt="send"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
                                 </IconButton>
                             </InputAdornment>
                         ),

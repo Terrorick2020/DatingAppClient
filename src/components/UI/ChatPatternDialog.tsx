@@ -24,7 +24,12 @@ const ChatPatternDialog = memo((props: PropsChatPatternDialog): JSX.Element => {
             }}
         >
             <DialogTitle>
-                <img src={props.img} alt="link-confirm" />
+                <img
+                    src={props.img}
+                    alt="link-confirm"
+                    loading="lazy"
+                    decoding="async"    
+                />
             </DialogTitle>
             { props.children }
         </Dialog>

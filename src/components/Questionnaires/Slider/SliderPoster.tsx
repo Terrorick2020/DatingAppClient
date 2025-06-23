@@ -122,7 +122,12 @@ const SliderPoster = (): JSX.Element => {
 
   if(!sliderList.length) return (
     <div className="empty">
-      <img src={SvgQuestsEmpty} alt="quests-empty" />
+      <img
+        src={SvgQuestsEmpty}
+        alt="quests-empty"
+        loading="lazy"
+        decoding="async"
+      />
       <h4 className="headline">В вашем городе ещё никого нет!</h4>
       <p className="text">Попробуйте изменить настройки профиля</p>
       <NavLink className="link" to={ toProfile }>

@@ -1,11 +1,6 @@
 import type { UsersEndpointParams } from '@/types/fetch.type';
 import { EProfileStatus } from '@/types/store.types';
 
-
-export const HOST = import.meta.env.VITE_HOST || 'localhost';
-export const PORT = import.meta.env.VITE_PORT || '5173';
-export const MODE = import.meta.env.VITE_MODE || 'dev';
-
 export const SSL_KEY  = import.meta.env.VITE_SSL_KEY || '';
 export const SSL_CERT = import.meta.env.VITE_SSL_CERT || '';
 export const DOMAIN   = import.meta.env.VITE_DOMAIN || '';

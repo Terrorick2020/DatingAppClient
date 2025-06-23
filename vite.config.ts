@@ -1,45 +1,120 @@
-import { defineConfig } from 'vite';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';  
+import { defineConfig, loadEnv } from 'vite';
 
+import removeConsole from 'vite-plugin-remove-console';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import checker from 'vite-plugin-checker';
 import path from 'node:path';
 
-export default defineConfig({
-  plugins: [
-    react(),
-    svgr(),
-    checker({ typescript: true }),
-  ],
-  esbuild: {
-    drop: ['console', 'debugger'],
-  },
-  server: {
-    host: '0.0.0.0',
-    allowedHosts: ['3dating.fun'],
-    hmr: {
-      host: '3dating.fun',
-      protocol: 'wss',
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+
+  const PROD_HOST = env.VITE_PROD_HOST;
+  const DEV_HOST = env.VITE_DEV_HOST;
+  const MODE = env.VITE_MODE;
+  const DOMAIN = env.VITE_DOMAIN;
+  const PORT = Number(env.VITE_PORT);
+
+  if (
+    !PROD_HOST ||
+    !DEV_HOST  ||
+    !MODE      ||
+    !DOMAIN    ||
+    isNaN(PORT)
+  ) throw new Error('Hasn`t some environments in vite.config.ts');
+
+  const isProd = MODE === 'prod';
+
+  return {
+    plugins: [
+      react(),
+      svgr(),
+      ViteImageOptimizer({
+        png: { quality: 70 },
+        jpeg: {
+          quality: 70,
+          progressive: true,
+        },
+        jpg: {
+          quality: 70,
+          progressive: true,
+        },
+        webp: { quality: 65 },
+        avif: { quality: 50 },
+        svg: { multipass: true },
+      }),
+      checker({ typescript: true }),
+      removeConsole({
+        includes: ['error', 'warn', 'log', 'info', 'debug'],
+      }),
+    ],
+    server: {
+      host: isProd ? PROD_HOST : DEV_HOST,
+      port: PORT,
+      ...(isProd && {
+        allowedHosts: [ DOMAIN ],
+        hmr: {
+          host: DOMAIN,
+          protocol: 'wss',
+          clientPort: PORT,
+        },
+      }),
     },
-  },
-  preview: {
-    allowedHosts: ['3dating.fun']
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
+    preview: {
+      allowedHosts: [ DOMAIN ],
     },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id: string) {
-          if (id.includes('node_modules')) {
-            if (id.includes('lodash')) return 'lodash'
-            return 'vendor';
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
+    },
+    build: {
+      minify: 'esbuild',
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (id.includes('node_modules')) {
+              if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+                return 'react-vendor';
+              };
+
+              if (id.includes('@mui') || id.includes('@emotion')) {
+                return 'mui';
+              };
+
+              if (id.includes('@reduxjs/toolkit') || id.includes('react-redux') || id.includes('reselect')) {
+                return 'redux';
+              };
+
+              if (id.includes('socket.io-client')) {
+                return 'socket';
+              };
+
+              if (id.includes('axios') || id.includes('dayjs')) {
+                return 'utils';
+              };
+
+              if (id.includes('@tanstack/react-query')) {
+                return 'react-query';
+              };
+
+              if (id.includes('@telegram-apps')) {
+                return 'telegram-sdk';
+              };
+
+              if (id.includes('emoji-mart') || id.includes('@emoji-mart')) {
+                return 'emoji';
+              };
+
+              if (id.includes('lodash')) return 'lodash';
+
+              return 'vendor';
+            }
           }
         }
       }
-    }
-  },
+    },
+  }
 })

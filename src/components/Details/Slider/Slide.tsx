@@ -31,7 +31,12 @@ const DetailsSlide = memo((props: PropsDetailsSlide): JSX.Element => {
                         variant="outlined"
                         disabled
                         startIcon={
-                            <img src={SvgMapPin} alt="map-pin" />
+                            <img
+                                src={SvgMapPin}
+                                alt="map-pin"
+                                loading="lazy"
+                                decoding="async"
+                            />
                         }
                     >{ targetUser.city }</Button>
                     <Button

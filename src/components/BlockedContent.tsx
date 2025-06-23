@@ -10,7 +10,7 @@ const BlockedContent = (): JSX.Element => {
         <div className="error__ctx">
             <header className="header">
                 <div className="box">
-                    <img className="image" src={SvgBlocked} alt="blocked" />
+                    <img className="image" src={SvgBlocked} alt="blocked" loading="lazy" decoding="async" />
                     <h3 className="headline">Ваш аккаунт заблокирован</h3>
                     <p className="description">
                         Возможно, вы нарушили правила использования приложения или конституции РФ.

@@ -20,7 +20,12 @@ const DetailsInfo = (): JSX.Element => {
                 <div className="plan-panel">
                     <PlansLabel type={ PlanLabelSvgType.ordinary } />
                     <div className="timer">
-                        <img src={SvgTimerCircle} alt="timer-circle" />
+                        <img
+                            alt="timer-circle"
+                            loading="lazy"
+                            decoding="async"
+                            src={SvgTimerCircle}
+                        />
                         {plans.targetTime && <p className="time">{plans.targetTime}</p>}
                     </div>
                 </div>

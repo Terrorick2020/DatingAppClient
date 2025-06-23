@@ -105,7 +105,12 @@ const PhotosAddItem = memo((props: PropsPhotosAddItem): JSX.Element => {
                     accept="image/*"
                     onChange={handleChange}
                 />
-                <img src={SvgAdd} alt="camera" />
+                <img
+                    src={SvgAdd}
+                    alt="camera"
+                    loading="lazy"
+                    decoding="async"
+                />
             </li>
             <PhotosCropperDialog
                 open={open}

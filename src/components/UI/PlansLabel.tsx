@@ -12,7 +12,12 @@ const PlansLabel = memo((props: PropsPlansLabel): JSX.Element => {
             }}
         >
             <p className="text">Планы на сегодня</p>
-            <img src={ planLabelStyle[ props.type ].img } alt="check-mark" loading='lazy' />
+            <img
+                src={ planLabelStyle[ props.type ].img }
+                alt="check-mark"
+                loading="lazy"
+                decoding="async"
+            />
         </div>
     )
 })
