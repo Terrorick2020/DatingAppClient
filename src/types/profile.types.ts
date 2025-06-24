@@ -20,6 +20,7 @@ export interface ProfileSelf {
     interest: string
     selSex: ESex
     referralCode: string
+    fromRefCode?: string
     latitude: number | null
     longitude: number| null
 }

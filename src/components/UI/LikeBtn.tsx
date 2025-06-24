@@ -1,6 +1,7 @@
 import { JSX, memo, useState, useEffect, useMemo, MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { acceptLikingAsync } from '@/store/slices/likesSlice';
+import { acceptLikingAsync, rejectLikingAsync } from '@/store/slices/likesSlice';
+import { ERejectLikingType } from '@/types/likes.types';
 import type { PropsLikeBtn } from '@/types/ui.types';
 import type { RootDispatch } from '@/store';
 
@@ -21,7 +22,7 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
         if(!props.isReject) return;
 
         setIsReject(props.isReject);
-    }, [props.isReject]);
+    }, []);
 
     const animatedBtn = (): Promise<void> => {
         return new Promise((resolve) => {
@@ -47,30 +48,38 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
         setDisabled(true);
         setLoad(true);
 
-        const acceptRes = await dispatch(acceptLikingAsync(props.id)).unwrap();
+        const acceptRes = isReject
+            ? await dispatch(rejectLikingAsync({
+                id: props.id,
+                type: ERejectLikingType.Direct,
+              })).unwrap()
+            : await dispatch(acceptLikingAsync(props.id)).unwrap();
 
-        if(
-            acceptRes &&
-            acceptRes !== 'error' &&
-            props.clickLike
-        ) {
-            setLoad(false);
-
+        if(acceptRes && acceptRes !== 'error') {
             await animatedBtn();
 
-            props.clickLike()
+            setIsReject(!isReject);
+
+            if(props.clickLike) props.clickLike();
         };
 
+        setLoad(false);
         setDisabled(false);
-    }
+    };
 
     const SvgIcon = useMemo(() => {
         if(load) return <CircularProgress size="22px" />;
         const imgUrl = isReject ? SvgClose :  SvgHeartsBtn;
         const addClass = isReject ? 'reject' : 'accept';
         
-        return <img className={ addClass } src={ imgUrl } alt="like-btn" />;
+        return <img className={ addClass } src={ imgUrl } alt="like-btn" loading="lazy" decoding="async" />;
     }, [load, isReject]);
+
+    const AnimeIcon = useMemo(() => {
+        if(isReject) return <img src={ SvgClose } className="close" alt="anime-icon" loading="lazy" decoding="async" />;
+
+        return <i className="fa-solid fa-heart" />;
+    }, [isReject]);
 
     return (
         <>
@@ -78,7 +87,7 @@ const LikeBtn = memo((props: PropsLikeBtn): JSX.Element => {
                 className="heart"
                 id={ `heart-${props.id}` }
             >
-                <i className="fa-solid fa-heart"></i>
+                { AnimeIcon }
             </div>
             <Button
                 disabled={ disabled }

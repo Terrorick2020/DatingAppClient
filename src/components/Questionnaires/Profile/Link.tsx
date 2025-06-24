@@ -22,7 +22,12 @@ const ProfileLink = (): JSX.Element => {
                     <p className="description opacity">Отправьте ссылку на ваш профиль</p>
                 </div>
                 <IconButton>
-                    <img src={SvgLink} alt="link" />
+                    <img
+                        src={SvgLink}
+                        alt="link"
+                        loading="lazy"
+                        decoding="async"
+                    />
                 </IconButton>
             </div>
             <LinkMsg link={addLink} open={open} setOpen={setOpen} />

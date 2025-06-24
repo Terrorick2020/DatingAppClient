@@ -48,9 +48,9 @@ const DefaultLayout = memo((): JSX.Element => {
     }, [apiRes] );
 
     const handleSocketConnect = async (): Promise<void> => {
-        await Promise.all([
+        await Promise.all(
             defNamespaces.map(item => connectToNamespace(item))
-        ]);
+        );
 
         await dispatch(initSocketRoomsConnectAsync(defNamespaces));
     };

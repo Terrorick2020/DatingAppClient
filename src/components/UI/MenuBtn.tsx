@@ -23,7 +23,12 @@ const MenuBtn = memo((props: PropsMenuBtn): JSX.Element => {
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
             >
-                <img src={props.btnIcon} alt="menu-btn" />
+                <img
+                    src={props.btnIcon}
+                    alt="menu-btn"
+                    loading="lazy"
+                    decoding="async"
+                />
             </IconButton>
             <Menu
                 id="serch-menu"

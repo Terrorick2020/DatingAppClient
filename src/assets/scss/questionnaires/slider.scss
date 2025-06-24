@@ -162,6 +162,7 @@
                                     width: 100%;
                                     cursor: pointer;
                                     z-index: 5;
+                                    -webkit-tap-highlight-color: transparent;
             
                                     .headline {
                                         width: 100%;
@@ -170,11 +171,13 @@
                                         display: grid;
                                         grid-template-columns: auto 1fr;
                                         gap: 0.4rem;
+                                        -webkit-tap-highlight-color: transparent;
                                         
                                         .name, .age {
                                             width: 100%;
                                             font-size: inherit;
                                             white-space: nowrap;
+                                            -webkit-tap-highlight-color: transparent;
                                         }
 
                                         .name {

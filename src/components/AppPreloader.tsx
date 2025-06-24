@@ -9,7 +9,12 @@ const AppPreloader = (): JSX.Element => {
             <div className="preloader__box">
                 <header className='pteloader__header'></header>
                 <main className='pteloader__main'>
-                    <img src={ SvgLogo } alt="logo" />
+                    <img
+                        alt="logo"
+                        loading="lazy"
+                        decoding="async"
+                        src={ SvgLogo }
+                    />
                 </main>
                 <footer className='pteloader__footer'></footer>
             </div>

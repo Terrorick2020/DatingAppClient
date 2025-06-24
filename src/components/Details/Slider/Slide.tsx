@@ -31,7 +31,12 @@ const DetailsSlide = memo((props: PropsDetailsSlide): JSX.Element => {
                         variant="outlined"
                         disabled
                         startIcon={
-                            <img src={SvgMapPin} alt="map-pin" />
+                            <img
+                                src={SvgMapPin}
+                                alt="map-pin"
+                                loading="lazy"
+                                decoding="async"
+                            />
                         }
                     >{ targetUser.city }</Button>
                     <Button
@@ -44,8 +49,8 @@ const DetailsSlide = memo((props: PropsDetailsSlide): JSX.Element => {
                 </nav>
             </header>
             <main>
-                <span onClick={props.toLeftScroll}></span>
-                <span onClick={props.toRightScroll}></span>
+                <span onClick={props.toLeftScroll} />
+                <span onClick={props.toRightScroll} />
             </main>
             <footer>
                 <h4 className="headline">

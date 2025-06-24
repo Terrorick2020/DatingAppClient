@@ -31,7 +31,12 @@ const ChatList = (): JSX.Element => {
 
     if(!chatDialog.length) return (
         <div className="empty">
-            <img src={PngChatEmpty} alt="chat-empty" />
+            <img
+                alt="chat-empty"
+                loading="lazy"
+                decoding="async"
+                src={PngChatEmpty}
+            />
             <h4 className="headline">Сообщений пока нет...</h4>
             <p className="text">Отправьте первое сообщение!</p>
         </div>

@@ -4,11 +4,13 @@ import {
     EApiStatus,
     EComplaintStep,
     EBadgeType,
+    ELikeBtnType,
     type Complaint,
     type FQErrors,
     type FEPErrors,
     type SettingsState,
     type BaseVarsItem,
+    type CityesVarsItem,
     type DistrictVarsItem,
     type InterestsVarsItem,
     type SetApiRes,
@@ -92,6 +94,7 @@ export const initialState: SettingsState = {
         likes: badgeEmptyItem,
     },
     photosCashe: [],
+    likeBtnType: ELikeBtnType.Accepted,
 };
 
 export const initFillingQuestAsync = createAsyncThunk(
@@ -106,7 +109,7 @@ export const initFillingQuestAsync = createAsyncThunk(
             if(needSetLoad) dispatch(setLoad(true));
 
             const [cityesRes, interestsRes]: [
-                cityes: AxiosResponse<FetchResponse<BaseVarsItem[]>>,
+                cityes: AxiosResponse<FetchResponse<CityesVarsItem[]>>,
                 interests: AxiosResponse<FetchResponse<InterestsVarsItem[]>>,
             ] = await Promise.all([
                 api.get(HELP_CITYES_ENDPOINT),
@@ -239,23 +242,24 @@ export const initEPCtxAsync = createAsyncThunk(
             dispatch(setLoad(true));
 
             const rootState = getState() as IState;
+            const city = rootState.profile.info.town;
             const cityesVars = rootState.settings.cityesVars;
 
-            let cityesVarsRes: BaseVarsItem[] = [];
+            let cityesVarsRes: CityesVarsItem[] = [];
 
             if( !cityesVars.length ) {
-                const cityesRes: AxiosResponse<FetchResponse<BaseVarsItem[]>> = await api.get(HELP_CITYES_ENDPOINT);
+                const cityRes: AxiosResponse<FetchResponse<CityesVarsItem>> = await api.get(`${HELP_CITYES_ENDPOINT}/${city}`);
 
-                if(
-                    cityesRes.status === 200 &&
-                    cityesRes.data.data &&
-                    cityesRes.data.data !== 'None' &&
-                    cityesRes.data.success
-                ) {
-                    cityesVarsRes = cityesRes.data.data;
+                if (
+                    cityRes.status !== 200 ||
+                    !cityRes.data.success  ||
+                    !cityRes.data.data     ||
+                    cityRes.data.data === 'None'
+                ) return 'error';
 
-                    dispatch(setCityes(cityesRes.data.data));
-                }
+                cityesVarsRes = [ cityRes.data.data ];
+
+                dispatch(setCityes([ cityRes.data.data ]));
             } else {
                 cityesVarsRes = cityesVars;
             }
@@ -293,7 +297,9 @@ export const initEPCtxAsync = createAsyncThunk(
                 const isFirstly = rootState.settings.isFirstly;
                 const plan = rootState.profile.eveningPlans.plan;
 
-                isFirstly && dispatch(setPlan({
+                const isDispatch = isFirstly || !plan.value;
+
+                isDispatch && dispatch(setPlan({
                     ...plan,
                     value: plansRes.data.data[0].value,
                 }))
@@ -322,7 +328,7 @@ export const initSocketRoomsConnectAsync = createAsyncThunk(
             
             const socketData = {
                 roomName: telegramId,
-                telegramId,    
+                telegramId,
             };
 
             const responses = await Promise.all([
@@ -453,7 +459,7 @@ const settingsSlice = createSlice({
                     break;
             }
         },
-        setCityes: (state, action: PayloadAction<BaseVarsItem[]>): void => {
+        setCityes: (state, action: PayloadAction<CityesVarsItem[]>): void => {
             state.cityesVars = action.payload;
         },
         addPhotoInCashe: (state, action: PayloadAction<string>): void => {
@@ -469,7 +475,10 @@ const settingsSlice = createSlice({
         },
         setMedaiLink: (state, action: PayloadAction<string>): void => {
             state.mediaLink = action.payload;
-        }
+        },
+        setLikeTypeBtn: (state, action: PayloadAction<ELikeBtnType>): void => {
+            state.likeBtnType = action.payload;
+        },
     },
     extraReducers: builder => {
         // Получение варианетов интересов
@@ -547,7 +556,6 @@ const settingsSlice = createSlice({
         })
 
         // Подключение к комнатам тунелей ws
-        // initSocketRoomsConnectAsync, initSocketRoomsDisconnectAsync
         builder.addCase(initSocketRoomsConnectAsync.pending, _ => {
             console.log("Подключение к комнатам тунелей ws");
         })
@@ -616,5 +624,6 @@ export const {
     setMedaiLink,
     setBadge,
     resetBadge,
+    setLikeTypeBtn,
 } = settingsSlice.actions;
 export default settingsSlice.reducer;

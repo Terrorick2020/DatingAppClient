@@ -33,16 +33,22 @@ const MediaContentBg = memo((props: PropsMediaContentBg): JSX.Element => {
                         <img
                             src={SvgMediaBack}
                             alt="back"
+                            loading="lazy"
+                            decoding="async"
                             onClick={() => props.handleSeekBy(-10)}
                         />
                         <img
                             src={varianPlaySvg.svg}
                             alt={varianPlaySvg.alt}
+                            loading="lazy"
+                            decoding="async"
                             onClick={props.handlePlaying}
                         />
                         <img
                             src={SvgMediaForward}
                             alt="forward"
+                            loading="lazy"
+                            decoding="async"
                             onClick={() => props.handleSeekBy(10)}
                         />
                     </nav>

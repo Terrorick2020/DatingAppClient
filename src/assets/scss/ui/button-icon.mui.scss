@@ -1,6 +1,8 @@
 #root {
     .MuiIconButton-root {
         background: transparent;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
 
         &:hover {
             background: transparent;

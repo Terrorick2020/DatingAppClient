@@ -8,5 +8,6 @@ ssl/
 .gitignore
 
 bun.lock
+package.lock.json
 Dockerfile
 README.md

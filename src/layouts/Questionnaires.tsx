@@ -6,13 +6,16 @@ import {
 } from '@/types/socket.types';
 
 import { JSX, useEffect, useRef } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
+import { toLikes, toChats } from '@/config/routes.config';
 import { WS_LIKES, WS_MATCH } from '@/config/env.config';
-import { setBadge } from '@/store/slices/settingsSlice';
-import { getMatchDataAsync } from '@/store/slices/likesSlice';
-import { getNamespaceSocket, handleSocket } from '@/config/socket.config';
+import { setBadge, setLikeTypeBtn } from '@/store/slices/settingsSlice';
+import { ELikeBtnType } from '@/types/settings.type';
+import { getMatchDataAsync, addLikeInRealTimeAsync } from '@/store/slices/likesSlice';
+import { getNamespaceSocket, handleSocket, waitForSocketConnection } from '@/config/socket.config';
+import type { Socket } from 'socket.io-client';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -27,9 +30,11 @@ const QuestLayout = (): JSX.Element => {
     const match = useSelector((state: IState) => state.likes.match);
 
     const dispatch = useDispatch<RootDispatch>();
+    const location = useLocation();
 
     const snackbarKeyRef = useRef<string | number | null>(null);
     const isMatchLoad = useRef<boolean>(false);
+    const lastLikeId = useRef<string>('');
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -60,31 +65,36 @@ const QuestLayout = (): JSX.Element => {
     );
 
     const handleLikesNotify = (data: OnResNewLike | null): void => {
-        if(!data) return;
+        if(!data || lastLikeId.current == data.fromUserId) return;
 
-        console.log(data);
+        lastLikeId.current = data.fromUserId;
 
-        dispatch(setBadge({
-            ...badgeCtx,
-            likes: {
-                value: true,
-                content: ++badgeCtx.likes.content,
-            }
-        }));
+        if(location.pathname === toLikes) {
+            
+            dispatch(addLikeInRealTimeAsync(data));
+        } else {
+            dispatch(setBadge({
+                ...badgeCtx,
+                likes: {
+                    value: true,
+                    content: badgeCtx.likes.content + 1,
+                }
+            }));
+        }
     };
 
     const handleMatchNotyfy = async (data: OnResNewMatch | null): Promise<void> => {
         if(!data) return;
 
-        console.log(data);
-
-        dispatch(setBadge({
-            ...badgeCtx,
-            chats: {
-                value: true,
-                content: ++badgeCtx.likes.content,
-            }
-        }));
+        if(location.pathname !== toChats) {
+            dispatch(setBadge({
+                ...badgeCtx,
+                chats: {
+                    value: true,
+                    content: badgeCtx.likes.content + 1,
+                }
+            }));
+        };
 
         if(match.value || isMatchLoad.current) return;
 
@@ -95,14 +105,39 @@ const QuestLayout = (): JSX.Element => {
         isMatchLoad.current = false;
     };
 
-    useEffect(() => {
-        const likeSocket = getNamespaceSocket(WS_LIKES);
-        const matchSocket = getNamespaceSocket(WS_MATCH);
+    const handleSocketSeed = async (): Promise<void> => {
+        let likeSocket: Socket | undefined = undefined;
+        let matchSocket: Socket | undefined = undefined;
+
+        likeSocket = getNamespaceSocket(WS_LIKES);
+        matchSocket = getNamespaceSocket(WS_MATCH);
+
+        if (
+            likeSocket === undefined ||
+            matchSocket === undefined
+        ) {
+            const response = await Promise.all([
+                waitForSocketConnection(() => getNamespaceSocket(WS_LIKES)),
+                waitForSocketConnection(() => getNamespaceSocket(WS_MATCH)),
+            ]);
+
+            likeSocket = response[0];
+            matchSocket = response[1];
+        };
 
         handleSocket<OnResNewLike>(likeSocket, LikesCltMethods.newLike, handleLikesNotify);
         handleSocket<OnResNewMatch>(matchSocket, MatchCltMethods.newMatch, handleMatchNotyfy);
+    };
+
+    useEffect(() => {
+        dispatch(setLikeTypeBtn(ELikeBtnType.Accepted));
+
+        handleSocketSeed();
 
         return () => {
+            const likeSocket = getNamespaceSocket(WS_LIKES);
+            const matchSocket = getNamespaceSocket(WS_MATCH);
+
             likeSocket?.off(LikesCltMethods.newLike);
             matchSocket?.off(MatchCltMethods.newMatch);
 

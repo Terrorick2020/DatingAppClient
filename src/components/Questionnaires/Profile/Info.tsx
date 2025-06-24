@@ -42,7 +42,14 @@ const ProfileInfo = memo((props: PropsProfileInfo): JSX.Element => {
                 fullWidth
                 className="lemon base-height edit"
                 variant="contained"
-                startIcon={<img src={SvgEdit} alt="edit" />}
+                startIcon={
+                    <img
+                        src={SvgEdit}
+                        alt="edit"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                }
                 onClick={props.handleRoute}
             >Редактировать профиль</Button>
         </div>

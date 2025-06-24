@@ -46,7 +46,7 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
 
     const shareIsWorked = useMemo(() => shareURL.isAvailable() || navigator.share, []);
     const CopySvg = useMemo(
-        () => copied ? <CheckIcon /> : <img src={SvgCopy} alt="copy" />,
+        () => copied ? <CheckIcon /> : <img src={SvgCopy} alt="copy" loading="lazy" decoding="async" />,
         [copied]
     );
 
@@ -65,7 +65,12 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
             }}
         >
             <DialogTitle>
-                <img src={SvgLinkConfirm} alt="link-confirm" />
+                <img
+                    src={SvgLinkConfirm}
+                    alt="link-confirm"
+                    loading="lazy"
+                    decoding="async"
+                />
             </DialogTitle>
             <DialogContent>
                 <div className="text-block">
@@ -88,7 +93,14 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
                 {
                     shareIsWorked && <Button
                         className="send-btn"
-                        startIcon={<img src={SvgLink} alt='link'/>}
+                        startIcon={
+                            <img
+                                src={SvgLink}
+                                alt="link"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        }
                         onClick={handleShare}
                     >Отправить</Button>
                 }

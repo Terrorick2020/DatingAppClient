@@ -12,7 +12,7 @@ import { setLoad, setApiRes } from './settingsSlice';
 import { PlanLabelSvgType } from '@/types/ui.types';
 import { EApiStatus } from '@/types/settings.type';
 import { type FetchResponse, EFetchLikesTProps } from '@/types/fetch.type';
-import type { OnResNewMatch } from '@/types/socket.types';
+import type { OnResNewMatch, OnResNewLike } from '@/types/socket.types';
 import type { AxiosResponse } from 'axios';
 import type { IState, AsyncThunkRes } from '@/types/store.types';
 
@@ -108,6 +108,13 @@ export const acceptLikingAsync = createAsyncThunk(
 
             return true;
         } catch (error) {
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Не удалось отправить симпатию',
+                status: EApiStatus.Warning,
+                timestamp: Date.now(),
+            }));
+
             return 'error';
         }
     }
@@ -115,7 +122,7 @@ export const acceptLikingAsync = createAsyncThunk(
 
 export const rejectLikingAsync = createAsyncThunk(
     'likes/reject-liking',
-    async (data: RejectLikingData, { getState }): Promise<AsyncThunkRes<boolean>> => {
+    async (data: RejectLikingData, { getState, dispatch }): Promise<AsyncThunkRes<boolean>> => {
         try {
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
@@ -134,8 +141,27 @@ export const rejectLikingAsync = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<null>> = await api.delete(url);
 
+            if (
+                response.status !== 200 ||
+                !response.data.success
+            ) {
+                dispatch(setApiRes({
+                    value: true,
+                    msg: 'Не удалось отклонить симпатию',
+                    status: EApiStatus.Warning,
+                    timestamp: Date.now(),
+                }));
+            };
+
             return response.data.success;
         } catch (error) {
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Не удалось отклонить симпатию',
+                status: EApiStatus.Warning,
+                timestamp: Date.now(),
+            }));
+
             return 'error';
         }
     }
@@ -205,6 +231,40 @@ export const acceptMatchAsync = createAsyncThunk(
         }
     }
 );
+
+export const addLikeInRealTimeAsync = createAsyncThunk(
+    'likes/add-like-in-real-time',
+    async (data: OnResNewLike): Promise<AsyncThunkRes<LikesItem>> => {
+        try {
+            const response: AxiosResponse<FetchResponse<any>> = await api.get(`${USER_ENDPOINT}/${data.fromUserId}`);
+
+            if (
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+
+            const userData = response.data.data as any;
+
+            const result = {
+                id: data.fromUserId,
+                avatar: userData.photos[0].url,
+                planStatus: PlanLabelSvgType.success,
+                timer: {
+                    value: 24 * 60 * 60 - 15,
+                    isCritical: false,
+                },
+                name: userData.name,
+                age: userData.age,
+            };
+
+            return result;
+        } catch (error) {
+            return 'error';
+        }
+    }
+)
 
 const likesSlice = createSlice({
     name: 'likes',
@@ -330,6 +390,33 @@ const likesSlice = createSlice({
         })
         builder.addCase(acceptMatchAsync.rejected, _ => {
             console.log("Ошибка ответа на симпатию");
+        })
+
+        // Добавление симпатии в реальном времени
+        builder.addCase(addLikeInRealTimeAsync.pending, _ => {
+            console.log("Добавление симпатии в реальном времени");
+        })
+        builder.addCase(addLikeInRealTimeAsync.fulfilled, (state, action: PayloadAction<AsyncThunkRes<LikesItem>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка добавления симпатии в реальном времени");
+                    break;
+                case null:
+                    console.log("Симпатия в реальном времени не добавлена");
+                    break;
+                default:
+                    const data = action.payload;
+                    const needPush = !state.likesList.find(item => item.id === data.id);
+                    if(needPush) {
+                        state.likesList.push(action.payload);
+                    }
+                    console.log("Успешное добавление симпатии в реальном времени");
+                    break;
+            }
+
+        })
+        builder.addCase(addLikeInRealTimeAsync.rejected, _ => {
+            console.log("Ошибка добавления симпатии в реальном времени");
         })
     },
 })

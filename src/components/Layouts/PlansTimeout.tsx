@@ -12,7 +12,12 @@ const SAPlansTimeout = forwardRef<HTMLDivElement, SnackbarProviderProps>((_, ref
             className="plans-timeout"
             label="Обновите свои планы"
             icon={
-                <img src={SvgHourglass} alt="hourglass" />
+                <img
+                    src={SvgHourglass}
+                    alt="hourglass"
+                    loading="lazy"
+                    decoding="async"
+                />
             }
         />
     )

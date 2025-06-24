@@ -1,10 +1,5 @@
 import type { UsersEndpointParams } from '@/types/fetch.type';
-import { EProfileRoles, EProfileStatus } from '@/types/store.types';
-
-
-export const HOST = import.meta.env.VITE_HOST || 'localhost';
-export const PORT = import.meta.env.VITE_PORT || '5173';
-export const MODE = import.meta.env.VITE_MODE || 'dev';
+import { EProfileStatus } from '@/types/store.types';
 
 export const SSL_KEY  = import.meta.env.VITE_SSL_KEY || '';
 export const SSL_CERT = import.meta.env.VITE_SSL_CERT || '';
@@ -170,7 +165,7 @@ if(
   throw Error('Hasn`t someone environments!');
 };
 
-export const REFERAL_LINK = (type: EProfileRoles, referal: string): string => `${REFERAL}?type=${type}&referal=${referal}`;
+export const REFERAL_LINK = (referal: string): string => `${REFERAL}${referal}`;
 
 export const CHATS_METADATA_ENDPOINT = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_METADATA}`;
 export const CHATS_MSG_ENDPOINT      = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_MSG}`;

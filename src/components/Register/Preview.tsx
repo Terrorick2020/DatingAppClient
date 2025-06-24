@@ -39,7 +39,13 @@ const PreviewContent = (): JSX.Element => {
                 <div className="text">
                     <h1 className="headline">
                         Настоящие встречи начинаются здесь
-                        <img className="relative" src={ SvgWhiteHeart } alt="white-heart" />
+                        <img
+                            className="relative"
+                            alt="white-heart"
+                            loading="lazy"
+                            decoding="async"
+                            src={ SvgWhiteHeart }
+                        />
                     </h1>
                     <h6 className="description">
                         Мы верим, что крепкие связи устанавливаются лицом к лицу.

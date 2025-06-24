@@ -76,7 +76,14 @@ const ProfilePlans = memo((props: PropsProfileInfo): JSX.Element => {
                 fullWidth
                 className="lemon base-height edit"
                 variant="contained"
-                startIcon={<img src={SvgCalendar} alt="edit" />}
+                startIcon={
+                    <img
+                        src={SvgCalendar}
+                        alt="edit"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                }
                 onClick={props.handleRoute}
             >Обновить планы</Button>
         </div>

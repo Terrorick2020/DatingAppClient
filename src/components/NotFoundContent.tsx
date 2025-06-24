@@ -27,7 +27,13 @@ const NotFoundContent = (): JSX.Element => {
         <div className="error__ctx">
             <header className="header">
                 <div className="box">
-                    <img className="image" src={SvgNotFound} alt="not-found" />
+                    <img
+                        className="image"
+                        alt="not-found"
+                        loading="lazy"
+                        decoding="async"
+                        src={SvgNotFound}
+                    />
                     <h3 className="headline">Cтраница не найдена</h3>
                     <p className="description">
                         Возможно, пользователь удалил свой аккаунт или возникли какие-то проблемы.

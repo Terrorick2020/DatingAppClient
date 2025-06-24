@@ -6,7 +6,6 @@ import {
 
 import {
   WS_URL,
-  BASE_URL,
   WS_COMPL,
   WS_MATCH,
   WS_CHATS,
@@ -20,33 +19,27 @@ const sockets: Record<string, Socket> = {};
 
 export const defNamespaces = [WS_COMPL, WS_MATCH, WS_CHATS, WS_LIKES];
 
-export const connectToNamespace = async (namespace: string, isApi?: boolean): Promise<Socket> => {
-  if (!sockets[namespace]) {
+export const connectToNamespace = async (namespace: string): Promise<Socket> => {
+  if (sockets[namespace]?.connected) return sockets[namespace];
 
-    const socket = io(`${isApi ? BASE_URL : WS_URL}/${namespace}`, {
-      autoConnect: false,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-      transports: ['websocket'],
-    });
-
-    sockets[namespace] = socket;
-  }
-
-  const socket = sockets[namespace];
+  const socket = io(`${WS_URL}/${namespace}`, {
+    autoConnect: false,
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000,
+    transports: ['websocket'],
+  });
 
   return new Promise((resolve, reject) => {
-    if (socket.connected) return resolve(socket);
-
     socket.connect();
 
     const timeout = setTimeout(() => {
       reject(new Error('Socket connection timeout'));
-    }, 5000); // таймаут подключения, например 5 сек
+    }, 5000);
 
     socket.once('connect', () => {
       clearTimeout(timeout);
+      sockets[namespace] = socket;
       resolve(socket);
     });
 
@@ -75,7 +68,7 @@ export const connectSocketRoom = (
   namespace: string,
   connectType: ServerMethods,
   data: ReqConnectionDto,
-  timeoutMs = 3000, // таймаут по умолчанию 3 сек
+  timeoutMs = 5000,
 ): Promise<ResConnectionDto | null> => {
   const socket: Socket = sockets[namespace];
 
@@ -99,6 +92,31 @@ export const connectSocketRoom = (
       }
     });
   });
+};
+
+export const waitForSocketConnection = (
+    getSocket: () => Socket | undefined,
+    maxAttempts = 10,
+    interval = 300
+): Promise<Socket> => {
+    return new Promise((resolve, reject) => {
+        let attempts = 0;
+
+        const check = () => {
+            const socket = getSocket();
+            if (socket && socket.connected) {
+                return resolve(socket);
+            }
+
+            if (++attempts >= maxAttempts) {
+                return reject(new Error("Socket connection timeout"));
+            }
+
+            setTimeout(check, interval);
+        };
+
+        check();
+    });
 };
 
 export async function handleSocket<TData>(

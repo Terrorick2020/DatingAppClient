@@ -71,3 +71,10 @@ export function getTgID(): string | null {
 
   return String(user.id);
 }
+
+export function getRefParams(): string | null {
+  if (typeof window !== 'undefined' && window.Telegram?.WebApp?.initDataUnsafe) {
+    return window.Telegram.WebApp.initDataUnsafe.start_param || null;
+  }
+  return null;
+}

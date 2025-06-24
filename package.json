@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "bun run vite",
-    "build": "npx tsc -b && npm run vite build",
-    "build:ret": "npm run build && npx postcss dist/main.css -o dist/main.css && npx html-minifier-terser dist/index.html --collapse-whitespace --remove-comments --remove-optional-tags --minify-css true --minify-js true -o dist/index.html",
-    "preview": "npx run vite preview"
+    "build": "npx tsc -b && npx vite build",
+    "minify": "npx postcss dist/main.css -o dist/main.css && npx html-minifier-terser dist/index.html --collapse-whitespace --remove-comments --remove-optional-tags --minify-css true --minify-js true -o dist/index.html",
+    "preview": "npx vite preview"
   },
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-alpha.6",
@@ -36,8 +36,10 @@
     "react-router-dom": "^7.2.0",
     "react-swipeable": "^7.0.2",
     "reselect": "^5.1.1",
+    "sharp": "^0.34.2",
     "socket.io-client": "^4.8.1",
     "uuid": "^11.1.0",
+    "vite-plugin-image-optimizer": "^1.1.9",
     "vite-plugin-svgr": "^4.3.0"
   },
   "devDependencies": {
@@ -56,6 +58,7 @@
     "sass": "^1.85.1",
     "typescript": "~5.8.2",
     "vite": "^6.2.3",
-    "vite-plugin-checker": "^0.9.0"
+    "vite-plugin-checker": "^0.9.0",
+    "vite-plugin-remove-console": "^2.2.0"
   }
 }
