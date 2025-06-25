@@ -5,16 +5,22 @@ import {
     type OnResNewMatch,
 } from '@/types/socket.types';
 
+import {
+    handleSocket,
+    getNamespaceSocket,
+    waitForSocketConnection
+} from '@/config/socket.config';
+
 import { JSX, useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { toLikes, toChats } from '@/config/routes.config';
 import { WS_LIKES, WS_MATCH } from '@/config/env.config';
+import { getUnreadChatsAsync } from '@/store/slices/chatsSlice';
 import { setBadge, setLikeTypeBtn } from '@/store/slices/settingsSlice';
 import { ELikeBtnType } from '@/types/settings.type';
 import { getMatchDataAsync, addLikeInRealTimeAsync } from '@/store/slices/likesSlice';
-import { getNamespaceSocket, handleSocket, waitForSocketConnection } from '@/config/socket.config';
 import type { Socket } from 'socket.io-client';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -131,6 +137,7 @@ const QuestLayout = (): JSX.Element => {
 
     useEffect(() => {
         dispatch(setLikeTypeBtn(ELikeBtnType.Accepted));
+        dispatch(getUnreadChatsAsync());
 
         handleSocketSeed();
 

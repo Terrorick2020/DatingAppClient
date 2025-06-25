@@ -55,7 +55,9 @@
 
         &:has(.complaints-list),
         &:has(.users-list),
-        &:has(.target-chat) {
+        &:has(.target-chat),
+        &:has(.chats),
+        &:has(.psychologists) {
             .logo-header::after {
                 display: none;
             }
@@ -81,6 +83,13 @@
                 width: 100%;
                 height: 2rem;
                 background: linear-gradient(#000000, #000000, transparent);
+                opacity: 1;
+                transition: all 0.2s ease;
+            }
+
+            &.no-shadow::after {
+                opacity: 0;
+                display: none;
             }
 
             .logo {

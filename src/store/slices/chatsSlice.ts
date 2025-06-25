@@ -62,17 +62,18 @@ export const getUnreadChatsAsync = createAsyncThunk(
             if(
                 response.status !== 200 ||
                 !response.data.success  ||
-                !response.data.data     ||
+                !response.data.data     ||  
                 response.data.data === 'None'
             ) return null;
 
             const badgeCtx = rootState.settings.badge;
+            const content = response.data.data;
 
             dispatch(setBadge({
                 ...badgeCtx,
                 chats: {
                     value: true,
-                    content: response.data.data,
+                    content,
                 }
             }));
 
@@ -81,7 +82,7 @@ export const getUnreadChatsAsync = createAsyncThunk(
             return 'error';
         }
     }
-)
+);
 
 export const initChatsCtxAsync = createAsyncThunk(
     'chats/init-chats-ctx',

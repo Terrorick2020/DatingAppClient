@@ -20,18 +20,35 @@ const ProfileContent = (): JSX.Element => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(
-        () => {
-            const profileHtml = document.getElementById('profile');
-            if ( profileHtml ) profileHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+    useEffect(() => {
+        const profileHtml = document.getElementById('profile');
+        if ( profileHtml ) profileHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
-            const logoHeader = document.getElementById('logo-header');
-            if( logoHeader ) logoHeader.style.display = 'flex';
+        const logoHeader = document.getElementById('logo-header');
+        if( logoHeader ) logoHeader.style.display = 'flex';
 
-            dispatch(initEPCtxAsync());
-        },
-        []
-    )
+        dispatch(initEPCtxAsync());
+
+        if( profileHtml && logoHeader ) {
+            const handleScroll = (element: HTMLElement) => {
+                const atTop = element.scrollTop <= 5;
+
+                logoHeader.classList.toggle('no-shadow', atTop);
+            };
+
+            const onScroll = (event: Event) => {
+                handleScroll(event.currentTarget as HTMLElement);
+            };
+
+            profileHtml.addEventListener('scroll', onScroll);
+
+            handleScroll(profileHtml);
+
+            return () => {
+                profileHtml.removeEventListener('scroll', onScroll);
+            };
+        };
+    }, []);
 
     const handleInfoRoute = (): void => {
         navigate(toFillQuest);

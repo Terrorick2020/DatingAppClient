@@ -1,9 +1,13 @@
 import { JSX, memo, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { warningAlert } from '@/funcs/alert.funcs';
 import { shareURL } from '@telegram-apps/sdk';
 import type { PropsLinkMsg } from '@/types/ui.types';
+import type { RootDispatch } from '@/store';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import CircularProgress from '@mui/material/CircularProgress';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/joy/IconButton';
@@ -17,6 +21,9 @@ import CheckIcon from '@mui/icons-material/Check';
 
 const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
     const [copied, setCopied] = useState<boolean>(false);
+    const [loadSend, setLoadSend] = useState<boolean>(false);
+
+    const dispatch = useDispatch<RootDispatch>();
 
     const handleClose = (): void => props.setOpen(false);
 
@@ -29,25 +36,41 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
     };
 
     const handleShare = async (): Promise<void> => {
-        const text = 'Попробуй приложение!';
+        try {
+            setLoadSend(true);
 
-        if(shareURL.isAvailable()) {
-            await shareURL(props.link, text);
-        } else if (navigator.share) {
-            const shareData = {
-                title: 'Приглашение',
-                text,
-                url: props.link,
-            };
+            const text = 'Попробуй приложение!';
 
-            await navigator.share(shareData);
+            if(shareURL.isAvailable()) {
+                await shareURL(props.link, '\n' + text);
+            } else if (navigator.share) {
+                const shareData = {
+                    title: 'Приглашение',
+                    text,
+                    url: props.link,
+                };
+
+                await navigator.share(shareData);
+            }
+
+            handleClose();
+        } catch (error: any) {
+            warningAlert(dispatch, 'Не удалось отправить ссылку! Попробуйте позже');
+        } finally {
+            setLoadSend(false);
         }
     };
 
     const shareIsWorked = useMemo(() => shareURL.isAvailable() || navigator.share, []);
+
     const CopySvg = useMemo(
         () => copied ? <CheckIcon /> : <img src={SvgCopy} alt="copy" loading="lazy" decoding="async" />,
         [copied]
+    );
+
+    const sendSvg = useMemo(
+        () => loadSend ? <CircularProgress size="1.2rem" /> : <img src={SvgLink} alt="link" loading="lazy" decoding="async" />,
+        [loadSend],
     );
 
     return (
@@ -66,7 +89,7 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
         >
             <DialogTitle>
                 <img
-                    src={SvgLinkConfirm}
+                    src={ SvgLinkConfirm }
                     alt="link-confirm"
                     loading="lazy"
                     decoding="async"
@@ -83,7 +106,7 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
                         <p className="link">{props.link}</p>
                     </div>
                     <IconButton
-                        onClick={handleCopy}
+                        onClick={ handleCopy }
                     >
                         { CopySvg }
                     </IconButton>
@@ -93,15 +116,9 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
                 {
                     shareIsWorked && <Button
                         className="send-btn"
-                        startIcon={
-                            <img
-                                src={SvgLink}
-                                alt="link"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                        }
-                        onClick={handleShare}
+                        startIcon={ sendSvg }
+                        disabled={ loadSend }
+                        onClick={ handleShare }
                     >Отправить</Button>
                 }
                 <Button

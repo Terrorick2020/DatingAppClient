@@ -42,7 +42,8 @@
             grid-template-columns: repeat(2, 1fr);
             align-content: start;
             gap: 3vh 3vw;
-            overflow: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
             @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
 
             @media (min-width: 540px) {

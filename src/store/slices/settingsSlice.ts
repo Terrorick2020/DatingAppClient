@@ -216,7 +216,6 @@ export const sendComplaintAsync = createAsyncThunk(
                 reportedUserId: complaint.to,
                 type: `${complaint.valueGlob}, ${complaint.value}`,
                 description: complaint.query,
-                // reportedContentId: "msg_123456",
             };
 
             const response: AxiosResponse<FetchResponse<any>> = await api.post(COMPLS_ENDPOINT, data);

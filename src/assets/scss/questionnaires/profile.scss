@@ -12,7 +12,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-y: auto;
 
     &__ctx {
         width: 100%;
@@ -140,9 +141,13 @@
                 flex-direction: row;
                 justify-content: space-between;
                 cursor: pointer;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
 
-                &:hover {
-                    box-shadow: 0 0 0.5rem #ebffbf6b;
+                @media (hover: hover) and (pointer: fine) {   
+                    &:hover {
+                        box-shadow: 0 0 0.5rem #ebffbf6b;
+                    }
                 }
 
                 &:active {

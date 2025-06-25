@@ -112,7 +112,8 @@
         height: 100%;
         padding-inline: 1rem;
         padding-top: 1.5rem;
-        overflow: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
 
         .chat-list {
             width: 100%;

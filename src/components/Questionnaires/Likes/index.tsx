@@ -18,19 +18,42 @@ const LikesContent = (): JSX.Element => {
 
     const dispatch = useDispatch<RootDispatch>();
 
-    useEffect(
-        () => {
-            const likesHtml = document.getElementById('likes');
-            if ( likesHtml ) likesHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+    useEffect(() => {
+        const likesHtml = document.getElementById('likes');
+        if ( likesHtml ) likesHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
-            const logoHeader = document.getElementById('logo-header');
-            if( logoHeader ) logoHeader.style.display = 'flex';
+        const logoHeader = document.getElementById('logo-header');
+        if( logoHeader ) logoHeader.style.display = 'flex';
 
-            dispatch(resetBadge(EBadgeType.Likes));
-            dispatch(initLikesListAsync());
-        },
-        []
-    )
+        dispatch(resetBadge(EBadgeType.Likes));
+        dispatch(initLikesListAsync());
+    }, []);
+
+    useEffect(() => {
+        const logoHeader = document.getElementById('logo-header');
+        const cardsHtml = document.getElementById('cards');
+
+        if( cardsHtml && logoHeader ) {
+            const handleScroll = (element: HTMLElement) => {
+                const atTop = element.scrollTop <= 5;
+
+                logoHeader.classList.toggle('no-shadow', atTop);
+            };
+
+            const onScroll = (event: Event) => {
+                handleScroll(event.currentTarget as HTMLElement);
+            };
+
+            cardsHtml.addEventListener('scroll', onScroll);
+
+            handleScroll(cardsHtml);
+
+            return () => {
+                cardsHtml.removeEventListener('scroll', onScroll);
+            };
+        };
+
+    }, [isLoad, likesList.length]);
 
     if(isLoad) return (
         <div className="loader">
@@ -56,7 +79,7 @@ const LikesContent = (): JSX.Element => {
     return (
         <div className="likes__ctx">
             <h4 className="headline">Симпатии</h4>
-            <div className="cards">
+            <div className="cards" id='cards'>
                 <AnimatePresence>
                     {likesList.map((item, index) => (
                         <motion.div

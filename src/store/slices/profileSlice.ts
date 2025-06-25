@@ -97,7 +97,7 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
-            const telegramId = getTgID() || '7339722';
+            const telegramId = getTgID() || '73881722';
             const fromRefCode = getRefParams();
 
             if(!telegramId) return 'error';
@@ -280,6 +280,10 @@ export const signUpProfileAsync = createAsyncThunk(
 
             if(interestId === undefined) return null;
 
+            const needRefCode = mark === KeyFQBtnText.First &&
+                !!profileInfo.fromRefCode &&
+                profileInfo.fromRefCode !== undefined;
+
             const data = {
                 telegramId: profileInfo.id,
                 name: profileInfo.name,
@@ -293,15 +297,15 @@ export const signUpProfileAsync = createAsyncThunk(
                     latitude: profileInfo.latitude,
                     longitude: profileInfo.longitude,
                 }),
-                ...(profileInfo.fromRefCode !== undefined && {
+                ...(needRefCode && {
                     invitedByReferralCode: profileInfo.fromRefCode,
                 }),
                 lang,
                 photoIds: profileInfo.photos.map(item => +item.id),
                 interestId,
-            }
+            };
 
-            let response;
+            let response: any = null;
             let msg: string = '';
 
             switch(mark) {
@@ -315,34 +319,44 @@ export const signUpProfileAsync = createAsyncThunk(
                     break;
             }
 
-            if (
-                response &&
-                [200, 201].includes(response.status) &&
-                response.data.success
-            ) {
-                dispatch(setApiRes({
-                    value: true,
-                    msg,
-                    status: EApiStatus.Success,
-                    timestamp: Date.now(),
-                }));
+            if(
+                !response ||
+                ![200, 201].includes(response.status) ||
+                !response.data.success
+            ) return null;
 
-                const referralCode = response.data.data.referralCode;
-
-                referralCode && dispatch(
-                    setAddLink(REFERAL_LINK(referralCode))
-                );
-
-                dispatch(resetPhotosCashe());
-                
-                return 'success';
-            }
-    
-            return null;
-        } catch ( error ) {
             dispatch(setApiRes({
                 value: true,
-                msg: 'Произошла ошибка сервера',
+                msg,
+                status: EApiStatus.Success,
+                timestamp: Date.now(),
+            }));
+
+            if (mark === KeyFQBtnText.First) {
+                const referralCode = response.data.data.user.referralCode;
+
+                !!referralCode && dispatch(
+                    setAddLink(REFERAL_LINK(referralCode))
+                );
+            }
+
+            dispatch(setIsFirstly(false));
+            dispatch(resetPhotosCashe());
+    
+            return 'success';
+        } catch ( error: any ) {
+            let msg = 'Произошла ошибка сервера';
+
+            if (
+                error.name === "AxiosError" &&
+                error.status === 429
+            ) {
+                msg = 'Превышен лимит попыток регистрации, попробуйте позже';
+            };
+
+            dispatch(setApiRes({
+                value: true,
+                msg,
                 status: EApiStatus.Error,
                 timestamp: Date.now(),
             }));

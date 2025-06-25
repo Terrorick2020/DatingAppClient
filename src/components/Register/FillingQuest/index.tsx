@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from 'react';
+import { JSX, useEffect, useRef, useState } from 'react';
 import { addRoute, initFillingQuestAsync } from '@/store/slices/settingsSlice';
 import { setLoad } from '@/store/slices/settingsSlice';
 import { createSelector } from 'reselect';
@@ -11,7 +11,7 @@ import { ANIME_DURATION } from '@/constant/settings';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { fQBtnText } from '@/constant/register';
 import { Slide } from 'react-awesome-reveal';
-import { signUpProfileAsync, getSelfProfile } from '@/store/slices/profileSlice';
+import { signUpProfileAsync } from '@/store/slices/profileSlice';
 import { type FQBtnTextItem, KeyFQBtnText } from '@/types/register.typs';
 import { type FQErrorsItem, EAnimeDirection } from '@/types/settings.type';
 import type { IState } from '@/types/store.types';
@@ -47,6 +47,9 @@ const FillingQuestContent = (): JSX.Element => {
     
     const [regLoad, setRegLoad] = useState<boolean>(false);
     const [btnCtx, setBtnCtx] = useState<FQBtnTextItem>(fQBtnText[KeyFQBtnText.First]);
+    const [isDis, setIsDis] = useState<boolean>(true);
+
+    const infoCache = useRef<string>('');
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
@@ -54,14 +57,6 @@ const FillingQuestContent = (): JSX.Element => {
 
     const initFQCtx = async (): Promise<void> => {
         dispatch(setLoad(true));
-
-        if(!isFirstly) {
-            const profRes = await dispatch(getSelfProfile()).unwrap();
-
-            if(profRes && profRes !== 'error') {
-                setBtnCtx(fQBtnText[KeyFQBtnText.Other]);
-            }
-        }
 
         await dispatch(initFillingQuestAsync());
 
@@ -77,9 +72,21 @@ const FillingQuestContent = (): JSX.Element => {
             if( logoHeader ) logoHeader.style.display = 'flex';
 
             initFQCtx();
+
+            infoCache.current = JSON.stringify(profileInfo);
         },
         []
     );
+
+    useEffect(() => {
+        if(isFirstly) return;
+
+        setBtnCtx(fQBtnText[KeyFQBtnText.Other]);
+    }, [isFirstly]);
+
+    useEffect(() => {
+        setIsDis(infoCache.current === JSON.stringify(profileInfo));
+    }, [profileInfo]);
 
     const handleRoute = async (): Promise<void> => {
         const errObj: { [key: string]: FQErrorsItem } = {};
@@ -182,12 +189,14 @@ const FillingQuestContent = (): JSX.Element => {
                         <FillingQuestSelectionSex />
                     </Slide>
                 </div>
-                <div className="link" onClick={handleRoute}>
+                <div className="link">
                     <Button
                         fullWidth
                         variant="contained"
                         loadingPosition="start"
                         loading={regLoad}
+                        disabled={isDis}
+                        onClick={handleRoute}
                     >
                         {regLoad ? btnCtx.loadText : btnCtx.text}
                     </Button>

@@ -109,8 +109,10 @@
             scale: 0.95;
         }
 
-        &:hover {
-            box-shadow: 0 0 0.7rem #999999;
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                box-shadow: 0 0 0.7rem #999999;
+            }
         }
     }
 }

@@ -126,10 +126,12 @@
                     border: 1px solid #D7FF81;
                     background: transparent;
                     color: #D7FF81;
-        
-                    &:hover {
-                        background: #D7FF81;
-                        color: #121112;
+
+                    @media (hover: hover) and (pointer: fine) {
+                        &:hover {
+                            background: #D7FF81;
+                            color: #121112;
+                        }
                     }
                 }
 
@@ -217,13 +219,16 @@
                         background: #D7FF81;
                         transition: all 0.1s ease;
 
-                        &:hover {
-                            box-shadow: 0 0 0.4rem #f0ffd057;
+                        @media (hover: hover) and (pointer: fine) {
+                            &:hover {
+                                box-shadow: 0 0 0.4rem #f0ffd057;
+                            }   
                         }
 
                         &:active {
                             scale: 0.99;
                             box-shadow: 0 0 0.6rem #f0ffd08b;
+                            background: #D7FF81;
                         }
                     }
                 }
@@ -252,10 +257,16 @@
                         background: transparent;
                         color: #D7FF81;
             
-                        &:hover {
-                            background: #D7FF81;
-                            color: #121112;
+                        @media (hover: hover) and (pointer: fine) {
+                            &:hover {
+                                background: #D7FF81;
+                                color: #121112;
+                            }
                         }
+                    }
+
+                    .MuiButton-icon .MuiCircularProgress-root {
+                        color: #121112;
                     }
                 }
             }
@@ -285,9 +296,11 @@
                             color: #D7FF81;
                             border: 2px solid #D7FF81;
             
-                            &:hover {
-                                background: #D7FF81;
-                                color: #121112;
+                            @media (hover: hover) and (pointer: fine) {
+                                &:hover {
+                                    background: #D7FF81;
+                                    color: #121112;
+                                }
                             }
                         }
 

@@ -14,9 +14,11 @@
                 background: #D7FF81;
             }
 
-            &:hover {
-                color: #121112;
-                background: #D7FF81;
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    color: #121112;
+                    background: #D7FF81;
+                }
             }
         }
     }
