@@ -61,10 +61,6 @@ export default defineConfig(({ mode }) => {
           clientPort: PORT,
         },
       }),
-      https: {
-        key: './ssl/key.pem',
-        cert: './ssl/cert.pem',
-      }
     },
     preview: {
       allowedHosts: [ DOMAIN ],
@@ -89,6 +85,14 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks(id: string) {
             if (id.includes('node_modules')) {
+
+              if (
+                id.includes('react-router-dom') ||
+                id.includes('@remix-run')       ||
+                id.includes('react-router')
+              ) {
+                return '@react-router';
+              };
               
               if (id.includes('@reduxjs/toolkit') || id.includes('react-redux') || id.includes('reselect')) {
                 return 'redux';
