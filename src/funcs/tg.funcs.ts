@@ -1,31 +1,42 @@
 import {
-    init,
-    isTMA, 
-    viewport, 
-    cloudStorage,
-    swipeBehavior
+  init,
+  isTMA,
+  viewport,
+  cloudStorage,
+  swipeBehavior,
+  addToHomeScreen,
+  onAddedToHomeScreen,
+  checkHomeScreenStatus,
+  onAddToHomeScreenFailed,
 } from '@telegram-apps/sdk';
+
+import {
+  EHomeScreenStatus,
+  type InitHomeScreenRes
+} from '@/types/tg.types';
 
 import { delay } from './general.funcs';
 import type { WebAppUser } from '@/types/profile.types';
 
 
-export async function isWorkedCloudeStore(): Promise<void> {
-    let attempts = 0;
-    while (attempts < 5) {
-        const is = cloudStorage.isSupported() &&
-            cloudStorage.getItem.isAvailable() &&
-            cloudStorage.setItem.isAvailable() &&
-            cloudStorage.deleteItem.isAvailable()
+async function isWorkedCloudeStore(): Promise<boolean> {
+  let attempts = 0;
+  let ready: boolean = false;
 
-        if(is) return;
+  while (attempts < 5) {
+    ready = cloudStorage.isSupported() &&
+      cloudStorage.getItem.isAvailable() &&
+      cloudStorage.setItem.isAvailable() &&
+      cloudStorage.deleteItem.isAvailable();
 
-        await delay(500);
-        
-        attempts++;
-    }
+    if(ready) return ready;
 
-    return;
+    await delay(500);
+    
+    attempts++;
+  }
+
+  return ready;
 }
 
 export async function initTg() {
@@ -77,4 +88,49 @@ export function getRefParams(): string | null {
     return window.Telegram.WebApp.initDataUnsafe.start_param || null;
   }
   return null;
+}
+
+async function checkInstallHomeScreen(): Promise<InitHomeScreenRes> {
+  if (!checkHomeScreenStatus.isAvailable()) return null;
+
+  try {
+    const status: EHomeScreenStatus = await checkHomeScreenStatus();
+    return status;
+  } catch (err) {
+    return 'error';
+  }
+}
+
+async function toOfferHomeScreen(): Promise<void> {
+  if (addToHomeScreen.isAvailable()) {
+    addToHomeScreen();
+
+    const handleSuccess = () => {
+      console.log( 'hello' )
+    }
+
+    onAddedToHomeScreen(handleSuccess);
+
+    const handleFailed = () => {
+      console.log( 'UnHello' )
+    }
+
+    onAddToHomeScreenFailed(handleFailed);
+  }
+}
+
+export async function setHomeScreen(): Promise<void> {
+  const response = await checkInstallHomeScreen();
+
+  if(!response || response === 'error') return;
+
+  switch(response) {
+    case EHomeScreenStatus.Added:
+      return;
+    case EHomeScreenStatus.NotAdded:
+      toOfferHomeScreen();
+      break;
+    case EHomeScreenStatus.Unknown:
+      break;
+  }
 }

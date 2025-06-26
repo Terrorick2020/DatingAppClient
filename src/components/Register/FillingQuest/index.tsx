@@ -149,13 +149,14 @@ const FillingQuestContent = (): JSX.Element => {
         
         const response = await dispatch(signUpProfileAsync(btnCtx.mark)).unwrap();
         
-        if(
-            response &&
-            response !== 'error' &&
-            btnCtx.mark === KeyFQBtnText.First
-        ) {
-            dispatch(addRoute(location.pathname));
-            navigate(toPlans);
+        if( response && response !== 'error') {
+            infoCache.current = JSON.stringify(profileInfo);
+            setIsDis(true);
+
+            if( btnCtx.mark === KeyFQBtnText.First ) {
+                dispatch(addRoute(location.pathname));
+                navigate(toPlans);
+            };
         };
 
         setRegLoad(false);

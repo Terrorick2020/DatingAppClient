@@ -1,5 +1,11 @@
-import { EApiStatus } from './settings.type';
-import { ESex } from './store.types';
+import {
+	EApiStatus,
+	ELanguage,
+	InterestsVarsItem,
+	CityesVarsItem
+} from './settings.type';
+
+import { ELineStatus, EProfileRoles, EProfileStatus, ESex } from './store.types';
 
 
 export interface FetchResBase {
@@ -71,8 +77,55 @@ export interface RegEndpointResUser {
 	coordinates: number[] | null
 	enableGeo: boolean
 	telegramId: string
+	referralCode: string
 	town: string
 }
 export interface RegEndpointRes {
 	user: RegEndpointResUser
+}
+
+export interface PhotoItemRes {
+	id: number
+	url: string
+}
+
+export interface UserProfileResBase {
+	telegramId: string
+  	name: string
+  	town: string
+	sex: ESex.All | ESex.Male
+	selSex: ESex
+	age: number
+  	bio: string
+  	lang: ELanguage
+	enableGeo: boolean
+	isVerify: boolean
+	latitude?: number
+	longitude?: number
+	role: EProfileRoles
+	status: EProfileStatus
+	referralCode?: string
+	createdAt: string
+	updatedAt: string
+	interest: InterestsVarsItem
+	photos: PhotoItemRes[]
+}
+
+export interface GetSelfEndpointRes extends UserProfileResBase {
+	invitedBy?: string
+	invitedUsers: string[]
+}
+
+export interface TargetUserEndpointRes extends UserProfileResBase {
+	isOnline: ELineStatus | boolean
+	interestId: number
+	invitedById: string | null
+	city: CityesVarsItem
+}
+
+export interface SendComplEndpointRes {
+	createdAt: number
+	id: string
+	status: string
+	type: string
 }

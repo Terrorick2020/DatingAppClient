@@ -20,7 +20,7 @@ import { setLoad } from './settingsSlice';
 import { initialArgs } from '@/constant/quest';
 import type { BaseVarsItem, DistrictVarsItem } from '@/types/settings.type';
 import type { EveningPlans } from '@/types/profile.types';
-import type { FetchResponse } from '@/types/fetch.type';
+import type { FetchResponse, TargetUserEndpointRes } from '@/types/fetch.type';
 import type { AsyncThunkRes, IState } from '@/types/store.types';
 import type { AxiosResponse } from 'axios';
 
@@ -77,7 +77,7 @@ export const initTargetUserAsync = createAsyncThunk(
             dispatch(setLoad(true));
 
             const response: [
-                AxiosResponse<FetchResponse<any>>,
+                AxiosResponse<FetchResponse<TargetUserEndpointRes>>,
                 AxiosResponse<FetchResponse<EveningPlans>>,
             ] = await Promise.all([
                 api.get(`${USER_ENDPOINT}/${id}`),

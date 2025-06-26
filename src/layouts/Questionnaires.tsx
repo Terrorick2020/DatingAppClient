@@ -16,6 +16,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { toLikes, toChats } from '@/config/routes.config';
+import { createSelector } from 'reselect';
 import { WS_LIKES, WS_MATCH } from '@/config/env.config';
 import { getUnreadChatsAsync } from '@/store/slices/chatsSlice';
 import { setBadge, setLikeTypeBtn } from '@/store/slices/settingsSlice';
@@ -30,10 +31,21 @@ import QuestNavBar from '@/components/Layouts/QuestNavBar';
 import SAPlansTimeout from '@/components/Layouts/PlansTimeout';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectProfile = (state: IState) => state.profile;
+const selectLikes = (state: IState) => state.likes;
+
+const selectQuestState = createSelector(
+    [selectSettings, selectProfile, selectLikes],
+    (settings, profile, likes) => ({
+      isCurrent: profile.eveningPlans.isCurrent,
+      badgeCtx: settings.badge,
+      match: likes.match,
+    })
+);
+
 const QuestLayout = (): JSX.Element => {
-    const isCurrent = useSelector((state: IState) => state.profile.eveningPlans.isCurrent);
-    const badgeCtx = useSelector((state: IState) => state.settings.badge);
-    const match = useSelector((state: IState) => state.likes.match);
+    const { isCurrent, badgeCtx, match } = useSelector(selectQuestState);
 
     const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();

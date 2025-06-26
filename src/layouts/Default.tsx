@@ -11,6 +11,7 @@ import { EApiStatus } from '@/types/settings.type';
 import { SNACK_TIMEOUT } from '@/constant/settings';
 import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
 import { defNamespaces } from '@/config/socket.config';
+import { setHomeScreen } from '@/funcs/tg.funcs';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -65,6 +66,7 @@ const DefaultLayout = memo((): JSX.Element => {
 
     useEffect( () => {
         handleSocketConnect();
+        setHomeScreen();
 
         window.addEventListener('beforeunload', handleSocketDisconnect);
 

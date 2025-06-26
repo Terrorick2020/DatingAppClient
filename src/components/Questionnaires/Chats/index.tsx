@@ -3,8 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { toSlider } from '@/config/routes.config';
 import { initChatsCtxAsync } from '@/store/slices/chatsSlice';
-import { resetBadge } from '@/store/slices/settingsSlice';
-import { EBadgeType } from '@/types/settings.type';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -28,7 +26,6 @@ const ChatsContent = (): JSX.Element => {
             const logoHeader = document.getElementById('logo-header');
             if( logoHeader ) logoHeader.style.display = 'flex';
 
-            dispatch(resetBadge(EBadgeType.Chats));
             dispatch(initChatsCtxAsync());
         },
         []

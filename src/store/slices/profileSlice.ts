@@ -15,6 +15,7 @@ import type {
     FetchGeoRes,
     FetchSavePhotoRes,
     RegEndpointRes,
+    GetSelfEndpointRes,
 } from '@/types/fetch.type';
 
 import {
@@ -97,7 +98,7 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
-            const telegramId = getTgID() || '73881722';
+            const telegramId = getTgID() || '7900722';
             const fromRefCode = getRefParams();
 
             if(!telegramId) return 'error';
@@ -236,12 +237,21 @@ export const deleteSelfPhotoAsync = createAsyncThunk(
                 photoId: id,
             }
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.post(DELETE_PHOTO, data);
+            const response: AxiosResponse<FetchResponse<string>> = await api.post(DELETE_PHOTO, data);
 
             if(
                 response.status === 200 &&
                 response.data.success
-            ) return id;
+            ) {
+                dispatch(setApiRes({
+                    value: true,
+                    msg: 'Фотография успешно удалена! Не забудьте сохранить изменения',
+                    status: EApiStatus.Success,
+                    timestamp: Date.now(),
+                }));
+
+                return id;
+            }
 
             dispatch(setApiRes({
                 value: true,
@@ -310,11 +320,13 @@ export const signUpProfileAsync = createAsyncThunk(
 
             switch(mark) {
                 case KeyFQBtnText.First:
-                    response = await api.post(REG_ENDPOINT, data) as AxiosResponse<FetchResponse<RegEndpointRes>>;
+                    response = await api.post(REG_ENDPOINT, data) as
+                        AxiosResponse<FetchResponse<RegEndpointRes>>;
                     msg = 'Регистрация пользователя прошла успешно';
                     break;
                 case KeyFQBtnText.Other:
-                    response = await api.patch(`${USER_ENDPOINT}/${profileInfo.id}`, data) as AxiosResponse<FetchResponse<any>>;
+                    response = await api.patch(`${USER_ENDPOINT}/${profileInfo.id}`, data) as
+                        AxiosResponse<FetchResponse<null>>;
                     msg = 'Профиль обновлён успешно';
                     break;
             }
@@ -381,7 +393,7 @@ export const getSelfProfile = createAsyncThunk(
 
             const data = { telegramId };
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.post(LOG_ENDPOINT, data);
+            const response: AxiosResponse<FetchResponse<GetSelfEndpointRes>> = await api.post(LOG_ENDPOINT, data);
 
             if(
                 response.status === 200 &&
@@ -407,7 +419,7 @@ export const getSelfProfile = createAsyncThunk(
                     bio: response.data.data.bio,
                     interest: response.data.data.interest.value,
                     selSex: response.data.data.selSex,
-                    referralCode,
+                    referralCode: referralCode ? referralCode : '',
                 }
 
                 referralCode && dispatch(

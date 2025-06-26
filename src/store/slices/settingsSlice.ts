@@ -42,9 +42,9 @@ import {
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { connectSocketRoom } from '@/config/socket.config';
-import { ServerMethods } from '@/types/socket.types';
+import { ServerMethods, type ResConnectionDto } from '@/types/socket.types';
 import { setInfo, setPlan } from './profileSlice';
-import type { FetchResponse } from '@/types/fetch.type';
+import type { FetchResponse, SendComplEndpointRes } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
 
 import api from '@/config/fetch.config';
@@ -218,7 +218,7 @@ export const sendComplaintAsync = createAsyncThunk(
                 description: complaint.query,
             };
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.post(COMPLS_ENDPOINT, data);
+            const response: AxiosResponse<FetchResponse<SendComplEndpointRes>> = await api.post(COMPLS_ENDPOINT, data);
 
             if(
                 response.status === 201 &&
@@ -330,11 +330,11 @@ export const initSocketRoomsConnectAsync = createAsyncThunk(
                 telegramId,
             };
 
-            const responses = await Promise.all([
+            const responses: (ResConnectionDto | null)[] = await Promise.all(
                 namespaces.map(
                     item => connectSocketRoom(item, ServerMethods.JoinRoom, socketData),
                 )
-            ]);
+            );
 
             for(let item of responses) {
                 if(!item) return null
@@ -359,11 +359,11 @@ export const initSocketRoomsDisconnectAsync = createAsyncThunk(
                 telegramId,    
             };
 
-            const responses = await Promise.all([
+            const responses: (ResConnectionDto | null)[] = await Promise.all(
                 namespaces.map(
                     item => connectSocketRoom(item, ServerMethods.LeaveRoom, socketData),
                 )
-            ]);
+            );
 
             for(let item of responses) {
                 if(!item) return null

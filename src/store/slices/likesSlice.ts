@@ -11,7 +11,7 @@ import { LIKES_ENDPOINT, USER_ENDPOINT, CHATS_ADD_MSG_ENDPOINT } from '@/config/
 import { setLoad, setApiRes } from './settingsSlice';
 import { PlanLabelSvgType } from '@/types/ui.types';
 import { EApiStatus } from '@/types/settings.type';
-import { type FetchResponse, EFetchLikesTProps } from '@/types/fetch.type';
+import { EFetchLikesTProps, type FetchResponse } from '@/types/fetch.type';
 import type { OnResNewMatch, OnResNewLike } from '@/types/socket.types';
 import type { AxiosResponse } from 'axios';
 import type { IState, AsyncThunkRes } from '@/types/store.types';
@@ -206,7 +206,7 @@ export const getMatchDataAsync = createAsyncThunk(
 
 export const acceptMatchAsync = createAsyncThunk(
     'likes/accept-match',
-    async (text: string, {getState}): Promise<AsyncThunkRes<'success'>> => {
+    async (text: string, {getState, dispatch}): Promise<AsyncThunkRes<'success'>> => {
         try {
             const rootState = getState() as IState;
             const fromUser = rootState.profile.info.id;
@@ -227,6 +227,13 @@ export const acceptMatchAsync = createAsyncThunk(
 
             return 'success';
         } catch (error) {
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Ошибка отправки сообщения в чат! Попробуйте сделать это в чате',
+                status: EApiStatus.Warning,
+                timestamp: Date.now(),
+            }));
+
             return 'error';
         }
     }

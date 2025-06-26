@@ -201,12 +201,22 @@ export const getChatByIdAsync = createAsyncThunk(
 
             ) return null;
 
+            // TODO: Переделать на сервере
+            const promtLineStat: ELineStatus | boolean = interRes.data.data.isOnline;
+            let lineStat: ELineStatus | null = null;
+
+            if(typeof promtLineStat === 'boolean') {
+                lineStat = promtLineStat ? ELineStatus.Online : ELineStatus.Offline;
+            } else {
+                lineStat = promtLineStat;
+            }
+
             const interlocutor: ChatInterlocutor = {
                 id: interRes.data.data.telegramId,
                 avatar: interRes.data.data.photos[0].url,
                 name: interRes.data.data.name,
                 age: interRes.data.data.age,
-                lineStat: interRes.data.data.isOnline ? ELineStatus.Online : ELineStatus.Offline,
+                lineStat,
             };
 
             let chatDialog: TargetChatDay[] = []
