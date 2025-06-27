@@ -96,7 +96,11 @@ export default defineConfig(({ mode }) => {
                 return '@react-router';
               };
               
-              if (id.includes('@reduxjs/toolkit') || id.includes('react-redux') || id.includes('reselect')) {
+              if (
+                id.includes('@reduxjs/toolkit') ||
+                id.includes('react-redux')      ||
+                id.includes('reselect')
+              ) {
                 return 'redux';
               };
 
