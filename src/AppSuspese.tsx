@@ -14,7 +14,7 @@ import AppPreloader from './components/AppPreloader';
 async function delayForLazy( promise: Promise<any> ) {
     const start = performance.now();
 
-    const [ checkRes, jsxRes ] = await Promise.all([
+    const [ checkRes, jsxRes, _ ] = await Promise.all([
         store.dispatch(initProfileAsync()).unwrap(),
         promise,
         initTg(),

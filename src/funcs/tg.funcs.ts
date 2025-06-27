@@ -39,30 +39,39 @@ async function isWorkedCloudeStore(): Promise<boolean> {
   return ready;
 }
 
-export async function initTg() {
-  if (await isTMA()) {
-    await init();
+export async function initTg(): Promise<void> {
+  const isTg = await isTMA();
 
-    if (viewport.mount.isAvailable()) {
-      await viewport.mount();
-      viewport.expand();
-    }
+  if(!isTg) return;
 
-    if (viewport.requestFullscreen.isAvailable()) {
+  await init();
+
+  await delay(50);
+
+  if (viewport.mount.isAvailable()) {
+    await viewport.mount();
+    viewport.expand();
+  }
+
+  if (viewport.requestFullscreen.isAvailable()) {
+    await viewport.requestFullscreen();
+
+    if(!viewport.isFullscreen()) {
+      await viewport.exitFullscreen();
       await viewport.requestFullscreen();
     }
-
-    if ( swipeBehavior.mount.isAvailable() ) {
-      await swipeBehavior.mount();
-
-      if ( swipeBehavior.isMounted() ) {
-        swipeBehavior.disableVertical();
-        swipeBehavior.isVerticalEnabled();
-      }
-    }
-
-    await isWorkedCloudeStore();
   }
+
+  if (swipeBehavior.mount.isAvailable()) {
+    await swipeBehavior.mount();
+
+    if (swipeBehavior.isMounted()) {
+      swipeBehavior.disableVertical();
+      swipeBehavior.isVerticalEnabled();
+    }
+  }
+
+  await isWorkedCloudeStore();
 }
 
 
