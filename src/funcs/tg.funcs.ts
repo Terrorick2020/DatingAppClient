@@ -8,7 +8,6 @@ import {
   onAddedToHomeScreen,
   checkHomeScreenStatus,
   onAddToHomeScreenFailed,
-  isFullscreen,
 } from '@telegram-apps/sdk-react';
 
 import {
