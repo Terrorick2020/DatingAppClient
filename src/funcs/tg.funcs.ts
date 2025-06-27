@@ -46,8 +46,6 @@ export async function initTg(): Promise<void> {
 
   await init();
 
-  await delay(50);
-
   if (viewport.mount.isAvailable()) {
     await viewport.mount();
     viewport.expand();
@@ -55,11 +53,6 @@ export async function initTg(): Promise<void> {
 
   if (viewport.requestFullscreen.isAvailable()) {
     await viewport.requestFullscreen();
-
-    if(!viewport.isFullscreen()) {
-      await viewport.exitFullscreen();
-      await viewport.requestFullscreen();
-    }
   }
 
   if (swipeBehavior.mount.isAvailable()) {
@@ -73,7 +66,6 @@ export async function initTg(): Promise<void> {
 
   await isWorkedCloudeStore();
 }
-
 
 export function getTgID(): string | null {
   const data = window.location.href;
