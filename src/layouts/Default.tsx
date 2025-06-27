@@ -11,7 +11,7 @@ import { EApiStatus } from '@/types/settings.type';
 import { SNACK_TIMEOUT } from '@/constant/settings';
 import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
 import { defNamespaces } from '@/config/socket.config';
-import { setHomeScreen, initTg } from '@/funcs/tg.funcs';
+import { setHomeScreen } from '@/funcs/tg.funcs';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -64,8 +64,8 @@ const DefaultLayout = memo((): JSX.Element => {
         ]);
     };
 
-    const handleTg = async (): Promise<void> => {
-        await initTg();
+    useEffect( () => {
+        handleSocketConnect();
         setHomeScreen();
 
         window.addEventListener('beforeunload', handleSocketDisconnect);
@@ -73,11 +73,6 @@ const DefaultLayout = memo((): JSX.Element => {
         if (typeof window.Telegram?.WebApp?.onEvent === 'function') {
             (window.Telegram.WebApp as any).onEvent('close', handleSocketDisconnect);
         };
-    }
-
-    useEffect( () => {
-        handleSocketConnect();
-        handleTg();
         
         return () => {
             handleSocketDisconnect();

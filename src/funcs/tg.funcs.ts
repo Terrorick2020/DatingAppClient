@@ -59,7 +59,7 @@ export async function initTg(): Promise<void> {
   try {
     await init();
   } catch {
-  } finally {
+    return;
   }
 
 

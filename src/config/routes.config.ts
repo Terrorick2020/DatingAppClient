@@ -42,33 +42,38 @@ export const appRoutes = {
     },
 }
 
+export const regRoutes   = appRoutes.register;
+export const epRoutes    = appRoutes.eveningPlans;
+export const questRoutes = appRoutes.questionnaires;
+export const adminRoutes = appRoutes.admin;
+
 export const toBlocked = appRoutes.blocked;
 export const toError = appRoutes.error;
 
-const regGlobRoute   = appRoutes.register.global;
-const previewRpute   = appRoutes.register.inner.preview;
-const langRoute      = appRoutes.register.inner.lang;
-const fillQuestRoute = appRoutes.register.inner.fillQuest;
-const mediaRoute     = appRoutes.register.inner.media;
+const regGlobRoute   = regRoutes.global;
+const previewRpute   = regRoutes.inner.preview;
+const langRoute      = regRoutes.inner.lang;
+const fillQuestRoute = regRoutes.inner.fillQuest;
+const mediaRoute     = regRoutes.inner.media;
 
 export const toPreview   = `${regGlobRoute}/${previewRpute}`;
 export const toLang      = `${regGlobRoute}/${langRoute}`;
 export const toFillQuest = `${regGlobRoute}/${fillQuestRoute}`;
 export const toMedia     = `${regGlobRoute}/${mediaRoute}`;
 
-const evePlansGlobRoute = appRoutes.eveningPlans.global;
-const plansRoute        = appRoutes.eveningPlans.inner.plans;
-const locationRoute     = appRoutes.eveningPlans.inner.location;
+const evePlansGlobRoute = epRoutes.global;
+const plansRoute        = epRoutes.inner.plans;
+const locationRoute     = epRoutes.inner.location;
 
 export const toPlans    = `${evePlansGlobRoute}/${plansRoute}`;
 export const toLocation = `${evePlansGlobRoute}/${locationRoute}`;
 
-const questGlobRoute = appRoutes.questionnaires.global;
-const chatsRoute     = appRoutes.questionnaires.inner.chats;
-const likesRoute     = appRoutes.questionnaires.inner.likes;
-const profileRoute   = appRoutes.questionnaires.inner.profile;
-const psychRoute     = appRoutes.questionnaires.inner.psychologists;
-const sliderRoute    = appRoutes.questionnaires.inner.slider;
+const questGlobRoute = questRoutes.global;
+const chatsRoute     = questRoutes.inner.chats;
+const likesRoute     = questRoutes.inner.likes;
+const profileRoute   = questRoutes.inner.profile;
+const psychRoute     = questRoutes.inner.psychologists;
+const sliderRoute    = questRoutes.inner.slider;
 
 export const toChats   = `${questGlobRoute}/${chatsRoute}`;
 export const toLikes   = `${questGlobRoute}/${likesRoute}`;
@@ -80,11 +85,11 @@ export const toDetails     = appRoutes.details;
 export const toTargetChat  = appRoutes.targetChat;
 export const toTargetPsych = appRoutes.targetPsych;
 
-const adminGlobRoute  = appRoutes.admin.global;
-const changeRoute     = appRoutes.admin.inner.nav;
-const usersListRoute  = appRoutes.admin.inner.usersList;
-const userInfoRoute   = appRoutes.admin.inner.userInfo;
-const complsListRoute = appRoutes.admin.inner.compalintsList;
+const adminGlobRoute  = adminRoutes.global;
+const changeRoute     = adminRoutes.inner.nav;
+const usersListRoute  = adminRoutes.inner.usersList;
+const userInfoRoute   = adminRoutes.inner.userInfo;
+const complsListRoute = adminRoutes.inner.compalintsList;
 
 export const toChange     = `${adminGlobRoute}/${changeRoute}`;
 export const toUsersList  = `${adminGlobRoute}/${usersListRoute}`;
