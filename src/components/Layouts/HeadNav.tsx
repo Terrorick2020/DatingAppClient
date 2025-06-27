@@ -86,8 +86,8 @@ const DesktopHeadNav = (): JSX.Element => {
             <Button 
                 className="btn text-fon rounded"
                 variant="contained"
-                startIcon={<SvgArrowDown />}
-                endIcon={<SvgOther />}
+                startIcon={ <SvgArrowDown /> }
+                endIcon={ <SvgOther /> }
             />
         </div>
     )
