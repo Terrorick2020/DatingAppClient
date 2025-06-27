@@ -10,7 +10,7 @@ import AppSuspense from './AppSuspese';
 import store from './store';
 
 
-(() => { initTg() });
+(() => { initTg() })();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
