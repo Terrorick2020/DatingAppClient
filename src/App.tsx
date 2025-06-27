@@ -43,7 +43,7 @@ const epRoutes    = appRoutes.eveningPlans;
 const questRoutes = appRoutes.questionnaires;
 const adminRoutes = appRoutes.admin;
 
-const App = (): JSX.Element => {  
+const App = (): JSX.Element => {
   return (
     <Routes>
       <Route element={ <DefautlLayout /> }>

@@ -73,10 +73,6 @@ export default defineConfig(({ mode }) => {
           clientPort: PORT,
         },
       }),
-      https: {
-        key: './ssl/key.pem',
-        cert: './ssl/cert.pem',
-      }
     },
     preview: {
       allowedHosts: [ DOMAIN ],

@@ -8,6 +8,7 @@ import {
   onAddedToHomeScreen,
   checkHomeScreenStatus,
   onAddToHomeScreenFailed,
+  isFullscreen,
 } from '@telegram-apps/sdk-react';
 
 import {
@@ -56,14 +57,17 @@ export async function initTg(): Promise<void> {
     }
   }
 
-  await init();
-
-  if (viewport.mount.isAvailable()) {
-    viewport.mount();
-    viewport.expand();
+  try {
+    await init();
+  } catch {
+  } finally {
   }
 
-  await delay(retryDelay);
+
+  if (viewport.mount.isAvailable()) {
+    await viewport.mount();
+    viewport.expand();
+  }
 
   if (viewport.requestFullscreen.isAvailable()) {
     await viewport.requestFullscreen();
