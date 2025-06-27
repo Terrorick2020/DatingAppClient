@@ -6,8 +6,6 @@ declare module '*.svg' {
     export default src
 };
 
-declare module '@telegram-apps/sdk';
-
 declare global {
   interface Window {
     Telegram: {
