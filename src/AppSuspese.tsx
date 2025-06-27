@@ -5,6 +5,7 @@ import { toChange, toPreview, toLikes } from './config/routes.config';{ }
 import { setNavigate, navigate } from './config/fetch.config';
 import { initProfileAsync, getSelfProfile, getSelfPlansAsync } from '@/store/slices/profileSlice';
 import { delay, fadeOutPreloader } from './funcs/general.funcs';
+import { initTg } from './funcs/tg.funcs';
 
 import store from './store';
 import AppPreloader from './components/AppPreloader';
@@ -16,6 +17,7 @@ async function delayForLazy( promise: Promise<any> ) {
     const [ checkRes, jsxRes ] = await Promise.all([
         store.dispatch(initProfileAsync()).unwrap(),
         promise,
+        initTg(),
     ]);
 
     if(navigate) {

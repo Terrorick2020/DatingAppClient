@@ -1,4 +1,5 @@
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv } from 'vite';
 
 import removeConsole from 'vite-plugin-remove-console';
@@ -27,6 +28,7 @@ export default defineConfig(({ mode }) => {
   ) throw new Error('Hasn`t some environments in vite.config.ts');
 
   const isProd = MODE === 'prod';
+  const isAnalyze = process.env.MODE = 'analyze';
 
   return {
     plugins: [
@@ -51,6 +53,14 @@ export default defineConfig(({ mode }) => {
       removeConsole({
         includes: ['error', 'warn', 'log', 'info', 'debug'],
       }),
+      ...(isAnalyze ? [visualizer({
+        filename: './dist/stats.html',
+        title: 'Vite Bundle Analysis',
+        open: true,
+        template: 'treemap',
+        gzipSize: true,
+        brotliSize: true,
+      })] : []),
     ],
     server: {
       host: isProd ? PROD_HOST : DEV_HOST,
@@ -88,14 +98,10 @@ export default defineConfig(({ mode }) => {
           manualChunks(id: string) {
             if (id.includes('node_modules')) {
 
-              if (
-                id.includes('react-router-dom') ||
-                id.includes('@remix-run')       ||
-                id.includes('react-router')
-              ) {
+              if (id.includes('react-router-dom') || id.includes('react-router')) {
                 return '@react-router';
               };
-              
+ 
               if (
                 id.includes('@reduxjs/toolkit') ||
                 id.includes('react-redux')      ||
