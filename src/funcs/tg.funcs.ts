@@ -8,7 +8,7 @@ import {
   onAddedToHomeScreen,
   checkHomeScreenStatus,
   onAddToHomeScreenFailed,
-} from '@telegram-apps/sdk';
+} from '@telegram-apps/sdk-react';
 
 import {
   EHomeScreenStatus,
@@ -59,9 +59,11 @@ export async function initTg(): Promise<void> {
   await init();
 
   if (viewport.mount.isAvailable()) {
-    await viewport.mount();
+    viewport.mount();
     viewport.expand();
   }
+
+  await delay(retryDelay);
 
   if (viewport.requestFullscreen.isAvailable()) {
     await viewport.requestFullscreen();
