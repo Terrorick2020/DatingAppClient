@@ -40,9 +40,21 @@ async function isWorkedCloudeStore(): Promise<boolean> {
 }
 
 export async function initTg(): Promise<void> {
-  const isTg = await isTMA();
+  let isTg: boolean = false;
+  const maxAttempts = 5;
+  const retryDelay = 100;
+  
+  isTg = await isTMA();
 
-  if(!isTg) return;
+  if(!isTg) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      isTg = await isTMA();
+
+      if (isTg) break;
+
+      await delay(retryDelay);
+    }
+  }
 
   await init();
 
