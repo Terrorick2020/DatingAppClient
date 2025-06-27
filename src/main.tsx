@@ -10,21 +10,19 @@ import AppSuspense from './AppSuspese';
 import store from './store';
 
 
-(async () => {
-  await initTg();
+(() => { initTg() });
 
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <Provider store={store}>
-        <BrowserRouter>
-            <SnackbarProvider
-                maxSnack={SNACK_COUNT}
-                autoHideDuration={SNACK_TIMEOUT}
-            >
-                <AppSuspense />
-            </SnackbarProvider>
-        </BrowserRouter>
-      </Provider>
-    </StrictMode>
-  );
-})();
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+          <SnackbarProvider
+              maxSnack={SNACK_COUNT}
+              autoHideDuration={SNACK_TIMEOUT}
+          >
+              <AppSuspense />
+          </SnackbarProvider>
+      </BrowserRouter>
+    </Provider>
+  </StrictMode>
+);

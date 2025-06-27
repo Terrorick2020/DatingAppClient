@@ -122,9 +122,9 @@ export default defineConfig(({ mode }) => {
                 return 'react-query';
               };
 
-              // if (id.includes('@telegram-apps')) {
-              //   return 'telegram-sdk';
-              // };
+              if (id.includes('@telegram-apps')) {
+                return 'telegram-sdk';
+              };
 
               if (id.includes('emoji-mart') || id.includes('@emoji-mart')) {
                 return 'emoji';
