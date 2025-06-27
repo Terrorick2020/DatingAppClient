@@ -12,7 +12,7 @@ import {
 
 import {
   EHomeScreenStatus,
-  type InitHomeScreenRes
+  type InitHomeScreenRes,
 } from '@/types/tg.types';
 
 import { delay } from './general.funcs';
@@ -56,12 +56,8 @@ export async function initTg(): Promise<void> {
     }
   }
 
-  try {
-    await init();
-  } catch {
-    return;
-  }
-
+  try { await init(); }
+  catch { return; }
 
   if (viewport.mount.isAvailable()) {
     await viewport.mount();

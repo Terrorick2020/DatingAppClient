@@ -337,7 +337,7 @@ export const initSocketRoomsConnectAsync = createAsyncThunk(
             );
 
             for(let item of responses) {
-                if(!item) return null
+                if(!item) return null;
             }
 
             return 'success';
@@ -366,7 +366,7 @@ export const initSocketRoomsDisconnectAsync = createAsyncThunk(
             );
 
             for(let item of responses) {
-                if(!item) return null
+                if(!item) return null;
             };
 
             return 'success';

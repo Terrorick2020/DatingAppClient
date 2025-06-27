@@ -9,7 +9,7 @@ import {
   WS_COMPL,
   WS_MATCH,
   WS_CHATS,
-  WS_LIKES
+  WS_LIKES,
 } from './env.config';
 
 import { io, Socket } from 'socket.io-client';
@@ -64,13 +64,18 @@ export const getNamespaceSocket = (namespace: string): Socket | undefined => {
   return sockets[namespace];
 };
 
-export const connectSocketRoom = (
+export const connectSocketRoom = async (
   namespace: string,
   connectType: ServerMethods,
   data: ReqConnectionDto,
   timeoutMs = 5000,
 ): Promise<ResConnectionDto | null> => {
-  const socket: Socket = sockets[namespace];
+  let socket: Socket | undefined = undefined;
+  socket = sockets[namespace];
+
+  if (socket === undefined) {
+    socket = await waitForSocketConnection(() => getNamespaceSocket(namespace));
+  };
 
   if (!socket || !socket.connected) return Promise.resolve(null);
 
@@ -98,8 +103,8 @@ export const waitForSocketConnection = (
     getSocket: () => Socket | undefined,
     maxAttempts = 10,
     interval = 300
-): Promise<Socket> => {
-    return new Promise((resolve, reject) => {
+): Promise<Socket | undefined> => {
+    return new Promise((resolve, _) => {
         let attempts = 0;
 
         const check = () => {
@@ -109,7 +114,7 @@ export const waitForSocketConnection = (
             }
 
             if (++attempts >= maxAttempts) {
-                return reject(new Error("Socket connection timeout"));
+                return resolve(undefined);
             }
 
             setTimeout(check, interval);
@@ -121,16 +126,20 @@ export const waitForSocketConnection = (
 
 export async function handleSocket<TData>(
     socket: Socket | undefined,
-    chanel:string,
+    channel:string,
     callback: (data: TData | null) => void,
 ): Promise<void> {
   if(socket === undefined) return;
 
+  socket.off(channel, callback);
+
+  const subscribe = () => {
+    socket.on(channel, callback);
+  };
+
   if(!socket.connected) {
-      socket.once('connect', () => {
-          socket.on(chanel, callback);
-      });
+    socket.once('connect', subscribe);
   } else {
-      socket.on(chanel, callback);
+    subscribe();
   }
 };

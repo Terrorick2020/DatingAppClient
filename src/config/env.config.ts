@@ -14,7 +14,6 @@ export const WS_COMPL   = import.meta.env.VITE_WS_COMPL || '';
 export const WS_LIKES   = import.meta.env.VITE_WS_LIKES || '';
 export const WS_MATCH   = import.meta.env.VITE_WS_MATCH || '';
 export const WS_MSGS    = import.meta.env.VITE_WS_MSGS  || '';
-export const WS_API     = import.meta.env.VITE_WS_API  || '';
 
 export const INITIAL_ENDPOINT = import.meta.env.VITE_INITIAL_ENDPOINT || '';
 export const SET_GEO_ENDPOINT = import.meta.env.VITE_SET_GEO_ENDPOINT || '';

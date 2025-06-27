@@ -10,6 +10,8 @@ import {
 import {
     connectToNamespace,
     disconnectFromNamespace,
+    handleSocket,
+    waitForSocketConnection,
     getNamespaceSocket,
 } from '@/config/socket.config';
 
@@ -25,6 +27,7 @@ import { setLikeTypeBtn } from '@/store/slices/settingsSlice';
 import { ELikeBtnType } from '@/types/settings.type';
 import { useDispatch, useSelector } from 'react-redux';
 import { WS_MSGS } from '@/config/env.config';
+import type { Socket } from 'socket.io-client';
 import type { IncomingMsg } from '@/types/chats.types';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -97,22 +100,16 @@ const ChatContent = (): JSX.Element => {
     const handleInitCtx = async (): Promise<void> => {
         await dispatch(getChatByIdAsync(id)).unwrap();
 
-        const socket = getNamespaceSocket(WS_MSGS);
+        let msgsSocket: Socket | undefined = undefined;
 
-        if(!socket) return;
+        msgsSocket = getNamespaceSocket(WS_MSGS);
 
-        socket.off(MsgsCltOnMeths.newMessage);
-        socket.off(MsgsCltOnMeths.messageRead);
-
-        if (!socket.connected) {
-            socket.once('connect', () => {
-                socket.on(MsgsCltOnMeths.newMessage, handleNewMessage);
-                socket.on(MsgsCltOnMeths.messageRead, handleReadMsgs);
-            });
-        } else {
-            socket.on(MsgsCltOnMeths.newMessage, handleNewMessage);
-            socket.on(MsgsCltOnMeths.messageRead, handleReadMsgs);
+        if(msgsSocket === undefined) {
+            msgsSocket = await waitForSocketConnection(() => getNamespaceSocket(WS_MSGS));
         }
+
+        handleSocket<OnResNewMsg>(msgsSocket, MsgsCltOnMeths.newMessage, handleNewMessage);
+        handleSocket<OnResReadMsg>(msgsSocket, MsgsCltOnMeths.messageRead, handleReadMsgs);
     };
 
     useEffect(() => {
@@ -123,6 +120,13 @@ const ChatContent = (): JSX.Element => {
         if( logoHeader ) logoHeader.style.display = 'flex';
 
         handleInitCtx();
+
+        return () => {
+            const msgsSocket = getNamespaceSocket(WS_MSGS);
+
+            msgsSocket?.off(MsgsCltOnMeths.newMessage);
+            msgsSocket?.off(MsgsCltOnMeths.messageRead);
+        }
     }, [id]);
 
     useEffect(() => {
