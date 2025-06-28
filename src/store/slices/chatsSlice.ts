@@ -50,14 +50,14 @@ const initialState: ChatsState = {
 
 export const getUnreadChatsAsync = createAsyncThunk(
     'chats/get-unread-chats',
-    async (_, { getState, dispatch }): Promise<AsyncThunkRes<number>> => {
+    async (_, { getState, dispatch }): Promise<AsyncThunkRes<string[]>> => {
         try {
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
 
             const url = CHATS_UNREAD_ENDPOINT(telegramId);
 
-            const response: AxiosResponse<FetchResponse<number>> = await api.get(url);
+            const response: AxiosResponse<FetchResponse<string[]>> = await api.get(url);
 
             if(
                 response.status !== 200 ||
@@ -67,7 +67,7 @@ export const getUnreadChatsAsync = createAsyncThunk(
             ) return null;
 
             const badgeCtx = rootState.settings.badge;
-            const content = response.data.data;
+            const content = response.data.data.length;
 
             dispatch(setBadge({
                 ...badgeCtx,
@@ -117,7 +117,7 @@ export const initChatsCtxAsync = createAsyncThunk(
                         avatar: item.toUser.avatarUrl,
                         name: item.toUser.name,
                         age: item.toUser.age,
-                        lastMsg: item.lastMsg,
+                        lastMsg: item.lastMsg ? item.lastMsg : 'Сообщений пока нет! Начните общение первым(ой)',
                         timer: Math.max(0, Math.floor(remainingMs / 1000)),
                         unreadMsgsCount: item.unread_count,
                     })
@@ -459,7 +459,7 @@ const chatsSlice = createSlice({
         builder.addCase(getUnreadChatsAsync.pending, _ => {
             console.log("Получение чатов в которых есть непрочитанные сообщения");
         })
-        builder.addCase(getUnreadChatsAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<number>>) => {
+        builder.addCase(getUnreadChatsAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<string[]>>) => {
             switch(action.payload) {
                 case 'error':
                     console.log("Ошибка получения чатов в которых есть непрочитанные сообщения");

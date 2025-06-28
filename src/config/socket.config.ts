@@ -10,6 +10,7 @@ import {
   WS_MATCH,
   WS_CHATS,
   WS_LIKES,
+  WS_MSGS,
 } from './env.config';
 
 import { io, Socket } from 'socket.io-client';
@@ -17,7 +18,7 @@ import { io, Socket } from 'socket.io-client';
 
 const sockets: Record<string, Socket> = {};
 
-export const defNamespaces = [WS_COMPL, WS_MATCH, WS_CHATS, WS_LIKES];
+export const defNamespaces = [WS_COMPL, WS_MATCH, WS_CHATS, WS_LIKES, WS_MSGS];
 
 export const connectToNamespace = async (namespace: string): Promise<Socket> => {
   if (sockets[namespace]?.connected) return sockets[namespace];

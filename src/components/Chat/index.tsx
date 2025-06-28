@@ -8,8 +8,6 @@ import {
 } from '@/store/slices/chatsSlice';
 
 import {
-    connectToNamespace,
-    disconnectFromNamespace,
     handleSocket,
     waitForSocketConnection,
     getNamespaceSocket,
@@ -59,10 +57,7 @@ const ChatContent = (): JSX.Element => {
     useEffect( () => {
         dispatch(setLikeTypeBtn(ELikeBtnType.ToChat));
 
-        connectToNamespace(WS_MSGS);
-
         return () => {
-            disconnectFromNamespace(WS_MSGS);
             if (timerId) clearInterval(timerId);
         }
     }, [] );

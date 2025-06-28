@@ -1,8 +1,10 @@
 import {
     LikesCltMethods,
     MatchCltMethods,
+    MsgsCltOnMeths,
     type OnResNewLike,
     type OnResNewMatch,
+    type OnResNewMsg,
 } from '@/types/socket.types';
 
 import {
@@ -17,7 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { toLikes, toChats } from '@/config/routes.config';
 import { createSelector } from 'reselect';
-import { WS_LIKES, WS_MATCH } from '@/config/env.config';
+import { WS_LIKES, WS_MATCH, WS_MSGS } from '@/config/env.config';
 import { getUnreadChatsAsync } from '@/store/slices/chatsSlice';
 import { setBadge, setLikeTypeBtn } from '@/store/slices/settingsSlice';
 import { ELikeBtnType } from '@/types/settings.type';
@@ -53,6 +55,7 @@ const QuestLayout = (): JSX.Element => {
     const snackbarKeyRef = useRef<string | number | null>(null);
     const isMatchLoad = useRef<boolean>(false);
     const lastLikeId = useRef<string>('');
+    const unreadedChats = useRef<string[]>([]);
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -101,7 +104,7 @@ const QuestLayout = (): JSX.Element => {
         }
     };
 
-    const handleMatchNotyfy = async (data: OnResNewMatch | null): Promise<void> => {
+    const handleMatchNotify = async (data: OnResNewMatch | null): Promise<void> => {
         if(!data) return;
 
         if(location.pathname !== toChats) {
@@ -109,7 +112,7 @@ const QuestLayout = (): JSX.Element => {
                 ...badgeCtx,
                 chats: {
                     value: true,
-                    content: badgeCtx.likes.content + 1,
+                    content: badgeCtx.chats.content + 1,
                 }
             }));
         };
@@ -123,42 +126,72 @@ const QuestLayout = (): JSX.Element => {
         isMatchLoad.current = false;
     };
 
+    const handleNewMsgNotify = async (data: OnResNewMsg | null): Promise<void> => {
+        if (!data || !unreadedChats.current.includes(data.chatId)) return;
+
+        dispatch(setBadge({
+            ...badgeCtx,
+            chats: {
+                value: true,
+                content: badgeCtx.likes.content + 1,
+            }
+        }));
+
+        unreadedChats.current.push(data.chatId);
+    };
+
     const handleSocketSeed = async (): Promise<void> => {
         let likeSocket: Socket | undefined = undefined;
         let matchSocket: Socket | undefined = undefined;
+        let msgsSocket: Socket | undefined = undefined;
 
         likeSocket = getNamespaceSocket(WS_LIKES);
         matchSocket = getNamespaceSocket(WS_MATCH);
+        msgsSocket = getNamespaceSocket(WS_MSGS);
 
         if (
-            likeSocket === undefined ||
-            matchSocket === undefined
+            likeSocket === undefined  ||
+            matchSocket === undefined ||
+            msgsSocket === undefined
         ) {
             const response = await Promise.all([
                 waitForSocketConnection(() => getNamespaceSocket(WS_LIKES)),
                 waitForSocketConnection(() => getNamespaceSocket(WS_MATCH)),
+                waitForSocketConnection(() => getNamespaceSocket(WS_MSGS)),
             ]);
 
             likeSocket = response[0];
             matchSocket = response[1];
+            msgsSocket = response[2];
         };
 
         handleSocket<OnResNewLike>(likeSocket, LikesCltMethods.newLike, handleLikesNotify);
-        handleSocket<OnResNewMatch>(matchSocket, MatchCltMethods.newMatch, handleMatchNotyfy);
+        handleSocket<OnResNewMatch>(matchSocket, MatchCltMethods.newMatch, handleMatchNotify);
+        handleSocket<OnResNewMsg>(msgsSocket, MsgsCltOnMeths.newMessage, handleNewMsgNotify);
+    };
+
+    const handleUnreadChats = async (): Promise<void> => {
+        const response = await dispatch(getUnreadChatsAsync()).unwrap();
+
+        if(response && response !== 'error') {
+            unreadedChats.current = response;
+        }
     };
 
     useEffect(() => {
         dispatch(setLikeTypeBtn(ELikeBtnType.Accepted));
-        dispatch(getUnreadChatsAsync());
-
+        
+        handleUnreadChats();
         handleSocketSeed();
 
         return () => {
             const likeSocket = getNamespaceSocket(WS_LIKES);
             const matchSocket = getNamespaceSocket(WS_MATCH);
+            const msgsSocket = getNamespaceSocket(WS_MSGS);
 
             likeSocket?.off(LikesCltMethods.newLike);
             matchSocket?.off(MatchCltMethods.newMatch);
+            msgsSocket?.off(MsgsCltOnMeths.newMessage);
 
             if (snackbarKeyRef.current) {
                 closeSnackbar(snackbarKeyRef.current);

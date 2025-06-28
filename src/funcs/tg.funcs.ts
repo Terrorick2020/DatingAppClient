@@ -40,28 +40,22 @@ async function isWorkedCloudeStore(): Promise<boolean> {
 }
 
 export async function initTg(): Promise<void> {
-  let isTg: boolean = false;
-  const maxAttempts = 5;
-  const retryDelay = 100;
-  
-  isTg = await isTMA();
+  if (
+    !window.Telegram?.WebApp ||
+    !(await isTMA())
+  ) return;
 
-  if(!isTg) {
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      isTg = await isTMA();
-
-      if (isTg) break;
-
-      await delay(retryDelay);
-    }
-  }
-
-  try { await init(); }
-  catch { return; }
+  try { await init() } catch {};
 
   if (viewport.mount.isAvailable()) {
-    await viewport.mount();
-    viewport.expand();
+    const mountPromise = viewport.mount({ timeout: 5000 });
+
+    await mountPromise.then(() => {
+      viewport.expand();
+    }).catch(() => {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    });
   }
 
   if (viewport.requestFullscreen.isAvailable()) {
