@@ -2,7 +2,7 @@ import { JSX, useMemo, useEffect } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { closingBehavior, backButton } from '@telegram-apps/sdk-react';
+import { closingBehavior, backButton } from '@telegram-apps/sdk';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 

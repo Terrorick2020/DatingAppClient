@@ -1,7 +1,7 @@
 import { JSX, memo, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { warningAlert } from '@/funcs/alert.funcs';
-import { shareURL } from '@telegram-apps/sdk-react';
+import { shareURL } from '@telegram-apps/sdk';
 import type { PropsLinkMsg } from '@/types/ui.types';
 import type { RootDispatch } from '@/store';
 
