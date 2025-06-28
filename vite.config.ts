@@ -72,10 +72,6 @@ export default defineConfig(({ mode }) => {
           protocol: 'wss',
           clientPort: PORT,
         },
-        https: {
-          key: './ssl/key.pem',
-          cert: './ssl/cert.pem',
-        }
       }),
     },
     preview: {
