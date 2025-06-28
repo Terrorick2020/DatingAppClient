@@ -1,8 +1,15 @@
+import {
+    closingBehavior,
+    backButton,
+    miniApp,
+    isTMA,
+    popup
+} from '@telegram-apps/sdk';
+
 import { JSX, useMemo, useEffect } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { closingBehavior, backButton } from '@telegram-apps/sdk';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -40,7 +47,28 @@ const DesktopHeadNav = (): JSX.Element => {
         dispatch(dellRoute());
     };
 
-    const closeWindow = () => window.close();
+    const closeWindow = async (): Promise<void> => {
+        const isTg = await isTMA();
+
+        if(isTg && miniApp.mountSync.isAvailable()) {
+            miniApp.mountSync();
+
+            const response = await popup.open({
+                title: 'Завешение работы',
+                message: 'Вы уверены, что хотите закрыть приложение?',
+                buttons: [
+                    { id: 'cancellation', type: 'default', text: 'Отмена' },
+                    { id: 'close', type: 'destructive', text: 'Закрыть' }
+                ],
+            });
+
+            if (response && response === 'close') {
+                miniApp.close.isAvailable() && miniApp.close();
+            }
+        } else {
+            window.close();
+        }
+    };
 
     useEffect(() => {
         if (!isTgMobile) return;

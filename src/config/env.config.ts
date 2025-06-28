@@ -164,7 +164,11 @@ if(
   throw Error('Hasn`t someone environments!');
 };
 
-export const REFERAL_LINK = (referal: string): string => `${REFERAL}${referal}`;
+export const REFERAL_LINK = (referal: string): string => {
+  const encoded = encodeURIComponent(btoa(referal));
+
+  return `${REFERAL}${encoded}`;
+}
 
 export const CHATS_METADATA_ENDPOINT = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_METADATA}`;
 export const CHATS_MSG_ENDPOINT      = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_MSG}`;

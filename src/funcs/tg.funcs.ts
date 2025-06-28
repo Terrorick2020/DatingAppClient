@@ -1,10 +1,11 @@
 import {
   init,
   isTMA,
+  initData,
   viewport,
   cloudStorage,
   swipeBehavior,
-  requestContact,
+  closingBehavior,
   addToHomeScreen,
   onAddedToHomeScreen,
   checkHomeScreenStatus,
@@ -44,6 +45,16 @@ export async function initTg(): Promise<void> {
 
   try { await init() } catch {};
 
+  initData.restore();
+
+  if (closingBehavior.mount.isAvailable()) {
+    closingBehavior.mount();
+  }
+
+  if (closingBehavior.enableConfirmation.isAvailable()) {
+    closingBehavior.enableConfirmation();
+  }
+
   if (viewport.mount.isAvailable()) {
     const mountPromise = viewport.mount({ timeout: 3000 });
 
@@ -66,17 +77,22 @@ export async function initTg(): Promise<void> {
   await isWorkedCloudeStore();
 }
 
-export async function getTgID(): Promise<string | null> {
-  const contact = await requestContact();
+export function getTgID(): string | null {
+  const user = initData.user();
 
-  return '' + contact.contact.user_id;
+  if(!user) return null
+
+  return '' + user.id;
 }
 
 export function getRefParams(): string | null {
-  if (typeof window !== 'undefined' && window.Telegram?.WebApp?.initDataUnsafe) {
-    return window.Telegram.WebApp.initDataUnsafe.start_param || null;
-  }
-  return null;
+  const param = initData.startParam();
+  
+  if(!param) return null;
+
+  const decoded = atob(decodeURIComponent(param));
+
+  return decoded;
 }
 
 async function checkInstallHomeScreen(): Promise<InitHomeScreenRes> {
