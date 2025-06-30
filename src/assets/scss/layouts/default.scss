@@ -57,6 +57,7 @@
         &:has(.users-list),
         &:has(.target-chat),
         &:has(.chats),
+        &:has(.media),
         &:has(.psychologists) {
             .logo-header::after {
                 display: none;
