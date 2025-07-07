@@ -1,8 +1,7 @@
 import type { UsersEndpointParams } from '@/types/fetch.type';
 import { EProfileStatus } from '@/types/store.types';
 
-export const SSL_KEY  = import.meta.env.VITE_SSL_KEY || '';
-export const SSL_CERT = import.meta.env.VITE_SSL_CERT || '';
+
 export const DOMAIN   = import.meta.env.VITE_DOMAIN || '';
 export const REFERAL  = import.meta.env.VITE_REFERAL || '';
 

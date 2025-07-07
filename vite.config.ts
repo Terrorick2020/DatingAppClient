@@ -17,6 +17,8 @@ export default defineConfig(({ mode }) => {
   const DEV_HOST = env.VITE_DEV_HOST;
   const MODE = env.VITE_MODE;
   const DOMAIN = env.VITE_DOMAIN;
+  const SSL_KEY = env.VITE_SSL_KEY;
+  const SSL_CRT = env.VITE_SSL_CRT;
   const PORT = Number(env.VITE_PORT);
 
   if (
@@ -72,6 +74,12 @@ export default defineConfig(({ mode }) => {
           protocol: 'wss',
           clientPort: PORT,
         },
+        ...(SSL_KEY && SSL_CRT && {
+          https: {
+            key: './ssl/key.pem',
+            cert: './ssl/cert.pem',
+          },
+        }),
       }),
     },
     preview: {
