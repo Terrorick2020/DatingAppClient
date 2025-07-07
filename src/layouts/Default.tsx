@@ -49,19 +49,23 @@ const DefaultLayout = memo((): JSX.Element => {
     }, [apiRes] );
 
     const handleSocketConnect = async (): Promise<void> => {
-        await Promise.all(
-            defNamespaces.map(item => connectToNamespace(item))
-        );
+        try {
+            await Promise.all(
+                defNamespaces.map(item => connectToNamespace(item))
+            );
 
-        await dispatch(initSocketRoomsConnectAsync(defNamespaces));
+            await dispatch(initSocketRoomsConnectAsync(defNamespaces));
+        } catch {}
     };
 
     const handleSocketDisconnect = async (): Promise<void> => {
-        await dispatch(initSocketRoomsDisconnectAsync(defNamespaces));
+        try {
+            await dispatch(initSocketRoomsDisconnectAsync(defNamespaces));
 
-        await Promise.all([
-            defNamespaces.map(item => disconnectFromNamespace(item))
-        ]);
+            await Promise.all([
+                defNamespaces.map(item => disconnectFromNamespace(item))
+            ]);
+        } catch {}
     };
 
     useEffect( () => {
@@ -75,7 +79,6 @@ const DefaultLayout = memo((): JSX.Element => {
         };
         
         return () => {
-            handleSocketDisconnect();
             window.removeEventListener('beforeunload', handleSocketDisconnect);
         }
     }, [] );

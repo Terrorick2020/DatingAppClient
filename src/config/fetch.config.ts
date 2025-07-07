@@ -6,9 +6,14 @@ import axios from 'axios';
 
 
 export let navigate: ReturnType<typeof useNavigate> | null = null;
+export let tgId: string | null = null;
 
-export const setNavigate = (nav: ReturnType<typeof useNavigate>) => {
+export const setNavigate = (nav: ReturnType<typeof useNavigate>): void => {
   navigate = nav
+};
+
+export const setTgId = (value: string): void => {
+  tgId = value;
 };
 
 const api = axios.create({
@@ -17,7 +22,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   config => {
-    const telegramId = getTgID();
+    const telegramId = tgId ? tgId : getTgID();
 
     if (telegramId) {
       config.headers!['x-spectre-telegram-id'] = telegramId

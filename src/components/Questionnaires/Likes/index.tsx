@@ -1,6 +1,6 @@
 import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { initLikesListAsync } from '@/store/slices/likesSlice';
+import { initLikesListAsync, readNewLikesAsync } from '@/store/slices/likesSlice';
 import { AnimatePresence, motion } from 'motion/react';
 import { resetBadge } from '@/store/slices/settingsSlice';
 import { EBadgeType } from '@/types/settings.type';
@@ -18,6 +18,16 @@ const LikesContent = (): JSX.Element => {
 
     const dispatch = useDispatch<RootDispatch>();
 
+    const initLikesCtx = async (): Promise<void> => {
+        await dispatch(initLikesListAsync());
+
+        const response = await dispatch(readNewLikesAsync()).unwrap();
+
+        if(response === 'success') {
+            dispatch(resetBadge(EBadgeType.Likes));
+        }
+    }
+
     useEffect(() => {
         const likesHtml = document.getElementById('likes');
         if ( likesHtml ) likesHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
@@ -25,8 +35,7 @@ const LikesContent = (): JSX.Element => {
         const logoHeader = document.getElementById('logo-header');
         if( logoHeader ) logoHeader.style.display = 'flex';
 
-        dispatch(resetBadge(EBadgeType.Likes));
-        dispatch(initLikesListAsync());
+        initLikesCtx();
     }, []);
 
     useEffect(() => {

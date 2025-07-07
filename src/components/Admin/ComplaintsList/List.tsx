@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { appRoutes } from '@/config/routes.config';
+import { toUserInfo } from '@/config/routes.config';
 import type { IState } from '@/types/store.types';
 
 import MyLoader from '@/components/UI/MyLoader';
@@ -19,10 +19,6 @@ const selectComplListState = createSelector(
       complaintsList: admin.complaintsList,
     })
 );
-
-const adminGlobRoute      = appRoutes.admin.global;
-const adminUserInfoRoute  = appRoutes.admin.inner.userInfo;
-const toUserInfo          = `${adminGlobRoute}/${adminUserInfoRoute}`;
 
 const ComplaintsListCtx = (): JSX.Element => {
     const { isLoad, complaintsList } = useSelector(selectComplListState);
@@ -46,6 +42,7 @@ const ComplaintsListCtx = (): JSX.Element => {
                     img={item.avatar}
                     route={`${toUserInfo.replace(':id', '')}${item.id}`}
                     key={`complaints-list__item-${item.id}`}
+                    prefAlt={item.name}
                 >
                     <ComplaintsListCtxItem
                         name={item.name}

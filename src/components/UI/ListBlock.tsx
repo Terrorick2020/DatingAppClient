@@ -7,7 +7,7 @@ import { Slide } from 'react-awesome-reveal';
 import { EAnimeDirection } from '@/types/settings.type';
 import type{ PropsListBlock } from '@/types/ui.types';
 
-import Avatar from '@mui/material/Avatar';
+import AvatarWithPreload from './AvatarWithPreload';
 
 
 const ListBlock = memo((props: PropsListBlock): JSX.Element => {
@@ -35,10 +35,11 @@ const ListBlock = memo((props: PropsListBlock): JSX.Element => {
             onVisibilityChange={handleView}
         >
             <div className="list-block" onClick={handleClick}>
-                <Avatar
-                    className="list-block__avatar"
-                    alt="list-block-avatar"
-                    src={ props.img }
+                <AvatarWithPreload
+                    avatarUrl={ props.img }
+                    prefAlt={`${props.prefAlt ? props.prefAlt : '?'}-avatar`}
+                    addClass="list-block__avatar"
+                    handleClick={() => {}}
                 />
                 <div className="list-block__content">
                     { props.children }

@@ -1,7 +1,8 @@
 import { JSX, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { type IState } from '@/types/store.types';
+import type { PropsTargetChatList } from '@/types/chats.types';
+import type { IState } from '@/types/store.types';
 
 import ChatDay from './Day';
 import PngChatEmpty from '@/assets/img/chat-empty.png';
@@ -18,15 +19,17 @@ const selectChatList = createSelector(
     })
 );
 
-const ChatList = (): JSX.Element => {
+const ChatList = (props: PropsTargetChatList): JSX.Element => {
     const { chatDialog, selfId } = useSelector(selectChatList);
 
     const msgsEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+
         setTimeout(() => {
-            msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 0);
+            props.setIsFirstly(false);
+        }, 1000);
     }, [chatDialog]);
 
     if(!chatDialog.length) return (

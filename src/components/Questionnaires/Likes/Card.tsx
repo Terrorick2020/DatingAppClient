@@ -24,6 +24,7 @@ import type { RootDispatch } from '@/store';
 
 import Timer from '@/components/UI/Timer';
 import Button from '@mui/material/Button';
+import Badge from '@mui/material/Badge';
 import SvgClose from '@/assets/icon/close.svg?react';
 import SvgHeart from '@/assets/icon/heart-white.svg?react';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -151,7 +152,22 @@ const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
                 </div>
                 <h5 className="text">
                     <span className="name">{`${props.likesItem.name}, `}</span>
-                    <span className="age">{ageToStr(props.likesItem.age)}</span>
+                    <Badge
+                        color="secondary"
+                        variant="dot"
+                        badgeContent="new"
+                        invisible={props.likesItem.isRead}
+                        sx={{
+                            '& .MuiBadge-badge': {
+                                backgroundColor: '#FF4365',
+                                top: 0,
+                                right: 0,
+                                scale: 1.2,
+                            },
+                        }}
+                    >
+                        <span className="age">{ageToStr(props.likesItem.age)}</span>
+                    </Badge>
                 </h5>
             </div>
         </div>

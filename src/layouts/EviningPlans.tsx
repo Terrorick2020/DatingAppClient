@@ -2,6 +2,7 @@ import { JSX, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { addRoute, initEPCtxAsync } from '@/store/slices/settingsSlice';
 import { createSelector } from 'reselect';
+import { warningAlert } from '@/funcs/alert.funcs';
 import { getSelfPlansAsync } from '@/store/slices/profileSlice';
 import { toMedia } from '@/config/routes.config';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,6 +32,15 @@ const EPLayout = (): JSX.Element => {
     const navigate = useNavigate();
 
     const handleMediaRoute = async (): Promise<void> => {
+        if(!mediaLink) {
+            warningAlert(
+                dispatch,
+                'Ссылка недоступна! Попробуйте позже'
+            );
+
+            return;
+        };
+
         navigate(toMedia);
         dispatch(addRoute(location.pathname));
     };
@@ -55,7 +65,7 @@ const EPLayout = (): JSX.Element => {
                     alt="help"
                     loading="lazy"
                     decoding="async"
-                    className={ `preview-img ${mediaLink && 'disabled'}` }
+                    className={ `preview-img ${!mediaLink && 'disabled'}` }
                     src={ SvgVideoHelpers }
                     onClick={ handleMediaRoute }
                 />

@@ -4,6 +4,7 @@ import { toMedia } from '@/config/routes.config';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { setMedaiLink } from '@/store/slices/settingsSlice';
 import { FQ_MEDIA_LINK } from '@/config/env.config';
+import { warningAlert } from '@/funcs/alert.funcs';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { fQHeadTxt } from '@/constant/register';
 import type { PropsFillingQuestHeader } from '@/types/register.typs';
@@ -20,7 +21,16 @@ const FillingQuestHeader = (props: PropsFillingQuestHeader): JSX.Element => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const handleClick = () => {        
+    const handleClick = () => {      
+        if(!mediaLink) {
+            warningAlert(
+                dispatch,
+                'Ссылка недоступна! Попробуйте позже'
+            );
+
+            return;
+        };
+
         navigate(toMedia);
         dispatch(addRoute(location.pathname));
     }
@@ -35,7 +45,7 @@ const FillingQuestHeader = (props: PropsFillingQuestHeader): JSX.Element => {
                 <h3 className="headline">{fQHeadTxt[props.mark]}</h3>
                 <p className="description">Расскажите немного о себе и о своих планах.</p>
             </div>
-            <div className={`video ${mediaLink && 'disabled'}`} onClick={handleClick}>
+            <div className={`video ${!mediaLink && 'disabled'}`} onClick={handleClick}>
                 <SvgVideoHelpers />
             </div>
         </>

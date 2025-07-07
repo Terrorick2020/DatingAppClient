@@ -6,12 +6,27 @@ import {
     type RejectLikingData,
 } from '@/types/likes.types';
 
+import {
+    EFetchLikesTProps,
+    type FetchResponse,
+    type UnreadLikesRes,
+    type LikesListRes,
+    type TargetUserEndpointRes,
+    type MarkReadLikesRes,
+} from '@/types/fetch.type';
+
+import {
+    LIKES_ENDPOINT,
+    USER_ENDPOINT,
+    CHATS_ADD_MSG_ENDPOINT,
+    LIKES_UNREADED_ENDPOINT,
+    LIKES_READED_ENDPOINT,
+} from '@/config/env.config';
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { LIKES_ENDPOINT, USER_ENDPOINT, CHATS_ADD_MSG_ENDPOINT } from '@/config/env.config';
-import { setLoad, setApiRes } from './settingsSlice';
+import { setLoad, setApiRes, setBadge } from './settingsSlice';
 import { PlanLabelSvgType } from '@/types/ui.types';
 import { EApiStatus } from '@/types/settings.type';
-import { EFetchLikesTProps, type FetchResponse } from '@/types/fetch.type';
 import type { OnResNewMatch, OnResNewLike } from '@/types/socket.types';
 import type { AxiosResponse } from 'axios';
 import type { IState, AsyncThunkRes } from '@/types/store.types';
@@ -27,6 +42,67 @@ const initialState: LikesState = {
     }
 }
 
+export const getUnreadLikesAsync = createAsyncThunk(
+    'likes/get-unread-likes',
+    async (_, { getState, dispatch }): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+
+            const url = LIKES_UNREADED_ENDPOINT(telegramId);
+
+            const response: AxiosResponse<FetchResponse<UnreadLikesRes>> = await api.get(url);
+
+            if(
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+
+            const data = response.data.data;
+            const badgeCtx = rootState.settings.badge;
+            
+            dispatch(setBadge({
+                ...badgeCtx,
+                likes: {
+                    value: data.count !== 0,
+                    content: data.count,
+                }
+            }));
+
+            return 'success';
+        } catch (error) {
+            return 'error';
+        }
+    }
+);
+
+export const readNewLikesAsync = createAsyncThunk(
+    'likes/read-new-likes',
+    async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+            const data = { telegramId };
+            
+            const response: AxiosResponse<FetchResponse<MarkReadLikesRes>> =
+                await api.post(LIKES_READED_ENDPOINT, data);
+
+            if(
+                response.status !== 201 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+
+            return 'success';
+        } catch {
+            return 'error';
+        }
+    }
+);
+
 export const initLikesListAsync = createAsyncThunk(
     'likes/init-likes-list',
     async (_, { getState, dispatch }): Promise<AsyncThunkRes<LikesItem[]>> => {
@@ -36,12 +112,18 @@ export const initLikesListAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
 
-            const response: AxiosResponse<FetchResponse<any>> =
+            const response: AxiosResponse<FetchResponse<LikesListRes[]>> =
                 await api.get(`${LIKES_ENDPOINT}?telegramId=${telegramId}&type=${EFetchLikesTProps.Received}`);
+            
+            if(
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
 
             const likesList: LikesItem[] = [];
-
-            const now = Date.now();
+            const now: number = Date.now();
 
             for(let item of response.data.data) {
                 const ms = new Date(item.createdAt).getTime()
@@ -59,17 +141,19 @@ export const initLikesListAsync = createAsyncThunk(
                     },
                     name: item.fromUser.name,
                     age: item.fromUser.age,
+                    isRead: item.isRead,
                 })
             };
 
-            if(
-                response.status === 200 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
-                response.data.success
-            ) return likesList;
+            likesList.sort((a, b) => {
+                if (a.isRead !== b.isRead) {
+                    return a.isRead ? 1 : -1;
+                };
 
-            return null;
+                return a.timer.value - b.timer.value;
+            });
+
+            return likesList;
         } catch (error) {
             return 'error';
         } finally {
@@ -243,7 +327,8 @@ export const addLikeInRealTimeAsync = createAsyncThunk(
     'likes/add-like-in-real-time',
     async (data: OnResNewLike): Promise<AsyncThunkRes<LikesItem>> => {
         try {
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(`${USER_ENDPOINT}/${data.fromUserId}`);
+            const response: AxiosResponse<FetchResponse<TargetUserEndpointRes>> = 
+                await api.get(`${USER_ENDPOINT}/${data.fromUserId}`);
 
             if (
                 response.status !== 200 ||
@@ -252,7 +337,7 @@ export const addLikeInRealTimeAsync = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            const userData = response.data.data as any;
+            const userData = response.data.data;
 
             const result = {
                 id: data.fromUserId,
@@ -264,6 +349,7 @@ export const addLikeInRealTimeAsync = createAsyncThunk(
                 },
                 name: userData.name,
                 age: userData.age,
+                isRead: false,
             };
 
             return result;
@@ -289,6 +375,48 @@ const likesSlice = createSlice({
         }
     },
     extraReducers: builder => {
+        // Получениие списка новых симпатий
+        builder.addCase(getUnreadLikesAsync.pending, _ => {
+            console.log("Получениие списка новых симпатий");
+        })
+        builder.addCase(getUnreadLikesAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения списка новых симпатий");
+                    break;
+                case null:
+                    console.log("Список новых сипатий не получен");
+                    break;
+                case 'success':
+                    console.log("Успешное получение списка новых симпатий");
+                    break;
+            }
+        })
+        builder.addCase(getUnreadLikesAsync.rejected, _ => {
+            console.log("Ошибка получения списка новых симпатий");
+        })
+
+        // Отметка новых лайков прочтёнными
+        builder.addCase(readNewLikesAsync.pending, _ => {
+            console.log("Отметка новых лайков прочтёнными");
+        })
+        builder.addCase(readNewLikesAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка отметки новых лайков прочтёнными");
+                    break;
+                case null:
+                    console.log("Отметка новых лайков прочтёнными не прошла");
+                    break;
+                case 'success':
+                    console.log("Успешноя отметка новых лайков прочтёнными");
+                    break;
+            }
+        })
+        builder.addCase(readNewLikesAsync.rejected, _ => {
+            console.log("Ошибка отметки новых лайков прочтёнными");
+        })
+
         // Получение списка симпатий
         builder.addCase(initLikesListAsync.pending, _ => {
             console.log("Получение списка симпатий");
@@ -308,7 +436,7 @@ const likesSlice = createSlice({
             }
         })
         builder.addCase(initLikesListAsync.rejected, _ => {
-            console.log("Ошибка получение списка симпатий");
+            console.log("Ошибка получения списка симпатий");
         })
 
         // Принятие симпатии
@@ -414,9 +542,11 @@ const likesSlice = createSlice({
                 default:
                     const data = action.payload;
                     const needPush = !state.likesList.find(item => item.id === data.id);
+
                     if(needPush) {
-                        state.likesList.push(action.payload);
-                    }
+                        state.likesList.unshift(action.payload);
+                    };
+
                     console.log("Успешное добавление симпатии в реальном времени");
                     break;
             }

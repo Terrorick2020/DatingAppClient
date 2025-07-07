@@ -17,6 +17,7 @@ const ChatsList = (): JSX.Element => {
                     img={item.avatar}
                     route={appRoutes.targetChat.replace(':id', `${item.id}`)}
                     key={`chats-list-item-${item.id}`}
+                    prefAlt={item.name}
                 >
                     <ChatsListItem item={item}/>
                 </ListBlock>

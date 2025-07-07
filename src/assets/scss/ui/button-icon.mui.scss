@@ -1,3 +1,6 @@
+@use "../components/mixins";
+
+
 #root {
     .MuiIconButton-root {
         background: transparent;
@@ -13,6 +16,21 @@
             &.notify:hover .MuiSvgIcon-root {
                 opacity: 1;
                 filter: drop-shadow(0 0 0.8rem rgb(209, 209, 209));
+            }
+        }
+
+        &.chat-down {
+            background: #343434;
+            border-radius: 50%;
+            position: absolute;
+            right: 1.9rem;
+            scale: 1.08;
+            bottom: 7rem;
+            z-index: 1000;
+            @include mixins.fadeIn(0.2s, ease-in-out, 0s, forwards);
+
+            .MuiSvgIcon-root {
+                color: #a777fa;
             }
         }
 

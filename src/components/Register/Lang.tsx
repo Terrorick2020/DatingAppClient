@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { toFillQuest } from '@/config/routes.config';
 import { setLang } from '@/store/slices/settingsSlice';
 import { ELanguage } from '@/types/settings.type';
+import type { RootDispatch } from '@/store';
 
 import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
@@ -13,28 +14,24 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 
 const LangContent = (): JSX.Element => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<RootDispatch>();
+    const location = useLocation();
 
     const handleLanguageChange = (event: ChangeEvent<HTMLInputElement>) => {
         dispatch( setLang( event.target.value as ELanguage ) );
-    }
+    };
 
-    useEffect(
-        () => {
-            const langHtml = document.getElementById('lang');
-            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+    useEffect(() => {
+        const langHtml = document.getElementById('lang');
+        if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
-            const logoHeader = document.getElementById('logo-header');
-            if( logoHeader ) logoHeader.style.display = 'none';
-        },
-        []
-    )
-
-    const location = useLocation();
+        const logoHeader = document.getElementById('logo-header');
+        if( logoHeader ) logoHeader.style.display = 'none';
+    }, []);
 
     const handleRoute = () => {
         dispatch(addRoute(location.pathname));
-    }
+    };
 
     return (
         <>

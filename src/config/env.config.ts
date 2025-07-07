@@ -17,9 +17,12 @@ export const WS_MSGS    = import.meta.env.VITE_WS_MSGS  || '';
 
 export const INITIAL_ENDPOINT = import.meta.env.VITE_INITIAL_ENDPOINT || '';
 export const SET_GEO_ENDPOINT = import.meta.env.VITE_SET_GEO_ENDPOINT || '';
-export const LIKES_ENDPOINT   = import.meta.env.VITE_LIKES_ENDPOINT || '';
 export const BILLING_ENDPOINT = import.meta.env.VITE_BILLING_ENDPOINT || '';
 export const ADMINE_ENDPOINT  = import.meta.env.VITE_ADMINE_ENDPOINT || '';
+
+export const LIKES_ENDPOINT = import.meta.env.VITE_LIKES_ENDPOINT || '';
+export const LIKES_UNREAD   = import.meta.env.VITE_LIKES_UNREAD || '';
+export const LIKES_READED   = import.meta.env.VITE_LIKES_READED || '';
 
 export const ADMINE_BLOCK   = import.meta.env.VITE_ADMINE_BLOCK || '';
 export const ADMINE_UNBLOCK = import.meta.env.VITE_ADMINE_UNBLOCK || '';
@@ -106,9 +109,12 @@ if(
 
   !INITIAL_ENDPOINT ||
   !SET_GEO_ENDPOINT ||
-  !LIKES_ENDPOINT   ||
   !BILLING_ENDPOINT ||
   !ADMINE_ENDPOINT  ||
+
+  !LIKES_ENDPOINT ||
+  !LIKES_UNREAD   ||
+  !LIKES_READED   ||
 
   !ADMINE_BLOCK   ||
   !ADMINE_UNBLOCK ||
@@ -170,8 +176,17 @@ export const REFERAL_LINK = (referal: string): string => {
   return `${REFERAL}${encoded}`;
 }
 
+export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`;
+export const LIKES_UNREADED_ENDPOINT = (tgId: string) => `${LIKES_ENDPOINT}${LIKES_UNREAD}/${tgId}`;
+
 export const CHATS_METADATA_ENDPOINT = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_METADATA}`;
-export const CHATS_MSG_ENDPOINT      = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_MSG}`;
+
+export const CHATS_MSG_ENDPOINT = (
+  chatId: string,
+  limit: number,
+  offset: number,
+): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_MSG}?limit=${limit}&offset=${offset}`;
+
 export const CHATS_DEL_ENDPOINT      = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}`;
 export const CHATS_UNREAD_ENDPOINT   = (tgId: string): string => `${CHATS_ENDPOINT}${CHATS_UNREAD}?telegramId=${tgId}`;
 export const CHATS_ADD_MSG_ENDPOINT  = `${CHATS_ENDPOINT}${CHATS_ADD_MSG}`;

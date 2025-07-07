@@ -6,7 +6,8 @@ import type { TargetChatDay, IncomingMsg, TargetChatDayMsg } from '@/types/chats
 export function addMessageToChat(
     chatDialog: TargetChatDay[],
     incoming: IncomingMsg,
-    interlocatorId: string
+    interlocatorId: string,
+    prepend: boolean = false,
 ): TargetChatDay[] {
     const day = dayjs(incoming.created_at).format('YYYY-MM-DD');
     const time = dayjs(incoming.created_at).format('HH:mm');
@@ -24,7 +25,10 @@ export function addMessageToChat(
 
     if (existingDayIndex !== -1) {
         const updatedDay = { ...chatDialog[existingDayIndex] };
-        updatedDay.dayListMsg = [...updatedDay.dayListMsg, newMessage];
+
+        updatedDay.dayListMsg = prepend
+            ? [newMessage, ...updatedDay.dayListMsg]
+            : [...updatedDay.dayListMsg, newMessage];
 
         return [
             ...chatDialog.slice(0, existingDayIndex),
@@ -38,8 +42,19 @@ export function addMessageToChat(
             dayListMsg: [newMessage],
         };
 
-        return [...chatDialog, newDay];
+        return prepend
+            ? [newDay, ...chatDialog]
+            : [...chatDialog, newDay];
     }
+}
+
+export function isMsgInChatDialog(
+  chatDialog: TargetChatDay[],
+  messageId: string
+): boolean {
+  return chatDialog.some(day =>
+    day.dayListMsg.some(msg => msg.id === messageId)
+  );
 }
 
 export function markMessagesAsRead(

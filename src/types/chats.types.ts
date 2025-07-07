@@ -1,4 +1,5 @@
 import { ELineStatus } from './store.types';
+import { InitSliderData } from './quest.types';
 
 
 export interface ChatsFavListItem {
@@ -105,4 +106,14 @@ export interface IncomingMsg {
     is_read: boolean
     text: string
     updated_at: number
+}
+
+
+export interface GetChatByIdArgs {
+    id: string
+    query: InitSliderData
+}
+
+export interface PropsTargetChatList {
+    setIsFirstly: (value: boolean) => void
 }

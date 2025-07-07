@@ -1,36 +1,30 @@
 import { JSX, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { toFillQuest } from '@/config/routes.config';
 import { useDispatch } from 'react-redux';
 import { addRoute } from '@/store/slices/settingsSlice';
-import { appRoutes } from '@/config/routes.config';
+import type { RootDispatch } from '@/store';
 
 import Button from '@mui/material/Button';
 import SvgWhiteHeart from '@/assets/icon/white-heart.svg';
 import SvgTriangle from '@/assets/icon/triangle.svg?react';
 
 
-const regGlobRoute = appRoutes.register.global;
-const regFillQuestRoute = appRoutes.register.inner.fillQuest;
-const toFillQuest = `${regGlobRoute}/${regFillQuestRoute}`;
-
 const PreviewContent = (): JSX.Element => {
-    useEffect(
-        () => {
-            const langHtml = document.getElementById('preview');
-            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+    useEffect(() => {
+        const langHtml = document.getElementById('preview');
+        if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
-            const logoHeader = document.getElementById('logo-header');
-            if( logoHeader ) logoHeader.style.display = 'none';
-        },
-        []
-    )
+        const logoHeader = document.getElementById('logo-header');
+        if( logoHeader ) logoHeader.style.display = 'none';
+    }, []);
 
+    const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();
-    const dispatch = useDispatch();
 
     const handleRoute = () => {
         dispatch(addRoute(location.pathname));
-    }
+    };
 
     return (
         <>

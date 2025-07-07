@@ -6,6 +6,7 @@ export interface MediaProgressState {
 }
 
 export interface PropsMediaContentBg {
+    isFirstly: boolean
     isPlaying: boolean
     isLoading: boolean
     isError: boolean

@@ -80,6 +80,7 @@ const UsersListMain = (): JSX.Element => {
                             route={`${toUserInfo.replace(':id', '')}${item.id}`}
                             key={`admin-profile-${item.id}`}
                             data-id={index}
+                            prefAlt={item.name}
                             view={{
                                 id: index,
                                 handleView: handleView,

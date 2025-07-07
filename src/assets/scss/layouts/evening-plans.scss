@@ -40,6 +40,8 @@
         .preview-img {
             cursor: pointer;
             animation: videoShadowPlay 1s ease-in-out 10;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
             
             &:hover {
                 filter: drop-shadow(0 0 0.3rem var(--play-shadow-color));

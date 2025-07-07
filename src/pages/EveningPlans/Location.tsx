@@ -1,5 +1,6 @@
 import EPLocationContent from '@/components/EveningPlans/Location';
 
+
 const EPLocationPage = () => {
     return (
         <>

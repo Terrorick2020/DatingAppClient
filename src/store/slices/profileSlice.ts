@@ -296,7 +296,7 @@ export const signUpProfileAsync = createAsyncThunk(
 
             const data = {
                 telegramId: profileInfo.id,
-                name: profileInfo.name,
+                name: profileInfo.name.trim(),
                 town: profileInfo.town,
                 sex: profileInfo.sex,
                 selSex: profileInfo.selSex,
@@ -330,6 +330,8 @@ export const signUpProfileAsync = createAsyncThunk(
                     msg = 'Профиль обновлён успешно';
                     break;
             }
+
+            console.log( response )
 
             if(
                 !response ||

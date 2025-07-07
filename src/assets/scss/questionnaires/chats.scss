@@ -99,10 +99,16 @@
                         background: #D7FF81;
                         color: #371F7D;
 
+                        &.null {
+                            background: transparent;
+                            color: transparent;
+                        }
+
                         .timer {
                             position: absolute;
                             top: -45px;
                             right: 0;
+                            color: #371F7D;
                         }
                     }
                 }

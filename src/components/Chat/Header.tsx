@@ -16,7 +16,7 @@ import { type IState, ETypingStatus, ELineStatus } from '@/types/store.types';
 import MenuBtn from '@/components/UI/MenuBtn';
 import ComplaintDrawer from '@/components/Layouts/ComplaintDrawer';
 import ChatDialogDelete from './DialogDelete';
-import Avatar from '@mui/material/Avatar';
+import AvatarWithPreload from '@/components/UI/AvatarWithPreload';
 import MenuItem from '@mui/material/MenuItem';
 import SvgVertOther from '@/assets/icon/vertical-other.svg';
 import SvgChatWarn from '@/assets/icon/chat-warn.svg?react';
@@ -95,10 +95,10 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
     return (
         <> 
             <div className="person">
-                <Avatar
-                    alt="chat-head-avatar"
-                    src={chatInterlocutor.avatar}
-                    onClick={handleNavToDetails}
+                <AvatarWithPreload
+                    avatarUrl={chatInterlocutor.avatar}
+                    prefAlt={chatInterlocutor.name}
+                    handleClick={handleNavToDetails}
                 />
                 <div className="description">
                     <h6 className="name" onClick={handleNavToDetails}>

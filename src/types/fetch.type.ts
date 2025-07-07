@@ -129,3 +129,67 @@ export interface SendComplEndpointRes {
 	status: string
 	type: string
 }
+
+export interface ChatMetaRes {
+	created_at: number
+	id: string
+	last_message_id: string
+	participants: string[]
+}
+
+export interface ChatMsgRes {
+	id: string
+	chatId: string
+	fromUser: string
+	is_read: boolean
+	text: string
+	created_at: number
+	updated_at: number
+}
+
+export interface ChatUserRes {
+  id: string
+  name: string
+  age: number
+  avatarKey: string
+  avatarUrl: string
+}
+
+export interface ChatItemRes {
+  chatId: string
+  created_at: number
+  lastMsg: string
+  toUser: ChatUserRes
+  unread_count: number
+}
+
+export interface UnreadLikesRes {
+  count: number
+}
+
+export interface MarkReadLikesRes {
+	updatedCount: number
+}
+
+export interface LikesListResUserPhoto {
+  key: string
+}
+
+export interface LikesListResUser {
+  telegramId: string
+  name: string
+  age: number
+  town: string
+  photoUrl: string
+  photos: LikesListResUserPhoto[]
+}
+
+export interface LikesListRes {
+  id: number
+  fromUserId: string
+  toUserId: string
+  isMatch: boolean
+  isRead: boolean
+  createdAt: string
+  fromUser: LikesListResUser
+}

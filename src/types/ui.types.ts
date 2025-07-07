@@ -42,6 +42,7 @@ export interface PropsListBlock extends HTMLAttributes<HTMLDivElement> {
     route: string
     children: ReactNode
     view?: ListBlockView
+    prefAlt?: string
 }
 
 export interface PropsPlansLabel {
@@ -154,4 +155,12 @@ export interface EmojiData {
     shortcodes: string;
     unified: string;
     keywords: string[];
+}
+
+export interface PropsAvatarWithPreload {
+    avatarUrl: string
+    prefAlt: string
+    size?: number
+    addClass?: string
+    handleClick: () => void
 }

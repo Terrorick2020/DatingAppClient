@@ -13,14 +13,16 @@ const MediaContentBg = memo((props: PropsMediaContentBg): JSX.Element => {
 
     if(props.isLoading) return (
         <div className={`player__bg ${varianPlaySvg.addClass}`}>
-            <div className="preloader">
+            <div className={`preloader ${props.isFirstly ? '' : 'other'}`}>
                 <CircularProgress color="inherit" />
             </div>
         </div>
     )
 
     return(
-        <div className={`player__bg ${varianPlaySvg.addClass}`}>
+        <div className={
+            `player__bg ${varianPlaySvg.addClass}`
+        }>
             {
                 props.isError
                     ?

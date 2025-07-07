@@ -5,6 +5,8 @@ import type {
     ChatInterlocutor,
     IncomingMsg,
     TargetChatDay,
+    GetChatByIdArgs,
+    ChatsListItem,
 } from '@/types/chats.types';
 
 import {
@@ -17,7 +19,6 @@ import {
     CHATS_ADD_MSG_ENDPOINT,
     CHATS_READ_ENDPOINT,
     CHATS_UNREAD_ENDPOINT,
-    WS_MSGS,
 } from '@/config/env.config';
 
 import {
@@ -26,12 +27,19 @@ import {
     type IState,
 } from '@/types/store.types';
 
+import type {
+    FetchResponse,
+    ChatMetaRes,
+    ChatMsgRes,
+    TargetUserEndpointRes,
+    ChatItemRes,
+} from '@/types/fetch.type';
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { ServerMethods, type OnResReadMsg, type OnResNewMsg } from '@/types/socket.types';
-import { addMessageToChat, markMessagesAsRead } from '@/funcs/chats.funcs';
-import { connectSocketRoom } from '@/config/socket.config';
-import { setLoad, setBadge } from './settingsSlice';
-import type { FetchResponse } from '@/types/fetch.type';
+import { addMessageToChat, isMsgInChatDialog, markMessagesAsRead } from '@/funcs/chats.funcs';
+import { EApiStatus } from '@/types/settings.type';
+import { setLoad, setBadge, setApiRes } from './settingsSlice';
+import type { OnResReadMsg, OnResNewMsg } from '@/types/socket.types';
 import type { AxiosResponse } from 'axios';
 
 import api from '@/config/fetch.config';
@@ -66,8 +74,9 @@ export const getUnreadChatsAsync = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
+            const data = response.data.data;
             const badgeCtx = rootState.settings.badge;
-            const content = response.data.data.length;
+            const content = Array.isArray(data) ? data.length : 0;
 
             dispatch(setBadge({
                 ...badgeCtx,
@@ -93,40 +102,54 @@ export const initChatsCtxAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
 
-            const chatsRes: AxiosResponse<FetchResponse<any>> = await api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`);
+            const chatsRes: AxiosResponse<FetchResponse<ChatItemRes[]>> = 
+                await api.get(`${CHATS_ENDPOINT}?telegramId=${telegramId}`);
 
             if(
-                chatsRes.status === 200 &&
-                chatsRes.data.data &&
-                chatsRes.data.data !== 'None' &&
-                chatsRes.data.success
-            ) {
-                const chatsCtx: ChatsCtx = {
-                    chatsFavList: [],
-                    chatsList: [],
-                };
+                chatsRes.status !== 200 ||
+                !chatsRes.data.success  ||
+                !chatsRes.data.data     ||
+                chatsRes.data.data === 'None'
+            ) return null;
 
-                const now = Date.now();
+            const chatsCtx: ChatsCtx = {
+                chatsFavList: [],
+                chatsList: [],
+            };
 
-                for(let item of chatsRes.data.data) {
-                    const expiresAt = item.created_at + 24 * 60 * 60 * 1000;
-                    const remainingMs = expiresAt - now;
+            const now = Date.now();
 
-                    chatsCtx.chatsList.push({
-                        id: item.chatId,
-                        avatar: item.toUser.avatarUrl,
-                        name: item.toUser.name,
-                        age: item.toUser.age,
-                        lastMsg: item.lastMsg ? item.lastMsg : 'Сообщений пока нет! Начните общение первым(ой)',
-                        timer: Math.max(0, Math.floor(remainingMs / 1000)),
-                        unreadMsgsCount: item.unread_count,
-                    })
+            const sortedData = chatsRes.data.data.slice().sort((a, b) => {
+                if (b.unread_count !== a.unread_count) {
+                    return b.unread_count - a.unread_count;
                 }
+                return a.created_at - b.created_at;
+            });
 
-                return chatsCtx;
+            for(let item of sortedData) {
+                const expiresAt = item.created_at + 24 * 60 * 60 * 1000;
+                const remainingMs = expiresAt - now;
+
+                chatsCtx.chatsList.push({
+                    id: item.chatId,
+                    avatar: item.toUser.avatarUrl,
+                    name: item.toUser.name,
+                    age: item.toUser.age,
+                    lastMsg: item.lastMsg ? item.lastMsg : 'Сообщений пока нет! Начните общение первым(ой)',
+                    timer: Math.max(0, Math.floor(remainingMs / 1000)),
+                    unreadMsgsCount: item.unread_count,
+                })
             }
 
-            return null;
+            chatsCtx.chatsList.sort((a, b) => {
+                if (b.unreadMsgsCount !== a.unreadMsgsCount) {
+                    return b.unreadMsgsCount - a.unreadMsgsCount;
+                };
+
+                return a.timer - b.timer;
+            });
+
+            return chatsCtx;
         } catch (error) {
             return 'error';
         } finally {
@@ -135,53 +158,82 @@ export const initChatsCtxAsync = createAsyncThunk(
     }
 );
 
+export const socketNewMsgInToChats = createAsyncThunk(
+  'chats/socket-new-msg-in-to-chats',
+  async (
+    data: OnResNewMsg,
+    { getState }
+  ): Promise<AsyncThunkRes<ChatsListItem[]>> => {
+    try {
+      const rootState = getState() as IState;
+      const chatsList = rootState.chats.chatsList;
+
+      const updatedChats = chatsList.map(chat =>
+        chat.id === data.chatId
+          ? {
+              ...chat,
+              unreadMsgsCount: chat.unreadMsgsCount + 1,
+              lastMsg: data.text,
+              timer: data.timestamp,
+            }
+          : chat
+      );
+
+      const updatedChat = updatedChats.find(chat => chat.id === data.chatId);
+
+      if (!updatedChat) return null;
+
+      const reorderedChats = [
+        updatedChat,
+        ...updatedChats.filter(chat => chat.id !== data.chatId),
+      ];
+
+      return reorderedChats;
+    } catch {
+      return 'error';
+    }
+  }
+);
+
 export const getChatByIdAsync = createAsyncThunk(
     'chats/get-chat-by-id',
-    async (id: string, {dispatch, getState}): Promise<AsyncThunkRes<TargetChat>> => {
+    async (args: GetChatByIdArgs, { dispatch, getState }): Promise<AsyncThunkRes<TargetChat>> => {
         try {
             dispatch(setLoad(true));
 
-            if( !id ) throw new Error('Не передан id');
+            if( !args.id ) return 'error';
 
-            const metaEndpoint = CHATS_METADATA_ENDPOINT(id);
-            const dialogEndpoint = CHATS_MSG_ENDPOINT(id);
+            const metaEndpoint = CHATS_METADATA_ENDPOINT(args.id);
+            const dialogEndpoint = CHATS_MSG_ENDPOINT(args.id, args.query.limit, args.query.offset);
 
-            const [chatMetaRes, chatDialogRes]: [
-                AxiosResponse<FetchResponse<any>>,
-                AxiosResponse<FetchResponse<any>>,
-            ] = await Promise.all([
-                api.get(metaEndpoint),
-                api.get(`${dialogEndpoint}?limit=10&offset=0`),
-            ]);
+            const chatMetaRes: AxiosResponse<FetchResponse<ChatMetaRes>> = await api.get(metaEndpoint);
 
-            if(
-                chatMetaRes.status !== 200         ||
-                !chatMetaRes.data.data             ||
-                chatMetaRes.data.data === 'None'   ||
-                !chatMetaRes.data.success          ||
-                chatDialogRes.status !== 200       ||
-                !chatDialogRes.data.data           || 
-                chatDialogRes.data.data === 'None' ||
-                !chatDialogRes.data.success
+            if (
+                chatMetaRes.status !== 200 ||
+                !chatMetaRes.data.success  ||
+                !chatMetaRes.data.data     ||
+                chatMetaRes.data.data === 'None'
             ) return null;
 
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
-            const interId: string = chatMetaRes.data.data.participants.find(
+            const interId: string | undefined = chatMetaRes.data.data.participants.find(
                 (item: string) => item !== telegramId
             );
 
+            if(!interId) return null;
+
             const readedData = {
-                chatId: id,
+                chatId: args.id,
                 userId: telegramId,
                 lastReadMessageId: chatMetaRes.data.data.last_message_id,
             };
 
             const needingReaded = !!chatMetaRes.data.data.last_message_id;
-            
+
             const [interRes, readedMsgsRes]:[
-                AxiosResponse<FetchResponse<any>>,
-                AxiosResponse<FetchResponse<any>> | undefined,
+                AxiosResponse<FetchResponse<TargetUserEndpointRes>>,
+                AxiosResponse<FetchResponse<boolean>> | undefined,
             ] = await Promise.all([
                 api.get(`${USER_ENDPOINT}/${interId}`),
                 needingReaded ? api.patch(CHATS_READ_ENDPOINT, readedData) : undefined,
@@ -201,7 +253,15 @@ export const getChatByIdAsync = createAsyncThunk(
 
             ) return null;
 
-            // TODO: Переделать на сервере
+            const chatDialogRes: AxiosResponse<FetchResponse<ChatMsgRes[]>> = await api.get(dialogEndpoint);
+
+            if (
+                chatDialogRes.status !== 200 ||
+                !chatDialogRes.data.success  ||
+                !chatDialogRes.data.data     || 
+                chatDialogRes.data.data === 'None'
+            ) return null;
+
             const promtLineStat: ELineStatus | boolean = interRes.data.data.isOnline;
             let lineStat: ELineStatus | null = null;
 
@@ -219,7 +279,7 @@ export const getChatByIdAsync = createAsyncThunk(
                 lineStat,
             };
 
-            let chatDialog: TargetChatDay[] = []
+            let chatDialog: TargetChatDay[] = [];
 
             for(let item of chatDialogRes.data.data) {
                 const incommingMsg: IncomingMsg =  {
@@ -227,20 +287,13 @@ export const getChatByIdAsync = createAsyncThunk(
                     created_at: item.created_at,
                     fromUser: item.fromUser,
                     id: item.id,
-                    is_read: readedMsgsRes?.data.success || false,
+                    is_read: item.is_read,
                     text: item.text,
                     updated_at: item.updated_at,
                 };
 
                 chatDialog = addMessageToChat(chatDialog, incommingMsg, interlocutor.id);
             }
-
-            const socketData = {
-                roomName: telegramId,
-                telegramId,    
-            };
-
-            await connectSocketRoom(WS_MSGS, ServerMethods.JoinRoom, socketData);
 
             const now = Date.now();
             const expiresAt = chatMetaRes.data.data.created_at + 24 * 60 * 60 * 1000;
@@ -249,7 +302,7 @@ export const getChatByIdAsync = createAsyncThunk(
             const timer = Math.max(0, Math.floor(remainingMs / 1000));
 
             return {
-                id,
+                id: args.id,
                 timer,
                 interlocutor,
                 chatDialog,
@@ -262,26 +315,58 @@ export const getChatByIdAsync = createAsyncThunk(
     }
 );
 
-export const createChatAsync = createAsyncThunk(
-    'chats/create-chat',
-    async (toUser: string, {getState}): Promise<AsyncThunkRes<'success'>> => {
+export const getDopDialogMsgs = createAsyncThunk(
+    'chats/get-dialog-msgs',
+    async (args: GetChatByIdArgs, { getState }): Promise<AsyncThunkRes<TargetChatDay[] | 'None'>> => {
         try {
-            const rootState = getState() as IState;
-            const telegramId = rootState.profile.info.id;
+            if(!args.id) return 'error';
 
-            const data = {
-                telegramId,
-                toUser,
+            const dialogEndpoint = CHATS_MSG_ENDPOINT(args.id, args.query.limit, args.query.offset);
+
+            const response: AxiosResponse<FetchResponse<ChatMsgRes[]>> = await api.get(dialogEndpoint);
+
+            if (
+                response.status !== 200       ||
+                !response.data.success        ||
+                !response.data.data           || 
+                response.data.data === 'None'
+            ) return null;
+
+            if(!response.data.data.length) return 'None';
+
+            const rootState = getState() as IState;
+            const interlocator = rootState.chats.targetChat.interlocutor
+
+            if(!interlocator) return 'error';
+
+            let chatDialog: TargetChatDay[] = rootState.chats.targetChat.chatDialog;
+            let count: number = 0;
+
+            for(let item of response.data.data) {
+                const isHas = isMsgInChatDialog(chatDialog, item.id);
+                
+                if(isHas) continue;
+
+                const incommingMsg: IncomingMsg =  {
+                    chatId: item.chatId,
+                    created_at: item.created_at,
+                    fromUser: item.fromUser,
+                    id: item.id,
+                    is_read: item.is_read,
+                    text: item.text,
+                    updated_at: item.updated_at,
+                };
+
+                chatDialog = addMessageToChat(chatDialog, incommingMsg, interlocator.id || 'recived', true);
+
+                count++;
             };
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.post(CHATS_ENDPOINT, data);
+            if(count === 0) {
+                return 'None'
+            };
 
-            if(
-                response.status === 201 &&
-                response.data.success
-            ) return 'success';
-
-            return null;
+            return chatDialog;
         } catch {
             return 'error';
         }
@@ -296,15 +381,16 @@ export const deleteChatByIDAsync = createAsyncThunk(
 
             const delEndpoint = CHATS_DEL_ENDPOINT(id);
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.delete(delEndpoint);
+            const response: AxiosResponse<FetchResponse<boolean>> = await api.delete(delEndpoint);
 
             if(
-                response.status === 200 &&
-                response.data.data      &&
-                response.data.success
-            ) return true;
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
 
-            return null;
+            return true;
         } catch (error) {
             return 'error';
         }
@@ -313,7 +399,7 @@ export const deleteChatByIDAsync = createAsyncThunk(
 
 export const sendMsgAsync = createAsyncThunk(
     'chats/send-msg',
-    async (text: string, { getState }): Promise<AsyncThunkRes<TargetChatDay[]>> => {
+    async (text: string, { dispatch, getState }): Promise<AsyncThunkRes<TargetChatDay[]>> => {
         try {
             const rootState = getState() as IState;
             const chatId = rootState.chats.targetChat.id;
@@ -347,7 +433,14 @@ export const sendMsgAsync = createAsyncThunk(
 
             return newChatDialog;
         } catch (error) {
-            return 'error'
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Сообщение не отправлено! Попробуйте позже',
+                status: EApiStatus.Warning,
+                timestamp: Date.now(),
+            }));
+
+            return 'error';
         }
     } 
 );
@@ -453,6 +546,14 @@ const chatsSlice = createSlice({
                 state.targetChat.interlocutor.lineStat = action.payload;
             }
         },
+        resetTargetChat: (state): void => {
+            state.targetChat = {
+                id: '',
+                timer: null,
+                interlocutor: null,
+                chatDialog: [],
+            };
+        },
     },
     extraReducers: builder => {
         // Получение количества чатов в которых есть непрочитанные сообщения
@@ -499,6 +600,29 @@ const chatsSlice = createSlice({
             console.log("Ошибка получение списков чатов и особых пользователей");
         })
 
+        // Получение сообщение, когда находишься на странице списка чатов
+        // socketNewMsgInToChats
+        builder.addCase(socketNewMsgInToChats.pending, _ => {
+            console.log("Получение сообщения, когда находишься на странице списка чатов");
+        })
+        builder.addCase(socketNewMsgInToChats.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<ChatsListItem[]>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения сообщения, когда находишься на странице списка чатов");
+                    break;
+                case null:
+                    console.log("Получение сообщение, когда находишься на странице списка чатов не порошло");
+                    break;
+                default:
+                    state.chatsList = action.payload;
+                    console.log("Успешное получение сообщения, когда находишься на странице списка чатов");
+                    break;
+            }
+        })
+        builder.addCase(socketNewMsgInToChats.rejected, _ => {
+            console.log("Ошибка получения сообщения, когда находишься на странице списка чатов");
+        })
+
         // Получение чата по id
         builder.addCase(getChatByIdAsync.pending, _ => {
             console.log("Получение чата по id");
@@ -521,25 +645,29 @@ const chatsSlice = createSlice({
             console.log("Ошибка получения чата по id");
         })
 
-        // Создание чата
-        builder.addCase(createChatAsync.pending, _ => {
-            console.log("Создание чата");
+        // Получение сообщений в чате
+        builder.addCase(getDopDialogMsgs.pending, _ => {
+            console.log("Получение дополнительных сообщений чата");
         })
-        builder.addCase(createChatAsync.fulfilled, (_, action: PayloadAction<AsyncThunkRes<'success'>>) => {
+        builder.addCase(getDopDialogMsgs.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<TargetChatDay[]| 'None'>> ) => {
             switch(action.payload) {
                 case 'error':
-                    console.log("Ошибка создания чата");
+                    console.log("Ошибка получения дополнительных сообщений чата");
                     break;
                 case null:
-                    console.log("Чат не создан");
+                    console.log("Дополнительные сообщения чата не получены");
+                    break;
+                case 'None':
+                    console.log('Все сообщения чата были загружены')
                     break;
                 default:
-                    console.log("Успешное создание чата");
+                    state.targetChat.chatDialog = action.payload;
+                    console.log("Успешное получение дополнительных сообщений чата");
                     break;
             }
         })
-        builder.addCase(createChatAsync.rejected, _ => {
-            console.log("Ошибка создания чата");
+        builder.addCase(getDopDialogMsgs.rejected, _ => {
+            console.log("Ошибка получения дополнительных сообщений чата");
         })
 
         // Удаление чата по id
@@ -637,5 +765,12 @@ const chatsSlice = createSlice({
     }
 })
 
-export const {deleteFavChatById, deleteChatById, socketAddMsgInChat, markedReadedMsgs, setInterLineStatus} = chatsSlice.actions;
+export const {
+    deleteFavChatById,
+    deleteChatById,
+    socketAddMsgInChat,
+    markedReadedMsgs,
+    setInterLineStatus,
+    resetTargetChat,
+} = chatsSlice.actions;
 export default chatsSlice.reducer;

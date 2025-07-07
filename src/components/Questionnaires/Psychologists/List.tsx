@@ -28,6 +28,7 @@ const PsychList = memo((props: PropsPsychList): JSX.Element => {
                                 img={item.avatar}
                                 route={globTargetPsychRoute.replace(':id', `${item.id}`)}
                                 key={`psych-list-item-${item.id}`}
+                                prefAlt={item.name}
                             >
                                 <div className="inner">
                                     <div className="inner__desc">

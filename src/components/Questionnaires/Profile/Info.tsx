@@ -5,7 +5,7 @@ import type { PropsProfileInfo } from '@/types/quest.types';
 import type { IState } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
+import AvatarWithPreload from '@/components/UI/AvatarWithPreload';
 import SvgEdit from '@/assets/icon/edit.svg';
 
 
@@ -26,9 +26,10 @@ const ProfileInfo = memo((props: PropsProfileInfo): JSX.Element => {
     return (
         <div className="profile-box">
             <div className="info">
-                <Avatar
-                    alt="profile-avatar"
-                    src={profileInfo.photos[0]?.photo}
+                <AvatarWithPreload
+                    avatarUrl={profileInfo.photos[0]?.photo}
+                    prefAlt={profileInfo.name}
+                    handleClick={() => {}}
                 />
                 <div className="text">
                     <h4 className="headline">

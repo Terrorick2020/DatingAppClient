@@ -14,31 +14,72 @@ import {
 
 import {
   EHomeScreenStatus,
+  ETgCloudeStore,
+  EStatusSetHomeScreen,
   type InitHomeScreenRes,
 } from '@/types/tg.types';
 
 import { delay } from './general.funcs';
+import { setTgId } from '@/config/fetch.config';
 
 
-async function isWorkedCloudeStore(): Promise<boolean> {
+let statusSetHomeScreen: EStatusSetHomeScreen = EStatusSetHomeScreen.Error;
+
+async function isCloudStorageAvailable(retries = 5, timeout = 500): Promise<boolean> {
   let attempts = 0;
-  let ready: boolean = false;
-
-  while (attempts < 5) {
-    ready = cloudStorage.isSupported() &&
+  while (attempts < retries) {
+    const available =
+      cloudStorage.isSupported() &&
       cloudStorage.getItem.isAvailable() &&
       cloudStorage.setItem.isAvailable() &&
       cloudStorage.deleteItem.isAvailable();
 
-    if(ready) return ready;
+    if (available) return true;
 
-    await delay(500);
-    
+    await delay(timeout);
     attempts++;
   }
+  return false;
+};
 
-  return ready;
-}
+export const tgCloudStore = {
+  async set<T = any>(key: ETgCloudeStore, value: T): Promise<boolean> {
+    const available = await isCloudStorageAvailable();
+    if (!available) return false;
+
+    try {
+      const stringified = JSON.stringify(value);
+      await cloudStorage.setItem(key, stringified);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  async get<T = any>(key: ETgCloudeStore): Promise<T | null> {
+    const available = await isCloudStorageAvailable();
+    if (!available) return null;
+
+    try {
+      const raw = await cloudStorage.getItem(key);
+      return raw ? JSON.parse(raw) as T : null;
+    } catch {
+      return null;
+    }
+  },
+
+  async delete(key: ETgCloudeStore): Promise<boolean> {
+    const available = await isCloudStorageAvailable();
+    if (!available) return false;
+
+    try {
+      await cloudStorage.deleteItem(key);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+};
 
 export async function initTg(): Promise<void> {
   if (!(await isTMA())) return;
@@ -73,17 +114,17 @@ export async function initTg(): Promise<void> {
       swipeBehavior.isVerticalEnabled();
     }
   }
-
-  await isWorkedCloudeStore();
-}
+};
 
 export function getTgID(): string | null {
   const user = initData.user();
 
   if(!user) return null
 
+  setTgId('' + user.id);
+
   return '' + user.id;
-}
+};
 
 export function getRefParams(): string | null {
   const param = initData.startParam();
@@ -93,7 +134,7 @@ export function getRefParams(): string | null {
   const decoded = atob(decodeURIComponent(param));
 
   return decoded;
-}
+};
 
 async function checkInstallHomeScreen(): Promise<InitHomeScreenRes> {
   if (!checkHomeScreenStatus.isAvailable()) return null;
@@ -104,38 +145,44 @@ async function checkInstallHomeScreen(): Promise<InitHomeScreenRes> {
   } catch (err) {
     return 'error';
   }
-}
+};
 
 async function toOfferHomeScreen(): Promise<void> {
   if (addToHomeScreen.isAvailable()) {
     addToHomeScreen();
 
     const handleSuccess = () => {
-      console.log( 'hello' )
-    }
+      statusSetHomeScreen = EStatusSetHomeScreen.Success;
+    };
 
     onAddedToHomeScreen(handleSuccess);
 
     const handleFailed = () => {
-      console.log( 'UnHello' )
-    }
+      statusSetHomeScreen = EStatusSetHomeScreen.Error;
+    };
 
     onAddToHomeScreenFailed(handleFailed);
   }
-}
+};
 
 export async function setHomeScreen(): Promise<void> {
+  const countRes = await tgCloudStore.get<number>(ETgCloudeStore.NumRejSetHomeScreen) || 0;
+
+  if(countRes && countRes > 3) return;
+
   const response = await checkInstallHomeScreen();
 
-  if(!response || response === 'error') return;
+  if(
+    !response            ||
+    response === 'error' ||
+    [EHomeScreenStatus.Added, EHomeScreenStatus.Unknown].includes(response)
+  ) return;
 
-  switch(response) {
-    case EHomeScreenStatus.Added:
-      return;
-    case EHomeScreenStatus.NotAdded:
-      toOfferHomeScreen();
-      break;
-    case EHomeScreenStatus.Unknown:
-      break;
-  }
-}
+  await toOfferHomeScreen();
+
+  setTimeout(() => {
+    if(statusSetHomeScreen = EStatusSetHomeScreen.Error) {
+      tgCloudStore.set<number>(ETgCloudeStore.NumRejSetHomeScreen, countRes + 1);
+    }
+  }, 5000);
+};

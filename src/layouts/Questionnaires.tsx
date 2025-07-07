@@ -13,6 +13,12 @@ import {
     waitForSocketConnection
 } from '@/config/socket.config';
 
+import {
+    getMatchDataAsync,
+    addLikeInRealTimeAsync,
+    getUnreadLikesAsync,
+} from '@/store/slices/likesSlice';
+
 import { JSX, useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,10 +26,9 @@ import { useSnackbar } from 'notistack';
 import { toLikes, toChats } from '@/config/routes.config';
 import { createSelector } from 'reselect';
 import { WS_LIKES, WS_MATCH, WS_MSGS } from '@/config/env.config';
-import { getUnreadChatsAsync } from '@/store/slices/chatsSlice';
+import { getUnreadChatsAsync, socketNewMsgInToChats } from '@/store/slices/chatsSlice';
 import { setBadge, setLikeTypeBtn } from '@/store/slices/settingsSlice';
 import { ELikeBtnType } from '@/types/settings.type';
-import { getMatchDataAsync, addLikeInRealTimeAsync } from '@/store/slices/likesSlice';
 import type { Socket } from 'socket.io-client';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -56,6 +61,7 @@ const QuestLayout = (): JSX.Element => {
     const isMatchLoad = useRef<boolean>(false);
     const lastLikeId = useRef<string>('');
     const unreadedChats = useRef<string[]>([]);
+    const pathname = useRef<string>(location.pathname);
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -72,25 +78,26 @@ const QuestLayout = (): JSX.Element => {
         return key;
     }
 
-    useEffect(
-        () => {
-            if(!isCurrent && !snackbarKeyRef.current) {
-                const key = showSnackPlanTimeout();
-                snackbarKeyRef.current = key;
-            } else if(isCurrent && snackbarKeyRef.current) {
-                closeSnackbar(snackbarKeyRef.current);
-                snackbarKeyRef.current = null;
-            }
-        },
-        [isCurrent]
-    );
+    useEffect(() => {
+        if(!isCurrent && !snackbarKeyRef.current) {
+            const key = showSnackPlanTimeout();
+            snackbarKeyRef.current = key;
+        } else if(isCurrent && snackbarKeyRef.current) {
+            closeSnackbar(snackbarKeyRef.current);
+            snackbarKeyRef.current = null;
+        }
+    }, [isCurrent]);
+
+    useEffect(() => {
+        pathname.current = location.pathname;
+    }, [location.pathname]);
 
     const handleLikesNotify = (data: OnResNewLike | null): void => {
         if(!data || lastLikeId.current == data.fromUserId) return;
 
         lastLikeId.current = data.fromUserId;
 
-        if(location.pathname === toLikes) {
+        if(pathname.current === toLikes) {
             
             dispatch(addLikeInRealTimeAsync(data));
         } else {
@@ -107,7 +114,7 @@ const QuestLayout = (): JSX.Element => {
     const handleMatchNotify = async (data: OnResNewMatch | null): Promise<void> => {
         if(!data) return;
 
-        if(location.pathname !== toChats) {
+        if(pathname.current !== toChats) {
             dispatch(setBadge({
                 ...badgeCtx,
                 chats: {
@@ -127,7 +134,13 @@ const QuestLayout = (): JSX.Element => {
     };
 
     const handleNewMsgNotify = async (data: OnResNewMsg | null): Promise<void> => {
-        if (!data || !unreadedChats.current.includes(data.chatId)) return;
+        if(!data) return;
+
+        if(pathname.current === toChats) {
+            await dispatch(socketNewMsgInToChats(data));
+        };
+
+        if (unreadedChats.current.includes(data.chatId)) return;
 
         dispatch(setBadge({
             ...badgeCtx,
@@ -173,9 +186,11 @@ const QuestLayout = (): JSX.Element => {
     const handleUnreadChats = async (): Promise<void> => {
         const response = await dispatch(getUnreadChatsAsync()).unwrap();
 
-        if(response && response !== 'error') {
+        if(response && response !== 'error' && Array.isArray(response)) {
             unreadedChats.current = response;
         }
+
+        await dispatch(getUnreadLikesAsync());
     };
 
     useEffect(() => {

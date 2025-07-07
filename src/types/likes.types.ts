@@ -13,6 +13,7 @@ export interface LikesItem {
     timer: LikesItemTimer
     name: string
     age: number
+    isRead: boolean
 }
 
 export interface LikesMatchFrom {

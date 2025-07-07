@@ -8,6 +8,7 @@ import Timer from '@/components/UI/Timer';
 
 const ChatsListItem = memo((props: PropsChatsListItem): JSX.Element => {
     const [timeLeft, setTimeLeft] = useState<number>(props.item.timer);
+    const [addClass, setAddClass] = useState<'' | 'null'>('');
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -30,6 +31,14 @@ const ChatsListItem = memo((props: PropsChatsListItem): JSX.Element => {
         }
     }, [timeLeft]);
 
+    useEffect(() => {
+        if(props.item.unreadMsgsCount === 0) {
+            setAddClass('null');
+        } else {
+            setAddClass('');
+        }
+    }, [props.item.unreadMsgsCount]);
+
     return (
         <div className="inner">
             <div className="inner__text">
@@ -39,7 +48,7 @@ const ChatsListItem = memo((props: PropsChatsListItem): JSX.Element => {
                 <p className="msg">{props.item.lastMsg}</p>
             </div>
             <div className="inner__trigger">
-                <span className={`label ${props.item.unreadMsgsCount ? '' : 'null'}`}>
+                <span className={`label ${addClass}`}>
                     <Timer
                         value={formatTimeLeftOther(timeLeft, true)}
                         isCritical={timeLeft < 60 * 60}
