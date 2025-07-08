@@ -1,6 +1,7 @@
 #root {
     --track-rail-h: 10px;
-    --rail-color: #FFFFFF;
+    --rail-color: #bababa;
+    --buffer-color: #ffffff;
     --track-color: #D7FF81;
     --thumb-color: #BC96FF;
 
@@ -10,6 +11,19 @@
                 background: var(--rail-color);
                 border-color: var(--rail-color);
                 height: var(--track-rail-h);
+                position: relative;
+                overflow: hidden;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: var(--buffer-percent, 0%);
+                    height: 100%;
+                    background: var(--buffer-color);
+                    border-radius: inherit;
+                }
             }
 
             .MuiSlider-track {

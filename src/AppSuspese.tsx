@@ -1,7 +1,7 @@
 import { Suspense, useEffect, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EProfileRoles } from './types/store.types';
-import { toChange, toPreview, toSlider } from './config/routes.config';{ }
+import { toChange, toPreview, toSlider } from './config/routes.config';
 import { setNavigate, navigate } from './config/fetch.config';
 import { initProfileAsync, getSelfProfile, getSelfPlansAsync } from '@/store/slices/profileSlice';
 import { delay, fadeOutPreloader } from './funcs/general.funcs';

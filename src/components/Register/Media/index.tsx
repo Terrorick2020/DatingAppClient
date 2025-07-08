@@ -1,4 +1,12 @@
-import { useState, useRef, SyntheticEvent, JSX, useEffect } from 'react';
+import {
+    JSX,
+    useRef,
+    useMemo,
+    useState,
+    useEffect,
+    SyntheticEvent
+} from 'react';
+
 import { useSelector } from 'react-redux';
 import { formatTime } from '@/funcs/general.funcs';
 import type { MediaProgressState } from '@/types/register.typs';
@@ -12,19 +20,29 @@ import Slider from '@mui/material/Slider';
 const MediaContent = (): JSX.Element => {
     const mediaLink = useSelector((state: IState) => state.settings.mediaLink);
 
-    const [_, setProgress] = useState<number>(0);
+    const [showBg, setShowBg] = useState<boolean>(false);
+    const [buffered, setBuffered] = useState<number>(0);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [isFirstly, setIsFirstly] = useState<boolean>(true);
     const [currentTime, setCurrentTime] = useState<number>(0);
     const [duration, setDuration] = useState<number>(0);
     const [showThumb, setShowThumb] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isStraightTime, setIsStraightTime] = useState<boolean>(true);
     const [isError, setIsError] = useState<boolean>(false);
 
     const playerRef = useRef<ReactPlayer>(null);
-    const isBuffer = useRef<boolean>(false);
+    const isWaiting = useRef<boolean>(false);
     const inactivityTimeout = useRef<NodeJS.Timeout | null>(null);
     const mountTimeRef  = useRef<number | null>(null);
+
+    const handleShowBg = (): void => {
+        setShowBg(true);
+
+        setTimeout(() => {
+            setShowBg(false);
+        }, 3000);
+    };
 
     const handleReady = (): void => {
         setIsLoading(false);
@@ -51,33 +69,44 @@ const MediaContent = (): JSX.Element => {
         }
     };
 
-    const handleBuffer = (): void => {
-        isBuffer.current = true;
+    const handleBuffer = (): void => {    
         setIsLoading(true);
         setIsPlaying(false);
         console.log( 'handleBuffer' )
+        console.log( currentTime, buffered )
     };
 
     const handleWaiting = (): void => {
+        setIsLoading(true);
+        setIsPlaying(false);
+        isWaiting.current = true;
         console.log( 'handleWaiting' )
     };
 
     const handleBufferEnd = (): void => {
-        isBuffer.current = false;
         setIsLoading(false);
         setIsPlaying(true);
         console.log( 'handleBufferEnd' )
     };
 
-    const handleError = (): void => {
-        setIsLoading(false);
-        setIsPlaying(false);
-        setIsError(true);
-    };
-
     const handleProgress = (state: MediaProgressState): void => {
-        setProgress(state.played * 100);
+        if(isError) return;
+
+        setBuffered(state.loadedSeconds);
+
+        if(!isPlaying) return;
+
         setCurrentTime(state.playedSeconds);
+
+        if(!isWaiting.current) return;
+
+        const delta = state.loadedSeconds - state.playedSeconds;
+
+        if(delta > 4) {
+            setIsLoading(false);
+            setIsPlaying(true);
+            isWaiting.current = false;
+        };
     };
 
     const handleDuration = (duration: number): void => setDuration(duration);
@@ -133,21 +162,41 @@ const MediaContent = (): JSX.Element => {
     useEffect(() => {
         mountTimeRef.current = Date.now();
 
-        if(!mediaLink) {
-            setIsError(true);
+        const handleError = (): void => {
             setIsLoading(false);
-        }
+            setIsPlaying(false);
+            setIsError(true);
+        };
+
+        if(!mediaLink) handleError();
+
+        const response = ReactPlayer.canPlay(mediaLink);
+
+        if(!response) handleError();
 
         return () => {
             if (mountTimeRef.current) clearTimeout(mountTimeRef.current);
         };
     }, []);
 
+    const handleSetTimeType = (): void => {
+        setIsStraightTime(!isStraightTime);
+    };
+
+    const displayTime = useMemo(() => {
+        const timeValue = isStraightTime ? currentTime : duration - currentTime;
+        const sign = isStraightTime ? '' : '-';
+        return `${sign}${formatTime(timeValue)}`;
+    }, [currentTime, duration, isStraightTime]);
+
     return(
         <>
             <main className="video">
                 <div className="player-box">
-                    <div className="player">
+                    <div
+                        className="player"
+                        onClick={handleShowBg}
+                    >
                         <ReactPlayer
                             className="player__ctx"
                             url={mediaLink}
@@ -157,7 +206,6 @@ const MediaContent = (): JSX.Element => {
                             controls={false}
                             playing={isPlaying}
                             onReady={handleReady}
-                            onError={handleError}
                             onBuffer={handleBuffer}
                             onBufferEnd={handleBufferEnd}
                             onWaiting={handleWaiting}
@@ -165,20 +213,27 @@ const MediaContent = (): JSX.Element => {
                             onDuration={handleDuration}
                             onEnded={handleEnd}
                         />
-                        <MediaContentBg
-                            isFirstly={isFirstly}
-                            isPlaying={isPlaying}
-                            isLoading={isLoading}
-                            isError={isError}
-                            handlePlaying={handlePlaying}
-                            handleSeekBy={handleSeekBy}
-                        />
+                        {
+                            (showBg || isLoading || !isPlaying || isError)
+                                && 
+                                <MediaContentBg
+                                    isFirstly={isFirstly}
+                                    isPlaying={isPlaying}
+                                    isLoading={isLoading}
+                                    isError={isError}
+                                    handlePlaying={handlePlaying}
+                                    handleSeekBy={handleSeekBy}
+                                />
+                        }
                     </div>
                 </div>
             </main>
             <footer className="progress">
                 <Slider
                     className={`media ${showThumb ? 'thumb-show' : ''}`}
+                    style={{
+                        '--buffer-percent': `${(buffered / duration) * 100}%`,
+                    } as React.CSSProperties}
                     aria-label="Default"
                     valueLabelDisplay="auto"
                     value={currentTime}
@@ -194,7 +249,10 @@ const MediaContent = (): JSX.Element => {
                     onTouchMove={handleShowThumb}
                 />
                 <div className="progress__time">
-                    <span className="current">{formatTime(currentTime)}</span>
+                    <span
+                        className="current"
+                        onClick={handleSetTimeType}
+                    >{ displayTime }</span>
                     <span className="all">{formatTime(duration)}</span>
                 </div>
             </footer>

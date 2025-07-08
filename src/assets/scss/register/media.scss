@@ -34,11 +34,11 @@
                 padding-inline: var(--media-indent);
                 user-select: none;
 
-                &:hover {
-                    .player__bg {
-                        display: flex;
-                    }
-                }
+                // &:hover {
+                //     .player__bg {
+                //         display: flex;
+                //     }
+                // }
 
                 &__ctx {
                     width: 100%;
@@ -61,8 +61,8 @@
                     left: 0;
                     width: 100%;
                     height: 100%;
+                    display: flex;
                     background: transparent;
-                    display: none;
                     justify-content: center;
                     align-items: center;
 
