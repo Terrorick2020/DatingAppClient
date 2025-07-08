@@ -68,7 +68,14 @@ const GeoConfirmation = (): JSX.Element => {
             return;
         }
         
-        await dispatch(sendSelfGeoAsync(geo));
+        const response = await dispatch(sendSelfGeoAsync(geo)).unwrap();
+
+        if(!response || response === 'error') {
+            warningAlert(
+                dispatch,
+                'Не удалось узнать ваш город или он не находится в разрешённом списке!'
+            );
+        };
         
         setLoad(null);
         setOpen(false);

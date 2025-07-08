@@ -156,13 +156,6 @@ export const sendSelfGeoAsync = createAsyncThunk(
                 return response.data.data
             };
 
-            dispatch(setApiRes({
-                value: true,
-                msg: 'Не удалось узнать ваш город или он не находится в разрешённом списке!',
-                status: EApiStatus.Info,
-                timestamp: Date.now(),
-            }))
-
             return null;
         } catch (error) {
             return 'error';

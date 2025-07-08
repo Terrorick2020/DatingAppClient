@@ -63,7 +63,15 @@ const AppLazy = lazy(() => delayForLazy(import('./App')));
 const AppSuspense = () => {
     const navigate = useNavigate();
 
-    useEffect( () => setNavigate(navigate), [] );
+    useEffect(() => {
+        setNavigate(navigate);
+
+        window.onbeforeunload = (): null => {
+            navigate('/');
+
+            return null;
+        }
+    }, []);
 
     return (
         <Suspense fallback={ <AppPreloader /> } >

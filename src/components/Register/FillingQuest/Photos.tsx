@@ -34,7 +34,7 @@ const FillingQuestPhotos = (): JSX.Element => {
             return;
         } else if (response === 'error') {
             errorAlert(dispatch, 'Произошла ошибка при загрузке фотографии');
-            navigate('error');
+            navigate('/error');
         } else {
             dispatch(setFQErrors({
                 ...fqErrors,
