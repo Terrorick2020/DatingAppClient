@@ -17,7 +17,7 @@ const GeoConfirmation = (): JSX.Element => {
     const geoEnable = useSelector((state:IState) => state.profile.info.enableGeo);
 
     const [open, setOpen] = useState<boolean>(false);
-    const [isLoad, setIsLoad] = useState<boolean>(false);
+    const [load, setLoad] = useState<'accept' | 'reject' | null>(null);
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -35,8 +35,8 @@ const GeoConfirmation = (): JSX.Element => {
 
     useEffect(() => { chekTgStore() }, []);
 
-    const handleBad = async (): Promise<void> => {
-        setIsLoad(true);
+    const handleReject = async (): Promise<void> => {
+        setLoad('reject')
 
         let rejectCount: number = 0;
 
@@ -48,12 +48,12 @@ const GeoConfirmation = (): JSX.Element => {
 
         await tgCloudStore.set<number>(ETgCloudeStore.NumRejSetGeo, rejectCount);
 
-        setIsLoad(false);
+        setLoad(null);
         setOpen(false);
     };
 
-    const handleSuccess = async (): Promise<void> => {
-        setIsLoad(true);
+    const handleAccept = async (): Promise<void> => {
+        setLoad('accept');
 
         const geo = await requestGeolocation();
 
@@ -63,14 +63,14 @@ const GeoConfirmation = (): JSX.Element => {
                 'Не получилось получить гео! Проверьте интернет соединение',
             );
 
-            setIsLoad(false);
+            setLoad(null);
             setOpen(false);
             return;
         }
         
         await dispatch(sendSelfGeoAsync(geo));
         
-        setIsLoad(false);
+        setLoad(null);
         setOpen(false);
     };
 
@@ -91,20 +91,20 @@ const GeoConfirmation = (): JSX.Element => {
                         className="btn bad"
                         variant="contained"
                         loadingPosition="start"
-                        loading={isLoad}
-                        onClick={handleBad}
+                        loading={load === 'reject'}
+                        onClick={handleReject}
                     >
-                        {isLoad ? 'Загрузка...' : 'Отклонить'}
+                        {load === 'reject' ? 'Загрузка...' : 'Отклонить'}
                     </Button>
                     <Button
                         fullWidth
                         className="btn success"
                         variant="contained"
                         loadingPosition="start"
-                        loading={isLoad}
-                        onClick={handleSuccess}
+                        loading={load === 'accept'}
+                        onClick={handleAccept}
                     >
-                        {isLoad ? 'Загрузка...' : 'Разрешить'}
+                        {load === 'accept' ? 'Загрузка...' : 'Разрешить'}
                     </Button>
                 </div>
             </Box>

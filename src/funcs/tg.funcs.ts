@@ -23,9 +23,9 @@ import { delay } from './general.funcs';
 import { setTgId } from '@/config/fetch.config';
 
 
-let statusSetHomeScreen: EStatusSetHomeScreen = EStatusSetHomeScreen.Error;
+export let statusSetHomeScreen: EStatusSetHomeScreen = EStatusSetHomeScreen.Error;
 
-const setStatusSetHomeScreen = (value: EStatusSetHomeScreen) => {
+export const setStatusSetHomeScreen = (value: EStatusSetHomeScreen) => {
   statusSetHomeScreen = value
 };
 

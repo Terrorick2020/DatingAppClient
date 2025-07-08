@@ -331,8 +331,6 @@ export const signUpProfileAsync = createAsyncThunk(
                     break;
             }
 
-            console.log( response )
-
             if(
                 !response ||
                 ![200, 201].includes(response.status) ||
