@@ -25,6 +25,10 @@ import { setTgId } from '@/config/fetch.config';
 
 let statusSetHomeScreen: EStatusSetHomeScreen = EStatusSetHomeScreen.Error;
 
+const setStatusSetHomeScreen = (value: EStatusSetHomeScreen) => {
+  statusSetHomeScreen = value
+};
+
 async function isCloudStorageAvailable(retries = 5, timeout = 500): Promise<boolean> {
   let attempts = 0;
   while (attempts < retries) {
@@ -152,13 +156,13 @@ async function toOfferHomeScreen(): Promise<void> {
     addToHomeScreen();
 
     const handleSuccess = () => {
-      statusSetHomeScreen = EStatusSetHomeScreen.Success;
+      setStatusSetHomeScreen(EStatusSetHomeScreen.Success);
     };
 
     onAddedToHomeScreen(handleSuccess);
 
     const handleFailed = () => {
-      statusSetHomeScreen = EStatusSetHomeScreen.Error;
+      setStatusSetHomeScreen(EStatusSetHomeScreen.Error);
     };
 
     onAddToHomeScreenFailed(handleFailed);
