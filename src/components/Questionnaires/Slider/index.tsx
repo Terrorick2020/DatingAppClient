@@ -1,4 +1,4 @@
-import { JSX, useEffect } from 'react';
+import { JSX, useEffect, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootDispatch } from '@/store';
 import { initialArgs } from '@/constant/quest';
@@ -14,18 +14,17 @@ const SliderContent = (): JSX.Element => {
 
     const dispatch = useDispatch<RootDispatch>();
 
-    useEffect(
-        () => {
-            const sliderHtml = document.getElementById('slider');
-            if ( sliderHtml ) sliderHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+    useLayoutEffect(() => {
+        const sliderHtml = document.getElementById('slider');
+        if ( sliderHtml ) sliderHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
-            const logoHeader = document.getElementById('logo-header');
-            if( logoHeader ) logoHeader.style.display = 'flex';
+        const logoHeader = document.getElementById('logo-header');
+        if( logoHeader ) logoHeader.style.display = 'flex';
+    }, []);
 
-            dispatch(initSliderListAsync(initialArgs));
-        },
-        []
-    )
+    useEffect(() => {
+        dispatch(initSliderListAsync(initialArgs));
+    }, []);
 
     if(isLoad) return (
         <div className="loader">
@@ -40,4 +39,4 @@ const SliderContent = (): JSX.Element => {
     )
 }
 
-export default SliderContent
+export default SliderContent;

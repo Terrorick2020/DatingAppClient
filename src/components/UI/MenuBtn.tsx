@@ -7,6 +7,7 @@ import Menu from '@mui/material/Menu';
 
 const MenuBtn = memo((props: PropsMenuBtn): JSX.Element => {
     const open = !!props.anchorEl;
+    const id = open ? props.id : undefined;
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>): void => {
         event.stopPropagation();
@@ -17,8 +18,9 @@ const MenuBtn = memo((props: PropsMenuBtn): JSX.Element => {
     return (
         <>
             <IconButton
+                id={id}
                 className={`menu-btn ${props.btnAddClass}`}
-                aria-controls={open ? 'basic-menu' : undefined}
+                aria-controls={id}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
@@ -31,7 +33,7 @@ const MenuBtn = memo((props: PropsMenuBtn): JSX.Element => {
                 />
             </IconButton>
             <Menu
-                id="serch-menu"
+                id={id}
                 className={`serch-menu ${props.menuAddClass}`}
                 anchorEl={props.anchorEl}
                 open={open}

@@ -1,4 +1,4 @@
-import { Suspense, useEffect, lazy } from 'react';
+import { Suspense, useLayoutEffect, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EProfileRoles } from './types/store.types';
 import { toChange, toPreview, toSlider } from './config/routes.config';
@@ -63,14 +63,8 @@ const AppLazy = lazy(() => delayForLazy(import('./App')));
 const AppSuspense = () => {
     const navigate = useNavigate();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setNavigate(navigate);
-
-        window.onbeforeunload = (): null => {
-            navigate('/');
-
-            return null;
-        }
     }, []);
 
     return (

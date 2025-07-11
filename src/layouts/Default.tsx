@@ -76,6 +76,7 @@ const DefaultLayout = memo((): JSX.Element => {
 
         if (typeof window.Telegram?.WebApp?.onEvent === 'function') {
             (window.Telegram.WebApp as any).onEvent('close', handleSocketDisconnect);
+            (window.Telegram.WebApp as any).onEvent('exit', handleSocketDisconnect);
         };
         
         return () => {

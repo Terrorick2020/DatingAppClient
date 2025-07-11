@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { toProfile } from '@/config/routes.config';
 import { useDispatch, useSelector } from 'react-redux';
 import { initSliderListAsync } from '@/store/slices/questionnairesSlice';
-import { initialArgs } from '@/constant/quest';
+import { initialArgs, SWIPED_OFFSET } from '@/constant/quest';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
 import type { InitSliderData } from '@/types/quest.types';
@@ -41,29 +41,49 @@ const SliderPoster = (): JSX.Element => {
   };
 
   const handlers = useSwipeable({
-    onSwipedLeft: () => {
+    onSwipedLeft: (eventData) => {
       if(disOpt) return;
 
-      changeSlide(index + 1);
+      if(eventData.velocity > 1.5 || Math.abs(offset) > SWIPED_OFFSET) {
+        changeSlide(index + 1);
+      } else {
+        setOffset(0);
+      };
+
       Math.abs(offset) < 5 && setIsSwiped(true);
     },
-    onSwipedRight: () => {
+    onSwipedRight: (eventData) => {
       if(disOpt) return;
 
-      changeSlide(index - 1);
+      if(eventData.velocity > 1.5 || Math.abs(offset) > SWIPED_OFFSET) {
+        changeSlide(index - 1);
+      } else {
+        setOffset(0);
+      };
+
       Math.abs(offset) < 5 && setIsSwiped(true);
     },
     onSwipedUp: () => {
       if(disOpt) return;
 
-      if( offset < -50 ) changeSlide(index - 1);
-      if( offset > 50 ) changeSlide(index - 1);
+      if(Math.abs(offset) < SWIPED_OFFSET) {
+        setOffset(0);
+        return;
+      }
+
+      if( offset < -SWIPED_OFFSET ) changeSlide(index - 1);
+      if( offset > SWIPED_OFFSET ) changeSlide(index + 1);
     },
     onSwipedDown: () => {
       if(disOpt) return;
 
-      if( offset < -50 ) changeSlide(index - 1);
-      if( offset > 50 ) changeSlide(index - 1);
+      if(Math.abs(offset) < SWIPED_OFFSET) {
+        setOffset(0);
+        return;
+      }
+
+      if( offset < -SWIPED_OFFSET ) changeSlide(index - 1);
+      if( offset > SWIPED_OFFSET ) changeSlide(index + 1);
     },
     onSwiping: (eventData) => {
       if(disOpt) return;
@@ -71,6 +91,8 @@ const SliderPoster = (): JSX.Element => {
       setOffset(eventData.deltaX)
     },
     trackMouse: true,
+    trackTouch: true,
+    delta: 10,
   });
 
   const nextStep = (): void => {
@@ -144,7 +166,7 @@ const SliderPoster = (): JSX.Element => {
           style={{
             width: `calc(${sliderList.length * 100}% + ${(sliderList.length - 1) * 16}px)`,
             transform: `translateX(calc(${-index * 100}% - ${index * 16}px + ${offset}px))`,
-            transition: offset === 0 ? 'transform 0.5s ease-in-out' : 'none',
+            transition: offset === 0 ? 'transform 0.3s ease-in-out' : 'none',
           }}
         >
           {sliderList.map( item => (
@@ -155,7 +177,8 @@ const SliderPoster = (): JSX.Element => {
                 transform: `rotateY(${-Math.min(10, Math.max(-20, offset / 10))}deg)`
               }}
             >
-              <SliderItem 
+              <SliderItem
+                btnsDis={disOpt}
                 sliderItem={item}
                 toDetails={toDetails}
                 nextStep={nextStep}

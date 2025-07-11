@@ -36,6 +36,7 @@ import type {
 } from '@/types/fetch.type';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { delay } from '@/funcs/general.funcs';
 import { addMessageToChat, isMsgInChatDialog, markMessagesAsRead } from '@/funcs/chats.funcs';
 import { EApiStatus } from '@/types/settings.type';
 import { setLoad, setBadge, setApiRes } from './settingsSlice';
@@ -252,6 +253,8 @@ export const getChatByIdAsync = createAsyncThunk(
                 )
 
             ) return null;
+
+            await delay(10);
 
             const chatDialogRes: AxiosResponse<FetchResponse<ChatMsgRes[]>> = await api.get(dialogEndpoint);
 

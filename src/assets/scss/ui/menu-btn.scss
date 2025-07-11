@@ -10,6 +10,22 @@
         }
     }
 
+    &.nav-menu {
+        .MuiPaper-root {
+            .MuiMenuItem-root {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: left;
+                gap: 0.8rem;
+
+                .text {
+                    font-weight: 400;
+                }
+            }
+        }
+    }
+
     &.chat-menu {
         .MuiPaper-root {
             .MuiMenuItem-root {

@@ -66,6 +66,7 @@ export interface PropsPsychList {
 }
 
 export interface ISliderItemProps {
+    btnsDis: boolean
     sliderItem: SliderItem
     toDetails: (id: string) => void
     nextStep: () => void

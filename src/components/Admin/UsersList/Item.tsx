@@ -81,6 +81,7 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
                 </span>
             </div>
             <MenuBtn
+                id={`users-list-menu-${props.item.id}`}
                 anchorEl={anchorEl}
                 setAnchorEl={setAnchorEl}
                 handleClose={handleClose}

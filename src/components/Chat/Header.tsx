@@ -110,6 +110,7 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
                 </div>
             </div>
             <MenuBtn
+                id="chat-head-menu"
                 anchorEl={anchorEl}
                 setAnchorEl={setAnchorEl}
                 handleClose={handleMenuClose}

@@ -1,17 +1,20 @@
+import {
+    addRoute,
+    initFillingQuestAsync,
+    setLoad,
+    setFQErrors,
+} from '@/store/slices/settingsSlice';
+
 import { JSX, useEffect, useRef, useState } from 'react';
-import { addRoute, initFillingQuestAsync } from '@/store/slices/settingsSlice';
-import { setLoad } from '@/store/slices/settingsSlice';
 import { createSelector } from 'reselect';
 import { useSelector, useDispatch } from 'react-redux';
 import { toPlans } from '@/config/routes.config';
-import { setFQErrors } from '@/store/slices/settingsSlice';
-import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
+import { EMPTY_INPUT_ERR_MSG, ANIME_DURATION } from '@/constant/settings';
 import { RootDispatch } from '@/store';
-import { ANIME_DURATION } from '@/constant/settings';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { fQBtnText } from '@/constant/register';
 import { Slide } from 'react-awesome-reveal';
-import { signUpProfileAsync } from '@/store/slices/profileSlice';
+import { signUpProfileAsync, setInfo } from '@/store/slices/profileSlice';
 import { type FQBtnTextItem, KeyFQBtnText } from '@/types/register.typs';
 import { type FQErrorsItem, EAnimeDirection } from '@/types/settings.type';
 import type { IState } from '@/types/store.types';
@@ -61,22 +64,23 @@ const FillingQuestContent = (): JSX.Element => {
         await dispatch(initFillingQuestAsync());
 
         dispatch(setLoad(false));
-    }
+    };
 
-    useEffect(
-        () => {
-            const langHtml = document.getElementById('filling-quest');
-            if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
+    useEffect(() => {
+        const langHtml = document.getElementById('filling-quest');
+        if ( langHtml ) langHtml.style.animation = 'fadeIn 1s ease-in-out forwards';
 
-            const logoHeader = document.getElementById('logo-header');
-            if( logoHeader ) logoHeader.style.display = 'flex';
+        const logoHeader = document.getElementById('logo-header');
+        if( logoHeader ) logoHeader.style.display = 'flex';
 
-            initFQCtx();
+        initFQCtx();
 
-            infoCache.current = JSON.stringify(profileInfo);
-        },
-        []
-    );
+        infoCache.current = JSON.stringify(profileInfo);
+
+        return () => {
+            dispatch(setInfo(JSON.parse(infoCache.current)));
+        }
+    }, [] );
 
     useEffect(() => {
         if(isFirstly) return;

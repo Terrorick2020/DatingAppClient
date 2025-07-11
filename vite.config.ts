@@ -76,8 +76,8 @@ export default defineConfig(({ mode }) => {
         },
         ...(SSL_KEY && SSL_CRT && {
           https: {
-            key: './ssl/key.pem',
-            cert: './ssl/cert.pem',
+            key: SSL_KEY,
+            cert: SSL_CRT,
           },
         }),
       }),

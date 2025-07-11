@@ -102,12 +102,14 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
                     <Button
                         className="lemon-fon"
                         variant="contained"
+                        disabled={props.btnsDis}
                         onClick={ props.prevStep }
                     >Назад</Button>
                     <LikeBtn id={ props.sliderItem.id } clickLike={ onClickLike } />
                     <Button
                         className="lemon"
                         variant="contained"
+                        disabled={props.btnsDis}
                         onClick={ props.nextStep }
                     >Далее</Button>
                 </div>

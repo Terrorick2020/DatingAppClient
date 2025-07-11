@@ -82,6 +82,7 @@ export interface PropsChatPatternDialog {
 }
 
 export interface PropsMenuBtn {
+    id: string
     anchorEl: null | HTMLElement
     setAnchorEl: (value: null | HTMLElement) => void
     handleClose: (e: MouseEvent<HTMLLIElement>) => void

@@ -53,6 +53,8 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
     }, [props.message, props.handleChange, props.handleClick]);
 
     const handleKeyPress = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
+        if(!props.message.trim()) return;
+        
         event.key === "Enter" && handleSendMessage();
     }, [handleSendMessage]);
 
