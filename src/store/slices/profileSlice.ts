@@ -29,6 +29,7 @@ import {
     PLANS_SET_ENDPOINT,
     REFERAL_LINK,
     USER_ENDPOINT,
+    USER_SELF_DELETE_ENDPOINT,
 } from '@/config/env.config';
 
 import {
@@ -514,6 +515,26 @@ export const selectSelfPsychAsync = createAsyncThunk(
     }
 );
 
+export const deleteSelfAsync = createAsyncThunk(
+    'profile/delete-self',
+    async (): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const response: AxiosResponse<FetchResponse<any>> = await api.delete(USER_SELF_DELETE_ENDPOINT);
+
+            if (
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+
+            return null;
+        } catch (error) {
+            return 'error';
+        }
+    }
+);
+
 const profileSlice = createSlice({
     name: 'profile',
     initialState,
@@ -740,6 +761,28 @@ const profileSlice = createSlice({
         })
         builder.addCase(selectSelfPsychAsync.rejected, _ => {
             console.log("Ошибка выбора специалиста");
+        })
+
+        // Удаление собственного аккаунта
+        // deleteSelfAsync
+        builder.addCase(deleteSelfAsync.pending, _ => {
+            console.log("Удаление собственного аккаунта");
+        })
+        builder.addCase(deleteSelfAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
+            switch (action.payload) {
+                case 'error':
+                    console.log("Ошибка удаления собственного аккаунта");
+                    break;
+                case null:
+                    console.log("Собственный аккаунт не удалён");
+                    break;
+                case 'success':
+                    console.log("Успешное удаление собственного аккаунта");
+                    break;
+            }
+        })
+        builder.addCase(deleteSelfAsync.rejected, _ => {
+            console.log("Ошибка удаления собственного аккаунта");
         })
     }
 })

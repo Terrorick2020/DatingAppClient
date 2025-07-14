@@ -20,17 +20,20 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import DeleteSelfDialog from './DeleteSelfDialog';
+import PolicyDialog from './PolicyDialog';
 import SvgArrowDown from '@/assets/icon/arrow-down.svg?react';
 import SvgArrowLeft from '@/assets/icon/arrow-left.svg?react';
 import SvgClose from '@/assets/icon/close.svg?react';
 import SvgOther from '@/assets/icon/other.svg?react';
 
 
-const DesktopHeadNav = (): JSX.Element => {
+const HeadNav = (): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const [fullTxt, setFullTxt] = useState<string>('Свернуть приложение');
+    const [openPolicyDialog, setOpenPolicyDialog] = useState<boolean>(false);
+    const [openDelDialog, setOpenDelDialog] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
@@ -94,7 +97,6 @@ const DesktopHeadNav = (): JSX.Element => {
             if (viewport.isFullscreen()) {
                 if (viewport.exitFullscreen.isAvailable()) {
                     await viewport.exitFullscreen();
-                    setFullTxt('Развернуть приложение');
                 } else {
                     infoAlert(
                         dispatch,
@@ -104,8 +106,6 @@ const DesktopHeadNav = (): JSX.Element => {
             } else {
                 if (viewport.requestFullscreen.isAvailable()) {
                     await viewport.requestFullscreen();
-
-                    setFullTxt('Свернуть приложение');
                 } else {
                     infoAlert(
                         dispatch,
@@ -125,10 +125,12 @@ const DesktopHeadNav = (): JSX.Element => {
 
     const handleGetPolicy = (): void => {
         handleMenuClose();
+        setOpenPolicyDialog(true);
     };
 
     const handleDeleteProfile = (): void => {
         handleMenuClose();
+        setOpenDelDialog(true);
     };
 
     useEffect(() => {
@@ -203,10 +205,18 @@ const DesktopHeadNav = (): JSX.Element => {
                 <MenuItem onClick={handleFullScreen}>
                     <SvgArrowDown 
                         style={{
-                            transform:  viewport.isFullscreen() ? '' : 'rotate(180deg)'
+                            transform: viewport.isFullscreen() ? '' : 'rotate(180deg)'
                         }}
                     />
-                    <span className="text">{ fullTxt }</span>
+                    <span className="text">
+                        {
+                            viewport.isFullscreen()
+                                ?
+                                'Свернуть приложение'
+                                :
+                                'Развернуть приложение'
+                        }
+                    </span>
                 </MenuItem>
                 <MenuItem onClick={handleGetPolicy}>
                     <AssignmentIcon />
@@ -217,8 +227,16 @@ const DesktopHeadNav = (): JSX.Element => {
                     <span className="text">Удалить аккаунт</span>
                 </MenuItem>
             </Menu>
+            <PolicyDialog
+                open={openPolicyDialog}
+                handleClose={() => setOpenPolicyDialog(false)}
+            />
+            <DeleteSelfDialog
+                open={openDelDialog}
+                handleClose={() => setOpenDelDialog(false)}
+            />
         </div>
     )
 }
 
-export default DesktopHeadNav;
+export default HeadNav;

@@ -19,7 +19,7 @@ const ChatPatternDialog = memo((props: PropsChatPatternDialog): JSX.Element => {
             slots={{ transition: Slide }}
             slotProps={{
                 transition: {
-                direction: 'up',
+                    direction: 'up',
                 },
             }}
         >
