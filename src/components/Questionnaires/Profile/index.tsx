@@ -11,6 +11,7 @@ import MyLoader from '@/components/UI/MyLoader';
 import ProfileInfo from './Info';
 import ProfilePlans from './Plans';
 import ProfileLink from './Link';
+import ProfileDelete from './Delete';
 
 
 const ProfileContent = (): JSX.Element => {
@@ -73,6 +74,7 @@ const ProfileContent = (): JSX.Element => {
                 <ProfileInfo handleRoute={handleInfoRoute} />
                 <ProfilePlans handleRoute={handlePlansRoute} />
                 <ProfileLink />
+                <ProfileDelete />
             </div>
         </div>
     )
