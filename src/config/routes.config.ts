@@ -6,6 +6,8 @@ export const appRoutes = {
         global: '/register',
         inner: {
             preview: '',
+            policy: 'policy',
+            rules: 'rules',
             lang: 'lang',
             fillQuest: 'filling-questionnaire',
             media: 'media',
@@ -51,12 +53,16 @@ export const toBlocked = appRoutes.blocked;
 export const toError = appRoutes.error;
 
 const regGlobRoute   = regRoutes.global;
-const previewRpute   = regRoutes.inner.preview;
+const previewRoute   = regRoutes.inner.preview;
+const policyRoute    = regRoutes.inner.policy;
+const rulesRoute     = regRoutes.inner.rules;
 const langRoute      = regRoutes.inner.lang;
 const fillQuestRoute = regRoutes.inner.fillQuest;
 const mediaRoute     = regRoutes.inner.media;
 
-export const toPreview   = `${regGlobRoute}/${previewRpute}`;
+export const toPreview   = `${regGlobRoute}/${previewRoute}`;
+export const toPolicy    = `${regGlobRoute}/${policyRoute}`;
+export const toRules     = `${regGlobRoute}/${rulesRoute}`;
 export const toLang      = `${regGlobRoute}/${langRoute}`;
 export const toFillQuest = `${regGlobRoute}/${fillQuestRoute}`;
 export const toMedia     = `${regGlobRoute}/${mediaRoute}`;

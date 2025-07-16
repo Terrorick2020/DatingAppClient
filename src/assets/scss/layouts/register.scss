@@ -1,4 +1,62 @@
+@use "../components/mixins";
+
 .reg-layout {
     width: 100%;
     height: 100%;
+
+    .policy, .rules {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        padding-block: clamp(4em, 12vh, 5.5rem) 2rem;
+        padding-inline: 8vw;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
+
+        &__ctx {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh;
+
+            .headline {
+                font-weight: 900;
+                font-size: clamp(1.5rem, 3vw, 1.85rem);
+            }
+
+            .sub-headline {
+                font-weight: 500;
+                font-size: clamp(1.1rem, 3vw, 1.5rem);
+            }
+
+            .text {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.1rem;
+
+                .title, .sub-title, .description, .list .list__item {
+                    font-size: clamp(0.85rem, 3vw, 1.1rem);
+                }
+
+                .sub-title, .description, .list .list__item {
+                    font-weight: 200;
+                }
+
+                .title {
+                    font-weight: 700;
+                }
+
+                .description {
+                    .purple {
+                        color: #BC96FF;
+                        text-decoration: underline;
+                    }
+                }
+
+                .list {
+                    margin-left: 2rem;
+                }
+            }
+        }
+    }
 }

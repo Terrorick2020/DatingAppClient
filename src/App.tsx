@@ -17,6 +17,8 @@ import EPLayout from './layouts/EviningPlans';
 
 import RegLangPage from './pages/Register/Lang';
 import RegPreviewPage from './pages/Register/Preview';
+import RegPolicyPage from './pages/Register/Policy';
+import RegRulesPage from './pages/Register/Rules';
 import RegFillingQuestPage from './pages/Register/FillingQuest';
 import RegMediaPage from './pages/Register/Media';
 
@@ -52,6 +54,8 @@ const App = (): JSX.Element => {
 
         <Route path={ regRoutes.global } element={ <RegisterLayout /> } >
           <Route path={ regRoutes.inner.preview } element={ <RegPreviewPage /> } />
+          <Route path={ regRoutes.inner.policy } element={ <RegPolicyPage /> } />
+          <Route path={ regRoutes.inner.rules } element={ <RegRulesPage /> } />
           <Route path={ regRoutes.inner.lang } element={ <RegLangPage /> } />
           <Route path={ regRoutes.inner.fillQuest } element={ <RegFillingQuestPage /> } />
           <Route path={ regRoutes.inner.media } element={ <RegMediaPage /> } />

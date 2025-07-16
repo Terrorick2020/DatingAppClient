@@ -1,13 +1,12 @@
 import { JSX, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { toFillQuest } from '@/config/routes.config';
+import { toFillQuest, toPolicy, toRules } from '@/config/routes.config';
 import { useDispatch } from 'react-redux';
 import { addRoute } from '@/store/slices/settingsSlice';
 import type { RootDispatch } from '@/store';
 
 import Button from '@mui/material/Button';
 import SvgWhiteHeart from '@/assets/icon/white-heart.svg';
-import SvgTriangle from '@/assets/icon/triangle.svg?react';
 
 
 const PreviewContent = (): JSX.Element => {
@@ -46,11 +45,20 @@ const PreviewContent = (): JSX.Element => {
                         Наша цель — помочь вам встретить новых людей офлайн, создавая значимые моменты и впечатления.
                     </h6>
                 </div>
-                <div className="btn">
-                    <NavLink className="link" to={ toFillQuest } onClick={handleRoute}>
-                        <Button variant="contained" endIcon={<SvgTriangle />}>Далее</Button>
-                    </NavLink>
+                <div className="policy-links">
+                    <p className="text">
+                        Нажимая кнопку "Старт", вы соглашаетесь с
+                        {" "}
+                        <NavLink to={toPolicy}>Политикой конфиденциальности</NavLink>
+                        {" "}
+                        и
+                        {" "}
+                        <NavLink to={toRules}>Правилами использования.</NavLink>
+                    </p>
                 </div>
+                <NavLink className="link" to={ toFillQuest } onClick={handleRoute}>
+                    <Button variant="contained">Старт</Button>
+                </NavLink>
             </div>
         </>
     )
