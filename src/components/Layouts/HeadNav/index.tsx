@@ -7,7 +7,7 @@ import {
     popup,
 } from '@telegram-apps/sdk';
 
-import { JSX, useMemo, useEffect } from 'react';
+import { JSX, useMemo, useEffect, useState } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { warningAlert, infoAlert } from '@/funcs/alert.funcs';
@@ -16,6 +16,7 @@ import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
+import HeadNavExitDialog from './ExitDialog';
 import SvgArrowDown from '@/assets/icon/arrow-down.svg?react';
 import SvgArrowLeft from '@/assets/icon/arrow-left.svg?react';
 import SvgClose from '@/assets/icon/close.svg?react';
@@ -24,6 +25,8 @@ import SvgOther from '@/assets/icon/other.svg?react';
 
 const HeadNav = (): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
+
+    const [open, setOpen] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
@@ -68,7 +71,7 @@ const HeadNav = (): JSX.Element => {
                 miniApp.close.isAvailable() && miniApp.close();
             }
         } else {
-            window.close();
+            setOpen(true);
         }
     };
 
@@ -135,27 +138,33 @@ const HeadNav = (): JSX.Element => {
     if(isTgMobile) return (<></>);
 
     return (
-        <div className="desc-head-nav">
-            <Button
-                className="btn text-fon min rounded"
-                variant="contained"
-                startIcon={ <btnCtx.svg /> }
-                onClick={ btnCtx.func }
-            >{btnCtx.text}</Button>
-            <Button
-                className="btn text-fon rounded"
-                variant="contained"
-                startIcon={
-                    <SvgArrowDown
-                        style = {{
-                            transform: viewport.isFullscreen() ? '' : 'rotate(180deg)',
-                        }}
-                    />
-                }
-                endIcon={ <SvgOther /> }
-                onClick={handleFullScreen}
+        <>
+            <div className="desc-head-nav">
+                <Button
+                    className="btn text-fon min rounded"
+                    variant="contained"
+                    startIcon={ <btnCtx.svg /> }
+                    onClick={ btnCtx.func }
+                >{btnCtx.text}</Button>
+                <Button
+                    className="btn text-fon rounded"
+                    variant="contained"
+                    startIcon={
+                        <SvgArrowDown
+                            style = {{
+                                transform: viewport.isFullscreen() ? '' : 'rotate(180deg)',
+                            }}
+                        />
+                    }
+                    endIcon={ <SvgOther /> }
+                    onClick={handleFullScreen}
+                />
+            </div>
+            <HeadNavExitDialog
+                open={open}
+                setOpen={(value: boolean) => setOpen(value)}
             />
-        </div>
+        </>
     )
 }
 

@@ -122,7 +122,11 @@ export default defineConfig(({ mode }) => {
                 return 'socket';
               };
 
-              if (id.includes('axios') || id.includes('dayjs')) {
+              if (
+                id.includes('axios') ||
+                id.includes('dayjs') ||
+                id.includes('uuid')
+              ) {
                 return 'utils';
               };
 

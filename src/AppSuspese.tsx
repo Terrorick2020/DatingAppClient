@@ -18,35 +18,35 @@ async function delayForLazy( promise: Promise<any> ) {
         promise,
     ]);
 
-    // if(navigate) {
-    //     if(checkRes === 'error' || !jsxRes) {
-    //         navigate('error');
-    //     } else if (!checkRes) {
-    //         navigate(toPreview);
-    //     } else {
+    if(navigate) {
+        if(checkRes === 'error' || !jsxRes) {
+            navigate('error');
+        } else if (!checkRes) {
+            navigate(toPreview);
+        } else {
 
-    //         const [ selfRes, _ ] = await Promise.all([
-    //             store.dispatch(getSelfProfile()).unwrap(),
-    //             store.dispatch(getSelfPlansAsync()).unwrap(),
-    //         ]);
+            const [ selfRes, _ ] = await Promise.all([
+                store.dispatch(getSelfProfile()).unwrap(),
+                store.dispatch(getSelfPlansAsync()).unwrap(),
+            ]);
 
-    //         if(!selfRes || selfRes === 'error') {
-    //             navigate('error');
-    //         } else {
-    //             switch(selfRes.role) {
-    //                 case EProfileRoles.User:
-    //                     navigate(toSlider);
-    //                     break;
-    //                 case EProfileRoles.Admin:
-    //                     navigate(toChange);
-    //                     break;
-    //                 case EProfileRoles.Psych:
-    //                     navigate('error');
-    //                     break;
-    //             }
-    //         }
-    //     }
-    // }
+            if(!selfRes || selfRes === 'error') {
+                navigate('error');
+            } else {
+                switch(selfRes.role) {
+                    case EProfileRoles.User:
+                        navigate(toSlider);
+                        break;
+                    case EProfileRoles.Admin:
+                        navigate(toChange);
+                        break;
+                    case EProfileRoles.Psych:
+                        navigate('error');
+                        break;
+                }
+            }
+        }
+    }
 
     const elapsed = performance.now() - start;
     const remainingDelay = Math.max(0, 2000 - elapsed);
