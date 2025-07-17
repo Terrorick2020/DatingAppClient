@@ -2,7 +2,7 @@ import { JSX, useState } from 'react';
 import { deleteSelfAsync } from '@/store/slices/profileSlice';
 import { warningAlert } from '@/funcs/alert.funcs';
 import { useDispatch } from 'react-redux';
-import type { PropsHeadNavfDialog } from '@/types/layout.types';
+import type { PropsDeleteSelfDialog } from '@/types/profile.types';
 import type { RootDispatch } from '@/store';
 
 import DialogActions from '@mui/material/DialogActions';
@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import SvgAngrySmileyFace from '@/assets/icon/angry-smiley-face.svg';
 
 
-const DeleteSelfDialog = (props: PropsHeadNavfDialog): JSX.Element => {
+const DeleteSelfDialog = (props: PropsDeleteSelfDialog): JSX.Element => {
     const [dLoading, setDLoading] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
@@ -22,25 +22,30 @@ const DeleteSelfDialog = (props: PropsHeadNavfDialog): JSX.Element => {
 
         const response = await dispatch(deleteSelfAsync()).unwrap();
         
-        setDLoading(false);
-        
         if(!response || response === 'error') {
             warningAlert(
                 dispatch,
                 'Не удалось удалить профиль! Попробуйте позже'
             );
+        };
 
-            return;
-        }
-
-        props.handleClose();
+        setDLoading(false);
+        props.setOpen(false);
     };
+
+    const handleSetOpen = (value: boolean): void => {
+        if(dLoading) return;
+
+        props.setOpen(value);
+    };
+
+    const handleClose = (): void => props.setOpen(false);
 
     return (
         <ChatPatternDialog
             open={props.open}
             img={SvgAngrySmileyFace}
-            setOpen={() => props.handleClose()}
+            setOpen={handleSetOpen}
         >
             <DialogContent>
                 <h4 className="headline">Удалить профиль?</h4>
@@ -52,13 +57,15 @@ const DeleteSelfDialog = (props: PropsHeadNavfDialog): JSX.Element => {
             <DialogActions>
                 <Button
                     className="exit-btn"
-                    onClick={() => props.handleClose()}
+                    disabled={dLoading}
+                    onClick={handleClose}
                 >Отмена</Button>
                 <Button
                     fullWidth
                     loadingPosition="start"
                     className="close-btn"
                     loading={dLoading}
+                    disabled={dLoading}
                     onClick={handleDeleteUser}
                 >
                     {dLoading ? 'Удаление..' : 'Удалить'}

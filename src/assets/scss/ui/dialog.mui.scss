@@ -313,48 +313,4 @@
             }
         }
     }
-    
-    &.policy-confirm {
-        .MuiPaper-root {
-            max-width: 90vh;
-
-            .MuiTypography-root {
-                font-weight: 700;
-                padding: 0;
-                margin: 0;
-            }
-
-            .MuiDialogContent-root {
-                margin-block: 1rem;
-                overflow-y: auto;
-
-                .text {
-                    width: 100%;
-                    word-break: break-word;
-                }
-            }
-
-            .MuiDialogActions-root {
-                width: 100%;
-                display: flex !important;
-                margin: 0;
-                padding: 0;
-
-                .MuiButtonBase-root {
-                    &.exit-btn {
-                        background: transparent;
-                        color: #D7FF81;
-                        border: 2px solid #D7FF81;
-        
-                        @media (hover: hover) and (pointer: fine) {
-                            &:hover {
-                                background: #D7FF81;
-                                color: #121112;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 }

@@ -49,11 +49,15 @@ const PreviewContent = (): JSX.Element => {
                     <p className="text">
                         Нажимая кнопку "Старт", вы соглашаетесь с
                         {" "}
-                        <NavLink to={toPolicy}>Политикой конфиденциальности</NavLink>
-                        {" "}
-                        и
-                        {" "}
-                        <NavLink to={toRules}>Правилами использования.</NavLink>
+                        <NavLink
+                            to={toPolicy}
+                            onClick={handleRoute}
+                        >Политикой конфиденциальности</NavLink>
+                        {" "}и{" "}
+                        <NavLink
+                            to={toRules}
+                            onClick={handleRoute}
+                        >Правилами использования.</NavLink>
                     </p>
                 </div>
                 <NavLink className="link" to={ toFillQuest } onClick={handleRoute}>

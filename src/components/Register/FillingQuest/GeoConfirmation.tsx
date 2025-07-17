@@ -11,6 +11,7 @@ import type { IState } from '@/types/store.types';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import PngLocation from '@/assets/img/location.png';
 
 
 const GeoConfirmation = (): JSX.Element => {
@@ -36,7 +37,8 @@ const GeoConfirmation = (): JSX.Element => {
     useEffect(() => { chekTgStore() }, []);
 
     const handleReject = async (): Promise<void> => {
-        setLoad('reject')
+
+        setLoad('reject');
 
         let rejectCount: number = 0;
 
@@ -87,11 +89,22 @@ const GeoConfirmation = (): JSX.Element => {
             open={open}
             aria-labelledby="geo-modal-modal-title"
             aria-describedby="geo-modal-modal-description"
+            disableEnforceFocus
+            disableAutoFocus
         >
             <Box className="geo-modal">
-                <h6 className="headline">
-                    Разрешить приложению определять Вашу гео-локацию?
-                </h6>
+                <div className="img">
+                    <img
+                        src={PngLocation}
+                        alt="location"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                </div>
+                <div className="text">
+                    <h3 className="headline">Ваше местоположение</h3>
+                    <p className="description">Разрешить приложению определять Вашу гео-локацию?</p>
+                </div>
                 <div className="btns">
                     <Button
                         fullWidth
@@ -99,6 +112,7 @@ const GeoConfirmation = (): JSX.Element => {
                         variant="contained"
                         loadingPosition="start"
                         loading={load === 'reject'}
+                        disabled={!!load}
                         onClick={handleReject}
                     >
                         {load === 'reject' ? 'Загрузка...' : 'Отклонить'}
@@ -109,6 +123,7 @@ const GeoConfirmation = (): JSX.Element => {
                         variant="contained"
                         loadingPosition="start"
                         loading={load === 'accept'}
+                        disabled={!!load}
                         onClick={handleAccept}
                     >
                         {load === 'accept' ? 'Загрузка...' : 'Разрешить'}

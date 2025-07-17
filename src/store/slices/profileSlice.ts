@@ -52,8 +52,9 @@ import {
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { delay } from '@/funcs/general.funcs';
-import { getTgID, getRefParams } from '@/funcs/tg.funcs';
+import { getTgID, getRefParams, tgCloudStore } from '@/funcs/tg.funcs';
 import { EApiStatus } from '@/types/settings.type';
+import { ETgCloudeStore } from '@/types/tg.types';
 import { KeyFQBtnText } from '@/types/register.typs';
 import type { AxiosResponse, AxiosProgressEvent  } from 'axios';
 
@@ -528,7 +529,11 @@ export const deleteSelfAsync = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            return null;
+            for (const key of Object.values(ETgCloudeStore)) {
+                await tgCloudStore.delete(key);
+            };
+
+            return 'success';
         } catch (error) {
             return 'error';
         }
@@ -561,7 +566,7 @@ const profileSlice = createSlice({
         },
         setFromRefCode: (state, action: PayloadAction<string>): void => {
             state.info.fromRefCode = action.payload;
-        }
+        },
     },
     extraReducers: builder => {
         // Первичная проверка пользователя

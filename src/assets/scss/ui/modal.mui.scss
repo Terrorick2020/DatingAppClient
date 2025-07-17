@@ -26,7 +26,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 4rem;
+            gap: 1rem;
             opacity: 0;
             animation: slideModalDown 1s ease-in-out forwards;
             animation-delay: 0.8s;
@@ -34,19 +34,37 @@
             @media (max-width: 680px) {
                 width: 90vw;
             }
-    
-            .headline {
-                width: 80%;
-                color: #FFFFFF;
-                text-align: center;
-                font-weight: 500;
 
-                @media (max-width: 360px) {
+            .img {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            .text {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                .headline {
                     width: 100%;
+                    color: #FFFFFF;
+                    text-align: center;
+                    font-weight: 700;
+                    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+                }
+
+                .description {
+                    width: 100%;
+                    text-align: center;
+                    font-weight: 400;
+                    font-size: clamp(1rem, 3.5vw, 1.1rem);
                 }
             }
 
             .btns {
+                width: 100%;
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 2rem;
@@ -55,20 +73,33 @@
                     gap: 1rem;
                 }
 
+                @media (max-width: 360px) {
+                    grid-template-columns: 1fr;
+                    grid-template-rows: repeat(2, 1fr);
+                }
+
                 .btn {
                     width: 100%;
                     min-width: 8rem !important;
 
-                    @media (max-width: 340px) {
-                        min-width: 5rem;
-                    }
-
                     &.bad {
-                        background: #FF0000;
+                        background: transparent;
+                        color: #D7FF81;
+                        border: 1px solid #D7FF81;
+                        border-radius: 3.75rem;
+                        transition: all 0.3s ease-in-out;
+
+                        &:active {
+                            background: #D7FF81;
+                            color: #121112;
+                        }
                     }
 
                     &.success {
-                        background: #0070D8;
+                        background: #D7FF81;
+                        color: #121112;
+                        border: 1px solid #D7FF81;
+                        border-radius: 3.75rem;
                     }
                 }
             }

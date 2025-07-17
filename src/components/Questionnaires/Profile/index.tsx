@@ -1,8 +1,14 @@
+import {
+    toPlans,
+    toFillQuest,
+    toPolicy,
+    toRules,
+} from '@/config/routes.config';
+
 import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toPlans, toFillQuest } from '@/config/routes.config';
 import { addRoute } from '@/store/slices/settingsSlice';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { initEPCtxAsync } from '@/store/slices/settingsSlice';
 import { type RootDispatch } from '@/store';
 import { type IState } from '@/types/store.types';
@@ -54,12 +60,16 @@ const ProfileContent = (): JSX.Element => {
     const handleInfoRoute = (): void => {
         navigate(toFillQuest);
         dispatch(addRoute(location.pathname));
-    }
+    };
 
     const handlePlansRoute = (): void => {
         navigate(toPlans);
         dispatch(addRoute(location.pathname));
-    }
+    };
+
+    const handleRoute = () => {
+        dispatch(addRoute(location.pathname));
+    };
 
     if(isLoad) return (
         <div className="loader">
@@ -75,6 +85,18 @@ const ProfileContent = (): JSX.Element => {
                 <ProfilePlans handleRoute={handlePlansRoute} />
                 <ProfileLink />
                 <ProfileDelete />
+                <div className="policy-links">
+                    <p className="text">
+                        <NavLink
+                            to={toPolicy}
+                            onClick={handleRoute}
+                        >Политика конфиденциальности</NavLink>
+                        {" "}и{" "}
+                        <NavLink
+                            to={toRules}
+                            onClick={handleRoute}
+                        >Правила использования</NavLink></p>
+                </div>
             </div>
         </div>
     )

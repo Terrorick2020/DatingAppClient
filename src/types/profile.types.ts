@@ -64,3 +64,8 @@ export interface SavePhotoAsyncThuncData {
     photo: File,
     setUploadProgress: (value: number) => void
 }
+
+export interface PropsDeleteSelfDialog {
+    open: boolean
+    setOpen: (value: boolean) => void
+}
