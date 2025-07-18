@@ -39,13 +39,13 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
         try {
             setLoadSend(true);
 
-            const text = 'Попробуй приложение!';
+            const text = 'Начни общение с интересными людьми здесь!';
 
             if(shareURL.isAvailable()) {
-                await shareURL(props.link, '\n' + text);
+                await shareURL(props.link, text);
             } else if (navigator.share) {
                 const shareData = {
-                    title: 'Приглашение',
+                    title: 'Приглашение.',
                     text,
                     url: props.link,
                 };
