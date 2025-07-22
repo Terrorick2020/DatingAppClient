@@ -2,6 +2,7 @@ import { JSX, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toUserInfo } from '@/config/routes.config';
 import { initialArgs } from '@/constant/quest';
+import { createSelector } from 'reselect';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
 import type { InitSliderData } from '@/types/quest.types';
 import type { RootDispatch } from '@/store';
@@ -13,9 +14,19 @@ import MyLoader from '@/components/UI/MyLoader';
 import UserListItem from './Item';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectAdmin = (state: IState) => state.admin;
+
+const selectAdmineUserList = createSelector(
+    [selectSettings, selectAdmin],
+    (settings, admin) => ({
+      isLoad: settings.load,
+      adminState: admin,
+    })
+);
+
 const UsersListMain = (): JSX.Element => {
-    const adminState = useSelector((state: IState) => state.admin);
-    const isLoad = useSelector((state: IState) => state.settings.load);
+    const { isLoad, adminState } = useSelector(selectAdmineUserList);
 
     const [openDel, setOpenDel] = useState<boolean>(false);
 

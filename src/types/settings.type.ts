@@ -52,6 +52,8 @@ export interface FQErrors {
     bioErr: FQErrorsItem
 }
 
+export type FQErrorKeys = keyof FQErrors;
+
 export interface FEPErrors {
     descPlanErr: FQErrorsItem
     districtErr: FQErrorsItem

@@ -8,10 +8,11 @@ import {
 import { JSX, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addRoute } from '@/store/slices/settingsSlice';
+import { createSelector } from 'reselect';
 import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { initEPCtxAsync } from '@/store/slices/settingsSlice';
 import { type RootDispatch } from '@/store';
-import { type IState } from '@/types/store.types';
+import { type IState, EProfileRoles } from '@/types/store.types';
 
 import MyLoader from '@/components/UI/MyLoader';
 import ProfileInfo from './Info';
@@ -20,12 +21,25 @@ import ProfileLink from './Link';
 import ProfileDelete from './Delete';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectProfile = (state: IState) => state.profile;
+
+const selectQProfile = createSelector(
+    [selectSettings, selectProfile],
+    (settings, profile) => ({
+      isLoad: settings.load,
+      profileInfo: profile.info,
+    })
+);
+
 const ProfileContent = (): JSX.Element => {
-    const isLoad = useSelector((state: IState) => state.settings.load);
+    const { isLoad, profileInfo } = useSelector(selectQProfile);
 
     const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();
     const navigate = useNavigate();
+
+    const isPsych = profileInfo.role === EProfileRoles.Psych;
 
     useEffect(() => {
         const profileHtml = document.getElementById('profile');
@@ -34,7 +48,7 @@ const ProfileContent = (): JSX.Element => {
         const logoHeader = document.getElementById('logo-header');
         if( logoHeader ) logoHeader.style.display = 'flex';
 
-        dispatch(initEPCtxAsync());
+        !isPsych && dispatch(initEPCtxAsync());
 
         if( profileHtml && logoHeader ) {
             const handleScroll = (element: HTMLElement) => {
@@ -82,8 +96,10 @@ const ProfileContent = (): JSX.Element => {
             <h4 className="headline">Мой профиль</h4>
             <div className="content">
                 <ProfileInfo handleRoute={handleInfoRoute} />
-                <ProfilePlans handleRoute={handlePlansRoute} />
-                <ProfileLink />
+                {!isPsych && <>
+                    <ProfilePlans handleRoute={handlePlansRoute} />
+                    <ProfileLink />
+                </> }
                 <ProfileDelete />
                 <div className="policy-links">
                     <p className="text">

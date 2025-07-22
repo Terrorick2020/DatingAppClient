@@ -1,9 +1,17 @@
+import { ProfileSelf } from './profile.types';
+import { FQErrors } from './settings.type';
+
 export interface MediaProgressState {
     played: number
     playedSeconds: number
     loaded: number
     loadedSeconds: number
 }
+
+export type ValidationField = {
+    value: keyof ProfileSelf;
+    key: keyof FQErrors;
+};
 
 export interface PropsMediaContentBg {
     isFirstly: boolean

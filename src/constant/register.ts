@@ -26,3 +26,5 @@ export const fQHeadTxt = {
     [KeyFQBtnText.First]: 'Регистрация',
     [KeyFQBtnText.Other]: 'Обновление профиля'
 }
+
+export const MAX_LEN_BIO = 500;

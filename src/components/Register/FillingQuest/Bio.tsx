@@ -2,13 +2,12 @@ import { JSX, ChangeEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfo } from '@/store/slices/profileSlice';
 import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
+import { MAX_LEN_BIO } from '@/constant/register';
 import { setFQErrors } from '@/store/slices/settingsSlice';
-import { type IState } from '@/types/store.types';
+import { type IState, EProfileRoles } from '@/types/store.types';
 
 import TextField from '@mui/material/TextField';
 
-
-const maxLenBio = 500;
 
 const FillingQuestBio = (): JSX.Element => {
     const profileInfo = useSelector((state: IState) => state.profile.info);
@@ -32,9 +31,17 @@ const FillingQuestBio = (): JSX.Element => {
         }))
     };
 
+    const isPsych = profileInfo.role === EProfileRoles.Psych;
+
     return (
         <div className="widgets__bio">
-            <h4 className="headline">Био <span className="count">{profileInfo?.bio?.length ?? 0}/500</span></h4>
+            <h4 className="headline">
+                {
+                    isPsych
+                        ? 'Био '
+                        : 'О себе как о специалисте '
+                }
+                <span className="count">{profileInfo?.bio?.length ?? 0}/500</span></h4>
             <TextField
                 className="bio-input"
                 id="bio-input"
@@ -50,7 +57,7 @@ const FillingQuestBio = (): JSX.Element => {
                 slotProps={{
                     input: {
                         inputProps: {
-                            maxLength: maxLenBio,
+                            maxLength: MAX_LEN_BIO,
                         },
                     },
                 }}

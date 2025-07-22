@@ -69,7 +69,7 @@ const initialState: ProfileState = {
         latitude: null,
         longitude: null,
         lineStat: ELineStatus.Online,
-        role: EProfileRoles.User,
+        role: EProfileRoles.Psych,
         status: EProfileStatus.Noob,
         name: '',
         age: null,
@@ -330,7 +330,16 @@ export const signUpProfileAsync = createAsyncThunk(
                 !response ||
                 ![200, 201].includes(response.status) ||
                 !response.data.success
-            ) return null;
+            ) {
+                dispatch(setApiRes({
+                    value: true,
+                    msg: 'Данные не сохранились',
+                    status: EApiStatus.Warning,
+                    timestamp: Date.now(),
+                }));
+
+                return null;
+            }
 
             dispatch(setApiRes({
                 value: true,
@@ -352,6 +361,41 @@ export const signUpProfileAsync = createAsyncThunk(
     
             return 'success';
         } catch ( error: any ) {
+            let msg = 'Произошла ошибка сервера';
+
+            if (
+                error.name === "AxiosError" &&
+                error.status === 429
+            ) {
+                msg = 'Превышен лимит попыток регистрации, попробуйте позже';
+            };
+
+            dispatch(setApiRes({
+                value: true,
+                msg,
+                status: EApiStatus.Error,
+                timestamp: Date.now(),
+            }));
+
+            return 'error';
+        }
+    }
+);
+
+export const signUpPsychAsync = createAsyncThunk(
+    'profile/sign-up-psych',
+    async (mark: KeyFQBtnText, { getState, dispatch }): Promise<AsyncThunkRes<any>> => {
+        try {
+            const rootState = getState() as IState;
+            const profileInfo = rootState.profile.info;
+
+            //TODO: доделать функцию
+            mark
+            profileInfo
+
+
+            return null;
+        } catch (error: any) {
             let msg = 'Произошла ошибка сервера';
 
             if (
@@ -678,6 +722,27 @@ const profileSlice = createSlice({
         })
         builder.addCase(signUpProfileAsync.rejected, _ => {
             console.log("Ошибка регистрации профиля пользователя");
+        })
+
+        // Регистрация специалиста
+        builder.addCase(signUpPsychAsync.pending, _ => {
+            console.log("Регистрация специалиста");
+        })
+        builder.addCase(signUpPsychAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
+            switch (action.payload) {
+                case 'error':
+                    console.log("Ошибка регистрации специалиста");
+                    break;
+                case null:
+                    console.log("Регистрация специалиста не прошла");
+                    break;
+                case 'success':
+                    console.log("Успешная регистрация специалиста");
+                    break;
+            }
+        })
+        builder.addCase(signUpPsychAsync.rejected, _ => {
+            console.log("Ошибка регистрации специалиста");
         })
 
         // Получение текущего профиля пользователя

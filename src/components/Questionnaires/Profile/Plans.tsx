@@ -2,6 +2,7 @@ import { JSX, memo, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { setPlanMeta } from '@/store/slices/profileSlice';
 import { formatTimeLeft } from '@/funcs/general.funcs';
+import { createSelector } from 'reselect';
 import type { PropsProfileInfo, PlansLabelsState } from '@/types/quest.types';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -11,10 +12,20 @@ import Chip from '@mui/material/Chip';
 import SvgCalendar from '@/assets/icon/calendar.svg';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectProfile = (state: IState) => state.profile;
+
+const selectProfilePlans = createSelector(
+    [selectSettings, selectProfile],
+    (settings, profile) => ({
+      eveningPlans: profile.eveningPlans,
+      plansVars: settings.plansVars,
+      districtsVars: settings.districtsVars,
+    })
+);
+
 const ProfilePlans = memo((props: PropsProfileInfo): JSX.Element => {
-    const eveningPlans = useSelector((state: IState) => state.profile.eveningPlans);
-    const plansVars = useSelector((state: IState) => state.settings.plansVars);
-    const districtsVars = useSelector((state: IState) => state.settings.districtsVars);
+    const { eveningPlans, plansVars, districtsVars } = useSelector(selectProfilePlans);
 
     const [plans, setPlans] = useState<PlansLabelsState>({
         plan: '',

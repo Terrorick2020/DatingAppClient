@@ -10,7 +10,7 @@ import {
 import {
     handleSocket,
     getNamespaceSocket,
-    waitForSocketConnection
+    waitForSocketConnection,
 } from '@/config/socket.config';
 
 import {
@@ -29,9 +29,9 @@ import { WS_LIKES, WS_MATCH, WS_MSGS } from '@/config/env.config';
 import { getUnreadChatsAsync, socketNewMsgInToChats } from '@/store/slices/chatsSlice';
 import { setBadge, setLikeTypeBtn } from '@/store/slices/settingsSlice';
 import { ELikeBtnType } from '@/types/settings.type';
+import { type IState, EProfileRoles } from '@/types/store.types';
 import type { Socket } from 'socket.io-client';
 import type { RootDispatch } from '@/store';
-import type { IState } from '@/types/store.types';
 
 import QuestMatch from '@/components/Layouts/QuestMatch';
 import QuestNavBar from '@/components/Layouts/QuestNavBar';
@@ -48,11 +48,12 @@ const selectQuestState = createSelector(
       isCurrent: profile.eveningPlans.isCurrent,
       badgeCtx: settings.badge,
       match: likes.match,
+      profileInfo: profile.info,
     })
 );
 
 const QuestLayout = (): JSX.Element => {
-    const { isCurrent, badgeCtx, match } = useSelector(selectQuestState);
+    const { isCurrent, badgeCtx, match, profileInfo } = useSelector(selectQuestState);
 
     const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();
@@ -62,6 +63,8 @@ const QuestLayout = (): JSX.Element => {
     const lastLikeId = useRef<string>('');
     const unreadedChats = useRef<string[]>([]);
     const pathname = useRef<string>(location.pathname);
+
+    const isPsych = profileInfo.role === EProfileRoles.Psych;
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -79,6 +82,8 @@ const QuestLayout = (): JSX.Element => {
     }
 
     useEffect(() => {
+        if(isPsych) return;
+
         if(!isCurrent && !snackbarKeyRef.current) {
             const key = showSnackPlanTimeout();
             snackbarKeyRef.current = key;

@@ -3,21 +3,27 @@ import {
     initFillingQuestAsync,
     setLoad,
     setFQErrors,
+    resetRoutes,
 } from '@/store/slices/settingsSlice';
 
-import { JSX, useEffect, useRef, useState } from 'react';
+import {
+    signUpProfileAsync,
+    signUpPsychAsync,
+    setInfo,
+} from '@/store/slices/profileSlice';
+
+import { JSX, useEffect, useRef, useState, } from 'react';
 import { createSelector } from 'reselect';
 import { useSelector, useDispatch } from 'react-redux';
-import { toPlans } from '@/config/routes.config';
+import { toPlans, toChats } from '@/config/routes.config';
 import { EMPTY_INPUT_ERR_MSG, ANIME_DURATION } from '@/constant/settings';
 import { RootDispatch } from '@/store';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { fQBtnText } from '@/constant/register';
 import { Slide } from 'react-awesome-reveal';
-import { signUpProfileAsync, setInfo } from '@/store/slices/profileSlice';
-import { type FQBtnTextItem, KeyFQBtnText } from '@/types/register.typs';
-import { type FQErrorsItem, EAnimeDirection } from '@/types/settings.type';
-import type { IState } from '@/types/store.types';
+import { type FQBtnTextItem, type ValidationField, KeyFQBtnText } from '@/types/register.typs';
+import { type FQErrorsItem, type FQErrorKeys, EAnimeDirection } from '@/types/settings.type';
+import { type IState, EProfileRoles } from '@/types/store.types';
 
 import Button from '@mui/material/Button';
 import MyLoader from '@/components/UI/MyLoader';
@@ -35,7 +41,7 @@ import FillingQuestSelectionSex from './SelectionSex';
 const selectSettings = (state: IState) => state.settings;
 const selectProfile = (state: IState) => state.profile;
 
-const selectComplListState = createSelector(
+const selectRegisterFQ = createSelector(
     [selectSettings, selectProfile],
     (settings, profile) => ({
       isFirstly: settings.isFirstly,
@@ -46,13 +52,15 @@ const selectComplListState = createSelector(
 );
 
 const FillingQuestContent = (): JSX.Element => {
-    const { isFirstly, isLoad, fQErrors, profileInfo } = useSelector(selectComplListState);
+    const { isFirstly, isLoad, fQErrors, profileInfo } = useSelector(selectRegisterFQ);
     
     const [regLoad, setRegLoad] = useState<boolean>(false);
     const [btnCtx, setBtnCtx] = useState<FQBtnTextItem>(fQBtnText[KeyFQBtnText.First]);
     const [isDis, setIsDis] = useState<boolean>(true);
 
     const infoCache = useRef<string>('');
+
+    const isPsych = profileInfo.role === EProfileRoles.Psych;
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
@@ -73,7 +81,7 @@ const FillingQuestContent = (): JSX.Element => {
         const logoHeader = document.getElementById('logo-header');
         if( logoHeader ) logoHeader.style.display = 'flex';
 
-        initFQCtx();
+        !isPsych && initFQCtx();
 
         infoCache.current = JSON.stringify(profileInfo);
 
@@ -93,50 +101,48 @@ const FillingQuestContent = (): JSX.Element => {
     }, [profileInfo]);
 
     const handleRoute = async (): Promise<void> => {
-        const errObj: { [key: string]: FQErrorsItem } = {};
+        setRegLoad(true);
 
-        if(!profileInfo.photos.length) {
-            errObj['photErr'] = {
-                value: true,
-                msg: EMPTY_INPUT_ERR_MSG,
-            }
-        }
+        const errObj: Partial<Record<FQErrorKeys, FQErrorsItem>> = {};
 
-        if(!profileInfo.name) {
-            errObj['nameErr'] = {
-                value: true,
-                msg: EMPTY_INPUT_ERR_MSG,
-            }
-        }
+        const keys: ValidationField[] = [
+            {
+                value: 'photos',
+                key: 'photErr'
+            },
+            {
+                value: 'name',
+                key: 'nameErr'
+            },
+            {
+                value: 'bio',
+                key: 'bioErr'
+            },
+        ];
 
-        if(!profileInfo.age) {
-            errObj['ageErr'] = {
-                value: true,
-                msg: EMPTY_INPUT_ERR_MSG,
-            }
-        }
+        const dopKeys: ValidationField[] = [
+            {
+                value: 'age',
+                key: 'ageErr'
+            },
+            {
+                value: 'town',
+                key: 'cityErr'
+            },
+        ];
 
-        if(!profileInfo.town) {
-            errObj['cityErr'] = {
-                value: true,
-                msg: EMPTY_INPUT_ERR_MSG,
-            }
-        }
+        if(!isPsych) keys.push( ...dopKeys );
 
-        if(!profileInfo.bio) {
-            errObj['bioErr'] = {
-                value: true,
-                msg: EMPTY_INPUT_ERR_MSG,
-            }
+        keys.forEach(item => {
+            const value = profileInfo[item.value];
 
-            dispatch(setFQErrors({
-                ...fQErrors,
-                bioErr: {
+            if (!value || (Array.isArray(value) && value.length === 0)) {
+                errObj[item.key] = {
                     value: true,
                     msg: EMPTY_INPUT_ERR_MSG,
                 }
-            }))
-        }
+            }
+        });
 
         const hasErrors = Object.values(errObj).some(item => item.value);
         
@@ -146,20 +152,30 @@ const FillingQuestContent = (): JSX.Element => {
                 ...errObj,
             }))
 
+            setRegLoad(false);
+
             return;
         };
-
-        setRegLoad(true);
         
-        const response = await dispatch(signUpProfileAsync(btnCtx.mark)).unwrap();
+        const response = await dispatch(
+            isPsych
+            ? signUpProfileAsync(btnCtx.mark)
+            : signUpPsychAsync(btnCtx.mark)
+        ).unwrap();
         
         if( response && response !== 'error') {
             infoCache.current = JSON.stringify(profileInfo);
             setIsDis(true);
 
             if( btnCtx.mark === KeyFQBtnText.First ) {
-                dispatch(addRoute(location.pathname));
-                navigate(toPlans);
+
+                if(!isPsych) {
+                    dispatch(addRoute(location.pathname));
+                    navigate(toPlans);
+                } else {
+                    dispatch(resetRoutes());
+                    navigate(toChats);
+                }
             };
         };
 
@@ -174,7 +190,7 @@ const FillingQuestContent = (): JSX.Element => {
 
     return (
         <>
-            <GeoConfirmation />
+            { profileInfo.role !== EProfileRoles.Psych && <GeoConfirmation /> }
             <div className="filling-quest__header">
                 <FillingQuestHeader mark={btnCtx.mark} />
             </div>
@@ -185,13 +201,13 @@ const FillingQuestContent = (): JSX.Element => {
                         direction={EAnimeDirection.Left}
                         duration={ANIME_DURATION}
                     >
-                        <FillingQuestPhotos />
-                        <FillingQuestInputs />
-                        <FillingQuestMySex />
-                        <FillingQuestAge />
+                        <FillingQuestPhotos key="inputs" />
+                        <FillingQuestInputs key="inputs" />
+                        { !isPsych && <FillingQuestMySex key="mysex" /> }
+                        { !isPsych && <FillingQuestAge key="age" /> }
                         <FillingQuestBio />
-                        <FillingQuestInterests />
-                        <FillingQuestSelectionSex />
+                        { !isPsych && <FillingQuestInterests key="interests" /> }
+                        { !isPsych && <FillingQuestSelectionSex key="sel-sex" /> }
                     </Slide>
                 </div>
                 <div className="link">
