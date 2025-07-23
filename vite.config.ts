@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => {
   ) throw new Error('Hasn`t some environments in vite.config.ts');
 
   const isProd = MODE === 'prod';
-  const isAnalyze = process.env.MODE = 'analyze';
+  const isAnalyze = process.env.MODE === 'analyze';
 
   return {
     plugins: [
@@ -83,6 +83,7 @@ export default defineConfig(({ mode }) => {
       }),
     },
     preview: {
+      port: PORT,
       allowedHosts: [ DOMAIN ],
     },
     resolve: {

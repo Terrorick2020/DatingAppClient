@@ -80,8 +80,7 @@ export const COMPLS_UPT_ENDPOINT = import.meta.env.VITE_COMPLS_UPT_ENDPOINT || '
 export const COMPLS_STATS        = import.meta.env.VITE_COMPLS_STATS || '';
 
 export const FQ_MEDIA_LINK     = import.meta.env.VITE_FQ_MEDIA_LINK || '';
-export const PL_MEDIA_LINK     = import.meta.env.VITE_PL_MEDIA_LINK || '';
-export const LO_MEDIA_LINK    = import.meta.env.VITE_LO_MEDIA_LINK || '';
+export const EP_MEDIA_LINK     = import.meta.env.VITE_EP_MEDIA_LINK || '';
 
 export const USER_STATUS = import.meta.env. VITE_USER_STATUS || '';
 
@@ -161,8 +160,7 @@ if(
   !COMPLS_STATS         ||
 
   !FQ_MEDIA_LINK ||
-  !PL_MEDIA_LINK ||
-  !LO_MEDIA_LINK ||
+  !EP_MEDIA_LINK ||
 
   !USER_STATUS
 ) {

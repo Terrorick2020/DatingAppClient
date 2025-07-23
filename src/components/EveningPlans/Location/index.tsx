@@ -1,9 +1,8 @@
-import { JSX, useState, useEffect } from 'react';
+import { JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toSlider } from '@/config/routes.config';
-import { resetRoutes, setEPErrors, setMedaiLink } from '@/store/slices/settingsSlice';
+import { resetRoutes, setEPErrors } from '@/store/slices/settingsSlice';
 import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
-import { LO_MEDIA_LINK } from '@/config/env.config';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveSelfPlansAsync } from '@/store/slices/profileSlice';
 import type { FEPHasErrors } from '@/types/settings.type';
@@ -73,10 +72,6 @@ const EveningPlansLocationCtx = (): JSX.Element => {
         dispatch(resetRoutes());
         navigate(toSlider);
     }
-
-    useEffect(() => {
-        dispatch(setMedaiLink(LO_MEDIA_LINK));
-    }, [])
 
     return (
         <>

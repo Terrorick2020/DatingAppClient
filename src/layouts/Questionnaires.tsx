@@ -25,9 +25,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { toLikes, toChats } from '@/config/routes.config';
 import { createSelector } from 'reselect';
-import { WS_LIKES, WS_MATCH, WS_MSGS } from '@/config/env.config';
+import { WS_LIKES, WS_MATCH, WS_MSGS, EP_MEDIA_LINK } from '@/config/env.config';
 import { getUnreadChatsAsync, socketNewMsgInToChats } from '@/store/slices/chatsSlice';
-import { setBadge, setLikeTypeBtn } from '@/store/slices/settingsSlice';
+import { setBadge, setLikeTypeBtn, setMedaiLink } from '@/store/slices/settingsSlice';
 import { ELikeBtnType } from '@/types/settings.type';
 import { type IState, EProfileRoles } from '@/types/store.types';
 import type { Socket } from 'socket.io-client';
@@ -96,6 +96,10 @@ const QuestLayout = (): JSX.Element => {
     useEffect(() => {
         pathname.current = location.pathname;
     }, [location.pathname]);
+
+    useEffect(() => {
+        dispatch(setMedaiLink(EP_MEDIA_LINK));
+    }, []);
 
     const handleLikesNotify = (data: OnResNewLike | null): void => {
         if(!data || lastLikeId.current == data.fromUserId) return;
