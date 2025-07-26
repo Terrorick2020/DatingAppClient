@@ -103,15 +103,16 @@ export const initProfileAsync = createAsyncThunk(
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
             const telegramId = getTgID() || 'vova';
-            const fromRefCode = getRefParams();
-
+            
             if(!telegramId) return 'error';
+
+            const fromRefCode = getRefParams();
 
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
 
             dispatch(setInfo({...profileInfo, id: telegramId}));
-            fromRefCode && dispatch(setFromRefCode(fromRefCode));
+            fromRefCode && dispatch(setFromRefCode(fromRefCode.code));
 
             const data = { telegramId };
 

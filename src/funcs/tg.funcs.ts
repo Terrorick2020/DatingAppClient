@@ -17,10 +17,12 @@ import {
   ETgCloudeStore,
   EStatusSetHomeScreen,
   type InitHomeScreenRes,
+  type GetParamsRes,
 } from '@/types/tg.types';
 
 import { delay } from './general.funcs';
 import { setTgId } from '@/config/fetch.config';
+import { EProfileRoles } from '@/types/store.types';
 
 
 export let statusSetHomeScreen: EStatusSetHomeScreen = EStatusSetHomeScreen.Error;
@@ -130,14 +132,33 @@ export function getTgID(): string | null {
   return '' + user.id;
 };
 
-export function getRefParams(): string | null {
+export function getRefParams(): GetParamsRes | null {
   const param = initData.startParam();
   
   if(!param) return null;
 
-  const decoded = atob(decodeURIComponent(param));
+  try {
+    const decodedString = atob(decodeURIComponent(param));
+    const searchParams = new URLSearchParams(decodedString);
 
-  return decoded;
+    const encodedCode = searchParams.get('code');
+    const encodedType = searchParams.get('type');
+
+    if (!encodedCode || !encodedType) return null;
+
+    const typeValue = atob(decodeURIComponent(encodedType));
+    const isValidType = Object.values(EProfileRoles).includes(typeValue as EProfileRoles);
+
+    if (!isValidType) return null;
+
+    return {
+      code: atob(decodeURIComponent(encodedCode)),
+      type: typeValue as EProfileRoles,
+    };
+
+  } catch {
+    return null;
+  }
 };
 
 async function checkInstallHomeScreen(): Promise<InitHomeScreenRes> {

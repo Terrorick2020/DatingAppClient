@@ -180,10 +180,14 @@ if(
 };
 
 export const REFERAL_LINK = (code: string, type: EProfileRoles): string => {
-  const encodedCode = encodeURIComponent(btoa(code));
-  const encodedType = encodeURIComponent(btoa(type));
+  const encodedCode = btoa(code);
+  const encodedType = btoa(type);
 
-  return `${REFERAL}${encodedCode}&type=${encodedType}`;
+  const paramsString = `code=${encodeURIComponent(encodedCode)}&type=${encodeURIComponent(encodedType)}`;
+
+  const finalEncoded = btoa(paramsString);
+
+  return `${REFERAL}${finalEncoded}`;
 }
 
 export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`;

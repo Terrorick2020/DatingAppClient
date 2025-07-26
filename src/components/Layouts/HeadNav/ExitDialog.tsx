@@ -1,4 +1,5 @@
 import { JSX } from 'react';
+import { miniApp, isTMA } from '@telegram-apps/sdk';
 import type { PropsHeadNavExitDialog } from '@/types/layout.types';
 
 import DialogActions from '@mui/material/DialogActions';
@@ -7,11 +8,20 @@ import ChatPatternDialog from '@/components/UI/ChatPatternDialog';
 import Button from '@mui/material/Button';
 import PngExit from '@/assets/img/exit.png';
 
+
 const HeadNavExitDialog = (props: PropsHeadNavExitDialog): JSX.Element => {
     const handleClose = (): void => props.setOpen(false);
 
-    const handleExit = (): void => {
-        document.getElementsByTagName('html')[0].remove();
+    const handleExit = async (): Promise<void> => {
+        const isTg = await isTMA();
+
+        if(isTg && miniApp.mountSync.isAvailable()) {
+            miniApp.mountSync();
+            miniApp.close.isAvailable() && miniApp.close();
+        } else {
+            document.getElementsByTagName('html')[0].remove();
+        }
+
         handleClose();
     };
 

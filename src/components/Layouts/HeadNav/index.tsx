@@ -1,13 +1,5 @@
-import {
-    closingBehavior,
-    backButton,
-    viewport,
-    miniApp,
-    isTMA,
-    popup,
-} from '@telegram-apps/sdk';
-
 import { JSX, useMemo, useEffect, useState } from 'react';
+import { closingBehavior, backButton, viewport } from '@telegram-apps/sdk';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { warningAlert, infoAlert } from '@/funcs/alert.funcs';
@@ -52,28 +44,7 @@ const HeadNav = (): JSX.Element => {
         dispatch(dellRoute());
     };
 
-    const closeWindow = async (): Promise<void> => {
-        const isTg = await isTMA();
-
-        if(isTg && miniApp.mountSync.isAvailable()) {
-            miniApp.mountSync();
-
-            const response = await popup.open({
-                title: 'Завешение работы',
-                message: 'Вы уверены, что хотите закрыть приложение?',
-                buttons: [
-                    { id: 'cancellation', type: 'default', text: 'Отмена' },
-                    { id: 'close', type: 'destructive', text: 'Закрыть' }
-                ],
-            });
-
-            if (response && response === 'close') {
-                miniApp.close.isAvailable() && miniApp.close();
-            }
-        } else {
-            setOpen(true);
-        }
-    };
+    const closeWindow = (): void => setOpen(true);
 
     const handleFullScreen = async (): Promise<void> => {
         try {
