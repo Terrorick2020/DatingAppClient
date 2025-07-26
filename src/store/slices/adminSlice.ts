@@ -24,6 +24,7 @@ import {
     ADMINE_CMPLS_ENDPOINT,
     USERS_SEARCH,
     USERS_ENDPOINT,
+    REFERAL_LINK,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -73,10 +74,8 @@ export const getProfilesListAsync = createAsyncThunk(
             const query = rootState.admin.searchId;
 
             const url = query
-                ? 
-                USERS_SEARCH(query, realArgs.offset, realArgs.limit)
-                :
-                USERS_ENDPOINT({page: realArgs.offset + 1, limit: realArgs.limit});
+                ? USERS_SEARCH(query, realArgs.offset, realArgs.limit)
+                : USERS_ENDPOINT({page: realArgs.offset + 1, limit: realArgs.limit});
 
             const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
 
@@ -114,10 +113,10 @@ export const getUniqueLinkAsync = createAsyncThunk(
     'admin/get-unique-link',
     async (): Promise<AsyncThunkRes<string>> =>{
         try {    
-            const response = 'https://t.me/a/psych/s/3339d25d-5fdfd-4dfdf8d-b442-30aadfdf2b4e8';
+            const response = '123456';
     
-            return response;
-        } catch ( error ) {
+            return REFERAL_LINK(response, EProfileRoles.Psych);
+        } catch {
             return 'error';
         }
     }

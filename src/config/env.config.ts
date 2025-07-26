@@ -1,4 +1,4 @@
-import { EProfileStatus } from '@/types/store.types';
+import { EProfileStatus, EProfileRoles } from '@/types/store.types';
 import type { UsersEndpointParams } from '@/types/fetch.type';
 
 
@@ -56,6 +56,7 @@ export const CHATS_CRT_WITH_PSYC    = import.meta.env.VITE_CHATS_CREATE_WITH_PSY
 export const PSYCH_ENDPOINT = import.meta.env.VITE_PSYCH_ENDPOINT || '';
 export const PSYCH_CHECK    = import.meta.env.VITE_PSYCH_CHECK || '';
 export const PSYCH_FIND     = import.meta.env.VITE_PSYCH_FIND || '';
+export const PSYCH_AVAL     = import.meta.env.VITE_PSYCH_AVAL || '';
 
 export const REDIS               = import.meta.env.VITE_REDIS || '';
 export const REDIS_KEY_ENDPOINT  = import.meta.env.VITE_REDIS_KEY_ENDPOINT || '';
@@ -110,6 +111,7 @@ if(
   !PSYCH_ENDPOINT ||
   !PSYCH_CHECK    ||
   !PSYCH_FIND     ||
+  !PSYCH_AVAL     ||
 
   !PLANS_GET_ENDPOINT ||
   !PLANS_SET_ENDPOINT ||
@@ -177,16 +179,18 @@ if(
   throw Error('Hasn`t someone environments!');
 };
 
-export const REFERAL_LINK = (referal: string): string => {
-  const encoded = encodeURIComponent(btoa(referal));
+export const REFERAL_LINK = (code: string, type: EProfileRoles): string => {
+  const encodedCode = encodeURIComponent(btoa(code));
+  const encodedType = encodeURIComponent(btoa(type));
 
-  return `${REFERAL}${encoded}`;
+  return `${REFERAL}${encodedCode}&type=${encodedType}`;
 }
 
 export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`;
 export const LIKES_UNREADED_ENDPOINT = (tgId: string) => `${LIKES_ENDPOINT}${LIKES_UNREAD}/${tgId}`;
 
 export const CHATS_METADATA_ENDPOINT = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_METADATA}`;
+export const CHATS_CRT_WITH_PSYC_ENDPOINT = `${CHATS_ENDPOINT}${CHATS_CRT_WITH_PSYC}`;
 
 export const CHATS_MSG_ENDPOINT = (
   chatId: string,
@@ -271,3 +275,6 @@ export const ADMINE_SERCH_STATUS_ENDPOINT = (tgId: string, type: EProfileStatus)
 }
 
 export const COMLS_STATS_ENDPOINT = (tgId: string): string => `${COMPLS_ENDPOINT}${COMPLS_STATS}/${tgId}`;
+
+export const PSYCH_FOR_USER_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_AVAL}`;
+export const PSYCH_BY_MARK_ENDPOINT = (mark: string | number): string => `${PSYCH_ENDPOINT}/${mark}`;

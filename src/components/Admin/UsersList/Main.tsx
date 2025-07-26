@@ -43,7 +43,7 @@ const UsersListMain = (): JSX.Element => {
 
         const newData: InitSliderData = {
             limit: block.current.limit,
-            offset: block.current.offset + initialArgs.offset,
+            offset: block.current.offset + 1,
         };
 
         const response = await dispatch(getProfilesListAsync(newData)).unwrap();

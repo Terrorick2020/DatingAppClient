@@ -30,6 +30,9 @@ import {
     REFERAL_LINK,
     USER_ENDPOINT,
     USER_SELF_DELETE_ENDPOINT,
+    CHATS_CRT_WITH_PSYC_ENDPOINT,
+    PSYCH_ENDPOINT,
+    PSYCH_BY_MARK_ENDPOINT,
 } from '@/config/env.config';
 
 import {
@@ -51,7 +54,6 @@ import {
 } from './settingsSlice';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { delay } from '@/funcs/general.funcs';
 import { getTgID, getRefParams, tgCloudStore } from '@/funcs/tg.funcs';
 import { EApiStatus } from '@/types/settings.type';
 import { ETgCloudeStore } from '@/types/tg.types';
@@ -352,7 +354,7 @@ export const signUpProfileAsync = createAsyncThunk(
                 const referralCode = response.data.data.user.referralCode;
 
                 !!referralCode && dispatch(
-                    setAddLink(REFERAL_LINK(referralCode))
+                    setAddLink(REFERAL_LINK(referralCode, EProfileRoles.User))
                 );
             }
 
@@ -389,10 +391,46 @@ export const signUpPsychAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
 
-            //TODO: доделать функцию
-            mark
-            profileInfo
+            const data = { ...profileInfo };
 
+            let response: any = null;
+            let msg: string = '';
+
+            switch(mark) {
+                case KeyFQBtnText.First:
+                    response = await api.post(PSYCH_ENDPOINT, data) as
+                        AxiosResponse<FetchResponse<any>>;
+                    msg = 'Регистрация прошла успешно';
+                    break;
+                case KeyFQBtnText.Other:
+                    const url = PSYCH_BY_MARK_ENDPOINT(profileInfo.id);
+                    response = await api.put(url, data) as
+                        AxiosResponse<FetchResponse<any>>;
+                    msg = 'Профиль обновлён успешно';
+                    break;
+            }
+
+            if(
+                !response ||
+                ![200, 201].includes(response.status) ||
+                !response.data.success
+            ) {
+                dispatch(setApiRes({
+                    value: true,
+                    msg: 'Данные не сохранились',
+                    status: EApiStatus.Warning,
+                    timestamp: Date.now(),
+                }));
+
+                return null;
+            }
+
+            dispatch(setApiRes({
+                value: true,
+                msg,
+                status: EApiStatus.Success,
+                timestamp: Date.now(),
+            }));
 
             return null;
         } catch (error: any) {
@@ -432,7 +470,8 @@ export const getSelfProfile = createAsyncThunk(
 
             const data = { telegramId };
 
-            const response: AxiosResponse<FetchResponse<GetSelfEndpointRes>> = await api.post(LOG_ENDPOINT, data);
+            const response: AxiosResponse<FetchResponse<GetSelfEndpointRes>> =
+                await api.post(LOG_ENDPOINT, data);
 
             if(
                 response.status === 200 &&
@@ -462,7 +501,7 @@ export const getSelfProfile = createAsyncThunk(
                 }
 
                 referralCode && dispatch(
-                    setAddLink(REFERAL_LINK(referralCode))
+                    setAddLink(REFERAL_LINK(referralCode, EProfileRoles.User))
                 );
 
                 return data
@@ -528,7 +567,7 @@ export const saveSelfPlansAsync = createAsyncThunk(
                 planDescription: eveningPlans.plan.description,
                 regionId: targetDistrict.id,
                 regionnDescription: eveningPlans.location.description,
-            }
+            };
 
             const response: AxiosResponse<FetchResponse<EveningPlans>> = 
                 await api.post(PLANS_SET_ENDPOINT, data);
@@ -551,9 +590,19 @@ export const selectSelfPsychAsync = createAsyncThunk(
     'profile/select-self-psych',
     async (id: string): Promise<AsyncThunkRes<string>> => {
         try {
-            await delay(1000);
+            const data = { id };
 
-            return id;
+            const response: AxiosResponse<FetchResponse<any>> =
+                await api.post(CHATS_CRT_WITH_PSYC_ENDPOINT, data);
+
+            if(
+                response.status !== 201 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+
+            return null;
         } catch (error) {
             return 'error';
         }

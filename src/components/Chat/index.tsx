@@ -157,7 +157,7 @@ const ChatContent = (): JSX.Element => {
 
         infoAlert(
             dispatch,
-            'Чат был удалён Вашим собеседником'
+            'Чат был удалён Вашим собеседником',
         );
 
         goBack();

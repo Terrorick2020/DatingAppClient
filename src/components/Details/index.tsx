@@ -1,7 +1,10 @@
 import { JSX, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { toSlider } from '@/config/routes.config';
+import { dellRoute } from '@/store/slices/settingsSlice';
 import { initTargetUserAsync } from '@/store/slices/questionnairesSlice';
+import { infoAlert } from '@/funcs/alert.funcs';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -15,21 +18,39 @@ import MyLoader from '@/components/UI/MyLoader';
 const DetailsContent = (): JSX.Element => {
     const { id } = useParams();
 
-    if(id === undefined) return (<></>);
+    const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
+
+    const goBack = (): void => {
+        infoAlert(
+            dispatch,
+            'Не удалось получить информацию о пользователе',
+        );
+
+        navigate(toSlider);
+        dispatch(dellRoute());
+    };
+
+    if(id === undefined) {
+        goBack();
+
+        return (<></>);
+    }
 
     const isLoad = useSelector((state: IState) => state.settings.load);
 
-    const dispatch = useDispatch<RootDispatch>();
+    const initTargetUser = async (): Promise<void> => {
+        const response = await dispatch(initTargetUserAsync(id)).unwrap();
 
-    useEffect(
-        () => {
-            const logoHeader = document.getElementById('logo-header');
-            if( logoHeader ) logoHeader.style.display = 'flex';
+        if(!response || response === 'error') goBack();
+    };
 
-            dispatch(initTargetUserAsync(id));
-        },
-        []
-    )
+    useEffect(() => {
+        const logoHeader = document.getElementById('logo-header');
+        if( logoHeader ) logoHeader.style.display = 'flex';
+
+        initTargetUser();
+    }, []);
 
     if(isLoad) return (
         <div className="loader">
