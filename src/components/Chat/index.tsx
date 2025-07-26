@@ -17,8 +17,10 @@ import {
 
 import {
     MsgsCltOnMeths,
+    ChtasCltMethods,
     type OnResNewMsg,
     type OnResReadMsg,
+    type OnResChatDeleted,
 } from '@/types/socket.types';
 
 import {
@@ -35,10 +37,10 @@ import { setLikeTypeBtn, dellRoute } from '@/store/slices/settingsSlice';
 import { ELikeBtnType } from '@/types/settings.type';
 import { initialQuery } from '@/constant/chats';
 import { toChats } from '@/config/routes.config';
-import { warningAlert } from '@/funcs/alert.funcs';
+import { warningAlert, infoAlert } from '@/funcs/alert.funcs';
 import { createSelector } from 'reselect';
 import { useDispatch, useSelector } from 'react-redux';
-import { WS_MSGS } from '@/config/env.config';
+import { WS_MSGS, WS_CHATS } from '@/config/env.config';
 import type { InitSliderData } from '@/types/quest.types';
 import type { Socket } from 'socket.io-client';
 import type { IncomingMsg, GetChatByIdArgs } from '@/types/chats.types';
@@ -62,6 +64,7 @@ const selectTargetChat = createSelector(
     [selectSettings, selectChats],
     (settings, chats) => ({
         isLoad: settings.load,
+        setRoutes: settings.routes,
         seconds: chats.targetChat.timer,
     })
 );
@@ -69,7 +72,7 @@ const selectTargetChat = createSelector(
 const ChatContent = (): JSX.Element => {
     const { id } = useParams();
 
-    const { isLoad, seconds } = useSelector(selectTargetChat);
+    const { isLoad, setRoutes, seconds } = useSelector(selectTargetChat);
 
     const [_, setTimeLeft] = useState<number | null>(null);
     const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
@@ -137,6 +140,29 @@ const ChatContent = (): JSX.Element => {
         dispatch(markedReadedMsgs(data));
     }
 
+    const goBack = (): void => {
+        const backRoute = setRoutes.at(-1);
+
+        if(backRoute === undefined || !backRoute) {
+            navigate(toChats);
+        } else {
+            navigate(backRoute);
+        }
+
+        dispatch(dellRoute());
+    };
+
+    const handleChatDeleted = async (data: OnResChatDeleted | null) => {
+        if(!data) return;
+
+        infoAlert(
+            dispatch,
+            'Чат был удалён Вашим собеседником'
+        );
+
+        goBack();
+    };
+
     const handleInitCtx = async (): Promise<void> => {
         const data: GetChatByIdArgs = {
             id,
@@ -148,21 +174,32 @@ const ChatContent = (): JSX.Element => {
         if(!response || response === 'error') {
             warningAlert(dispatch, 'Не удалось загрузить чать! Попробуйте перезагрузить приложение');
 
-            navigate(toChats);
-            dispatch(dellRoute());
+            goBack();
             return;
         };
 
         let msgsSocket: Socket | undefined = undefined;
+        let chatsSocket: Socket | undefined = undefined;
 
         msgsSocket = getNamespaceSocket(WS_MSGS);
+        chatsSocket = getNamespaceSocket(WS_CHATS);
 
-        if(msgsSocket === undefined) {
-            msgsSocket = await waitForSocketConnection(() => getNamespaceSocket(WS_MSGS));
+        if(
+            msgsSocket === undefined ||
+            chatsSocket === undefined
+        ) {
+            const socketRes = await Promise.all([
+                waitForSocketConnection(() => getNamespaceSocket(WS_MSGS)),
+                waitForSocketConnection(() => getNamespaceSocket(WS_CHATS)),
+            ]);
+
+            msgsSocket = socketRes[0];
+            chatsSocket = socketRes[1];
         }
 
         handleSocket<OnResNewMsg>(msgsSocket, MsgsCltOnMeths.newMessage, handleNewMessage);
         handleSocket<OnResReadMsg>(msgsSocket, MsgsCltOnMeths.messageRead, handleReadMsgs);
+        handleSocket<OnResChatDeleted>(chatsSocket, ChtasCltMethods.chatDeleted, handleChatDeleted);
     };
 
     useEffect(() => {
@@ -176,9 +213,11 @@ const ChatContent = (): JSX.Element => {
 
         return () => {
             const msgsSocket = getNamespaceSocket(WS_MSGS);
+            const chatsSocket = getNamespaceSocket(WS_CHATS);
 
             msgsSocket?.off(MsgsCltOnMeths.newMessage);
             msgsSocket?.off(MsgsCltOnMeths.messageRead);
+            chatsSocket?.off(ChtasCltMethods.chatDeleted);
 
             dispatch(resetTargetChat());
 

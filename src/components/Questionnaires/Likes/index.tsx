@@ -1,7 +1,8 @@
-import { JSX, useEffect } from 'react';
+import { JSX, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { initLikesListAsync, readNewLikesAsync } from '@/store/slices/likesSlice';
 import { AnimatePresence, motion } from 'motion/react';
+import { createSelector } from 'reselect';
 import { resetBadge } from '@/store/slices/settingsSlice';
 import { EBadgeType } from '@/types/settings.type';
 import type { RootDispatch } from '@/store';
@@ -12,9 +13,21 @@ import MyLoader from '@/components/UI/MyLoader';
 import SvgLikesEmpty from '@/assets/icon/likes-empty.svg';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectLikes = (state: IState) => state.likes;
+
+const selectQLikes = createSelector(
+    [selectSettings, selectLikes],
+    (settings, likes) => ({
+      isLoad: settings.load,
+      likesList: likes.likesList,
+    })
+);
+
 const LikesContent = (): JSX.Element => {
-    const likesList = useSelector((state: IState) => state.likes.likesList);
-    const isLoad = useSelector((state: IState) => state.settings.load);
+    const { isLoad, likesList } = useSelector(selectQLikes);
+
+    const neededResetBage = useRef<boolean>(false)
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -24,7 +37,7 @@ const LikesContent = (): JSX.Element => {
         const response = await dispatch(readNewLikesAsync()).unwrap();
 
         if(response === 'success') {
-            dispatch(resetBadge(EBadgeType.Likes));
+            neededResetBage.current = true;
         }
     }
 
@@ -36,6 +49,10 @@ const LikesContent = (): JSX.Element => {
         if( logoHeader ) logoHeader.style.display = 'flex';
 
         initLikesCtx();
+
+        return () => {
+            if(neededResetBage.current) dispatch(resetBadge(EBadgeType.Likes));
+        }
     }, []);
 
     useEffect(() => {

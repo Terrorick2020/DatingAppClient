@@ -32,6 +32,8 @@
         margin-right: 0.5rem;
         gap: 0.5rem;
         border-radius: 50px;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
 
         .text {
             color: #121112;

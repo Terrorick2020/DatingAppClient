@@ -1,5 +1,5 @@
-import type { UsersEndpointParams } from '@/types/fetch.type';
 import { EProfileStatus } from '@/types/store.types';
+import type { UsersEndpointParams } from '@/types/fetch.type';
 
 
 export const DOMAIN   = import.meta.env.VITE_DOMAIN || '';
@@ -51,6 +51,11 @@ export const CHATS_MEDIA_ENDPOINT   = import.meta.env.VITE_CHATS_MEDIA_ENDPOINT 
 export const CHATS_READ_ENDPOINT    = import.meta.env.VITE_CHATS_READ_ENDPOINT || '';
 export const CHATS_TYPING_ENDPOINT  = import.meta.env.VITE_CHATS_TYPING_ENDPOINT || '';
 export const CHATS_UNREAD           = import.meta.env.VITE_CHATS_UNREAD || '';
+export const CHATS_CRT_WITH_PSYC    = import.meta.env.VITE_CHATS_CREATE_WITH_PSYCH || '';
+
+export const PSYCH_ENDPOINT = import.meta.env.VITE_PSYCH_ENDPOINT || '';
+export const PSYCH_CHECK    = import.meta.env.VITE_PSYCH_CHECK || '';
+export const PSYCH_FIND     = import.meta.env.VITE_PSYCH_FIND || '';
 
 export const REDIS               = import.meta.env.VITE_REDIS || '';
 export const REDIS_KEY_ENDPOINT  = import.meta.env.VITE_REDIS_KEY_ENDPOINT || '';
@@ -102,6 +107,10 @@ if(
   !HELP_GLOB_COMPLAINTS_ENDPOINT ||
   !HELP_DESC_COMPLAINTS_ENDPOINT ||
 
+  !PSYCH_ENDPOINT ||
+  !PSYCH_CHECK    ||
+  !PSYCH_FIND     ||
+
   !PLANS_GET_ENDPOINT ||
   !PLANS_SET_ENDPOINT ||
 
@@ -132,6 +141,7 @@ if(
   !CHATS_READ_ENDPOINT   ||
   !CHATS_TYPING_ENDPOINT ||
   !CHATS_UNREAD          ||
+  !CHATS_CRT_WITH_PSYC   ||
 
   !REDIS               ||
   !REDIS_KEY_ENDPOINT  ||

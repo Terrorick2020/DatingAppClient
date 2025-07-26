@@ -1,6 +1,7 @@
 import { JSX, memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { toChats } from '@/config/routes.config';
 import { deleteChatByIDAsync } from '@/store/slices/chatsSlice';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import type { PropsChatDialogDelete } from '@/types/chats.types';
@@ -25,9 +26,12 @@ const ChatDialogDelete = memo((props: PropsChatDialogDelete): JSX.Element => {
     const goBack = () => {
         const backRoute = setRoutes.at(-1);
 
-        if(backRoute === undefined || !backRoute) return;
+        if(backRoute === undefined || !backRoute)  {
+            navigate(toChats);
+        } else {
+            navigate(backRoute);
+        }
 
-        navigate(backRoute);
         dispatch(dellRoute());
     };
 

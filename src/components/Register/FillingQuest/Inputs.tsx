@@ -132,7 +132,13 @@ const FillingQuestInputs = (): JSX.Element => {
             </>
         )
 
-    }, [cityesVarsList.length, profileInfo.role]);
+    }, [
+        cityesVarsList,
+        profileInfo.role,
+        open,
+        profileInfo.town,
+        fQErrors.cityErr,
+    ]);
 
     return (
         <div className="widgets__inputs">

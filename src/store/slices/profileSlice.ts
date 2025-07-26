@@ -69,7 +69,7 @@ const initialState: ProfileState = {
         latitude: null,
         longitude: null,
         lineStat: ELineStatus.Online,
-        role: EProfileRoles.Psych,
+        role: EProfileRoles.User,
         status: EProfileStatus.Noob,
         name: '',
         age: null,
@@ -100,7 +100,7 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
-            const telegramId = getTgID();
+            const telegramId = getTgID() || 'vova';
             const fromRefCode = getRefParams();
 
             if(!telegramId) return 'error';

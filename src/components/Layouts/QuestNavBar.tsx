@@ -75,37 +75,35 @@ const QuestNavBar = (): JSX.Element => {
                     onClick={() => navigate(toChats)}
                     disabled={isLoad}
                 />
-                { !isPsych && <>
-                    <BottomNavigationAction
-                        label="Симпатии"
-                        value={toLikes}
-                        icon={
-                            <Badge
-                                color="error"
-                                badgeContent={badgeCtx.likes.content} 
-                                invisible={!badgeCtx.likes.value}
-                            >
-                                <SvgLikes />
-                            </Badge>
-                        }
-                        onClick={() => navigate(toLikes)}
-                        disabled={isLoad}
-                    />
-                    <BottomNavigationAction
-                        label="Анкеты"
-                        value={toSlider}
-                        icon={<SvgQuestionnaires />}
-                        onClick={() => navigate(toSlider)}
-                        disabled={isLoad}
-                    />
-                    <BottomNavigationAction
-                        label="Пси-помощь"
-                        value={toPsych}
-                        icon={<SvgPsychologists />}
-                        onClick={() => navigate(toPsych)}
-                        disabled={isLoad}
-                    />
-                </> }
+                { !isPsych && <BottomNavigationAction
+                    label="Симпатии"
+                    value={toLikes}
+                    icon={
+                        <Badge
+                            color="error"
+                            badgeContent={badgeCtx.likes.content} 
+                            invisible={!badgeCtx.likes.value}
+                        >
+                            <SvgLikes />
+                        </Badge>
+                    }
+                    onClick={() => navigate(toLikes)}
+                    disabled={isLoad}
+                /> }
+                { !isPsych && <BottomNavigationAction
+                    label="Анкеты"
+                    value={toSlider}
+                    icon={<SvgQuestionnaires />}
+                    onClick={() => navigate(toSlider)}
+                    disabled={isLoad}
+                /> }
+                { !isPsych && <BottomNavigationAction
+                    label="Пси-помощь"
+                    value={toPsych}
+                    icon={<SvgPsychologists />}
+                    onClick={() => navigate(toPsych)}
+                    disabled={isLoad}
+                /> }
                 <BottomNavigationAction
                     label="Профиль"
                     value={toProfile}

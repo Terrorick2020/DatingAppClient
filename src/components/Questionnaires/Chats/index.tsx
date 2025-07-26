@@ -1,6 +1,7 @@
 import { JSX, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { createSelector } from 'reselect';
 import { toSlider } from '@/config/routes.config';
 import { initChatsCtxAsync } from '@/store/slices/chatsSlice';
 import type { RootDispatch } from '@/store';
@@ -12,9 +13,19 @@ import Button from '@mui/material/Button';
 import SvgChatsEmpty from '@/assets/icon/chats-empty.svg';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectChats = (state: IState) => state.chats;
+
+const selectQChats = createSelector(
+    [selectSettings, selectChats],
+    (settings, chats) => ({
+      isLoad: settings.load,
+      chatsListLen: chats.chatsList.length,
+    })
+);
+
 const ChatsContent = (): JSX.Element => {
-    const isLoad = useSelector((state: IState) => state.settings.load);
-    const chatsListLen = useSelector((state: IState) => state.chats.chatsList.length);
+    const { isLoad, chatsListLen } = useSelector(selectQChats);
 
     const dispatch = useDispatch<RootDispatch>();
     

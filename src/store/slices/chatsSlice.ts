@@ -82,7 +82,7 @@ export const getUnreadChatsAsync = createAsyncThunk(
             dispatch(setBadge({
                 ...badgeCtx,
                 chats: {
-                    value: true,
+                    value: content > 0,
                     content,
                 }
             }));

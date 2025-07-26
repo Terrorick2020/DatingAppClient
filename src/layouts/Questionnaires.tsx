@@ -2,16 +2,32 @@ import {
     LikesCltMethods,
     MatchCltMethods,
     MsgsCltOnMeths,
+    ChtasCltMethods,
     type OnResNewLike,
     type OnResNewMatch,
     type OnResNewMsg,
+    type OnResChatDeleted,
 } from '@/types/socket.types';
+
+import {
+    WS_LIKES,
+    WS_MATCH,
+    WS_MSGS,
+    WS_CHATS,
+    EP_MEDIA_LINK,
+} from '@/config/env.config';
 
 import {
     handleSocket,
     getNamespaceSocket,
     waitForSocketConnection,
 } from '@/config/socket.config';
+
+import {
+    getUnreadChatsAsync,
+    socketNewMsgInToChats,
+    deleteChatById,
+} from '@/store/slices/chatsSlice';
 
 import {
     getMatchDataAsync,
@@ -25,8 +41,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { toLikes, toChats } from '@/config/routes.config';
 import { createSelector } from 'reselect';
-import { WS_LIKES, WS_MATCH, WS_MSGS, EP_MEDIA_LINK } from '@/config/env.config';
-import { getUnreadChatsAsync, socketNewMsgInToChats } from '@/store/slices/chatsSlice';
 import { setBadge, setLikeTypeBtn, setMedaiLink } from '@/store/slices/settingsSlice';
 import { ELikeBtnType } from '@/types/settings.type';
 import { type IState, EProfileRoles } from '@/types/store.types';
@@ -155,41 +169,71 @@ const QuestLayout = (): JSX.Element => {
             ...badgeCtx,
             chats: {
                 value: true,
-                content: badgeCtx.likes.content + 1,
+                content: badgeCtx.chats.content + 1,
             }
         }));
 
         unreadedChats.current.push(data.chatId);
     };
 
+    const handleChatDeleted = async (data: OnResChatDeleted | null): Promise<void> => {
+        if(!data) return;
+
+        if(pathname.current === toChats) {
+            dispatch(deleteChatById(data.chatId));
+        };
+
+        if(unreadedChats.current.includes(data.chatId)) {
+            const newCount = badgeCtx.chats.content - 1;
+
+            dispatch(setBadge({
+                ...badgeCtx,
+                chats: {
+                    value: newCount > 0,
+                    content: Math.max(newCount, 0),
+                }
+            }));
+
+            unreadedChats.current = unreadedChats.current.filter(
+                item => item !== data.chatId
+            );
+        };
+    };
+
     const handleSocketSeed = async (): Promise<void> => {
         let likeSocket: Socket | undefined = undefined;
         let matchSocket: Socket | undefined = undefined;
         let msgsSocket: Socket | undefined = undefined;
+        let chatsSocket: Socket | undefined = undefined;
 
         likeSocket = getNamespaceSocket(WS_LIKES);
         matchSocket = getNamespaceSocket(WS_MATCH);
         msgsSocket = getNamespaceSocket(WS_MSGS);
+        chatsSocket = getNamespaceSocket(WS_CHATS);
 
         if (
             likeSocket === undefined  ||
             matchSocket === undefined ||
-            msgsSocket === undefined
+            msgsSocket === undefined  ||
+            chatsSocket === undefined
         ) {
             const response = await Promise.all([
                 waitForSocketConnection(() => getNamespaceSocket(WS_LIKES)),
                 waitForSocketConnection(() => getNamespaceSocket(WS_MATCH)),
                 waitForSocketConnection(() => getNamespaceSocket(WS_MSGS)),
+                waitForSocketConnection(() => getNamespaceSocket(WS_CHATS)),
             ]);
 
             likeSocket = response[0];
             matchSocket = response[1];
             msgsSocket = response[2];
+            chatsSocket = response[3];
         };
 
         handleSocket<OnResNewLike>(likeSocket, LikesCltMethods.newLike, handleLikesNotify);
         handleSocket<OnResNewMatch>(matchSocket, MatchCltMethods.newMatch, handleMatchNotify);
         handleSocket<OnResNewMsg>(msgsSocket, MsgsCltOnMeths.newMessage, handleNewMsgNotify);
+        handleSocket<OnResChatDeleted>(chatsSocket, ChtasCltMethods.chatDeleted, handleChatDeleted);
     };
 
     const handleUnreadChats = async (): Promise<void> => {
@@ -204,7 +248,7 @@ const QuestLayout = (): JSX.Element => {
 
     useEffect(() => {
         dispatch(setLikeTypeBtn(ELikeBtnType.Accepted));
-        
+
         handleUnreadChats();
         handleSocketSeed();
 
@@ -212,10 +256,12 @@ const QuestLayout = (): JSX.Element => {
             const likeSocket = getNamespaceSocket(WS_LIKES);
             const matchSocket = getNamespaceSocket(WS_MATCH);
             const msgsSocket = getNamespaceSocket(WS_MSGS);
+            const chatsSocket = getNamespaceSocket(WS_CHATS);
 
             likeSocket?.off(LikesCltMethods.newLike);
             matchSocket?.off(MatchCltMethods.newMatch);
             msgsSocket?.off(MsgsCltOnMeths.newMessage);
+            chatsSocket?.off(ChtasCltMethods.chatDeleted);
 
             if (snackbarKeyRef.current) {
                 closeSnackbar(snackbarKeyRef.current);

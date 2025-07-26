@@ -159,8 +159,8 @@ const FillingQuestContent = (): JSX.Element => {
         
         const response = await dispatch(
             isPsych
-            ? signUpProfileAsync(btnCtx.mark)
-            : signUpPsychAsync(btnCtx.mark)
+            ? signUpPsychAsync(btnCtx.mark)
+            : signUpProfileAsync(btnCtx.mark)
         ).unwrap();
         
         if( response && response !== 'error') {
@@ -201,13 +201,13 @@ const FillingQuestContent = (): JSX.Element => {
                         direction={EAnimeDirection.Left}
                         duration={ANIME_DURATION}
                     >
-                        <FillingQuestPhotos key="inputs" />
-                        <FillingQuestInputs key="inputs" />
-                        { !isPsych && <FillingQuestMySex key="mysex" /> }
-                        { !isPsych && <FillingQuestAge key="age" /> }
+                        <FillingQuestPhotos />
+                        <FillingQuestInputs />
+                        { !isPsych && <FillingQuestMySex /> }
+                        { !isPsych && <FillingQuestAge /> }
                         <FillingQuestBio />
-                        { !isPsych && <FillingQuestInterests key="interests" /> }
-                        { !isPsych && <FillingQuestSelectionSex key="sel-sex" /> }
+                        { !isPsych && <FillingQuestInterests /> }
+                        { !isPsych && <FillingQuestSelectionSex /> }
                     </Slide>
                 </div>
                 <div className="link">

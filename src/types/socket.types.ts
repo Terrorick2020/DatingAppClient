@@ -14,6 +14,7 @@ export enum MsgsCltOnMeths {
 
 export enum ChtasCltMethods {
     userStatus = 'userStatus',
+    chatDeleted = 'chatDeleted',
 }
 
 export enum LikesCltMethods {
@@ -46,6 +47,11 @@ export interface OnResNewMsg {
     senderId: string
     text: string
     timestamp: number
+}
+
+export interface OnResChatDeleted {
+    chatId: string
+    deletedByUserId: string
 }
 
 export interface OnResTyping {
