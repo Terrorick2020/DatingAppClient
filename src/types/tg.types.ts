@@ -18,7 +18,7 @@ export enum EStatusSetHomeScreen {
     Success = 'success',
     Error = 'error',
 }
-``
+
 export interface GetParamsRes {
     code: string
     type: EProfileRoles

@@ -36,8 +36,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { setLikeTypeBtn, dellRoute } from '@/store/slices/settingsSlice';
 import { ELikeBtnType } from '@/types/settings.type';
 import { initialQuery } from '@/constant/chats';
-import { toChats } from '@/config/routes.config';
-import { warningAlert, infoAlert } from '@/funcs/alert.funcs';
+import { toChats, toNotFoud } from '@/config/routes.config';
+import { infoAlert, warningAlert } from '@/funcs/alert.funcs';
 import { createSelector } from 'reselect';
 import { useDispatch, useSelector } from 'react-redux';
 import { WS_MSGS, WS_CHATS } from '@/config/env.config';
@@ -95,7 +95,11 @@ const ChatContent = (): JSX.Element => {
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
 
-    if ( !id ) return (<></>);
+    if ( !id ) {
+        navigate(toNotFoud);
+
+        return (<></>);
+    }
 
     useEffect( () => {
         dispatch(setLikeTypeBtn(ELikeBtnType.ToChat));
@@ -140,7 +144,14 @@ const ChatContent = (): JSX.Element => {
         dispatch(markedReadedMsgs(data));
     }
 
-    const goBack = (): void => {
+    const handleChatDeleted = async (data: OnResChatDeleted | null) => {
+        if(!data) return;
+
+        infoAlert(
+            dispatch,
+            'Чат был удалён Вашим собеседником',
+        );
+
         const backRoute = setRoutes.at(-1);
 
         if(backRoute === undefined || !backRoute) {
@@ -152,17 +163,6 @@ const ChatContent = (): JSX.Element => {
         dispatch(dellRoute());
     };
 
-    const handleChatDeleted = async (data: OnResChatDeleted | null) => {
-        if(!data) return;
-
-        infoAlert(
-            dispatch,
-            'Чат был удалён Вашим собеседником',
-        );
-
-        goBack();
-    };
-
     const handleInitCtx = async (): Promise<void> => {
         const data: GetChatByIdArgs = {
             id,
@@ -172,9 +172,13 @@ const ChatContent = (): JSX.Element => {
         const response = await dispatch(getChatByIdAsync(data)).unwrap();
 
         if(!response || response === 'error') {
-            warningAlert(dispatch, 'Не удалось загрузить чать! Попробуйте перезагрузить приложение');
+            warningAlert(
+                dispatch,
+                'Не удалось загрузить чат! Попробуйте перезагрузить приложение'
+            );
 
-            goBack();
+            navigate(toNotFoud);
+
             return;
         };
 
@@ -227,7 +231,7 @@ const ChatContent = (): JSX.Element => {
 
     useEffect(() => {
         if (typeof seconds !== 'number') return; 
-        
+
         if(seconds <= 5) {
             setEnd(true);
             return;

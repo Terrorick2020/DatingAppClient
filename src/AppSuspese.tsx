@@ -1,9 +1,23 @@
+import {
+    toChange,
+    toPreview,
+    toSlider,
+    toError,
+    toProfile,
+    toBlocked,
+} from './config/routes.config';
+
+import {
+    initProfileAsync,
+    getSelfProfile,
+    getSelfPsychProfile,
+    getSelfPlansAsync,
+} from '@/store/slices/profileSlice';
+
 import { Suspense, useLayoutEffect, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { EProfileRoles } from './types/store.types';
-import { toChange, toPreview, toSlider } from './config/routes.config';
+import { EProfileRoles, EProfileStatus, type IState } from './types/store.types';
 import { setNavigate, navigate } from './config/fetch.config';
-import { initProfileAsync, getSelfProfile, getSelfPlansAsync } from '@/store/slices/profileSlice';
 import { delay, fadeOutPreloader } from './funcs/general.funcs';
 
 import store from './store';
@@ -20,18 +34,31 @@ async function delayForLazy( promise: Promise<any> ) {
 
     if(navigate) {
         if(checkRes === 'error' || !jsxRes) {
-            navigate('error');
+            navigate(toError);
         } else if (!checkRes) {
             navigate(toPreview);
+        } else if (checkRes === EProfileStatus.Blocked) {
+            navigate(toBlocked);
         } else {
 
-            const [ selfRes, _ ] = await Promise.all([
-                store.dispatch(getSelfProfile()).unwrap(),
-                store.dispatch(getSelfPlansAsync()).unwrap(),
-            ]);
+            const rootState = store.getState() as IState;
+            const profileRole = rootState.profile.info.role;
+            const isPsych = profileRole === EProfileRoles.Psych;
+
+            const [ selfRes, _ ] = await Promise.all(
+                isPsych
+                    ? [
+                        store.dispatch(getSelfPsychProfile()).unwrap(),
+                        null,
+                    ]
+                    : [
+                        store.dispatch(getSelfProfile()).unwrap(),
+                        store.dispatch(getSelfPlansAsync()).unwrap(),
+                    ]
+            );
 
             if(!selfRes || selfRes === 'error') {
-                navigate('error');
+                navigate(toError);
             } else {
                 switch(selfRes.role) {
                     case EProfileRoles.User:
@@ -41,7 +68,7 @@ async function delayForLazy( promise: Promise<any> ) {
                         navigate(toChange);
                         break;
                     case EProfileRoles.Psych:
-                        navigate('error');
+                        navigate(toProfile);
                         break;
                 }
             }

@@ -1,6 +1,7 @@
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 import removeConsole from 'vite-plugin-remove-console';
 import preload from 'vite-plugin-preload';
@@ -14,12 +15,12 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   const PROD_HOST = env.VITE_PROD_HOST;
-  const DEV_HOST = env.VITE_DEV_HOST;
-  const MODE = env.VITE_MODE;
-  const DOMAIN = env.VITE_DOMAIN;
-  const SSL_KEY = env.VITE_SSL_KEY;
-  const SSL_CRT = env.VITE_SSL_CRT;
-  const PORT = Number(env.VITE_PORT);
+  const DEV_HOST  = env.VITE_DEV_HOST;
+  const MODE      = env.VITE_MODE;
+  const DOMAIN    = env.VITE_DOMAIN;
+  const SSL_KEY   = env.VITE_SSL_KEY;
+  const SSL_CRT   = env.VITE_SSL_CRT;
+  const PORT      = Number(env.VITE_PORT);
 
   if (
     !PROD_HOST ||
@@ -29,14 +30,21 @@ export default defineConfig(({ mode }) => {
     isNaN(PORT)
   ) throw new Error('Hasn`t some environments in vite.config.ts');
 
-  const isProd = MODE === 'prod';
-  const isAnalyze = process.env.MODE === 'analyze';
+  const isProd    = MODE === 'prod';
+  const isAnalyze = MODE === 'analyze';
 
   return {
     plugins: [
       react(),
       svgr(),
       preload(),
+      VitePWA({
+        registerType: 'autoUpdate',
+        workbox: {
+          globPatterns: ['**/*.{png,jpg,svg}'],
+          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+        }
+      }),
       ViteImageOptimizer({
         png: { quality: 70 },
         jpeg: {

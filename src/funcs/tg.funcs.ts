@@ -149,7 +149,7 @@ export function getRefParams(): GetParamsRes | null {
     const typeValue = atob(decodeURIComponent(encodedType));
     const isValidType = Object.values(EProfileRoles).includes(typeValue as EProfileRoles);
 
-    if (!isValidType) return null;
+    if (!isValidType || typeValue === EProfileRoles.Admin) return null;
 
     return {
       code: atob(decodeURIComponent(encodedCode)),

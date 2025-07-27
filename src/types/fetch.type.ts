@@ -193,3 +193,8 @@ export interface LikesListRes {
   createdAt: string
   fromUser: LikesListResUser
 }
+
+export interface ValidetePsychCodeRes {
+	isValid: boolean
+	message?: string
+}

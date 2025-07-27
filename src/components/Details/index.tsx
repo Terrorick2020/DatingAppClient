@@ -1,10 +1,9 @@
 import { JSX, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { toSlider } from '@/config/routes.config';
-import { dellRoute } from '@/store/slices/settingsSlice';
+import { toNotFoud } from '@/config/routes.config';
 import { initTargetUserAsync } from '@/store/slices/questionnairesSlice';
-import { infoAlert } from '@/funcs/alert.funcs';
+import { warningAlert } from '@/funcs/alert.funcs';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -22,13 +21,12 @@ const DetailsContent = (): JSX.Element => {
     const navigate = useNavigate();
 
     const goBack = (): void => {
-        infoAlert(
+        warningAlert(
             dispatch,
             'Не удалось получить информацию о пользователе',
         );
 
-        navigate(toSlider);
-        dispatch(dellRoute());
+        navigate(toNotFoud);
     };
 
     if(id === undefined) {

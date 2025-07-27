@@ -1,5 +1,7 @@
 import { JSX, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { warningAlert } from '@/funcs/alert.funcs';
+import { toNotFoud } from '@/config/routes.config';
 import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 import { RootDispatch } from '@/store';
@@ -28,18 +30,33 @@ const UserInfoContent = (): JSX.Element => {
     const { isLoad, targetProfile } = useSelector(selectComplListState);
 
     const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
 
-    if(!id) return (<></>);
+    if(!id) {
+        navigate(toNotFoud);
 
-    useEffect(
-        () => {
-            const logoHeader = document.getElementById('logo-header');
-            if( logoHeader ) logoHeader.style.display = 'flex';
+        return (<></>);
+    }
 
-            dispatch(getProfileByIdAsync(id));
-        },
-        [id]
-    )
+    const initUserInfo = async (): Promise<void> => {
+        const response = await dispatch(getProfileByIdAsync(id)).unwrap();
+
+        if(!response || response === 'error') {
+            warningAlert(
+                dispatch,
+                'Не удалось получить информацию о пользователе',
+            );
+
+            navigate(toNotFoud);
+        };
+    };
+
+    useEffect(() => {
+        const logoHeader = document.getElementById('logo-header');
+        if( logoHeader ) logoHeader.style.display = 'flex';
+
+        initUserInfo();
+    }, [id] );
 
     if(isLoad) return (
         <div className="loader">

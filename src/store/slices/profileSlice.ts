@@ -16,6 +16,7 @@ import type {
     FetchSavePhotoRes,
     RegEndpointRes,
     GetSelfEndpointRes,
+    ValidetePsychCodeRes,
 } from '@/types/fetch.type';
 
 import {
@@ -33,6 +34,8 @@ import {
     CHATS_CRT_WITH_PSYC_ENDPOINT,
     PSYCH_ENDPOINT,
     PSYCH_BY_MARK_ENDPOINT,
+    PSYCH_INITIAL_ENDPOINT,
+    PSYCH_VALID_TOKEN_ENDPOINT,
 } from '@/config/env.config';
 
 import {
@@ -106,24 +109,106 @@ export const initProfileAsync = createAsyncThunk(
             
             if(!telegramId) return 'error';
 
-            const fromRefCode = getRefParams();
+            const params = getRefParams();
 
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
 
-            dispatch(setInfo({...profileInfo, id: telegramId}));
-            fromRefCode && dispatch(setFromRefCode(fromRefCode.code));
+            let profileRole: EProfileRoles = EProfileRoles.User;
+
+            if(params) {
+                profileRole = params.type;
+                dispatch(setFromRefCode(params.code));
+            };
 
             const data = { telegramId };
 
-            const response: AxiosResponse<FetchResponse<EProfileStatus>> = await api.post(INITIAL_ENDPOINT, data);
+            type TInit = AxiosResponse<FetchResponse<any>>;
+            type TEPSInit = AxiosResponse<FetchResponse<EProfileStatus>>;
+            let profileStatus: EProfileStatus = EProfileStatus.Noob;
+            let resResult: boolean = false;
 
-            if(
-                response.status !== 200 ||
-                !response.data.success  ||
-                !response.data.data     ||
-                response.data.data === 'None'
-            ) {
+            const validResResult = (res: TInit): boolean =>
+                !res || ![200, 201].includes(res.status) ||
+                !res.data.success || !res.data.data      ||
+                res.data.data === 'None';
+
+            switch(profileRole) {
+                case EProfileRoles.User:
+                    const [ userRes, psychRes ]: [ TEPSInit, TEPSInit ] =
+                        await Promise.all([
+                            api.post(INITIAL_ENDPOINT, data),
+                            api.post(PSYCH_INITIAL_ENDPOINT, data),
+                        ]);
+
+                    resResult = validResResult(userRes);
+
+                    if (!resResult) {
+                        profileStatus = userRes.data.data as EProfileStatus;
+                        break;
+                    };
+                    
+                    resResult = validResResult(psychRes);
+
+                    if(!resResult) {
+                        profileRole = EProfileRoles.Psych;
+                        profileStatus = psychRes.data.data as EProfileStatus;
+                    };
+
+                    break;
+                case EProfileRoles.Psych:
+                    const endPsychRes: TInit = await api.post(PSYCH_INITIAL_ENDPOINT, data);
+
+                    resResult = validResResult(endPsychRes);
+
+                    if(!resResult) {
+                        profileStatus = endPsychRes.data.data as EProfileStatus;
+                        break;
+                    };
+
+                    if(!params) return 'error';
+
+                    const validData = { code: params?.code };
+
+                    const codePsychRes: AxiosResponse<FetchResponse<ValidetePsychCodeRes>> =
+                        await api.post(PSYCH_VALID_TOKEN_ENDPOINT, validData);
+
+                    resResult = validResResult(codePsychRes);
+
+                    if(
+                        resResult ||
+                        (
+                            codePsychRes.data.data !== 'None' &&
+                            !codePsychRes.data.data?.isValid
+                        )
+                    ) {
+                        profileRole = EProfileRoles.User;
+                        let msg: string = '';
+
+                        if(codePsychRes.data.data !== 'None') {
+                            msg = codePsychRes.data.data?.message || codePsychRes.data.message;
+                        } else {
+                            msg = 'Ссылка регистрции специолиста недействительна'
+                        }
+
+                        dispatch(setApiRes({
+                            value: true,
+                            msg,
+                            status: EApiStatus.Warning,
+                            timestamp: Date.now(),
+                        }));
+                }
+                    
+                    break;
+            }
+
+            dispatch(setInfo({
+                ...profileInfo,
+                id: telegramId,
+                role: profileRole,
+            }));
+
+            if(resResult) {
                 dispatch(setIsFirstly(true));
 
                 return null;
@@ -131,9 +216,9 @@ export const initProfileAsync = createAsyncThunk(
 
             dispatch(setIsFirstly(false));
 
-            return response.data.data;
+            return profileStatus;
 
-        } catch (error) {
+        } catch {
             dispatch(setIsFirstly(true));
 
             return 'error';
@@ -518,6 +603,31 @@ export const getSelfProfile = createAsyncThunk(
     }
 );
 
+export const getSelfPsychProfile = createAsyncThunk(
+    'profile/get-self-psych-profile',
+    async (_, {getState}): Promise<AsyncThunkRes<any>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+
+            const url = PSYCH_BY_MARK_ENDPOINT(telegramId);
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
+            
+            if(
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+
+            return null;
+        } catch {
+            return 'error';
+        }
+    }
+);
+
 export const getSelfPlansAsync = createAsyncThunk(
     'profile/get-self-plans',
     async (_, { getState }): Promise<AsyncThunkRes<EveningPlans>> => {
@@ -677,7 +787,6 @@ const profileSlice = createSlice({
                     break;
                 default:
                     state.info.status = action.payload;
-                    state.info.enableGeo = true;
                     console.log("Успешная первичная проверка пользователя");
                     break;
             }
@@ -815,6 +924,27 @@ const profileSlice = createSlice({
         })
         builder.addCase(getSelfProfile.rejected, _ => {
             console.log("Ошибка получения текущего профиля пользователя");
+        })
+
+        // Получение информации о себе, как о специолисте
+        builder.addCase(getSelfPsychProfile.pending, _ => {
+            console.log("Получение информации о себе, как о специолисте");
+        })
+        builder.addCase(getSelfPsychProfile.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<any>> ) => {
+            switch (action.payload) {
+                case 'error':
+                    console.log("Ошибка получения информации о себе, как о специолисте");
+                    break;
+                case null:
+                    console.log("Информация о себе, как о специолисте не получена");
+                    break;
+                default:
+                    console.log("Успешное получение информации о себе, как о специолисте");
+                    break;
+            }
+        })
+        builder.addCase(getSelfPsychProfile.rejected, _ => {
+            console.log("Ошибка получения информации о себе, как о специолисте");
         })
 
         // Получение планов пользователя

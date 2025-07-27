@@ -49,8 +49,9 @@ export const epRoutes    = appRoutes.eveningPlans;
 export const questRoutes = appRoutes.questionnaires;
 export const adminRoutes = appRoutes.admin;
 
+export const toNotFoud = 'not-found';
 export const toBlocked = appRoutes.blocked;
-export const toError = appRoutes.error;
+export const toError   = appRoutes.error;
 
 const regGlobRoute   = regRoutes.global;
 const previewRoute   = regRoutes.inner.preview;

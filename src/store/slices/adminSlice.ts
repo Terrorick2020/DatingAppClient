@@ -25,6 +25,7 @@ import {
     USERS_SEARCH,
     USERS_ENDPOINT,
     REFERAL_LINK,
+    PSYCH_GEN_TOKEN_ENDPOINT,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -112,10 +113,22 @@ export const getProfilesListAsync = createAsyncThunk(
 export const getUniqueLinkAsync = createAsyncThunk(
     'admin/get-unique-link',
     async (): Promise<AsyncThunkRes<string>> =>{
-        try {    
-            const response = '123456';
-    
-            return REFERAL_LINK(response, EProfileRoles.Psych);
+        try {
+            const data = {};
+
+            const respose: AxiosResponse<FetchResponse<any>> = await api.post(PSYCH_GEN_TOKEN_ENDPOINT, data);
+
+            if(
+                respose.status !== 201 ||
+                !respose.data.success  ||
+                !respose.data.data     ||
+                respose.data.data === 'None'
+            ) return null;
+
+            const code = respose.data.data;
+            const result = REFERAL_LINK(code, EProfileRoles.Psych);
+
+            return result;
         } catch {
             return 'error';
         }

@@ -2,9 +2,8 @@ import { JSX, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPsycByIdhAsync } from '@/store/slices/psychSlice';
 import { infoAlert, warningAlert } from '@/funcs/alert.funcs';
-import { toPsych } from '@/config/routes.config';
+import { toNotFoud } from '@/config/routes.config';
 import { selectSelfPsychAsync } from '@/store/slices/profileSlice';
-import { dellRoute } from '@/store/slices/settingsSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -30,11 +29,10 @@ const PsychologistContent = (): JSX.Element => {
             'Не удалось получить информацию о специолист',
         );
 
-        navigate(toPsych);
-        dispatch(dellRoute());
+        navigate(toNotFoud);
     };
 
-    if(id === undefined) {
+    if(!id) {
         goBack();
 
         return (<></>);
@@ -66,7 +64,7 @@ const PsychologistContent = (): JSX.Element => {
                 dispatch,
                 'Не удалось прикреить выбранного специолиста к Вам! Попробуйте повторить запрос позже',
             );
-        }
+        };
 
         setIsSelLoad(false);
     };

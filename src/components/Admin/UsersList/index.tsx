@@ -1,5 +1,6 @@
 import { JSX, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { warningAlert } from '@/funcs/alert.funcs';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
 import { getUniqueLinkAsync } from '@/store/slices/adminSlice';
 import { type RootDispatch } from '@/store';
@@ -12,10 +13,21 @@ import UsersListMain from './Main';
 const UsersListContent = (): JSX.Element => {
     const dispatch = useDispatch<RootDispatch>();
 
-    useEffect(() => { 
-        dispatch(getProfilesListAsync());
-        dispatch(getUniqueLinkAsync());
-    }, []);
+    const initUsersList = async (): Promise<void> => {
+        const [_, linkRes] = await Promise.all([
+            dispatch(getProfilesListAsync()),
+            dispatch(getUniqueLinkAsync()).unwrap(),
+        ]);
+
+        if(!linkRes || linkRes === 'error') {
+            warningAlert(
+                dispatch,
+                'Не удалось создать ссылку регистрации специалиста'
+            );
+        }
+    }
+
+    useEffect(() => { initUsersList() }, []);
 
     const handleSearch = async (): Promise<void> => {
         await dispatch( getProfilesListAsync() )

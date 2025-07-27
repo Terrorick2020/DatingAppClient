@@ -1,5 +1,6 @@
 import { JSX, MouseEvent, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { infoAlert } from '@/funcs/alert.funcs';
 import { setSearchType, setSearchId } from '@/store/slices/adminSlice';
 import { EProfileRoles } from '@/types/store.types';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
@@ -43,7 +44,18 @@ const UsersListHeader = (): JSX.Element => {
         [dispatch]
     );
 
-    const handleOpen = useCallback(() => setOpen(true), []);
+    const handleOpen = useCallback(() => {
+        if(!adminState.link) {
+            infoAlert(
+                dispatch,
+                'Ссылка для регистрации специалиста отсутствует',
+            );
+
+            return;
+        };
+
+        setOpen(true)
+    }, [adminState.link]);
 
     return (
         <>

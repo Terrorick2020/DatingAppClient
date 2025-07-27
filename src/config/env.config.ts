@@ -53,10 +53,12 @@ export const CHATS_TYPING_ENDPOINT  = import.meta.env.VITE_CHATS_TYPING_ENDPOINT
 export const CHATS_UNREAD           = import.meta.env.VITE_CHATS_UNREAD || '';
 export const CHATS_CRT_WITH_PSYC    = import.meta.env.VITE_CHATS_CREATE_WITH_PSYCH || '';
 
-export const PSYCH_ENDPOINT = import.meta.env.VITE_PSYCH_ENDPOINT || '';
-export const PSYCH_CHECK    = import.meta.env.VITE_PSYCH_CHECK || '';
-export const PSYCH_FIND     = import.meta.env.VITE_PSYCH_FIND || '';
-export const PSYCH_AVAL     = import.meta.env.VITE_PSYCH_AVAL || '';
+export const PSYCH_ENDPOINT    = import.meta.env.VITE_PSYCH_ENDPOINT || '';
+export const PSYCH_CHECK       = import.meta.env.VITE_PSYCH_CHECK || '';
+export const PSYCH_FIND        = import.meta.env.VITE_PSYCH_FIND || '';
+export const PSYCH_AVAL        = import.meta.env.VITE_PSYCH_AVAL || '';
+export const PSYCH_GEN_TOKEN   = import.meta.env.VITE_PSYCH_GEN_TOKEN || '';
+export const PSYCH_VALID_TOKEN = import.meta.env.VITE_PSYCH_VALID_TOKEN || '';
 
 export const REDIS               = import.meta.env.VITE_REDIS || '';
 export const REDIS_KEY_ENDPOINT  = import.meta.env.VITE_REDIS_KEY_ENDPOINT || '';
@@ -108,10 +110,12 @@ if(
   !HELP_GLOB_COMPLAINTS_ENDPOINT ||
   !HELP_DESC_COMPLAINTS_ENDPOINT ||
 
-  !PSYCH_ENDPOINT ||
-  !PSYCH_CHECK    ||
-  !PSYCH_FIND     ||
-  !PSYCH_AVAL     ||
+  !PSYCH_ENDPOINT    ||
+  !PSYCH_CHECK       ||
+  !PSYCH_FIND        ||
+  !PSYCH_AVAL        ||
+  !PSYCH_GEN_TOKEN   ||
+  !PSYCH_VALID_TOKEN ||
 
   !PLANS_GET_ENDPOINT ||
   !PLANS_SET_ENDPOINT ||
@@ -280,5 +284,8 @@ export const ADMINE_SERCH_STATUS_ENDPOINT = (tgId: string, type: EProfileStatus)
 
 export const COMLS_STATS_ENDPOINT = (tgId: string): string => `${COMPLS_ENDPOINT}${COMPLS_STATS}/${tgId}`;
 
+export const PSYCH_INITIAL_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_CHECK}`;
 export const PSYCH_FOR_USER_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_AVAL}`;
+export const PSYCH_GEN_TOKEN_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_GEN_TOKEN}`;
+export const PSYCH_VALID_TOKEN_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_VALID_TOKEN}`;
 export const PSYCH_BY_MARK_ENDPOINT = (mark: string | number): string => `${PSYCH_ENDPOINT}/${mark}`;
