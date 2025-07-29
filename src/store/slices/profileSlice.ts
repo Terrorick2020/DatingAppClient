@@ -36,6 +36,8 @@ import {
     PSYCH_BY_MARK_ENDPOINT,
     PSYCH_INITIAL_ENDPOINT,
     PSYCH_VALID_TOKEN_ENDPOINT,
+    PSYCH_UPL_PHOTO_ENDPOINT,
+    PSYCH_DEL_PHOTO_ENDPOINT,
 } from '@/config/env.config';
 
 import {
@@ -122,6 +124,11 @@ export const initProfileAsync = createAsyncThunk(
             };
 
             const data = { telegramId };
+            
+            dispatch(setInfo({
+                ...profileInfo,
+                id: telegramId,
+            }));
 
             type TInit = AxiosResponse<FetchResponse<any>>;
             type TEPSInit = AxiosResponse<FetchResponse<EProfileStatus>>;
@@ -135,10 +142,10 @@ export const initProfileAsync = createAsyncThunk(
 
             switch(profileRole) {
                 case EProfileRoles.User:
-                    const [ userRes, psychRes ]: [ TEPSInit, TEPSInit ] =
+                    const [ userRes, psychRes ]: [ TEPSInit, AsyncThunkRes<ProfileSelf> ] =
                         await Promise.all([
                             api.post(INITIAL_ENDPOINT, data),
-                            api.post(PSYCH_INITIAL_ENDPOINT, data),
+                            dispatch(getSelfPsychProfile()).unwrap()
                         ]);
 
                     resResult = validResResult(userRes);
@@ -148,30 +155,27 @@ export const initProfileAsync = createAsyncThunk(
                         break;
                     };
 
-                    resResult = validResResult(psychRes);
+                    resResult = !psychRes || psychRes === 'error';
 
-                    if(!resResult) {
-                        profileRole = EProfileRoles.Psych;
-                        profileStatus = psychRes.data.data as EProfileStatus;
-                    };
+                    if(!resResult) profileRole = EProfileRoles.Psych;
 
                     break;
                 case EProfileRoles.Psych:
-                    const endPsychRes: TInit = await api.post(PSYCH_INITIAL_ENDPOINT, data);
-
-                    resResult = validResResult(endPsychRes);
-
-                    if(!resResult) {
-                        profileStatus = endPsychRes.data.data as EProfileStatus;
-                        break;
-                    };
-
                     if(!params || !params.code) return 'error';
 
                     const validData = { code: params.code };
 
-                    const codePsychRes: AxiosResponse<FetchResponse<ValidetePsychCodeRes>> =
-                        await api.post(PSYCH_VALID_TOKEN_ENDPOINT, validData);
+                    const [ endPsychRes, codePsychRes ] : [
+                        AsyncThunkRes<ProfileSelf>,
+                        AxiosResponse<FetchResponse<ValidetePsychCodeRes>>,
+                    ] = await Promise.all([
+                        dispatch(getSelfPsychProfile()).unwrap(),
+                        api.post(PSYCH_VALID_TOKEN_ENDPOINT, validData),
+                    ]);
+
+                    resResult = !endPsychRes || endPsychRes === 'error';
+
+                    if(!resResult) break;
 
                     resResult = validResResult(codePsychRes);
 
@@ -197,7 +201,7 @@ export const initProfileAsync = createAsyncThunk(
                             status: EApiStatus.Warning,
                             timestamp: Date.now(),
                         }));
-                }
+                    }
 
                     break;
             }
@@ -258,12 +262,17 @@ export const saveSelfPhotoAsync = createAsyncThunk(
         try {
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
+            const profileRole = rootState.profile.info.role;
     
             const formData = new FormData();
             formData.append('photo', data.photo);
             formData.append('telegramId', telegramId);
+
+            const url = profileRole === EProfileRoles.Psych
+                ? PSYCH_UPL_PHOTO_ENDPOINT
+                : UPLOAD_PHOTO;
     
-            const response: AxiosResponse<FetchResponse<FetchSavePhotoRes>> = await api.post(UPLOAD_PHOTO, formData, {
+            const response: AxiosResponse<FetchResponse<FetchSavePhotoRes>> = await api.post(url, formData, {
                 onUploadProgress: (progressEvent: AxiosProgressEvent) => {
                     if (progressEvent.total) {
                       const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -301,6 +310,7 @@ export const deleteSelfPhotoAsync = createAsyncThunk(
     async (id: string, { dispatch, getState }): Promise<AsyncThunkRes<string>> => {
         try {
             const rootState = getState() as IState;
+            const profileRole = rootState.profile.info.role;
 
             if(rootState.settings.photosCashe.includes(id)) {
                 dispatch(delPhotoInCashe(id));
@@ -317,9 +327,13 @@ export const deleteSelfPhotoAsync = createAsyncThunk(
             const data = {
                 telegramId,
                 photoId: id,
-            }
+            };
 
-            const response: AxiosResponse<FetchResponse<string>> = await api.post(DELETE_PHOTO, data);
+            const url = profileRole === EProfileRoles.Psych
+                ? PSYCH_DEL_PHOTO_ENDPOINT
+                : DELETE_PHOTO;
+
+            const response: AxiosResponse<FetchResponse<null>> = await api.post(url, data);
 
             if(
                 response.status === 200 &&
@@ -476,12 +490,15 @@ export const signUpPsychAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
 
+            const photoIds = rootState.profile.info.photos.map(item => item.id);
+
             const data = {
                 ...( mark === KeyFQBtnText.First && {
                     telegramId: profileInfo.id 
                 } ),
                 name: profileInfo.name,
                 about: profileInfo.bio,
+                photoIds,
             };
 
             let response: any = null;
@@ -610,17 +627,20 @@ export const getSelfProfile = createAsyncThunk(
 
 export const getSelfPsychProfile = createAsyncThunk(
     'profile/get-self-psych-profile',
-    async (_, {getState}): Promise<AsyncThunkRes<any>> => {
+    async (_, {getState}): Promise<AsyncThunkRes<ProfileSelf>> => {
         try {
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
 
-            const url = PSYCH_BY_MARK_ENDPOINT(telegramId);
+            const data = { telegramId };
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
-            
+            const response: AxiosResponse<FetchResponse<any>> =
+                await api.post(PSYCH_INITIAL_ENDPOINT, data);
+
+            console.log( response );
+                
             if(
-                response.status !== 200 ||
+                response.status !== 201 ||
                 !response.data.success  ||
                 !response.data.data     ||
                 response.data.data === 'None'
@@ -727,9 +747,16 @@ export const selectSelfPsychAsync = createAsyncThunk(
 
 export const deleteSelfAsync = createAsyncThunk(
     'profile/delete-self',
-    async (): Promise<AsyncThunkRes<'success'>> => {
+    async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
         try {
-            const response: AxiosResponse<FetchResponse<any>> = await api.delete(USER_SELF_DELETE_ENDPOINT);
+            const rootState = getState() as IState;
+            const profileRole = rootState.profile.info.role;
+
+            const url = profileRole === EProfileRoles.User
+                ? USER_SELF_DELETE_ENDPOINT
+                : PSYCH_ENDPOINT;
+
+            const response: AxiosResponse<FetchResponse<any>> = await api.delete(url);
 
             if (
                 response.status !== 200 ||

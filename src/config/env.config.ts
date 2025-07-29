@@ -59,6 +59,8 @@ export const PSYCH_FIND        = import.meta.env.VITE_PSYCH_FIND || '';
 export const PSYCH_AVAL        = import.meta.env.VITE_PSYCH_AVAL || '';
 export const PSYCH_GEN_TOKEN   = import.meta.env.VITE_PSYCH_GEN_TOKEN || '';
 export const PSYCH_VALID_TOKEN = import.meta.env.VITE_PSYCH_VALID_TOKEN || '';
+export const PSYCH_UPL_PHOTO   = import.meta.env.VITE_PSYCH_UPL_PHOTO || '';
+export const PSYCH_DEL_PHOTO   = import.meta.env.VITE_PSYCH_DEL_PHOTO || '';
 
 export const REDIS               = import.meta.env.VITE_REDIS || '';
 export const REDIS_KEY_ENDPOINT  = import.meta.env.VITE_REDIS_KEY_ENDPOINT || '';
@@ -116,6 +118,8 @@ if(
   !PSYCH_AVAL        ||
   !PSYCH_GEN_TOKEN   ||
   !PSYCH_VALID_TOKEN ||
+  !PSYCH_UPL_PHOTO   ||
+  !PSYCH_DEL_PHOTO   ||
 
   !PLANS_GET_ENDPOINT ||
   !PLANS_SET_ENDPOINT ||
@@ -288,6 +292,9 @@ export const PSYCH_INITIAL_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_CHECK}`;
 export const PSYCH_FOR_USER_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_AVAL}`;
 export const PSYCH_GEN_TOKEN_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_GEN_TOKEN}`;
 export const PSYCH_VALID_TOKEN_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_VALID_TOKEN}`;
+export const PSYCH_UPL_PHOTO_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_UPL_PHOTO}`;
+export const PSYCH_DEL_PHOTO_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_DEL_PHOTO}`;
+
 export const PSYCH_BY_MARK_ENDPOINT = (mark: string | number): string => `${PSYCH_ENDPOINT}/${mark}`;
 
 export const PSYCH_ADMIN_ENDPOINT = (

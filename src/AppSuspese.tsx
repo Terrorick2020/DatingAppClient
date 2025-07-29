@@ -10,7 +10,6 @@ import {
 import {
     initProfileAsync,
     getSelfProfile,
-    getSelfPsychProfile,
     getSelfPlansAsync,
 } from '@/store/slices/profileSlice';
 
@@ -48,10 +47,9 @@ async function delayForLazy( promise: Promise<any> ) {
             const [ selfRes, _ ] = await Promise.all(
                 isPsych
                     ? [
-                        store.dispatch(getSelfPsychProfile()).unwrap(),
+                        store.getState().profile.info,
                         null,
-                    ]
-                    : [
+                    ] : [
                         store.dispatch(getSelfProfile()).unwrap(),
                         store.dispatch(getSelfPlansAsync()).unwrap(),
                     ]
