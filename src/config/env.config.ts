@@ -289,3 +289,19 @@ export const PSYCH_FOR_USER_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_AVAL}`;
 export const PSYCH_GEN_TOKEN_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_GEN_TOKEN}`;
 export const PSYCH_VALID_TOKEN_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_VALID_TOKEN}`;
 export const PSYCH_BY_MARK_ENDPOINT = (mark: string | number): string => `${PSYCH_ENDPOINT}/${mark}`;
+
+export const PSYCH_ADMIN_ENDPOINT = (
+  search?: string,
+  offset?: number,
+  limit?: number,
+) => {
+  const params: string[] = [];
+
+  if(search) params.push(`search=${search}`);
+  if(limit) params.push(`limit=${limit}`);
+  if(offset !== undefined && offset >= 0) params.push(`offset=${offset}`);
+
+  const queryString = params.length ? `?${params.join('&')}` : '';
+
+  return `${PSYCH_ENDPOINT}${queryString}`;
+}

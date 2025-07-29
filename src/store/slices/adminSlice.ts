@@ -26,6 +26,7 @@ import {
     USERS_ENDPOINT,
     REFERAL_LINK,
     PSYCH_GEN_TOKEN_ENDPOINT,
+    PSYCH_ADMIN_ENDPOINT,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -73,10 +74,31 @@ export const getProfilesListAsync = createAsyncThunk(
 
             const rootState = getState() as IState;
             const query = rootState.admin.searchId;
+            const type = rootState.admin.searchType;
 
-            const url = query
-                ? USERS_SEARCH(query, realArgs.offset, realArgs.limit)
-                : USERS_ENDPOINT({page: realArgs.offset + 1, limit: realArgs.limit});
+            let url: string | null = null;
+
+            switch(type) {
+                case EProfileRoles.User:
+                    url = query
+                        ? USERS_SEARCH(query, realArgs.offset, realArgs.limit)
+                        : USERS_ENDPOINT({page: realArgs.offset + 1, limit: realArgs.limit});
+                    break;
+
+                case EProfileRoles.Psych:
+                    const isNumeric = /^\d+$/.test(query);
+
+                    url = query && !isNumeric
+                        ? null
+                        : PSYCH_ADMIN_ENDPOINT(query, realArgs.offset, realArgs.limit);
+                    
+                    // TODO: Убрать потом!    
+                    url = null;
+
+                    break;
+            }
+
+            if(!url) return null;
 
             const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
 

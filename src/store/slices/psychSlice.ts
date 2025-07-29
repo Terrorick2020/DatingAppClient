@@ -5,7 +5,7 @@ import { initialArgs } from '@/constant/psych';
 import { AsyncThunkRes, IState } from '@/types/store.types';
 import { ELineStatus} from '@/types/store.types';
 import type { InitSliderData } from '@/types/quest.types';
-import type { FetchResponse, InitPsychListRes } from '@/types/fetch.type';
+import type { FetchResponse, InitPsychListRes, TargetPsychologistRes } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
 import type { PsychState, PsychListItem, TargerPsych } from '@/types/psych.types';
 
@@ -77,7 +77,7 @@ export const getPsycByIdhAsync = createAsyncThunk(
 
             const url = PSYCH_BY_MARK_ENDPOINT(id);
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
+            const response: AxiosResponse<FetchResponse<TargetPsychologistRes>> = await api.get(url);
 
             if(
                 response.status !== 200 ||

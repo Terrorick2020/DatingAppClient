@@ -204,7 +204,7 @@ export interface AdminGenLinkRes {
 	inviteUrl: string
 }
 
-export interface InitPsychListResPsychPhoto {
+export interface PsychListPhotoRes {
 	id: number
 	key: string
 	tempTgId: string | null
@@ -216,10 +216,21 @@ export interface InitPsychListResPsych {
 	telegramId: string
 	name: string
 	about: string
-	photos: InitPsychListResPsychPhoto[]
+	photos: PsychListPhotoRes[]
 }
 
 export interface InitPsychListRes {
 	psychologists: InitPsychListResPsych[]
 	total: number
+}
+
+export interface TargetPsychologistRes {
+	id: number
+	telegramId: string
+	name: string
+	about: string
+	status: 'Active' | 'Inactive' | 'Blocked'
+	createdAt: Date
+	updatedAt: Date
+	photos: PsychListPhotoRes[]
 }

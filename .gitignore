@@ -11,6 +11,7 @@ ssl/*
 **/ssl/*
 
 .env
+.env.prod
 **/.env
 
 **/*.crt

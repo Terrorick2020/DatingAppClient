@@ -133,11 +133,11 @@ export function getTgID(): string | null {
 };
 
 export function getRefParams(): GetParamsRes | null {
-  const param = initData.startParam();
-  
-  if(!param) return null;
-
   try {
+    const param = initData.startParam();
+  
+    if(!param || param === undefined) return null;
+
     const decodedString = atob(decodeURIComponent(param));
     const searchParams = new URLSearchParams(decodedString);
 
