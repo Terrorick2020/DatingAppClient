@@ -85,7 +85,7 @@ const ProfilePlans = memo((props: PropsProfileInfo): JSX.Element => {
             }
             <Button
                 fullWidth
-                className="lemon base-height edit"
+                className="lemon base-height edit with-icon"
                 variant="contained"
                 startIcon={
                     <img

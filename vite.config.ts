@@ -161,3 +161,20 @@ export default defineConfig(({ mode }) => {
     },
   }
 })
+
+  // "@base-ui-components/react": "^1.0.0-alpha.6",
+  // "@emotion/react": "^11.14.0",
+  // "@mui/icons-material": "^6.4.6",
+  // "@mui/joy": "^5.0.0-beta.52",
+  // "@mui/material": "^6.4.6",
+  // "arktype": "^2.1.15",
+  // "motion": "^12.16.0",
+  // "notistack": "^3.0.2",
+  // "react": "^18.3.1",
+  // "react-awesome-reveal": "^4.3.1",
+  // "react-dom": "^18.3.1",
+  // "react-easy-crop": "^5.4.1",
+  // "react-player": "^2.16.0",
+  // "react-redux": "^9.2.0",
+  // "react-router-dom": "^7.2.0",
+  // "react-swipeable": "^7.0.2",

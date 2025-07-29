@@ -34,7 +34,7 @@ import { formatTimestamp } from '@/funcs/general.funcs';
 import { initialArgs } from '@/constant/quest';
 import type { InitSliderData } from '@/types/quest.types';
 import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
-import type { FetchResponse, FetchSavePhotoRes, } from '@/types/fetch.type';
+import type { FetchResponse, FetchSavePhotoRes, AdminGenLinkRes } from '@/types/fetch.type';
 import type { AxiosResponse, AxiosProgressEvent } from 'axios';
 
 import api from '@/config/fetch.config';
@@ -116,7 +116,7 @@ export const getUniqueLinkAsync = createAsyncThunk(
         try {
             const data = {};
 
-            const respose: AxiosResponse<FetchResponse<any>> = await api.post(PSYCH_GEN_TOKEN_ENDPOINT, data);
+            const respose: AxiosResponse<FetchResponse<AdminGenLinkRes>> = await api.post(PSYCH_GEN_TOKEN_ENDPOINT, data);
 
             if(
                 respose.status !== 201 ||
@@ -125,7 +125,7 @@ export const getUniqueLinkAsync = createAsyncThunk(
                 respose.data.data === 'None'
             ) return null;
 
-            const code = respose.data.data;
+            const code = respose.data.data.code;
             const result = REFERAL_LINK(code, EProfileRoles.Psych);
 
             return result;

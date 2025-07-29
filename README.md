@@ -1,5 +1,12 @@
 # DatingAppClient
 
-bunx postcss public/main.css -o dist/main.css
+## Хочу добавить:
+    - arktype
+    - @tanstack/react-query
 
-bunx html-minifier-terser index.html --collapse-whitespace --remove-comments --remove-optional-tags --minify-css true --minify-js true -o dist/index.html 
+## Сделать:
+    - Backend:
+        1. При регистрации психолога нет поля для фотографий
+        2. psychologists/check пробрасывает ошибку, если не находит человаека в БД
+    - Client:
+        1. Проверить работоспособность initProfileAsync

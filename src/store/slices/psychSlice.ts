@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { PSYCH_FOR_USER_ENDPOINT, PSYCH_BY_MARK_ENDPOINT } from '@/config/env.config';
 import { setLoad } from './settingsSlice';
-import { AsyncThunkRes } from '@/types/store.types';
+import { initialArgs } from '@/constant/psych';
+import { AsyncThunkRes, IState } from '@/types/store.types';
 import { ELineStatus} from '@/types/store.types';
-import type { FetchResponse } from '@/types/fetch.type';
+import type { InitSliderData } from '@/types/quest.types';
+import type { FetchResponse, InitPsychListRes } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
 import type { PsychState, PsychListItem, TargerPsych } from '@/types/psych.types';
 
@@ -27,14 +29,30 @@ const initialState: PsychState = {
 
 export const initPsychList = createAsyncThunk(
     'psychologists/init-psych-list',
-    async (_, {dispatch}): Promise<AsyncThunkRes<PsychListItem[]>> => {
+    async (
+        args: InitSliderData | undefined,
+        { dispatch, getState }
+    ): Promise<AsyncThunkRes<PsychListItem[]>> => {
         try {
             dispatch(setLoad(true));
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(PSYCH_FOR_USER_ENDPOINT);
+            const query: InitSliderData = args || initialArgs;
+
+            const rootState = getState() as IState;
+            const userTelegramId = rootState.profile.info.id;
+            const search = rootState.psych.serchPsychQuery;
+
+            const data = {
+                ...( search && { search } ),
+                ...query,
+                userTelegramId,
+            };
+
+            const response: AxiosResponse<FetchResponse<InitPsychListRes>> =
+                await api.post(PSYCH_FOR_USER_ENDPOINT, data);
 
             if(
-                response.status !== 200 ||
+                response.status !== 201 ||
                 !response.data.success  ||
                 !response.data.data     ||
                 response.data.data === 'None'

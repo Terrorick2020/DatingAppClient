@@ -167,7 +167,7 @@ async function checkInstallHomeScreen(): Promise<InitHomeScreenRes> {
   try {
     const status = await checkHomeScreenStatus() as EHomeScreenStatus;
     return status;
-  } catch (err) {
+  } catch {
     return 'error';
   }
 };

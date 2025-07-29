@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
 import { ageToStr } from '@/funcs/general.funcs';
 import { lineStatusAttr } from '@/constant/settings';
-import { type IState } from '@/types/store.types';
+import type { IState } from '@/types/store.types';
 
 
 const PsychologistCtx = (): JSX.Element => {
@@ -12,7 +12,9 @@ const PsychologistCtx = (): JSX.Element => {
 
     if ( !targerPsych ) {
         const navgate = useNavigate();
+
         navgate( appRoutes.notFound );
+
         return (<></>);
     }
 

@@ -111,6 +111,12 @@
             font-size: clamp(0.75rem, 2.5vw, 0.9rem);
         }
 
+        &.with-icon {
+            .MuiButton-icon {
+                margin-right: 0.5rem;
+            }
+        }
+
         &:active {
             scale: 0.95;
         }

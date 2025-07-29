@@ -19,6 +19,11 @@ export enum EProfileStatus {
     Blocked = 'Blocked',
 }
 
+export enum EPsychStatus {
+    Active = 'Active',
+    Inactive = 'Inactive',
+}
+
 export enum ESex {
     All = 'All',
     Male = 'Male',

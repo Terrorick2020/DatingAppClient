@@ -33,3 +33,5 @@ export const targerPsychList: TargerPsych[] = [
     { id: '16434236', photo: PngLeady, name: 'Иван', spec: 'Травматерапевт', lineStat: ELineStatus.Offline, exp: 5, desc: 'Выберите любого специалиста и опишите ему свою проблему или попросите совет. Специалист ответит вам в свободное время, а диалог появится в общем чате.', expList: expListValues },
     { id: '17434237', photo: PngLeady, name: 'Светлана', spec: 'Нейропсихолог', lineStat: ELineStatus.Online, exp: 7, desc: 'Выберите любого специалиста и опишите ему свою проблему или попросите совет. Специалист ответит вам в свободное время, а диалог появится в общем чате.', expList: expListValues },
 ];
+
+export const initialArgs = { limit: 10, offset: 0 };

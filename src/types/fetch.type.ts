@@ -198,3 +198,28 @@ export interface ValidetePsychCodeRes {
 	isValid: boolean
 	message?: string
 }
+
+export interface AdminGenLinkRes {
+	code: string
+	inviteUrl: string
+}
+
+export interface InitPsychListResPsychPhoto {
+	id: number
+	key: string
+	tempTgId: string | null
+	telegramId: string | null
+}
+
+export interface InitPsychListResPsych {
+	id: number
+	telegramId: string
+	name: string
+	about: string
+	photos: InitPsychListResPsychPhoto[]
+}
+
+export interface InitPsychListRes {
+	psychologists: InitPsychListResPsych[]
+	total: number
+}

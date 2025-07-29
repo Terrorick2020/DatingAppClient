@@ -147,7 +147,7 @@ export const initProfileAsync = createAsyncThunk(
                         profileStatus = userRes.data.data as EProfileStatus;
                         break;
                     };
-                    
+
                     resResult = validResResult(psychRes);
 
                     if(!resResult) {
@@ -166,9 +166,9 @@ export const initProfileAsync = createAsyncThunk(
                         break;
                     };
 
-                    if(!params) return 'error';
+                    if(!params || !params.code) return 'error';
 
-                    const validData = { code: params?.code };
+                    const validData = { code: params.code };
 
                     const codePsychRes: AxiosResponse<FetchResponse<ValidetePsychCodeRes>> =
                         await api.post(PSYCH_VALID_TOKEN_ENDPOINT, validData);
@@ -198,7 +198,7 @@ export const initProfileAsync = createAsyncThunk(
                             timestamp: Date.now(),
                         }));
                 }
-                    
+
                     break;
             }
 
@@ -217,7 +217,6 @@ export const initProfileAsync = createAsyncThunk(
             dispatch(setIsFirstly(false));
 
             return profileStatus;
-
         } catch {
             dispatch(setIsFirstly(true));
 
@@ -247,7 +246,7 @@ export const sendSelfGeoAsync = createAsyncThunk(
             };
 
             return null;
-        } catch (error) {
+        } catch {
             return 'error';
         }
     }
@@ -477,7 +476,13 @@ export const signUpPsychAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
 
-            const data = { ...profileInfo };
+            const data = {
+                ...( mark === KeyFQBtnText.First && {
+                    telegramId: profileInfo.id 
+                } ),
+                name: profileInfo.name,
+                about: profileInfo.bio,
+            };
 
             let response: any = null;
             let msg: string = '';
