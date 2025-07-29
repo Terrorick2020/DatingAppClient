@@ -107,7 +107,7 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
-            const telegramId = getTgID() || 'vova';
+            const telegramId = getTgID();
             
             if(!telegramId) return 'error';
 
@@ -157,7 +157,10 @@ export const initProfileAsync = createAsyncThunk(
 
                     resResult = !psychRes || psychRes === 'error';
 
-                    if(!resResult) profileRole = EProfileRoles.Psych;
+                    if(!resResult && psychRes && psychRes !== 'error') {
+                        profileRole = EProfileRoles.Psych;
+                        profileStatus = psychRes.status;
+                    }
 
                     break;
                 case EProfileRoles.Psych:
@@ -175,7 +178,10 @@ export const initProfileAsync = createAsyncThunk(
 
                     resResult = !endPsychRes || endPsychRes === 'error';
 
-                    if(!resResult) break;
+                    if(!resResult && endPsychRes && endPsychRes !== 'error') {
+                        profileStatus = endPsychRes.status;
+                        break;
+                    };
 
                     resResult = validResResult(codePsychRes);
 
@@ -210,6 +216,7 @@ export const initProfileAsync = createAsyncThunk(
                 ...profileInfo,
                 id: telegramId,
                 role: profileRole,
+                status: profileStatus,
             }));
 
             if(resResult) {
@@ -646,7 +653,9 @@ export const getSelfPsychProfile = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            return null;
+            const result = { ...rootState.profile.info };
+
+            return result;
         } catch {
             return 'error';
         }
