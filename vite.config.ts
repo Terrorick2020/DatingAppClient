@@ -1,7 +1,7 @@
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv } from 'vite';
-// import { VitePWA } from 'vite-plugin-pwa';
+import { VitePWA } from 'vite-plugin-pwa';
 
 import removeConsole from 'vite-plugin-remove-console';
 import preload from 'vite-plugin-preload';
@@ -38,13 +38,13 @@ export default defineConfig(({ mode }) => {
       react(),
       svgr(),
       preload(),
-      // VitePWA({
-      //   registerType: 'autoUpdate',
-      //   workbox: {
-      //     globPatterns: ['**/*.{png,jpg,svg}'],
-      //     maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
-      //   }
-      // }),
+      VitePWA({
+        registerType: 'autoUpdate',
+        workbox: {
+          globPatterns: ['**/*.{html,css,js,png,jpg,svg}'],
+          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+        }
+      }),
       ViteImageOptimizer({
         png: { quality: 70 },
         jpeg: {
@@ -116,7 +116,7 @@ export default defineConfig(({ mode }) => {
             if (id.includes('node_modules')) {
 
               if (id.includes('react-router-dom') || id.includes('react-router')) {
-                return '@react-router';
+                return 'react-router';
               };
  
               if (
@@ -139,10 +139,6 @@ export default defineConfig(({ mode }) => {
                 return 'utils';
               };
 
-              if (id.includes('@tanstack/react-query')) {
-                return 'react-query';
-              };
-
               if (id.includes('@telegram-apps')) {
                 return 'telegram-sdk';
               };
@@ -151,7 +147,13 @@ export default defineConfig(({ mode }) => {
                 return 'emoji';
               };
 
-              if (id.includes('lodash')) return 'lodash';
+              if (
+                id.includes('react-easy-crop') ||
+                id.includes('react-swipeable') ||
+                id.includes('react-player')
+              ) {
+                return "servises";
+              }
 
               return 'vendor';
             }
@@ -161,20 +163,3 @@ export default defineConfig(({ mode }) => {
     },
   }
 })
-
-  // "@base-ui-components/react": "^1.0.0-alpha.6",
-  // "@emotion/react": "^11.14.0",
-  // "@mui/icons-material": "^6.4.6",
-  // "@mui/joy": "^5.0.0-beta.52",
-  // "@mui/material": "^6.4.6",
-  // "arktype": "^2.1.15",
-  // "motion": "^12.16.0",
-  // "notistack": "^3.0.2",
-  // "react": "^18.3.1",
-  // "react-awesome-reveal": "^4.3.1",
-  // "react-dom": "^18.3.1",
-  // "react-easy-crop": "^5.4.1",
-  // "react-player": "^2.16.0",
-  // "react-redux": "^9.2.0",
-  // "react-router-dom": "^7.2.0",
-  // "react-swipeable": "^7.0.2",
