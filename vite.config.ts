@@ -1,7 +1,7 @@
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
-import { visualizer } from 'rollup-plugin-visualizer';
+// import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
+// import { VitePWA } from 'vite-plugin-pwa';
 
 import removeConsole from 'vite-plugin-remove-console';
 import preload from 'vite-plugin-preload';
@@ -31,20 +31,20 @@ export default defineConfig(({ mode }) => {
   ) throw new Error('Hasn`t some environments in vite.config.ts');
 
   const isProd    = MODE === 'prod';
-  const isAnalyze = MODE === 'analyze';
+  // const isAnalyze = MODE === 'analyze';
 
   return {
     plugins: [
       react(),
       svgr(),
       preload(),
-      VitePWA({
-        registerType: 'autoUpdate',
-        workbox: {
-          globPatterns: ['**/*.{html,css,js,png,jpg,svg,ico}'],
-          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
-        }
-      }),
+      // VitePWA({
+      //   registerType: 'autoUpdate',
+      //   workbox: {
+      //     globPatterns: ['**/*.{html,css,js,png,jpg,svg,ico}'],
+      //     maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+      //   }
+      // }),
       ViteImageOptimizer({
         png: { quality: 70 },
         jpeg: {
@@ -63,14 +63,14 @@ export default defineConfig(({ mode }) => {
       removeConsole({
         includes: ['error', 'warn', 'log', 'info', 'debug'],
       }),
-      ...(isAnalyze ? [visualizer({
-        filename: './dist/stats.html',
-        title: 'Vite Bundle Analysis',
-        open: true,
-        template: 'treemap',
-        gzipSize: true,
-        brotliSize: true,
-      })] : []),
+      // ...(isAnalyze ? [visualizer({
+      //   filename: './dist/stats.html',
+      //   title: 'Vite Bundle Analysis',
+      //   open: true,
+      //   template: 'treemap',
+      //   gzipSize: true,
+      //   brotliSize: true,
+      // })] : []),
     ],
     server: {
       host: isProd ? PROD_HOST : DEV_HOST,
@@ -115,45 +115,45 @@ export default defineConfig(({ mode }) => {
           manualChunks(id: string) {
             if (id.includes('node_modules')) {
 
-              if (id.includes('react-router-dom') || id.includes('react-router')) {
-                return 'react-router';
-              };
+              // if (id.includes('react-router-dom') || id.includes('react-router')) {
+              //   return 'react-router';
+              // };
  
-              if (
-                id.includes('@reduxjs/toolkit') ||
-                id.includes('react-redux')      ||
-                id.includes('reselect')
-              ) {
-                return 'redux';
-              };
+              // if (
+              //   id.includes('@reduxjs/toolkit') ||
+              //   id.includes('react-redux')      ||
+              //   id.includes('reselect')
+              // ) {
+              //   return 'redux';
+              // };
 
-              if (id.includes('socket.io-client')) {
-                return 'socket';
-              };
+              // if (id.includes('socket.io-client')) {
+              //   return 'socket';
+              // };
 
-              if (
-                id.includes('axios') ||
-                id.includes('dayjs') ||
-                id.includes('uuid')
-              ) {
-                return 'utils';
-              };
+              // if (
+              //   id.includes('axios') ||
+              //   id.includes('dayjs') ||
+              //   id.includes('uuid')
+              // ) {
+              //   return 'utils';
+              // };
 
-              if (id.includes('@telegram-apps')) {
-                return 'telegram-sdk';
-              };
+              // if (id.includes('@telegram-apps')) {
+              //   return 'telegram-sdk';
+              // };
 
-              if (id.includes('emoji-mart') || id.includes('@emoji-mart')) {
-                return 'emoji';
-              };
+              // if (id.includes('emoji-mart') || id.includes('@emoji-mart')) {
+              //   return 'emoji';
+              // };
 
-              if (
-                id.includes('react-easy-crop') ||
-                id.includes('react-swipeable') ||
-                id.includes('react-player')
-              ) {
-                return "servises";
-              }
+              // if (
+              //   id.includes('react-easy-crop') ||
+              //   id.includes('react-swipeable') ||
+              //   id.includes('react-player')
+              // ) {
+              //   return "servises";
+              // }
 
               return 'vendor';
             }
