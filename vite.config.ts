@@ -1,7 +1,7 @@
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
+// import { VitePWA } from 'vite-plugin-pwa';
 
 import removeConsole from 'vite-plugin-remove-console';
 import preload from 'vite-plugin-preload';
@@ -38,13 +38,13 @@ export default defineConfig(({ mode }) => {
       react(),
       svgr(),
       preload(),
-      VitePWA({
-        registerType: 'autoUpdate',
-        workbox: {
-          globPatterns: ['**/*.{png,jpg,svg}'],
-          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
-        }
-      }),
+      // VitePWA({
+      //   registerType: 'autoUpdate',
+      //   workbox: {
+      //     globPatterns: ['**/*.{png,jpg,svg}'],
+      //     maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+      //   }
+      // }),
       ViteImageOptimizer({
         png: { quality: 70 },
         jpeg: {

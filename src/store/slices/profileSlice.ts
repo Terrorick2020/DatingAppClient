@@ -107,7 +107,7 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
-            const telegramId = getTgID();
+            const telegramId = getTgID() || 'vova';
             
             if(!telegramId) return 'error';
 
@@ -124,11 +124,6 @@ export const initProfileAsync = createAsyncThunk(
             };
 
             const data = { telegramId };
-            
-            dispatch(setInfo({
-                ...profileInfo,
-                id: telegramId,
-            }));
 
             type TInit = AxiosResponse<FetchResponse<any>>;
             type TEPSInit = AxiosResponse<FetchResponse<EProfileStatus>>;
@@ -145,7 +140,7 @@ export const initProfileAsync = createAsyncThunk(
                     const [ userRes, psychRes ]: [ TEPSInit, AsyncThunkRes<ProfileSelf> ] =
                         await Promise.all([
                             api.post(INITIAL_ENDPOINT, data),
-                            dispatch(getSelfPsychProfile()).unwrap()
+                            dispatch(getSelfPsychProfile(telegramId)).unwrap()
                         ]);
 
                     resResult = validResResult(userRes);
@@ -634,17 +629,20 @@ export const getSelfProfile = createAsyncThunk(
 
 export const getSelfPsychProfile = createAsyncThunk(
     'profile/get-self-psych-profile',
-    async (_, {getState}): Promise<AsyncThunkRes<ProfileSelf>> => {
+    async (
+        tgId: string | undefined,
+        { getState }
+    ): Promise<AsyncThunkRes<ProfileSelf>> => {
         try {
             const rootState = getState() as IState;
-            const telegramId = rootState.profile.info.id;
+            const telegramId = rootState.profile.info.id || tgId;
+
+            if(!telegramId) return null;
 
             const data = { telegramId };
 
             const response: AxiosResponse<FetchResponse<any>> =
                 await api.post(PSYCH_INITIAL_ENDPOINT, data);
-
-            console.log( response );
                 
             if(
                 response.status !== 201 ||
