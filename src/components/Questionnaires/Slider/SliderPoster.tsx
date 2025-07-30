@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { toProfile } from '@/config/routes.config';
 import { useDispatch, useSelector } from 'react-redux';
 import { initSliderListAsync } from '@/store/slices/questionnairesSlice';
-import { initialArgs, SWIPED_OFFSET } from '@/constant/quest';
+import { initialArgs } from '@/constant/quest';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
 import type { InitSliderData } from '@/types/quest.types';
@@ -16,6 +16,8 @@ import SliderItem from './SliderItem';
 import Button from '@mui/material/Button';
 import SvgQuestsEmpty from '@/assets/icon/quests-empty.svg';
 
+
+const SWIPED_OFFSET: number = 100;
 
 const SliderPoster = (): JSX.Element => {
   const sliderList = useSelector((state: IState) => state.questionnaires.sliderList);
