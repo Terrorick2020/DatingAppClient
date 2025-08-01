@@ -19,6 +19,7 @@ const HeadNav = (): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
 
     const [open, setOpen] = useState<boolean>(false);
+    const [_, setLoad] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
@@ -48,6 +49,8 @@ const HeadNav = (): JSX.Element => {
 
     const handleFullScreen = async (): Promise<void> => {
         try {
+            setLoad(true);
+
             if (viewport.isFullscreen()) {
                 if (viewport.exitFullscreen.isAvailable()) {
                     await viewport.exitFullscreen();
@@ -72,6 +75,8 @@ const HeadNav = (): JSX.Element => {
                 dispatch,
                 'Ошибка при изменении полноэкранного режима'
             );
+        } finally {
+            setLoad(false);
         }
     };
 
