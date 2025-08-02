@@ -33,6 +33,8 @@ export default defineConfig(({ mode }) => {
   const isProd    = MODE === 'prod';
   const isAnalyze = MODE === 'analyze';
 
+  const allowedHosts = [ DOMAIN, 'client' ];
+
   return {
     plugins: [
       react(),
@@ -76,24 +78,25 @@ export default defineConfig(({ mode }) => {
     server: {
       host: isProd ? PROD_HOST : DEV_HOST,
       port: PORT,
-      ...(isProd && {
-        allowedHosts: [ DOMAIN ],
-        hmr: {
-          host: DOMAIN,
-          protocol: 'wss',
-          clientPort: PORT,
-        },
+      ...(isProd ? {
+        allowedHosts,
         ...(SSL_KEY && SSL_CRT && {
           https: {
             key: SSL_KEY,
             cert: SSL_CRT,
           },
         }),
+      } : {
+        hmr: {
+          host: DEV_HOST,
+          protocol: 'ws',
+          clientPort: PORT,
+        },
       }),
     },
     preview: {
       port: PORT,
-      allowedHosts: [ DOMAIN ],
+      allowedHosts,
     },
     resolve: {
       alias: {

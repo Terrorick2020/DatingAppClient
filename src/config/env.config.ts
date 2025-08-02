@@ -2,9 +2,7 @@ import { EProfileStatus, EProfileRoles } from '@/types/store.types';
 import type { UsersEndpointParams } from '@/types/fetch.type';
 
 
-export const DOMAIN   = import.meta.env.VITE_DOMAIN || '';
 export const REFERAL  = import.meta.env.VITE_REFERAL || '';
-
 export const BASE_URL = import.meta.env.VITE_BASE_URL || '';
 export const WS_URL   = import.meta.env.VITE_WS_URL || '';
 
