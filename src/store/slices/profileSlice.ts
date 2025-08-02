@@ -111,7 +111,7 @@ export const initProfileAsync = createAsyncThunk(
             
             if(!telegramId) return 'error';
 
-            const params = getRefParams();
+            const params = await getRefParams();
 
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;

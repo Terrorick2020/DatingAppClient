@@ -132,9 +132,18 @@ export function getTgID(): string | null {
   return '' + user.id;
 };
 
-export function getRefParams(): GetParamsRes | null {
+export async function getRefParams(): Promise<GetParamsRes | null> {
   try {
-    const param = initData.startParam();
+    const isTg = await isTMA();
+
+    let param: string | null | undefined = null;
+
+    if(isTg) {
+      param = initData.startParam();
+    } else {
+      const urlParams = new URLSearchParams(window.location.search);
+      param = urlParams.get('startapp');
+    }
   
     if(!param || param === undefined) return null;
 
