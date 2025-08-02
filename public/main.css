@@ -1,21 +1,15 @@
 @font-face {
 	font-family: 'CraftworkGrotesk';
-	src: url('./fonts/craftwork-grotesk/craftworkgrotesk.eot');
-	src: url('./fonts/craftwork-grotesk/craftworkgrotesk.eot?#iefix') format('embedded-opentype'),
-		url('./fonts/craftwork-grotesk/craftworkgrotesk.woff2') format('woff2'),
-		url('./fonts/craftwork-grotesk/craftworkgrotesk.woff') format('woff'),
-		url('./fonts/craftwork-grotesk/craftworkgrotesk.ttf') format('truetype'),
-		url('./fonts/craftwork-grotesk/craftworkgrotesk.svg#craftworkgrotesk') format('svg');
+	src: url('./fonts/craftwork-grotesk/craftworkgrotesk.woff2') format('woff2'),
+		url('./fonts/craftwork-grotesk/craftworkgrotesk.woff') format('woff');
+    font-display: swap;
 }
 
 @font-face {
 	font-family: 'Inter Regular';
-	src: url('./fonts/inter-regular/inter_regular.eot');
-	src: url('./fonts/inter-regular/inter_regular.eot?#iefix') format('embedded-opentype'),
-		url('./fonts/inter-regular/inter_regular.woff2') format('woff2'),
-		url('./fonts/inter-regular/inter_regular.woff') format('woff'),
-		url('./fonts/inter-regular/inter_regular.ttf') format('truetype'),
-		url('./fonts/inter-regular/inter_regular.svg#inter_regular') format('svg');
+	src: url('./fonts/inter-regular/inter_regular.woff2') format('woff2'),
+		url('./fonts/inter-regular/inter_regular.woff') format('woff');
+    font-display: swap;
 }
 
 :root {

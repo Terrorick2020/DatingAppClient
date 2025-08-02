@@ -11,9 +11,14 @@ COPY . .
 RUN npm run build
 RUN npm run minify
 
-# Этап продакшена — через nginx
-FROM nginx:stable-alpine
-COPY --from=builder /client/node_modules ./node_modules
-COPY --from=builder /client/dist /usr/share/nginx/html
+# # Этап продакшена — через nginx
+# FROM nginx:stable-alpine
+# COPY --from=builder /client/node_modules ./node_modules
+# COPY --from=builder /client/dist /usr/share/nginx/html
+# EXPOSE 4173
+# CMD ["nginx", "-g", "daemon off;"]
+
+# Пробная версия
 EXPOSE 4173
-CMD ["nginx", "-g", "daemon off;"]
+
+CMD ["npm", "run", "preview"]
