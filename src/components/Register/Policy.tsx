@@ -1,4 +1,5 @@
 import { JSX, useEffect } from 'react';
+import { SUPPORT_EMAIL, BOT_LINK } from '@/config/env.config';
 
 
 const PolicyContent = (): JSX.Element => {
@@ -16,7 +17,7 @@ const PolicyContent = (): JSX.Element => {
                 <h6 className="title">1. Общая информация</h6>
                 <p className="description">
                     3date — это мини-приложение в Telegram, предназначенное для знакомств и общения.
-                    Доступ осуществляется через бота <span className="purple">@dating_vmeste_bot</span>.
+                    Доступ осуществляется через бота <span className="purple">{ BOT_LINK }</span>.
                     Мы соблюдаем положения законодательства о защите персональных данных.
                 </p>
             </div>
@@ -71,7 +72,7 @@ const PolicyContent = (): JSX.Element => {
             <div className="text">
                 <p className="description">
                     Для этого напишите нам на 
-                    {" "}<span className="purple">blablabla@ya.ru</span>{" "}
+                    {" "}<span className="purple">{ SUPPORT_EMAIL }</span>{" "}
                     или отключите уведомления через Telegram-бота.
                 </p>
             </div>
@@ -87,7 +88,7 @@ const PolicyContent = (): JSX.Element => {
                 <h6 className="title">Контакты</h6>
                 <p className="description">
                     По вопросам обработки персональных данных обращайтесь:
-                    {" "}<span className="purple">blablabla@ya.ru</span>
+                    {" "}<span className="purple">{ SUPPORT_EMAIL }</span>
                 </p>
             </div>
             <div className="text">

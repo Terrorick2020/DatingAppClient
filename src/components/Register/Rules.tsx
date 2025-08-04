@@ -1,4 +1,5 @@
 import { JSX, useEffect } from 'react';
+import { SUPPORT_EMAIL } from '@/config/env.config';
 
 
 const RulesContent = (): JSX.Element => {
@@ -118,7 +119,10 @@ const RulesContent = (): JSX.Element => {
                 </p>
             </div>
             <div className="text">
-                <p className="description">По вопросам обращайтесь в поддержку.</p>
+                <p className="description">
+                    По вопросам обращайтесь в поддержку:{" "}
+                    <span className="purple">{ SUPPORT_EMAIL }</span>
+                </p>
             </div>
             <div className="text">
                 <p className="description">Последнее обновление: 20.07.2025</p>

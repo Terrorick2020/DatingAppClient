@@ -2,9 +2,10 @@ import { EProfileStatus, EProfileRoles } from '@/types/store.types';
 import type { UsersEndpointParams } from '@/types/fetch.type';
 
 
-export const REFERAL  = import.meta.env.VITE_REFERAL || '';
-export const BASE_URL = import.meta.env.VITE_BASE_URL || '';
-export const WS_URL   = import.meta.env.VITE_WS_URL || '';
+export const BASE_URL      = import.meta.env.VITE_BASE_URL || '';
+export const WS_URL        = import.meta.env.VITE_WS_URL || '';
+export const BOT_LINK      = import.meta.env.VITE_BOT_LINK || '';
+export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || '';
 
 export const WS_CHATS   = import.meta.env.VITE_WS_CHATS || '';
 export const WS_COMPL   = import.meta.env.VITE_WS_COMPL || '';
@@ -93,9 +94,10 @@ export const EP_MEDIA_LINK     = import.meta.env.VITE_EP_MEDIA_LINK || '';
 export const USER_STATUS = import.meta.env. VITE_USER_STATUS || '';
 
 if(
-  !BASE_URL ||
-  !WS_URL   ||
-  !REFERAL  ||
+  !BASE_URL      ||
+  !WS_URL        ||
+  !BOT_LINK      ||
+  !SUPPORT_EMAIL ||
 
   !WS_CHATS ||
   !WS_COMPL ||
@@ -193,7 +195,7 @@ export const REFERAL_LINK = (code: string, type: EProfileRoles): string => {
 
   const finalEncoded = btoa(paramsString);
 
-  return `${REFERAL}${finalEncoded}`;
+  return `${BOT_LINK}?startapp=${finalEncoded}`;
 }
 
 export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`;
