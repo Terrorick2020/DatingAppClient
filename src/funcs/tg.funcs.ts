@@ -125,7 +125,7 @@ export async function initTg(): Promise<void> {
 export function getTgID(): string | null {
   const user = initData.user();
 
-  if(!user) return null
+  if(!user) return null;
 
   setTgId('' + user.id);
 
