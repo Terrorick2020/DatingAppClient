@@ -6,6 +6,7 @@ export interface PlansObj {
 export interface SliderItem {
     id: string
     name: string
+    interest: string
     age: number
     city: string
     description: string

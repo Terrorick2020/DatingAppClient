@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 import Popover from '@mui/material/Popover';
 import InputAdornment from '@mui/material/InputAdornment';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/joy/IconButton';
 import SvgSend from '@/assets/icon/send.svg';
 import Picker from '@emoji-mart/react';
@@ -26,6 +27,7 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [emojiCount, setEmojiCount] = useState<number>(9);
     const [origHor, setOrigHor] = useState<EPopOrigHor>(EPopOrigHor.Right);
+    const [sendLoad, setSendLoad] = useState<boolean>(false);
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>): void => {
         setAnchorEl(event.currentTarget);
@@ -45,11 +47,15 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
         props.handleChange(newValue);
     }, [props.handleChange]);
 
-    const handleSendMessage = useCallback(() => {
+    const handleSendMessage = useCallback(async (): Promise<void> => {
+        setSendLoad(true);
+
         const resMsg = props.message.trim();
 
-        props.handleChange(resMsg);
-        props.handleClick();
+        await props.handleChange(resMsg);
+        await props.handleClick();
+
+        setSendLoad(false);
     }, [props.message, props.handleChange, props.handleClick]);
 
     const handleKeyPress = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
@@ -106,14 +112,21 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
                                 </IconButton>
                                 <IconButton
                                     onClick={handleSendMessage}
-                                    disabled={!props.message}
+                                    disabled={!props.message || sendLoad}
                                 >
-                                    <img
-                                        src={SvgSend}
-                                        alt="send"
-                                        loading="lazy"
-                                        decoding="async"
-                                    />
+                                    {
+                                        !sendLoad 
+                                            ?
+                                            <img
+                                                src={SvgSend}
+                                                alt="send"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                            :
+                                            <CircularProgress size="22px" />
+                                    }
+                                    
                                 </IconButton>
                             </InputAdornment>
                         ),
@@ -140,6 +153,7 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
                     theme="dark"
                     data={data}
                     locale="en"
+                    previewPosition="none"
                     i18n={ru}
                     onEmojiSelect={handleEmojiSelect}
                     perLine={emojiCount}

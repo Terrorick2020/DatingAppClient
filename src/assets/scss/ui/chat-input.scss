@@ -35,6 +35,10 @@
                 &:hover {
                     box-shadow: 0 0 0.5rem rgb(115, 115, 115);
                 }
+
+                .MuiCircularProgress-root {
+                    color: #000000;
+                }
             }
 
             &:active {

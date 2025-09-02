@@ -403,6 +403,15 @@ export const deleteChatByIDAsync = createAsyncThunk(
 export const sendMsgAsync = createAsyncThunk(
     'chats/send-msg',
     async (text: string, { dispatch, getState }): Promise<AsyncThunkRes<TargetChatDay[]>> => {
+        const sendWarnAlert = (): void => {
+            dispatch(setApiRes({
+                value: true,
+                msg: 'Сообщение не отправлено! Попробуйте позже',
+                status: EApiStatus.Warning,
+                timestamp: Date.now(),
+            }));
+        };
+
         try {
             const rootState = getState() as IState;
             const chatId = rootState.chats.targetChat.id;
@@ -417,7 +426,11 @@ export const sendMsgAsync = createAsyncThunk(
                 !response.data.data           ||
                 response.data.data === 'None' ||
                 !response.data.success
-            ) return null;
+            ) {
+                sendWarnAlert();
+
+                return null;
+            }
 
             const incommingMsg: IncomingMsg =  {
                 chatId: response.data.data.chatId,
@@ -436,12 +449,7 @@ export const sendMsgAsync = createAsyncThunk(
 
             return newChatDialog;
         } catch (error) {
-            dispatch(setApiRes({
-                value: true,
-                msg: 'Сообщение не отправлено! Попробуйте позже',
-                status: EApiStatus.Warning,
-                timestamp: Date.now(),
-            }));
+            sendWarnAlert();
 
             return 'error';
         }

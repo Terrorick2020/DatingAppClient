@@ -6,6 +6,7 @@ import {
 import { JSX, memo, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { errorAlert } from '@/funcs/alert.funcs';
 import { useSnackbar } from 'notistack';
 import { load } from '@fingerprintjs/botd';
 import { EApiStatus } from '@/types/settings.type';
@@ -76,7 +77,14 @@ const DefaultLayout = memo((): JSX.Element => {
 
         const res = await (await botdPromise).detect();
 
-        res.bot && navigate(toBlocked);
+        if(res.bot) {
+            navigate(toBlocked);
+            
+            errorAlert(
+                dispatch,
+                'Есть подозрения, что ваш аккаунт используется ботом',
+            );
+        };
     };
 
     useEffect( () => {

@@ -21,6 +21,10 @@
         &.black {
             background: #1B1A1B;
             color: #FFFFFF;
+        
+            &.opacity {
+                background: #2c2b2bd6;
+            }
         }
 
         &.plans-timeout {

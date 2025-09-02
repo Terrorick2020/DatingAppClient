@@ -8,6 +8,7 @@ import type { ISliderItemProps } from '@/types/quest.types';
 import type { RootDispatch } from '@/store';
 
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import ScrollBar from '@/components/UI/ScrollBar';
 import LikeBtn from '@/components/UI/LikeBtn';
 import PlansLabel from '@/components/UI/PlansLabel';
@@ -85,6 +86,7 @@ const SliderItem = memo((props: ISliderItemProps): JSX.Element => {
                         />
                         <p>{ props.sliderItem.city }</p>
                     </div>
+                    <Chip className="black opacity" label={props.sliderItem.interest} />
                 </div>
             </header>
             <footer className="slide__footer">

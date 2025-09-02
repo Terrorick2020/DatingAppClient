@@ -1,5 +1,5 @@
 import { JSX, useMemo, useEffect, useState } from 'react';
-import { closingBehavior, backButton, viewport } from '@telegram-apps/sdk';
+import { closingBehavior, backButton, viewport, isTMA } from '@telegram-apps/sdk';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
 import { warningAlert, infoAlert } from '@/funcs/alert.funcs';
@@ -15,11 +15,30 @@ import SvgClose from '@/assets/icon/close.svg?react';
 import SvgOther from '@/assets/icon/other.svg?react';
 
 
+async function enterFullscreen(): Promise<boolean> {
+  if (document.documentElement.requestFullscreen) {
+    await document.documentElement.requestFullscreen();
+    return !!document.fullscreenElement;
+  }
+  return false;
+}
+
+async function exitFullscreen(): Promise<boolean> {
+  if (document.exitFullscreen) {
+    await document.exitFullscreen();
+    return !document.fullscreenElement;
+  }
+  return false;
+}
+
 const HeadNav = (): JSX.Element => {
     const setRoutes = useSelector((state: IState) => state.settings.routes);
 
     const [open, setOpen] = useState<boolean>(false);
     const [_, setLoad] = useState<boolean>(false);
+    const [isFullscreen, setIsFullscreen] = useState<boolean>(
+        () => viewport.isFullscreen() || !!document.fullscreenElement
+    );
 
     const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
@@ -31,7 +50,10 @@ const HeadNav = (): JSX.Element => {
         const predMobile  = userAgent.includes('iphone') || userAgent.includes('android');
 
         const isDesktop  = !predMobile || predDesktop;
-        const isTgMobile = !!closingBehavior && !!backButton && predMobile && !isDesktop;
+        const isTgMobile = !!closingBehavior.mount.isAvailable()
+            && !!backButton.mount.isAvailable()
+            && predMobile
+            && !isDesktop;
         
         return isTgMobile;
     }, []);
@@ -48,45 +70,64 @@ const HeadNav = (): JSX.Element => {
     const closeWindow = (): void => setOpen(true);
 
     const handleFullScreen = async (): Promise<void> => {
-        try {
-            setLoad(true);
+        setLoad(true);
 
-            if (viewport.isFullscreen()) {
-                if (viewport.exitFullscreen.isAvailable()) {
-                    await viewport.exitFullscreen();
-                } else {
+        try {
+            if (!(await isTMA())) {
+                const ok = isFullscreen
+                    ? await exitFullscreen()
+                    : await enterFullscreen();
+
+                if (!ok) {
                     infoAlert(
                         dispatch,
-                        'Выход из полноэкранного режима не поддерживается'
+                        `${isFullscreen ? 'Выход' : 'Вход'} из полноэкранного режима не поддерживается`
                     );
                 }
             } else {
-                if (viewport.requestFullscreen.isAvailable()) {
-                    await viewport.requestFullscreen();
+                if (viewport.isFullscreen()) {
+                    if (viewport.exitFullscreen.isAvailable()) {
+                        await viewport.exitFullscreen();
+                    } else {
+                        infoAlert(dispatch, 'Выход из полноэкранного режима не поддерживается');
+                    }
                 } else {
-                    infoAlert(
-                        dispatch,
-                        'Вход в полноэкранный режим не поддерживается'
-                    );
+                    if (viewport.requestFullscreen.isAvailable()) {
+                        await viewport.requestFullscreen();
+                    } else {
+                        infoAlert(dispatch, 'Вход в полноэкранный режим не поддерживается');
+                    }
                 }
             }
-        } catch (error) {
-            warningAlert(
-                dispatch,
-                'Ошибка при изменении полноэкранного режима'
-            );
+        } catch {
+            warningAlert(dispatch, 'Ошибка при изменении полноэкранного режима');
         } finally {
+            setIsFullscreen(viewport.isFullscreen() || !!document.fullscreenElement);
             setLoad(false);
         }
     };
 
     useEffect(() => {
-        if (!isTgMobile) return;
+        if(isTgMobile) {
+            if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
+            if (backButton.mount.isAvailable()) backButton.mount();
+            if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+        } else {
+            const update = () => {
+                setIsFullscreen(viewport.isFullscreen() || !!document.fullscreenElement);
+            };
 
-        if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
-        if (backButton.mount.isAvailable()) backButton.mount();
-        if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
-    }, [])
+            document.addEventListener('fullscreenchange', update);
+            document.addEventListener('webkitfullscreenchange', update);
+            document.addEventListener('msfullscreenchange', update);
+
+            return () => {
+                document.removeEventListener('fullscreenchange', update);
+                document.removeEventListener('webkitfullscreenchange', update);
+                document.removeEventListener('msfullscreenchange', update);
+            }
+        }
+    }, []);
 
     useEffect(() => {
         if (!isTgMobile) return;
@@ -101,7 +142,7 @@ const HeadNav = (): JSX.Element => {
         }
     }, [setRoutes]);
 
-    const btnCtx = useMemo(()=> {
+    const btnCtx = useMemo(() => {
         const hasNav = !!setRoutes.length;
 
         return {
@@ -128,7 +169,7 @@ const HeadNav = (): JSX.Element => {
                     startIcon={
                         <SvgArrowDown
                             style = {{
-                                transform: viewport.isFullscreen() ? '' : 'rotate(180deg)',
+                                transform: isFullscreen ? '' : 'rotate(180deg)',
                             }}
                         />
                     }
