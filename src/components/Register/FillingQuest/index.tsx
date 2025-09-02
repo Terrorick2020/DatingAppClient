@@ -15,7 +15,7 @@ import {
 import { JSX, useEffect, useRef, useState, } from 'react';
 import { createSelector } from 'reselect';
 import { useSelector, useDispatch } from 'react-redux';
-import { toPlans, toChats } from '@/config/routes.config';
+import { toPlans, toChats, toProfile } from '@/config/routes.config';
 import { EMPTY_INPUT_ERR_MSG, ANIME_DURATION } from '@/constant/settings';
 import { RootDispatch } from '@/store';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -176,7 +176,10 @@ const FillingQuestContent = (): JSX.Element => {
                     dispatch(resetRoutes());
                     navigate(toChats);
                 }
-            };
+            } else {
+                dispatch(resetRoutes());
+                navigate(toProfile);
+            }
         };
 
         setRegLoad(false);

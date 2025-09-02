@@ -1,4 +1,4 @@
-import PolicyContent from "@/components/Register/Policy";
+import PolicyContent from '@/components/Register/Policy';
 
 
 const RegPolicyPage = () => {

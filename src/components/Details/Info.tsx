@@ -15,14 +15,19 @@ const selectDetailsInfo = createSelector(
     [selectQuestionnaires],
     (questionnaires) => ({
       plans: questionnaires.targetUser?.plans,
+      interest: questionnaires.targetUser?.interest,
       bio: questionnaires.targetUser?.bio,
     })
 );
 
 const DetailsInfo = (): JSX.Element => {
-    const { plans, bio } = useSelector(selectDetailsInfo);
+    const { plans, interest, bio } = useSelector(selectDetailsInfo);
 
-    if(plans === undefined || bio === undefined) return (<></>);
+    if(
+        plans === undefined ||
+        bio === undefined   ||
+        interest === undefined
+    ) return (<></>);
 
     return (
         <>
@@ -40,6 +45,7 @@ const DetailsInfo = (): JSX.Element => {
                     </div>
                 </div>
                 <div className="labels">
+                    <Chip className="blure" label={interest}/>
                     <Chip className="blure" label={plans.place}/>
                     <Chip className="blure" label={plans.district}/>
                 </div>
