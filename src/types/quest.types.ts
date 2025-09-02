@@ -38,6 +38,7 @@ export interface DetailsTargetUser {
     name: string
     age: number
     plans: DetailsTargetUserPlans
+    interest: string
     bio: string
 }
 

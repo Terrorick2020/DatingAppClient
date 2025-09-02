@@ -38,8 +38,8 @@ const FillingQuestBio = (): JSX.Element => {
             <h4 className="headline">
                 {
                     isPsych
-                        ? 'Био '
-                        : 'О себе как о специалисте '
+                        ? 'О себе как о специалисте '
+                        : 'Био '
                 }
                 <span className="count">{profileInfo?.bio?.length ?? 0}/500</span></h4>
             <TextField

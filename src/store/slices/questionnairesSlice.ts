@@ -128,11 +128,12 @@ export const initTargetUserAsync = createAsyncThunk(
                 plans: {
                     targetTime: '',
                     district: distData.label,
-                    distDesc: plansData.location.description,
+                    distDesc: plansData.location.description.trim(),
                     place: planData.label,
-                    planDesc: plansData.plan.description,
+                    planDesc: plansData.plan.description.trim(),
                 },
-                bio: userData.bio
+                interest: userData.interest.label,
+                bio: userData.bio,
             }
 
             return result;
