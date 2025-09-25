@@ -19,14 +19,21 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
 
     const dispatch = useDispatch<RootDispatch>();
 
+    const clearMeta = (): void => {
+        setLoadingPreview(false);
+        setThumbnail(null)
+        setLoadFetch(false);
+        setProgress(0);
+    };
+
     const handleDelete = async (): Promise<void> => {
-        setThumbnail(null);
+        clearMeta()
     };
 
     const fetchVideo = async (file: File | null): Promise<void> => {
         if(!file) {
             warningAlert(dispatch, 'Не удалось загрузить видео' );
-
+            clearMeta();
             return;
         };
 
@@ -51,29 +58,8 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
         };
 
         const file = files[0];
-        const url = URL.createObjectURL(file);
-        const tempVideo = document.createElement('video');
 
-        tempVideo.preload = 'metadata';
-        tempVideo.src = url;
-
-        tempVideo.onloadedmetadata = () => {
-            URL.revokeObjectURL(url);
-            const maxDuration = 3 * 60;
-
-            if (tempVideo.duration > maxDuration) {
-                warningAlert(dispatch, 'Видео не должно быть длиннее 3 минут');
-                setLoadingPreview(false);
-                return;
-            }
-
-            getPreviewVideo(file, setThumbnail, setLoadingPreview, fetchVideo);
-        };
-
-        tempVideo.onerror = () => {
-            errorAlert(dispatch, 'Не удалось загрузить видео');
-            setLoadingPreview(false);
-        };
+        getPreviewVideo(file, setThumbnail, setLoadingPreview, fetchVideo);
 
         event.target.value = '';
     };
