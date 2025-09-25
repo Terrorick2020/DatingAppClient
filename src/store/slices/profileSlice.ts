@@ -210,7 +210,8 @@ export const initProfileAsync = createAsyncThunk(
             dispatch(setInfo({
                 ...profileInfo,
                 id: telegramId,
-                role: profileRole,
+                // role: profileRole,
+                role: EProfileRoles.Psych,
                 status: profileStatus,
             }));
 
@@ -608,7 +609,7 @@ export const getSelfProfile = createAsyncThunk(
                     interest: response.data.data.interest.value,
                     selSex: response.data.data.selSex,
                     referralCode: referralCode ? referralCode : '',
-                }
+                };
 
                 referralCode && dispatch(
                     setAddLink(REFERAL_LINK(referralCode, EProfileRoles.User))
@@ -643,7 +644,7 @@ export const getSelfPsychProfile = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<any>> =
                 await api.post(PSYCH_INITIAL_ENDPOINT, data);
-                
+
             if(
                 response.status !== 201 ||
                 !response.data.success  ||

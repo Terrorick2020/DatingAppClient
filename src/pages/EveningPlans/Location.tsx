@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import EPLocationContent from '@/components/EveningPlans/Location';
 
 
-const EPLocationPage = () => {
+const EPLocationPage = (): JSX.Element => {
     return (
-        <>
-            <div className="ep-location" id="ep-location">
-                <EPLocationContent />
-            </div>
-        </>
+        <div className="ep-location" id="ep-location">
+            <EPLocationContent />
+        </div>
     )
 }
 

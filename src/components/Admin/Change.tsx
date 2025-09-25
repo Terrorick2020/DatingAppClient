@@ -28,10 +28,10 @@ const ChangeContent = () => {
                     <Button className="link__btn crimson" variant="contained">Приложение</Button>
                 </NavLink>
                 <NavLink className="link" to={ toUsersList } onClick={ handleRoute }>
-                    <Button className="link__btn take-pro" variant="contained">Список пользователей</Button>
+                    <Button className="link__btn take-pro" variant="contained">Пользователи</Button>
                 </NavLink>
                 <NavLink className="link" to={ toComplsList } onClick={ handleRoute }>
-                    <Button className="link__btn text-block" variant="contained">Список жалоб</Button>
+                    <Button className="link__btn text-block" variant="contained">Ресурсы и жалобы</Button>
                 </NavLink>
             </div>
         </div>

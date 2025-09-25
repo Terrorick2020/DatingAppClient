@@ -8,7 +8,8 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { errorAlert } from '@/funcs/alert.funcs';
 import { useSnackbar } from 'notistack';
-import { load } from '@fingerprintjs/botd';
+import { load, BotKind } from '@fingerprintjs/botd';
+import { toBlocked } from '@/config/routes.config';
 import { EApiStatus } from '@/types/settings.type';
 import { SNACK_TIMEOUT } from '@/constant/settings';
 import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
@@ -21,7 +22,6 @@ import IconButton from '@mui/joy/IconButton';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import HeadNav from '@/components/Layouts/HeadNav';
 import LogoHeader from '@/components/Layouts/LogoHeader';
-import { toBlocked } from '@/config/routes.config';
 
 
 const DefaultLayout = memo((): JSX.Element => {
@@ -72,13 +72,24 @@ const DefaultLayout = memo((): JSX.Element => {
         } catch {}
     };
 
-    const handleBotd = async () => {
+    const handleBotd = async (): Promise<void> => {
         const botdPromise = load();
 
         const res = await (await botdPromise).detect();
 
-        if(res.bot) {
-            navigate(toBlocked);
+        const highRiskKinds = new Set<BotKind>([
+            BotKind.HeadlessChrome,
+            BotKind.Selenium,
+            BotKind.NightmareJS,
+            BotKind.PhantomJS,
+            BotKind.SlimerJS,
+            BotKind.FMiner,
+            BotKind.WebDriver,
+            BotKind.WebDriverIO,
+        ]);
+
+        if(res.bot && highRiskKinds.has(res.botKind)) {
+            // navigate(toBlocked);
             
             errorAlert(
                 dispatch,

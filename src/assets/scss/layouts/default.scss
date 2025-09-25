@@ -58,7 +58,8 @@
         &:has(.target-chat),
         &:has(.chats),
         &:has(.media),
-        &:has(.psychologists) {
+        &:has(.psychologists),
+        &:has(.shorts) {
             .logo-header::after {
                 display: none;
             }

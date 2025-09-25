@@ -128,7 +128,7 @@ const FillingQuestInputs = (): JSX.Element => {
                         ))}
                     </Select>
                 </FormControl>
-                {fQErrors.cityErr.value && <p className="city-err">{fQErrors.cityErr.msg}</p>}
+                {fQErrors.cityErr.value && <p className="city-msg-err">{fQErrors.cityErr.msg}</p>}
             </>
         )
 

@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { getTgID } from '@/funcs/tg.funcs';
+import { toError } from './routes.config';
 import { BASE_URL } from './env.config';
 
 import axios from 'axios';
 
 
 export let navigate: ReturnType<typeof useNavigate> | null = null;
+export let isNetworkListenerActive: boolean = false;
 export let tgId: string | null = null;
 
 export const setNavigate = (nav: ReturnType<typeof useNavigate>): void => {
@@ -36,9 +38,21 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const status = error?.response?.status
+    if (!error.response) {
+      isNetworkListenerActive = true;
 
-    if ((status >= 500 && status < 600  || status === 404) && navigate) navigate('error');
+      const handleOnline = (): void => {
+        isNetworkListenerActive = false;
+        
+        window.removeEventListener("online", handleOnline);
+        window.location.reload();
+      }
+
+      window.addEventListener("online", handleOnline);
+    } else {
+      const status = error?.response?.status;
+      if ((status >= 500 && status < 600  || status === 404) && navigate) navigate(toError);
+    }
 
     return Promise.reject(error)
   }

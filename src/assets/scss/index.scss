@@ -5,6 +5,7 @@
 @use "./layouts/evening-plans.scss";
 
 @use "./ui/autocomplete.mui.scss";
+@use "./ui/player-btn.scss";
 @use "./ui/avatar.mui.scss";
 @use "./ui/bottom-nav.mui.scss";
 @use "./ui/button-base.mui.scss";
@@ -32,16 +33,20 @@
 @use "./ui/my-loader.scss";
 @use "./ui/timer.scss";
 @use "./ui/poppover.mui.scss";
+@use "./ui/my-player.scss";
+@use "./ui/back-drop.mui.scss";
 
 @use "./admin/change.scss";
 @use "./admin/users-list.scss";
 @use "./admin/user-info.scss";
 @use "./admin/complsints-list.scss";
+@use "./admin/video-info.scss";
 
 @use "./questionnaires/slider.scss";
 @use "./questionnaires/likes.scss";
 @use "./questionnaires/profile.scss";
 @use "./questionnaires/chats.scss";
+@use "./questionnaires/video.scss";
 @use "./questionnaires/psychologists.scss";
 
 @use "./register/lang.scss";
@@ -54,6 +59,8 @@
 
 @use "./target-chat.scss";
 @use "./target-psych.scss";
+@use "./psych-add-video.scss";
 @use "./details.scss";
 @use "./error.scss";
 @use "./global.scss";
+@use "./shorts.scss";

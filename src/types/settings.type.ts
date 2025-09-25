@@ -2,10 +2,14 @@ import { ESex, ELineStatus, ETypingStatus } from './store.types';
 
 
 export enum ELanguage {
-    English   = 'en',
-    Russian   = 'ru',
-    Ukrainian = 'ukr',
-    Spanish   = 'esp',
+    Russia = "ru",
+    English = "en",
+    Belarus = "be",
+    Kazakhstan = "kk",
+    Tatarstan = "tt",
+    Ukraine = "uk",
+    Uzbekistan = "uz",
+    Turkey = "tr"
 }
 
 export enum EApiStatus {

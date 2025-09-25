@@ -7,6 +7,10 @@ import { ProfileState } from './profile.types';
 import { QuestState } from './quest.types';
 
 
+export enum ETypeDispatch {
+    ResetStore = 'ResetStore',
+}
+
 export enum EProfileRoles {
     User  = 'User',
     Admin = 'Admin',

@@ -45,7 +45,9 @@ const EPLayout = (): JSX.Element => {
         dispatch(addRoute(location.pathname));
     };
 
-    useEffect( () => { 
+    useEffect( () => {
+        document.title = "Планы на вечер";
+
         dispatch(initEPCtxAsync());
         !isFirstly && dispatch(getSelfPlansAsync());
     }, []);

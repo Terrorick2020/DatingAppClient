@@ -54,3 +54,57 @@ export async function getCroppedImg(
     }, 'image/jpeg');
   });
 }
+
+export function getPreviewVideo(
+  file: File,
+  setImgUrl: (value: string) => void,
+  setLoading: (value: boolean) => void,
+  callback: (file: File) => void
+): void {
+  const video = document.createElement('video');
+  video.src = URL.createObjectURL(file);
+  video.preload = 'metadata';
+  video.muted = true;
+  video.playsInline = true;
+
+  video.onloadedmetadata = () => {
+    const duration = video.duration;
+    const step = Math.max(0.5, duration / 10);
+    let currentTime = Math.min(1, duration / 10);
+
+    const canvas = document.createElement('canvas');
+
+    canvas.width = video.videoWidth * window.devicePixelRatio;
+    canvas.height = video.videoHeight * window.devicePixelRatio;
+
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) return;
+
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    const checkFrame = () => {
+      ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+      const imageData = ctx.getImageData(0, 0, video.videoWidth, video.videoHeight).data;
+      const isBlack = !imageData.some((p, i) => i % 4 !== 3 && p > 10);
+
+      if (!isBlack || currentTime >= duration) {
+        const imageUrl = canvas.toDataURL('image/png');
+        setImgUrl(imageUrl);
+        URL.revokeObjectURL(video.src);
+
+        setTimeout(() => {
+          setLoading(false);
+          callback(file);
+        }, 10);
+      } else {
+        currentTime += step;
+        video.currentTime = currentTime;
+      }
+    };
+
+    video.onseeked = checkFrame;
+    video.currentTime = currentTime;
+  };
+}

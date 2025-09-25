@@ -42,7 +42,7 @@ const ProfileDelete = (): JSX.Element => {
                         loadingPosition="start"
                         disabled={open}
                         onClick={handleOpen}
-                    >Удалить</Button>
+                    >Удалить аккаунт</Button>
                 </div>
             </div>
             <DeleteSelfDialog

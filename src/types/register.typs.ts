@@ -41,3 +41,9 @@ export interface FillQuestBtnText  {
 export interface PropsFillingQuestHeader {
     mark: KeyFQBtnText
 }
+
+export interface PlayingSvgVars {
+    addClass: string
+    svg: string
+    alt: string
+}

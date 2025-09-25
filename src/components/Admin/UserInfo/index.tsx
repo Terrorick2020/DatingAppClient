@@ -1,5 +1,6 @@
 import { JSX, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { URL_MARK } from '@/config/env.config';
 import { warningAlert } from '@/funcs/alert.funcs';
 import { toNotFoud } from '@/config/routes.config';
 import { useSelector, useDispatch } from 'react-redux';
@@ -25,7 +26,8 @@ const selectComplListState = createSelector(
 );
 
 const UserInfoContent = (): JSX.Element => {
-    const { id } = useParams();
+    const params = useParams();
+    const id = params[URL_MARK];
 
     const { isLoad, targetProfile } = useSelector(selectComplListState);
 

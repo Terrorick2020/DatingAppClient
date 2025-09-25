@@ -4,6 +4,7 @@ import {
     toSlider,
     toPsych,
     toProfile,
+    toVideo,
 } from '@/config/routes.config';
 
 import { JSX, useState, useEffect } from 'react';
@@ -22,6 +23,7 @@ import SvgLikes from '@/assets/icon/likes.svg?react';
 import SvgQuestionnaires from '@/assets/icon/questionnaires.svg?react';
 import SvgPsychologists from '@/assets/icon/psychologists.svg?react';
 import SvgProfile from '@/assets/icon/profile.svg?react';
+import SvgVideo from '@/assets/icon/video.svg?react';
 
 
 const selectSettings = (state: IState) => state.settings;
@@ -102,6 +104,13 @@ const QuestNavBar = (): JSX.Element => {
                     value={toPsych}
                     icon={<SvgPsychologists />}
                     onClick={() => navigate(toPsych)}
+                    disabled={isLoad}
+                /> }
+                { isPsych && <BottomNavigationAction
+                    label="Видео"
+                    value={toVideo}
+                    icon={<SvgVideo />}
+                    onClick={() => navigate(toVideo)}
                     disabled={isLoad}
                 /> }
                 <BottomNavigationAction

@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import RulesContent from "@/components/Register/Rules";
 
 
-const RegRulesPage = () => {
+const RegRulesPage = (): JSX.Element => {
     return (
-        <>
-            <div className="rules"  id="rules">
-                <RulesContent />
-            </div>
-        </>
+        <div className="rules"  id="rules">
+            <RulesContent />
+        </div>
     )
 }
 

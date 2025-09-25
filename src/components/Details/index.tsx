@@ -2,6 +2,7 @@ import { JSX, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toNotFoud } from '@/config/routes.config';
+import { URL_MARK } from '@/config/env.config';
 import { initTargetUserAsync } from '@/store/slices/questionnairesSlice';
 import { warningAlert } from '@/funcs/alert.funcs';
 import type { RootDispatch } from '@/store';
@@ -15,7 +16,8 @@ import MyLoader from '@/components/UI/MyLoader';
 
 
 const DetailsContent = (): JSX.Element => {
-    const { id } = useParams();
+    const params = useParams();
+    const id = params[URL_MARK];
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
@@ -29,7 +31,7 @@ const DetailsContent = (): JSX.Element => {
         navigate(toNotFoud);
     };
 
-    if(id === undefined) {
+    if(id === undefined || !id) {
         goBack();
 
         return (<></>);

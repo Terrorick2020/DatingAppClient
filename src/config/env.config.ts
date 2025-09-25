@@ -6,6 +6,7 @@ export const BASE_URL      = import.meta.env.VITE_BASE_URL || '';
 export const WS_URL        = import.meta.env.VITE_WS_URL || '';
 export const BOT_LINK      = import.meta.env.VITE_BOT_LINK || '';
 export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || '';
+export const URL_MARK      = import.meta.env.VITE_URL_MARK || 'id';
 
 export const WS_CHATS   = import.meta.env.VITE_WS_CHATS || '';
 export const WS_COMPL   = import.meta.env.VITE_WS_COMPL || '';
@@ -91,7 +92,9 @@ export const COMPLS_STATS        = import.meta.env.VITE_COMPLS_STATS || '';
 export const FQ_MEDIA_LINK     = import.meta.env.VITE_FQ_MEDIA_LINK || '';
 export const EP_MEDIA_LINK     = import.meta.env.VITE_EP_MEDIA_LINK || '';
 
-export const USER_STATUS = import.meta.env. VITE_USER_STATUS || '';
+export const USER_STATUS  = import.meta.env.VITE_USER_STATUS || '';
+export const CAPTURE_KEY  = import.meta.env.VITE_CAPTURE_KEY || '';
+export const CAPTURE_MODE = import.meta.env.VITE_CAPTURE_MODE || '';
 
 if(
   !BASE_URL      ||
@@ -182,7 +185,9 @@ if(
   !FQ_MEDIA_LINK ||
   !EP_MEDIA_LINK ||
 
-  !USER_STATUS
+  !USER_STATUS ||
+  !CAPTURE_KEY ||
+  !CAPTURE_MODE
 ) {
   throw Error('Hasn`t someone environments!');
 };

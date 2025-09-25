@@ -1,3 +1,6 @@
+@use "../components/mixins";
+
+
 :root {
     --size: clamp(25px, 10vw, 50px);
     --th: 1.5px;
@@ -13,6 +16,7 @@
         align-items: center;
         overflow: hidden;
         z-index: 4000;
+        @include mixins.fadeIn(1s, ease-in-out, 0s, forwards);
 
         &__container {
             position: relative;

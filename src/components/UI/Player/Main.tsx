@@ -1,0 +1,185 @@
+import { JSX, useState, useRef, useEffect } from 'react';
+import { EMyPlayertxType } from '.';
+import type { OnProgressProps } from 'react-player/base';
+
+import MyPlayerNav from './Nav';
+import ReactPlayer from 'react-player';
+
+
+interface PropsMyPlayerMain {
+    videoUrl: string
+    playing: boolean
+    setPlaying: (value: boolean) => void
+    setCtxType: (value: EMyPlayertxType) => void
+}
+const MyPlayerMain = (props: PropsMyPlayerMain): JSX.Element => {
+    const [showBg, setShowBg] = useState<boolean>(false);
+    const [isLoad, setIsLoad] = useState<boolean>(true);
+    const [muted, setMuted] = useState<boolean>(true);
+    const [duration, setDuration] = useState<number>(0);
+    const [buffered, setBuffered] = useState<number>(0);
+    const [currentTime, setCurrentTime] = useState<number>(0);
+
+    const hideTimer = useRef<NodeJS.Timeout | null>(null);
+    const playerRef = useRef<ReactPlayer | null>(null);
+    const isWaiting = useRef<boolean>(false);
+    const isError = useRef<boolean>(false);
+
+    const handleToggleBg = (): void => {
+        setShowBg(prevent => !prevent);
+    };
+
+    const handleReady = (): void => {
+        setIsLoad(false);
+        setMuted(false);
+    };
+    const handleDuration = (duration: number): void => setDuration(duration);
+
+    const handleProgress = (state: OnProgressProps): void => {
+        if(isError.current) return;
+
+        setBuffered(state.loadedSeconds);
+
+        if(!props.playing) return;
+
+        setCurrentTime(state.playedSeconds);
+
+        if(!isWaiting.current) return;
+
+        const delta = state.loadedSeconds - state.playedSeconds;
+
+        if(delta > 4) {
+            setIsLoad(false);
+            props.setPlaying(true);
+            isWaiting.current = false;
+        };
+    };
+
+    const handleBuffer = (): void => {    
+        setIsLoad(true);
+        props.setPlaying(false);
+    };
+
+    const handleWaiting = (): void => {
+        setIsLoad(true);
+        props.setPlaying(false);
+        isWaiting.current = true;
+    };
+
+    const handleBufferEnd = (): void => {
+        setIsLoad(false);
+        props.setPlaying(true);
+    };
+
+    const handleEnded = (): void => {
+        if (playerRef.current) {
+            playerRef.current.seekTo(0, 'seconds');
+        };
+
+        props.setPlaying(true);
+    };
+
+    const handleError = (
+        error: any,
+        _data?: any,
+        _hlsInstance?: any,
+        _hlsGlobal?: any
+    ): void => {
+        if (error instanceof Event) {
+            const videoError = (error.target as HTMLVideoElement).error;
+
+            if( videoError && (
+                videoError.code === videoError.MEDIA_ERR_SRC_NOT_SUPPORTED ||
+                videoError.code === videoError.MEDIA_ERR_DECODE
+            )) {
+                isError.current = true;
+                props.setCtxType(EMyPlayertxType.Error);
+            };
+        };
+    };
+
+    const setSeek = (seconds: number): void => {
+        if (playerRef.current) {
+            const newTime = currentTime + seconds;
+            const clampedTime = Math.min(Math.max(newTime, 0), duration);
+            playerRef.current.seekTo(clampedTime, 'seconds');
+            setCurrentTime(clampedTime);
+        };
+
+        props.setPlaying(true);
+    };
+
+    // useEffect(() => {
+    //     if(props.playing) {
+    //         hideTimer.current = setTimeout(() => {
+    //             setShowBg(false);
+    //         }, 1000);
+    //     } else {
+    //         if(hideTimer.current) {
+    //             clearTimeout(hideTimer.current);
+    //             hideTimer.current = null;
+    //         };
+    //     }
+    // }, [props.playing]);
+
+    // useEffect(() => {
+    //     const handleGlobalKeyDown = (event: KeyboardEvent) => {
+    //         switch(event.code) {
+    //             case "Space":
+    //                 props.setPlaying(!props.playing);
+    //                 setShowBg(props.playing);
+    //                 break;
+
+    //             case "ArrowRight":
+    //                 setSeek(10);
+    //                 break;
+
+    //             case "ArrowLeft":
+    //                 setSeek(-10);
+    //                 break;
+    //         };
+    //     };
+
+    //     window.addEventListener("keydown", handleGlobalKeyDown);
+
+    //     return () => {
+    //         window.removeEventListener("keydown", handleGlobalKeyDown);
+    //     }; 
+    // }, [props.playing]);
+
+    return (
+        <div
+            className="my-player-main"
+            tabIndex={0}
+            onClick={handleToggleBg}
+        >
+            <ReactPlayer
+                className="my-player-main__video"
+                width="100%"
+                height="100%"
+                url={props.videoUrl}
+                ref={playerRef}
+                controls={false}
+                muted={muted}
+                playing={props.playing}
+                onReady={handleReady}
+                onDuration={handleDuration}
+                onProgress={handleProgress}
+                onBuffer={handleBuffer}
+                onBufferEnd={handleBufferEnd}
+                onWaiting={handleWaiting}
+                onEnded={handleEnded}
+                onError={handleError}
+            />
+            <MyPlayerNav
+                isLoad={isLoad}
+                playing={props.playing}
+                addClass={ showBg || isLoad ? 'show' : 'hide' }
+                setPlaying={props.setPlaying}
+                setSeek={setSeek}
+            />
+        </div>
+    )
+};
+
+export default MyPlayerMain;

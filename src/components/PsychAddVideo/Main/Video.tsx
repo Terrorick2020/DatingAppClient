@@ -1,0 +1,144 @@
+import { JSX, ChangeEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { getPreviewVideo } from '@/funcs/img.funcs';
+import { errorAlert, warningAlert } from '@/funcs/alert.funcs';
+import type { RootDispatch } from '@/store';
+
+import CircularProgress from '@mui/material/CircularProgress';
+import BrochPatternDialog from '@/components/UI/BrochPatternDialog';
+import SvgClose from '@/assets/icon/close.svg?react';
+import SvgAdd from '@/assets/icon/add.svg';
+
+
+const PsychAddVideoMainVideo = (): JSX.Element => {
+    const [loadPreview, setLoadingPreview] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
+    const [loadFetch, setLoadFetch] = useState<boolean>(false);
+    const [thumbnail, setThumbnail] = useState<string | null>(null);
+    const [progress, setProgress] = useState<number>(0);
+
+    const dispatch = useDispatch<RootDispatch>();
+
+    const handleDelete = async (): Promise<void> => {
+        setThumbnail(null);
+    };
+
+    const fetchVideo = async (file: File | null): Promise<void> => {
+        if(!file) {
+            warningAlert(dispatch, 'Не удалось загрузить видео' );
+
+            return;
+        };
+
+        setLoadFetch(true);
+        setProgress(100);
+
+        setLoadFetch(false);
+        setProgress(0);
+    };
+
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if(loadPreview) return;
+
+        setLoadingPreview(true);
+
+        const files = event.currentTarget.files;
+
+        if (!files || files.length === 0) {
+            errorAlert(dispatch, 'Не удалось загрузить видео' );
+            setLoadingPreview(false);
+            return;
+        };
+
+        const file = files[0];
+        const url = URL.createObjectURL(file);
+        const tempVideo = document.createElement('video');
+
+        tempVideo.preload = 'metadata';
+        tempVideo.src = url;
+
+        tempVideo.onloadedmetadata = () => {
+            URL.revokeObjectURL(url);
+            const maxDuration = 3 * 60;
+
+            if (tempVideo.duration > maxDuration) {
+                warningAlert(dispatch, 'Видео не должно быть длиннее 3 минут');
+                setLoadingPreview(false);
+                return;
+            }
+
+            getPreviewVideo(file, setThumbnail, setLoadingPreview, fetchVideo);
+        };
+
+        tempVideo.onerror = () => {
+            errorAlert(dispatch, 'Не удалось загрузить видео');
+            setLoadingPreview(false);
+        };
+
+        event.target.value = '';
+    };
+
+    if(!thumbnail) {
+        return (
+            <>
+                <input
+                    className="loader"
+                    type="file"
+                    accept="video/*"
+                    onChange={handleFileChange}
+
+                />
+                <div className="loader-box">
+                    <div className="loader-box__ctx">
+                        {
+                            loadPreview
+                                ?
+                                <CircularProgress />
+                                :
+                                <img
+                                    src={SvgAdd}
+                                    alt="camera"
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                        }
+                    </div>
+                </div>
+            </>
+        )
+    }
+
+    return (
+        <>
+            <div
+                className="video-preview"
+                style={{
+                    backgroundImage: `url(${thumbnail})`,
+                    backgroundColor: loadFetch ? '#00000080' : 'none',
+                }}
+            >
+                {
+                    loadFetch
+                        ?
+                        <CircularProgress variant="determinate" value={progress} />
+                        :
+                        <span
+                            className="delete"
+                            onClick={() => setOpen(true)}
+                        >
+                            <SvgClose />
+                        </span>
+                }
+            </div>
+            <BrochPatternDialog
+                title="Вы уверены, что хотите удалить видео?"
+                btnTxt="Удалить"
+                open={open}
+                btnFunc={handleDelete}
+                setOpen={setOpen}
+            />
+        </>
+    )
+};
+
+export default PsychAddVideoMainVideo;

@@ -53,7 +53,7 @@ import api from '@/config/fetch.config';
 export const initialState: SettingsState = {
     isFirstly: true,
     routes: [],
-    lang: ELanguage.Russian,
+    lang: ELanguage.Russia,
     load: false,
     apiRes: {
         value: false,

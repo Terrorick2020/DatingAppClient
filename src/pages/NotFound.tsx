@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import NotFoundContent from '@/components/NotFoundContent';
 
 
-const NotFoundPage = () => {
+const NotFoundPage = (): JSX.Element => {
     return (
-        <>
-            <div className="error">
-                <NotFoundContent />
-            </div>
-        </>
+        <div className="error">
+            <NotFoundContent />
+        </div>  
     )
 }
 

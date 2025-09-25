@@ -10,7 +10,7 @@
         }
     }
 
-    &.chat-menu {
+    &.chat-menu, &.video-menu {
         .MuiPaper-root {
             .MuiMenuItem-root {
                 display: flex;
@@ -28,6 +28,22 @@
 
                     .text {
                         margin-left: 0.2rem;
+                    }
+                }
+            }
+        }
+    }
+
+    &.video-menu {
+        .MuiPaper-root {
+            .MuiMenuItem-root:not(:last-of-type) {
+                svg {
+                    &.cross {
+                        rotate: 45deg;
+                    }
+
+                    path {
+                        stroke: #FFFFFF;
                     }
                 }
             }

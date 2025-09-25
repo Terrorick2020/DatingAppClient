@@ -112,6 +112,8 @@ const QuestLayout = (): JSX.Element => {
     }, [location.pathname]);
 
     useEffect(() => {
+        document.title = "3Вместе";
+
         dispatch(setMedaiLink(EP_MEDIA_LINK));
     }, []);
 

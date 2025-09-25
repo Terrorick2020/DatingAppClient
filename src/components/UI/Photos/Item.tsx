@@ -21,7 +21,7 @@ const PhotosItem = memo((props: PropsPhotosItem): JSX.Element => {
                 className="delete"
                 onClick={handleClick}
             >
-            <SvgClose />
+                <SvgClose />
             </span>
         </li>
     )

@@ -13,6 +13,7 @@ import type {
     DetailsTargetUser,
     InitSliderData,
     InitSliderResData,
+    PsychVideoItem,
 } from '@/types/quest.types';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -25,10 +26,12 @@ import type { AsyncThunkRes, IState } from '@/types/store.types';
 import type { AxiosResponse } from 'axios';
 
 import api from '@/config/fetch.config';
+import { delay } from '@/funcs/general.funcs';
 
 
 const initialState: QuestState = {
     sliderList: [],
+    psychVideosList: [],
     targetUser: null,
 }
 
@@ -145,6 +148,23 @@ export const initTargetUserAsync = createAsyncThunk(
     }
 );
 
+export const initPsychVideosListAsync = createAsyncThunk(
+    'questionnaires/init-psych-video-list',
+    async (_, {dispatch}): Promise<AsyncThunkRes<PsychVideoItem[]>> => {
+        try {
+            dispatch(setLoad(true));
+
+            await delay(2000);
+
+            return null;
+        } catch {
+            return 'error';
+        } finally {
+            dispatch(setLoad(false));
+        }
+    }
+);
+
 const questionnairesSlice = createSlice({
     name: 'questionnaires',
     initialState,
@@ -201,6 +221,28 @@ const questionnairesSlice = createSlice({
         })
         builder.addCase(initTargetUserAsync.rejected, _ => {
             console.log("Ошибка получения информации о целевой анкете");
+        })
+
+        // Получение списка видео психолога
+        builder.addCase(initPsychVideosListAsync.pending, _ => {
+            console.log("Получение списка видео психолога");
+        })
+        builder.addCase(initPsychVideosListAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<PsychVideoItem[]>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения списка видео психолога");
+                    break;
+                case null:
+                    console.log("Список видео психолога не получен");
+                    break;
+                default:
+                    state.psychVideosList = action.payload;
+                    console.log("Успешное получение списка видео психолога");
+                    break;
+            }
+        })
+        builder.addCase(initPsychVideosListAsync.rejected, _ => {
+            console.log("Ошибка получения списка видео психолога");
         })
     },
 })

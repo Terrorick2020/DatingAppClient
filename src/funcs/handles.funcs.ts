@@ -1,9 +1,11 @@
 import {
     isTMA,
+    viewport,
     switchInlineQuery,
-    SwitchInlineQueryChatType,
+    type SwitchInlineQueryChatType,
 } from '@telegram-apps/sdk';
 
+import { isTgMobile } from './tg.funcs';
 import { infoAlert } from './alert.funcs';
 import type { RootDispatch } from '@/store';
 
@@ -21,7 +23,12 @@ export const handleTechSupport = async (dispatch: RootDispatch): Promise<void> =
     };
 
     const text: string = '/complaint';
-    const utils: SwitchInlineQueryChatType[] = [ 'users','groups' ];
+    const utils: SwitchInlineQueryChatType[] = [ 'users', 'groups' ];
+    const isTelegramMobile = isTgMobile();
+
+    if(!isTelegramMobile) {
+        viewport.exitFullscreen();
+    };
 
     if(switchInlineQuery.isAvailable()) {
         switchInlineQuery(text, utils);

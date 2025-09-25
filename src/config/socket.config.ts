@@ -74,7 +74,7 @@ export const connectSocketRoom = async (
   let socket: Socket | undefined = undefined;
   socket = sockets[namespace];
 
-  if (socket === undefined) {
+  if (socket === undefined || !socket) {
     socket = await waitForSocketConnection(() => getNamespaceSocket(namespace));
   };
 

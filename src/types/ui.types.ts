@@ -165,3 +165,17 @@ export interface PropsAvatarWithPreload {
     addClass?: string
     handleClick: () => void
 }
+
+export interface PropsPlayerBtn {
+    urlImg: string
+    urlVideo: string
+}
+
+
+export interface PropsBrochPatternDialog {
+    title: string
+    btnTxt: string
+    open: boolean
+    btnFunc: () => Promise<void>
+    setOpen: (value: boolean) => void
+}

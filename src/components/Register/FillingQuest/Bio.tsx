@@ -16,7 +16,9 @@ const FillingQuestBio = (): JSX.Element => {
     const dispatch = useDispatch();
 
     const handleChangeBio = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-        const bio = event.target.value;
+        const newValue = event.target.value;
+        const bio = newValue.length < MAX_LEN_BIO ? newValue : profileInfo.bio;
+
         dispatch(setInfo({
             ...profileInfo,
             bio,
@@ -41,7 +43,7 @@ const FillingQuestBio = (): JSX.Element => {
                         ? 'О себе как о специалисте '
                         : 'Био '
                 }
-                <span className="count">{profileInfo?.bio?.length ?? 0}/500</span></h4>
+                <span className="count">{profileInfo?.bio?.length ?? 0}/{MAX_LEN_BIO}</span></h4>
             <TextField
                 className="bio-input"
                 id="bio-input"

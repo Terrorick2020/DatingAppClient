@@ -1,3 +1,6 @@
+import { URL_MARK } from './env.config';
+
+
 export const appRoutes = {
     notFound: '*',
     blocked: '/blocked',
@@ -27,19 +30,23 @@ export const appRoutes = {
             likes: 'likes',
             profile: 'profile',
             psychologists: 'psychologists',
+            video: 'video',
             slider: 'slider',
         },
     },
-    details: '/slider/details/:id',
-    targetChat: '/questionnaires/chats/:id',
-    targetPsych: '/questionnaires/psychologists/:id',
+    shorts: '/questionnaires/shorts',
+    details: `/slider/details/:${URL_MARK}`,
+    targetChat: `/questionnaires/chats/:${URL_MARK}`,
+    targetPsych: `/questionnaires/psychologists/:${URL_MARK}`,
+    psychAddVideo: `/questionnaires/psychologists/add-video/:${URL_MARK}`,
     admin: {
         global: '/admin',
         inner: {
             nav: 'change',
             usersList: 'users-list',
-            userInfo: 'user-info/:id',
+            userInfo: `user-info/:${URL_MARK}`,
             compalintsList: 'complaints-list',
+            videoInfo: `video-info/:${URL_MARK}`
         },
     },
 }
@@ -49,7 +56,7 @@ export const epRoutes    = appRoutes.eveningPlans;
 export const questRoutes = appRoutes.questionnaires;
 export const adminRoutes = appRoutes.admin;
 
-export const toNotFoud = 'not-found';
+export const toNotFoud = appRoutes.notFound;
 export const toBlocked = appRoutes.blocked;
 export const toError   = appRoutes.error;
 
@@ -80,17 +87,21 @@ const chatsRoute     = questRoutes.inner.chats;
 const likesRoute     = questRoutes.inner.likes;
 const profileRoute   = questRoutes.inner.profile;
 const psychRoute     = questRoutes.inner.psychologists;
+const videoRoute     = questRoutes.inner.video;
 const sliderRoute    = questRoutes.inner.slider;
 
 export const toChats   = `${questGlobRoute}/${chatsRoute}`;
 export const toLikes   = `${questGlobRoute}/${likesRoute}`;
 export const toProfile = `${questGlobRoute}/${profileRoute}`;
 export const toPsych   = `${questGlobRoute}/${psychRoute}`;
+export const toVideo   = `${questGlobRoute}/${videoRoute}`;
 export const toSlider  = `${questGlobRoute}/${sliderRoute}`;
 
-export const toDetails     = appRoutes.details;
-export const toTargetChat  = appRoutes.targetChat;
-export const toTargetPsych = appRoutes.targetPsych;
+export const toDetails       = appRoutes.details;
+export const toTargetChat    = appRoutes.targetChat;
+export const toTargetPsych   = appRoutes.targetPsych;
+export const toPsychAddVideo = appRoutes.psychAddVideo;
+export const toShorts        = appRoutes.shorts;
 
 const adminGlobRoute  = adminRoutes.global;
 const changeRoute     = adminRoutes.inner.nav;

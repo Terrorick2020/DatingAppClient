@@ -1,0 +1,97 @@
+@use "./components/mixins";
+
+
+.shorts {
+    width: 100%;
+    height: 100vh;
+    padding-top: clamp(2.5rem, 6vh, 4rem);
+
+    &__ctx {
+        width: 100%;
+        height: 100%;
+        padding-inline: 1rem;
+        position: relative;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
+
+        .shorts-carusel {
+            width: 100%;
+            height: 100%;
+
+            &__box {
+                --shorts-shadow-h: clamp(3rem, 12vh, 4.5rem);
+
+                width: 100%;
+                height: 100%;
+                position: relative;
+                overflow: hidden;
+
+                &::before, &::after {
+                    content: "";
+                    width: 100%;
+                    height: var(--shorts-shadow-h);
+                    position: absolute;
+                    left: 0;
+                    z-index: 5;
+                }
+
+                &::before {
+                    top: 0;
+                    background: linear-gradient(#000000, transparent);
+                }
+
+                &::after {
+                    bottom: 0;
+                    background: linear-gradient(to top, #000000, transparent);
+                }
+
+                .shorts-carusel-poster {
+                    width: 100%;
+                    height: 100%;
+                    margin-top: var(--shorts-shadow-h);
+
+                    .shorts-carusel-slide {
+                        width: 100%;
+                        height: calc(100% - var(--shorts-shadow-h) * 2 );
+                        padding-block: 0.35rem;
+                        cursor: grab;
+
+                        &:active {
+                            cursor: grabbing;
+                        }
+                    }
+                }
+            }
+        }
+
+        .shorts-desctop-btns {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: none;
+
+            @media (min-width: 650px) {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+            .MuiIconButton-root {
+                color: #FFFFFF;
+                background: #FFFFFF1F !important;
+                border-radius: 50% !important;
+                scale: 1.25 !important;
+                transition: all 0.2s ease;
+
+                &:active {
+                    scale: 1.1 !important
+                }
+
+                &:disabled {
+                    opacity: 0.65;
+                }
+            }
+        }
+    }
+}

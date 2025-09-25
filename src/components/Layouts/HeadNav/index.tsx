@@ -2,6 +2,7 @@ import { JSX, useMemo, useEffect, useState } from 'react';
 import { closingBehavior, backButton, viewport, isTMA } from '@telegram-apps/sdk';
 import { useNavigate  } from 'react-router-dom';
 import { dellRoute } from '@/store/slices/settingsSlice';
+import { isTgMobile } from '@/funcs/tg.funcs';
 import { warningAlert, infoAlert } from '@/funcs/alert.funcs';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootDispatch } from '@/store';
@@ -43,19 +44,10 @@ const HeadNav = (): JSX.Element => {
     const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
 
-    const userAgent = navigator.userAgent.toLowerCase();
+    const isTelegramgMobile = useMemo(() => {
+        const result = isTgMobile()
 
-    const isTgMobile = useMemo(() => {
-        const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win');
-        const predMobile  = userAgent.includes('iphone') || userAgent.includes('android');
-
-        const isDesktop  = !predMobile || predDesktop;
-        const isTgMobile = !!closingBehavior.mount.isAvailable()
-            && !!backButton.mount.isAvailable()
-            && predMobile
-            && !isDesktop;
-        
-        return isTgMobile;
+        return result;
     }, []);
 
     const goBack = () => {
@@ -108,10 +100,13 @@ const HeadNav = (): JSX.Element => {
     };
 
     useEffect(() => {
-        if(isTgMobile) {
+        if(isTelegramgMobile) {
             if (closingBehavior.mount.isAvailable()) closingBehavior.mount();
             if (backButton.mount.isAvailable()) backButton.mount();
             if (closingBehavior.enableConfirmation.isAvailable()) closingBehavior.enableConfirmation();
+
+            const topPx = viewport.safeAreaInsetTop();
+            document.documentElement.style.setProperty('--box-header-height', `${topPx}px`);
         } else {
             const update = () => {
                 setIsFullscreen(viewport.isFullscreen() || !!document.fullscreenElement);
@@ -130,7 +125,7 @@ const HeadNav = (): JSX.Element => {
     }, []);
 
     useEffect(() => {
-        if (!isTgMobile) return;
+        if (!isTelegramgMobile) return;
 
         !!setRoutes.length && backButton.show.isAvailable() && backButton.show();
         !setRoutes.length && backButton.hide.isAvailable() && backButton.hide();
@@ -152,7 +147,7 @@ const HeadNav = (): JSX.Element => {
         }
     }, [setRoutes]);
 
-    if(isTgMobile) return (<></>);
+    if(isTelegramgMobile) return (<></>);
 
     return (
         <>

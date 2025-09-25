@@ -6,6 +6,7 @@ import { toProfile } from '@/config/routes.config';
 import { useDispatch, useSelector } from 'react-redux';
 import { initSliderListAsync } from '@/store/slices/questionnairesSlice';
 import { initialArgs, SWIPED_OFFSET } from '@/constant/quest';
+import { URL_MARK } from '@/config/env.config';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
 import type { InitSliderData } from '@/types/quest.types';
@@ -106,7 +107,7 @@ const SliderPoster = (): JSX.Element => {
   const dispatch = useDispatch<RootDispatch>();
 
   const toDetails = (id: string): void => {
-    const toDetails = appRoutes.details.replace(':id', id);
+    const toDetails = appRoutes.details.replace(`:${URL_MARK}`, id);
 
     setTimeout(() => {
       !isSwiped && Math.abs(offset) < 5 && navigate(toDetails);

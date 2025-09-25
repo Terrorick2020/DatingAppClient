@@ -16,7 +16,7 @@ import { JSX, useEffect, useRef, useState, } from 'react';
 import { createSelector } from 'reselect';
 import { useSelector, useDispatch } from 'react-redux';
 import { toPlans, toChats, toProfile } from '@/config/routes.config';
-import { EMPTY_INPUT_ERR_MSG, ANIME_DURATION } from '@/constant/settings';
+import { EMPTY_INPUT_ERR_MSG, ANIME_DURATION, dfltErrItem } from '@/constant/settings';
 import { RootDispatch } from '@/store';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { fQBtnText } from '@/constant/register';
@@ -36,6 +36,7 @@ import FillingQuestAge from './Age';
 import FillingQuestBio from './Bio';
 import FillingQuestInterests from './Interests';
 import FillingQuestSelectionSex from './SelectionSex';
+import FillingQuestCaptcha from './Captcha';
 
 
 const selectSettings = (state: IState) => state.settings;
@@ -87,6 +88,13 @@ const FillingQuestContent = (): JSX.Element => {
 
         return () => {
             dispatch(setInfo(JSON.parse(infoCache.current)));
+            dispatch(setFQErrors({
+                photErr: dfltErrItem,
+                nameErr: dfltErrItem,
+                cityErr: dfltErrItem,
+                ageErr: dfltErrItem,
+                bioErr: dfltErrItem,
+            }));
         }
     }, [] );
 
@@ -156,6 +164,8 @@ const FillingQuestContent = (): JSX.Element => {
 
             return;
         };
+
+        
         
         const response = await dispatch(
             isPsych
@@ -193,7 +203,7 @@ const FillingQuestContent = (): JSX.Element => {
 
     return (
         <>
-            { profileInfo.role !== EProfileRoles.Psych && <GeoConfirmation /> }
+            { !isPsych && <GeoConfirmation /> }
             <div className="filling-quest__header">
                 <FillingQuestHeader mark={btnCtx.mark} />
             </div>
@@ -211,6 +221,7 @@ const FillingQuestContent = (): JSX.Element => {
                         <FillingQuestBio />
                         { !isPsych && <FillingQuestInterests /> }
                         { !isPsych && <FillingQuestSelectionSex /> }
+                        <FillingQuestCaptcha />
                     </Slide>
                 </div>
                 <div className="link">

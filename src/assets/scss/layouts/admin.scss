@@ -5,6 +5,16 @@
     width: 100%;
     height: 100%;
 
+    .users-list, .complaints-list {
+        width: 100%;
+        height: 100vh;
+        padding-top: clamp(4rem, 12.5vh, 5.5rem);
+        display: grid;
+        grid-template-rows: clamp(9.5rem, 27vh, 12rem) 1fr clamp(4.5rem, 13vh, 5.5rem);
+        overflow: hidden;
+        @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
+    }
+
     [class$="__header"] {
         width: 100%;
         height: 100%;
@@ -18,6 +28,25 @@
             width: 100%;
             font-weight: 900;
             text-align: start;
+        }
+
+        .search-type {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: left;
+            align-items: center;
+
+            &__item {
+                width: 35vw;
+                min-width: 7.5rem;
+                max-width: 10rem;
+                font-size: 0.8rem;
+
+                @media (min-width: 450px) {
+                    font-size: 1rem;
+                }
+            }
         }
 
         &::after {

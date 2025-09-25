@@ -1,10 +1,10 @@
-import { type FillQuestBtnText, KeyFQBtnText } from '@/types/register.typs';
+import { type FillQuestBtnText, type PlayingSvgVars, KeyFQBtnText } from '@/types/register.typs';
 
 import SvgMediaPause from '@/assets/icon/media-pause.svg';
 import SvgMediaPlay from '@/assets/icon/media-play.svg';
 
 
-export const PlayingSvgVars = [
+export const playingSvgVars: PlayingSvgVars[] = [
     {addClass: 'pause', svg: SvgMediaPlay, alt: 'play'},
     {addClass: '', svg: SvgMediaPause, alt: 'pause'},
 ]

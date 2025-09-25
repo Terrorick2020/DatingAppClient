@@ -1,7 +1,8 @@
 import { JSX } from 'react';
 import { appRoutes } from '@/config/routes.config';
+import { URL_MARK } from '@/config/env.config';
 import { useSelector } from 'react-redux';
-import { type IState } from '@/types/store.types';
+import type { IState } from '@/types/store.types';
 
 import ListBlock from '@/components/UI/ListBlock';
 import ChatsListItem from './ChatsItem';
@@ -15,7 +16,7 @@ const ChatsList = (): JSX.Element => {
             {chatsList.map(item =>(
                 <ListBlock
                     img={item.avatar}
-                    route={appRoutes.targetChat.replace(':id', `${item.id}`)}
+                    route={appRoutes.targetChat.replace(`:${URL_MARK}`, `${item.id}`)}
                     key={`chats-list-item-${item.id}`}
                     prefAlt={item.name}
                 >

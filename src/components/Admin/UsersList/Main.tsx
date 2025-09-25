@@ -1,6 +1,7 @@
 import { JSX, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toUserInfo } from '@/config/routes.config';
+import { URL_MARK } from '@/config/env.config';
 import { initialArgs } from '@/constant/quest';
 import { createSelector } from 'reselect';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
@@ -88,7 +89,7 @@ const UsersListMain = (): JSX.Element => {
                     (adminState.profilesList.map((item, index) => (
                         <ListBlock
                             img={item.avatar}
-                            route={`${toUserInfo.replace(':id', '')}${item.id}`}
+                            route={`${toUserInfo.replace(`:${URL_MARK}`, `${item.id}`)}`}
                             key={`admin-profile-${item.id}`}
                             data-id={index}
                             prefAlt={item.name}
@@ -99,7 +100,7 @@ const UsersListMain = (): JSX.Element => {
                         >
                             <UserListItem
                                 item={item}
-                                toUserInfo={`${toUserInfo.replace(':id', '')}${item.id}`}
+                                toUserInfo={`${toUserInfo.replace(`:${URL_MARK}`, `${item.id}`)}`}
                                 setOpenDel={setOpenDel}
                             />
                         </ListBlock>

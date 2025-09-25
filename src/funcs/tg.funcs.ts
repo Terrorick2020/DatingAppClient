@@ -3,6 +3,7 @@ import {
   isTMA,
   initData,
   viewport,
+  backButton,
   cloudStorage,
   swipeBehavior,
   closingBehavior,
@@ -220,3 +221,17 @@ export async function setHomeScreen(): Promise<void> {
     }
   }, 5000);
 };
+
+export function isTgMobile(): boolean {
+  const userAgent = navigator.userAgent.toLowerCase();
+  const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win');
+  const predMobile  = userAgent.includes('iphone') || userAgent.includes('android');
+
+  const isDesktop  = !predMobile || predDesktop;
+  const isTgMobile = !!closingBehavior.mount.isAvailable()
+      && !!backButton.mount.isAvailable()
+      && predMobile
+      && !isDesktop;
+  
+  return isTgMobile;
+}
