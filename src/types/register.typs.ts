@@ -1,5 +1,5 @@
-import { ProfileSelf } from './profile.types';
-import { FQErrors } from './settings.type';
+import type { ProfileSelf } from './profile.types';
+import type { FQErrors } from './settings.type';
 
 export interface MediaProgressState {
     played: number

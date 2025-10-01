@@ -31,47 +31,47 @@ async function delayForLazy( promise: Promise<any> ) {
         promise,
     ]);
 
-    // if(navigate) {
-    //     if(checkRes === 'error' || !jsxRes) {
-    //         navigate(toError);
-    //     } else if (!checkRes) {
-    //         navigate(toPreview);
-    //     } else if (checkRes === EProfileStatus.Blocked) {
-    //         navigate(toBlocked);
-    //     } else {
+    if(navigate) {
+        if(checkRes === 'error' || !jsxRes) {
+            navigate(toError);
+        } else if (!checkRes) {
+            navigate(toPreview);
+        } else if (checkRes === EProfileStatus.Blocked) {
+            navigate(toBlocked);
+        } else {
 
-    //         const rootState = store.getState() as IState;
-    //         const profileRole = rootState.profile.info.role;
-    //         const isPsych = profileRole === EProfileRoles.Psych;
+            const rootState = store.getState() as IState;
+            const profileRole = rootState.profile.info.role;
+            const isPsych = profileRole === EProfileRoles.Psych;
 
-    //         const [ selfRes, _ ] = await Promise.all(
-    //             isPsych
-    //                 ? [
-    //                     store.getState().profile.info,
-    //                     null,
-    //                 ] : [
-    //                     store.dispatch(getSelfProfile()).unwrap(),
-    //                     store.dispatch(getSelfPlansAsync()).unwrap(),
-    //                 ]
-    //         );
+            const [ selfRes, _ ] = await Promise.all(
+                isPsych
+                    ? [
+                        store.getState().profile.info,
+                        null,
+                    ] : [
+                        store.dispatch(getSelfProfile()).unwrap(),
+                        store.dispatch(getSelfPlansAsync()).unwrap(),
+                    ]
+            );
 
-    //         if(!selfRes || selfRes === 'error') {
-    //             navigate(toError);
-    //         } else {
-    //             switch(selfRes.role) {
-    //                 case EProfileRoles.User:
-    //                     navigate(toSlider);
-    //                     break;
-    //                 case EProfileRoles.Admin:
-    //                     navigate(toChange);
-    //                     break;
-    //                 case EProfileRoles.Psych:
-    //                     navigate(toProfile);
-    //                     break;
-    //             }
-    //         }
-    //     }
-    // }
+            if(!selfRes || selfRes === 'error') {
+                navigate(toError);
+            } else {
+                switch(selfRes.role) {
+                    case EProfileRoles.User:
+                        navigate(toSlider);
+                        break;
+                    case EProfileRoles.Admin:
+                        navigate(toChange);
+                        break;
+                    case EProfileRoles.Psych:
+                        navigate(toProfile);
+                        break;
+                }
+            }
+        }
+    }
 
     const elapsed = performance.now() - start;
     const remainingDelay = Math.max(0, 2000 - elapsed);

@@ -1,5 +1,5 @@
 import { EProfileRoles, EProfileStatus } from './store.types';
-import { PhotoItem } from './profile.types';
+import type { PhotoItem } from './profile.types';
 
 
 export enum ESearchComplType {

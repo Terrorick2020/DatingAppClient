@@ -1,5 +1,5 @@
 import { ELineStatus } from './store.types';
-import { InitSliderData } from './quest.types';
+import type { InitSliderData } from './quest.types';
 
 
 export interface ChatsFavListItem {

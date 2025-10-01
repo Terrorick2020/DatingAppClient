@@ -1,7 +1,9 @@
 import { JSX, ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { MAX_VIDEO_SIZE } from '@/constant/video';
+import { psychAddVideoAsync } from '@/store/slices/videosSlice';
 import { getPreviewVideo } from '@/funcs/img.funcs';
-import { errorAlert, warningAlert } from '@/funcs/alert.funcs';
+import { errorAlert, successAlert, warningAlert } from '@/funcs/alert.funcs';
 import type { RootDispatch } from '@/store';
 
 import CircularProgress from '@mui/material/CircularProgress';
@@ -26,9 +28,7 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
         setProgress(0);
     };
 
-    const handleDelete = async (): Promise<void> => {
-        clearMeta()
-    };
+    const handleDelete = async (): Promise<void> => clearMeta();
 
     const fetchVideo = async (file: File | null): Promise<void> => {
         if(!file) {
@@ -38,10 +38,17 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
         };
 
         setLoadFetch(true);
-        setProgress(100);
 
-        setLoadFetch(false);
-        setProgress(0);
+        const response = await dispatch(psychAddVideoAsync({file, setProgress})).unwrap();
+
+        if(!response || response === 'error') {
+            warningAlert(dispatch, 'Не удалось сохранить видео! Попробуйте позже.');
+            clearMeta();
+
+            return;
+        };
+
+        successAlert(dispatch, 'Видео успешно загрузилось')
     };
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -59,6 +66,15 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
 
         const file = files[0];
 
+        if(file.size > MAX_VIDEO_SIZE) {
+            warningAlert(
+                dispatch,
+                `Нельзя загрузить видео больше ${MAX_VIDEO_SIZE / 1024 / 1024}Мбайт!`
+            );
+            setLoadingPreview(false);
+            return;
+        };
+
         getPreviewVideo(file, setThumbnail, setLoadingPreview, fetchVideo);
 
         event.target.value = '';
@@ -72,7 +88,6 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
                     type="file"
                     accept="video/*"
                     onChange={handleFileChange}
-
                 />
                 <div className="loader-box">
                     <div className="loader-box__ctx">

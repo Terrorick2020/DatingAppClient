@@ -70,6 +70,11 @@ export interface FEPHasErrors {
     descDistErr?: FQErrorsItem
 }
 
+export interface FAVErrors {
+    videoErr: FQErrorsItem
+    titleErr: FQErrorsItem
+}
+
 export interface AbstractVarsItem {
     value: string
     label: string
@@ -140,6 +145,7 @@ export interface SettingsState {
     apiRes: SetApiRes
     fQErrors: FQErrors
     fEPErrors: FEPErrors
+    fAVErrors: FAVErrors
     cityesVars: CityesVarsItem[]
     interestsVars: InterestsVarsItem[]
     selSexVars: SelSexVarsItem[]

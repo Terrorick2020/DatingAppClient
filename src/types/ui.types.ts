@@ -1,5 +1,5 @@
-import { ReactNode, MouseEvent, HTMLAttributes } from 'react';
-import { PhotoItem } from './profile.types';
+import type { ReactNode, MouseEvent, HTMLAttributes } from 'react';
+import type { PhotoItem } from './profile.types';
 
 
 export enum EPopOrigHor {

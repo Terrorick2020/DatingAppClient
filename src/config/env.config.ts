@@ -62,6 +62,16 @@ export const PSYCH_VALID_TOKEN = import.meta.env.VITE_PSYCH_VALID_TOKEN || '';
 export const PSYCH_UPL_PHOTO   = import.meta.env.VITE_PSYCH_UPL_PHOTO || '';
 export const PSYCH_DEL_PHOTO   = import.meta.env.VITE_PSYCH_DEL_PHOTO || '';
 
+export const VIDEO_ENDPOIN      = import.meta.env.VITE_VIDEO_ENDPOINT || '';
+export const VIDEO_UPL          = import.meta.env.VITE_VIDEO_UPL || '';
+export const VIDEO_SAVE         = import.meta.env.VITE_VIDEO_SAVE || '';
+export const VIDEO_MY           = import.meta.env.VITE_VIDEO_MY || '';
+export const VIDEO_PBLC         = import.meta.env.VITE_VIDEO_PBLC || '';
+export const VIDEO_SHORTS       = import.meta.env.VITE_VIDEO_SHORTS || '';
+export const VIDEO_SHORTS_FEED  = import.meta.env.VITE_VIDEO_SHORTS_FEED || '';
+export const VIDEO_SHORTS_LIKE  = import.meta.env.VITE_VIDEO_SHORTS_LIKE || '';
+export const VIDEO_SHORTS_VIEW  = import.meta.env.VITE_VIDEO_SHORTS_VIEW || '';
+
 export const REDIS               = import.meta.env.VITE_REDIS || '';
 export const REDIS_KEY_ENDPOINT  = import.meta.env.VITE_REDIS_KEY_ENDPOINT || '';
 export const REDIS_EXPIRE        = import.meta.env.VITE_REDIS_EXPIRE || '';
@@ -123,6 +133,16 @@ if(
   !PSYCH_VALID_TOKEN ||
   !PSYCH_UPL_PHOTO   ||
   !PSYCH_DEL_PHOTO   ||
+
+  !VIDEO_ENDPOIN ||
+  !VIDEO_UPL ||
+  !VIDEO_SAVE ||
+  !VIDEO_MY ||
+  !VIDEO_PBLC ||
+  !VIDEO_SHORTS ||
+  !VIDEO_SHORTS_FEED ||
+  !VIDEO_SHORTS_LIKE ||
+  !VIDEO_SHORTS_VIEW ||
 
   !PLANS_GET_ENDPOINT ||
   !PLANS_SET_ENDPOINT ||
@@ -317,3 +337,6 @@ export const PSYCH_ADMIN_ENDPOINT = (
 
   return `${PSYCH_ENDPOINT}${queryString}`;
 }
+
+export const VIDEO_UPL_ENDPOINT = `${VIDEO_ENDPOIN}${VIDEO_UPL}`;
+export const VIDEO_SAVE_ENDPOINT = `${VIDEO_ENDPOIN}${VIDEO_SAVE}`;

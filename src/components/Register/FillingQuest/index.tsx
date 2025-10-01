@@ -15,7 +15,7 @@ import {
 import { JSX, useEffect, useRef, useState, } from 'react';
 import { createSelector } from 'reselect';
 import { useSelector, useDispatch } from 'react-redux';
-import { toPlans, toChats, toProfile } from '@/config/routes.config';
+import { toPlans, toProfile } from '@/config/routes.config';
 import { EMPTY_INPUT_ERR_MSG, ANIME_DURATION, dfltErrItem } from '@/constant/settings';
 import { RootDispatch } from '@/store';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -165,31 +165,25 @@ const FillingQuestContent = (): JSX.Element => {
             return;
         };
 
-        
-        
         const response = await dispatch(
             isPsych
-            ? signUpPsychAsync(btnCtx.mark)
-            : signUpProfileAsync(btnCtx.mark)
+                ? signUpPsychAsync(btnCtx.mark)
+                : signUpProfileAsync(btnCtx.mark)
         ).unwrap();
+
+        console.log(response)
         
         if( response && response !== 'error') {
             infoCache.current = JSON.stringify(profileInfo);
             setIsDis(true);
 
-            if( btnCtx.mark === KeyFQBtnText.First ) {
-
-                if(!isPsych) {
-                    dispatch(addRoute(location.pathname));
-                    navigate(toPlans);
-                } else {
-                    dispatch(resetRoutes());
-                    navigate(toChats);
-                }
+            if( btnCtx.mark === KeyFQBtnText.First && !isPsych ) {
+                dispatch(addRoute(location.pathname));
+                navigate(toPlans);
             } else {
                 dispatch(resetRoutes());
                 navigate(toProfile);
-            }
+            };
         };
 
         setRegLoad(false);

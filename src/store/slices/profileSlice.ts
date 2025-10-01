@@ -17,6 +17,7 @@ import type {
     RegEndpointRes,
     GetSelfEndpointRes,
     ValidetePsychCodeRes,
+    SelfPsychRes,
 } from '@/types/fetch.type';
 
 import {
@@ -202,6 +203,8 @@ export const initProfileAsync = createAsyncThunk(
                             status: EApiStatus.Warning,
                             timestamp: Date.now(),
                         }));
+                    } else {
+                        resResult = true;
                     }
 
                     break;
@@ -210,8 +213,7 @@ export const initProfileAsync = createAsyncThunk(
             dispatch(setInfo({
                 ...profileInfo,
                 id: telegramId,
-                // role: profileRole,
-                role: EProfileRoles.Psych,
+                role: profileRole,
                 status: profileStatus,
             }));
 
@@ -493,7 +495,7 @@ export const signUpPsychAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
 
-            const photoIds = rootState.profile.info.photos.map(item => item.id);
+            const photoIds = rootState.profile.info.photos.map(item => +item.id);
 
             const data = {
                 ...( mark === KeyFQBtnText.First && {
@@ -642,7 +644,7 @@ export const getSelfPsychProfile = createAsyncThunk(
 
             const data = { telegramId };
 
-            const response: AxiosResponse<FetchResponse<any>> =
+            const response: AxiosResponse<FetchResponse<SelfPsychRes>> =
                 await api.post(PSYCH_INITIAL_ENDPOINT, data);
 
             if(
@@ -652,7 +654,16 @@ export const getSelfPsychProfile = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            const result = { ...rootState.profile.info };
+            const resData = response.data.data;
+            const photos = resData.photos.map(item => ({ id: ''+item.id, photo: item.url }));
+
+            const result: ProfileSelf = {
+                ...rootState.profile.info,
+                name: resData.name,
+                bio: resData.about,
+                id: resData.telegramId,
+                photos,
+            };
 
             return result;
         } catch {

@@ -17,6 +17,7 @@ import {
     type SelSexVarsItem,
     type BadgeBlock,
     type InitEPCtxAsyncRes,
+    type FAVErrors,
 } from '@/types/settings.type';
 
 import {
@@ -41,6 +42,7 @@ import {
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { hasAllKeys } from '@/funcs/utels';
 import { connectSocketRoom } from '@/config/socket.config';
 import { ServerMethods, type ResConnectionDto } from '@/types/socket.types';
 import { setInfo, setPlan } from './profileSlice';
@@ -48,6 +50,7 @@ import type { FetchResponse, SendComplEndpointRes } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
 
 import api from '@/config/fetch.config';
+import isEqual from 'lodash.isequal';
 
 
 export const initialState: SettingsState = {
@@ -72,6 +75,10 @@ export const initialState: SettingsState = {
         descPlanErr: dfltErrItem,
         districtErr: dfltErrItem,
         descDistErr: dfltErrItem,
+    },
+    fAVErrors: {
+        videoErr: dfltErrItem,
+        titleErr: dfltErrItem,
     },
     cityesVars: [],
     interestsVars: [],
@@ -418,6 +425,15 @@ const settingsSlice = createSlice({
         setEPErrors: (state, action: PayloadAction<FEPErrors>): void => {
             state.fEPErrors = action.payload;
         },
+        setFAVErrors: (state, action: PayloadAction<FAVErrors | Partial<FAVErrors>>): void => {
+            if(!isEqual(state.fAVErrors, action.payload)) {
+                if(hasAllKeys(action.payload, ['titleErr', 'videoErr'])) {
+                    state.fAVErrors = action.payload;
+                } else {
+                    Object.assign(state.fAVErrors, action.payload);
+                };
+            };
+        },
         setComplOpen: (state, action: PayloadAction<boolean>): void => {
             state.complaint.open = action.payload;
         },
@@ -610,6 +626,7 @@ export const {
     resetApiRes,
     setFQErrors,
     setEPErrors,
+    setFAVErrors,
     setComplOpen,
     setComplCtx,
     setComplStep,

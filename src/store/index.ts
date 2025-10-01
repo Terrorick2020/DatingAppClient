@@ -8,6 +8,7 @@ import profileReducer from './slices/profileSlice';
 import questionnairesReducer from './slices/questionnairesSlice';
 import psychReducer from './slices/psychSlice';
 import settingsReducer from './slices/settingsSlice';
+import videosReducer from './slices/videosSlice';
 import myMiddleware from './middleware';
 
 
@@ -19,6 +20,7 @@ const appReducer: Reducer<IState> = combineReducers({
     questionnaires: questionnairesReducer,
     psych: psychReducer,
     settings:  settingsReducer,
+    videos: videosReducer,
 });
 
 const rootReducer: Reducer<IState> = (state, action) => {
