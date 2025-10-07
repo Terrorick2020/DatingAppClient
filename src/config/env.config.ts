@@ -7,6 +7,8 @@ export const WS_URL        = import.meta.env.VITE_WS_URL || '';
 export const BOT_LINK      = import.meta.env.VITE_BOT_LINK || '';
 export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || '';
 export const URL_MARK      = import.meta.env.VITE_URL_MARK || 'id';
+export const TG_HEADER      = import.meta.env.VITE_TG_HEADER || '';
+export const YC_HEADER      = import.meta.env.VITE_YC_HEADER || '';
 
 export const WS_CHATS   = import.meta.env.VITE_WS_CHATS || '';
 export const WS_COMPL   = import.meta.env.VITE_WS_COMPL || '';
@@ -62,15 +64,13 @@ export const PSYCH_VALID_TOKEN = import.meta.env.VITE_PSYCH_VALID_TOKEN || '';
 export const PSYCH_UPL_PHOTO   = import.meta.env.VITE_PSYCH_UPL_PHOTO || '';
 export const PSYCH_DEL_PHOTO   = import.meta.env.VITE_PSYCH_DEL_PHOTO || '';
 
-export const VIDEO_ENDPOIN      = import.meta.env.VITE_VIDEO_ENDPOINT || '';
-export const VIDEO_UPL          = import.meta.env.VITE_VIDEO_UPL || '';
-export const VIDEO_SAVE         = import.meta.env.VITE_VIDEO_SAVE || '';
-export const VIDEO_MY           = import.meta.env.VITE_VIDEO_MY || '';
-export const VIDEO_PBLC         = import.meta.env.VITE_VIDEO_PBLC || '';
-export const VIDEO_SHORTS       = import.meta.env.VITE_VIDEO_SHORTS || '';
-export const VIDEO_SHORTS_FEED  = import.meta.env.VITE_VIDEO_SHORTS_FEED || '';
-export const VIDEO_SHORTS_LIKE  = import.meta.env.VITE_VIDEO_SHORTS_LIKE || '';
-export const VIDEO_SHORTS_VIEW  = import.meta.env.VITE_VIDEO_SHORTS_VIEW || '';
+export const VIDEO_ENDPOIN = import.meta.env.VITE_VIDEO_ENDPOINT || '';
+export const VIDEO_UPL    = import.meta.env.VITE_VIDEO_UPL || '';
+export const VIDEO_SAVE   = import.meta.env.VITE_VIDEO_SAVE || '';
+export const VIDEO_MY     = import.meta.env.VITE_VIDEO_MY || '';
+export const VIDEO_FEED   = import.meta.env.VITE_VIDEO_SHORTS_FEED || '';
+export const VIDEO_LIKE   = import.meta.env.VITE_VIDEO_SHORTS_LIKE || '';
+export const VIDEO_VIEW   = import.meta.env.VITE_VIDEO_SHORTS_VIEW || '';
 
 export const REDIS               = import.meta.env.VITE_REDIS || '';
 export const REDIS_KEY_ENDPOINT  = import.meta.env.VITE_REDIS_KEY_ENDPOINT || '';
@@ -111,6 +111,8 @@ if(
   !WS_URL        ||
   !BOT_LINK      ||
   !SUPPORT_EMAIL ||
+  !TG_HEADER     ||
+  !YC_HEADER     ||
 
   !WS_CHATS ||
   !WS_COMPL ||
@@ -135,14 +137,12 @@ if(
   !PSYCH_DEL_PHOTO   ||
 
   !VIDEO_ENDPOIN ||
-  !VIDEO_UPL ||
-  !VIDEO_SAVE ||
-  !VIDEO_MY ||
-  !VIDEO_PBLC ||
-  !VIDEO_SHORTS ||
-  !VIDEO_SHORTS_FEED ||
-  !VIDEO_SHORTS_LIKE ||
-  !VIDEO_SHORTS_VIEW ||
+  !VIDEO_UPL     ||
+  !VIDEO_SAVE    ||
+  !VIDEO_MY      ||
+  !VIDEO_FEED    ||
+  !VIDEO_LIKE    ||
+  !VIDEO_VIEW    ||
 
   !PLANS_GET_ENDPOINT ||
   !PLANS_SET_ENDPOINT ||
@@ -340,3 +340,49 @@ export const PSYCH_ADMIN_ENDPOINT = (
 
 export const VIDEO_UPL_ENDPOINT = `${VIDEO_ENDPOIN}${VIDEO_UPL}`;
 export const VIDEO_SAVE_ENDPOINT = `${VIDEO_ENDPOIN}${VIDEO_SAVE}`;
+
+export const getVideoMark = (videoId: number): string =>
+    `${VIDEO_ENDPOIN}/${videoId}`;
+
+export const VIDEO_LIKE_ENDPOINT = (videoId: number): string =>
+    `${getVideoMark(videoId)}${VIDEO_LIKE}`;
+
+export const VIDEO_VIEW_ENDPOINT = (videoId: number): string =>
+    `${getVideoMark(videoId)}${VIDEO_VIEW}`;
+
+const getBaseVideoParams = (
+    telegramId: string,
+    offset?: number,
+    limit?: number,
+): string => {
+    const params: string[] = [];
+
+    params.push(`telegramId=${telegramId}`);
+
+    if(limit && limit >= 0) params.push(`limit=${limit}`);
+    if(offset && offset >= 0) params.push(`offset=${offset}`);
+
+    const queryString = `?${params.join('&')}`;
+
+    return queryString;
+};
+
+export const VIDEO_SELF_ENDPOINT = (
+    telegramId: string,
+    offset?: number,
+    limit?: number,
+): string => {
+    const queryString = getBaseVideoParams(telegramId, offset, limit);
+
+    return `${VIDEO_ENDPOIN}${VIDEO_MY}${queryString}`;
+};
+
+export const VIDEO_SHORTS_ENDPOINT = (
+  telegramId: string,
+  offset?: number,
+  limit?: number,
+): string => {
+    const queryString = getBaseVideoParams(telegramId, offset, limit);
+
+    return `${VIDEO_ENDPOIN}${VIDEO_FEED}${queryString}`;
+};

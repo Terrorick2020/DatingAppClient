@@ -1,4 +1,4 @@
-import { JSX, useState, useMemo, useRef, useEffect } from 'react';
+import { type JSX, type ReactNode, useState, useMemo, useRef, useEffect } from 'react';
 
 import MyPlayerPreview from './Preview';
 import MyPlayerMain from './Main';
@@ -11,6 +11,7 @@ interface PropsMyPlayer {
     playing: boolean
     timeToStart: boolean
     setPlaying: (value: boolean) => void
+    children?: ReactNode
 }
 
 export enum EMyPlayertxType {
@@ -49,7 +50,7 @@ const MyPlayer = (props: PropsMyPlayer): JSX.Element => {
                     playing={props.playing}
                     setPlaying={props.setPlaying}
                     setCtxType={setCtxType}
-                />;
+                >{ props.children }</MyPlayerMain>
         }
     }, [ctxType, props.playing]);
 

@@ -66,7 +66,7 @@ import { ETgCloudeStore } from '@/types/tg.types';
 import { KeyFQBtnText } from '@/types/register.typs';
 import type { AxiosResponse, AxiosProgressEvent  } from 'axios';
 
-import api from '@/config/fetch.config';
+import api, { setTgId } from '@/config/fetch.config';
 
 
 const initialState: ProfileState = {
@@ -108,14 +108,13 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
         try {
-            const telegramId = getTgID() || 'browser3';
+            const telegramId = getTgID() || 'browser30';
             
             if(!telegramId) return 'error';
 
-            const params = await getRefParams();
+            setTgId(telegramId);
 
-            const rootState = getState() as IState;
-            const profileInfo = rootState.profile.info;
+            const params = await getRefParams();
 
             let profileRole: EProfileRoles = EProfileRoles.User;
 
@@ -210,6 +209,9 @@ export const initProfileAsync = createAsyncThunk(
                     break;
             }
 
+            const rootState = getState() as IState;
+            const profileInfo = rootState.profile.info;
+
             dispatch(setInfo({
                 ...profileInfo,
                 id: telegramId,
@@ -226,7 +228,7 @@ export const initProfileAsync = createAsyncThunk(
             dispatch(setIsFirstly(false));
 
             return profileStatus;
-        } catch {
+        } catch (error) {
             dispatch(setIsFirstly(true));
 
             return 'error';
@@ -490,7 +492,7 @@ export const signUpProfileAsync = createAsyncThunk(
 
 export const signUpPsychAsync = createAsyncThunk(
     'profile/sign-up-psych',
-    async (mark: KeyFQBtnText, { getState, dispatch }): Promise<AsyncThunkRes<any>> => {
+    async (mark: KeyFQBtnText, { getState, dispatch }): Promise<AsyncThunkRes<'success'>> => {
         try {
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
@@ -545,7 +547,7 @@ export const signUpPsychAsync = createAsyncThunk(
                 timestamp: Date.now(),
             }));
 
-            return null;
+            return 'success';
         } catch (error: any) {
             let msg = 'Произошла ошибка сервера';
 
@@ -981,7 +983,7 @@ const profileSlice = createSlice({
         builder.addCase(getSelfPsychProfile.pending, _ => {
             console.log("Получение информации о себе, как о специолисте");
         })
-        builder.addCase(getSelfPsychProfile.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<any>> ) => {
+        builder.addCase(getSelfPsychProfile.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<ProfileSelf>> ) => {
             switch (action.payload) {
                 case 'error':
                     console.log("Ошибка получения информации о себе, как о специолисте");
@@ -990,6 +992,7 @@ const profileSlice = createSlice({
                     console.log("Информация о себе, как о специолисте не получена");
                     break;
                 default:
+                    state.info = action.payload;
                     console.log("Успешное получение информации о себе, как о специолисте");
                     break;
             }

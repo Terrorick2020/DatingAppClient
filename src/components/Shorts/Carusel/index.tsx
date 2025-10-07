@@ -1,5 +1,6 @@
 import { JSX, useState, useRef, useEffect, WheelEvent } from 'react';
 import { useSwipeable, SwipeEventData } from 'react-swipeable';
+import { EShortsCaruselKey } from '@/types/quest.types';
 import { CARUSEL_ANIME_MS } from '@/constant/quest';
 import { FQ_MEDIA_LINK } from '@/config/env.config';
 
@@ -7,27 +8,17 @@ import ShortsCtxCaruselItem from './Item';
 import IconButton from '@mui/joy/IconButton';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { useSelector } from 'react-redux';
+import { IState } from '@/types/store.types';
 
-
-const data = [
-    'Slide 1',
-    'Slide 2',
-    'Slide 3',
-    'Slide 4',
-    'Slide 5',
-    'Slide 6',
-    'Slide 7',
-    'Slide 8',
-    'Slide 9',
-    'Slide 10',
-    'Slide 11',
-    'Slide 12',
-];
 
 const ShortsCtxCarusel = (): JSX.Element => {
+    const { videos, total } = useSelector((state: IState) => state.videos.shortsList);
+
     const [isSwiped, setIsSwiped] = useState<boolean>(false);
     const [index, setIndex] = useState<number>(0);
     const [offset, setOffset] = useState<number>(0);
+    const [keyCode, setKeyCode] = useState<EShortsCaruselKey | null>(null);
 
     const deltaSwipeY = useRef<number>(100);
     const deltaWheelY = useRef<number>(2);
@@ -48,20 +39,20 @@ const ShortsCtxCarusel = (): JSX.Element => {
     };
 
     const changeSlide = (newIndex: number): void => {
-        setIsSwiped(true);
         setOffset(0);
-
-        setTimeout(() => {
-            setIsSwiped(false);
-        }, CARUSEL_ANIME_MS + 5);
 
         if(
             isSwiped     ||
             newIndex < 0 ||
-            newIndex >= data.length
+            newIndex >= videos.length
         ) return;
-        
+
+        setIsSwiped(true);
         setIndex(newIndex);
+        
+        setTimeout(() => {
+            setIsSwiped(false);
+        }, CARUSEL_ANIME_MS + 5);
     };
 
     const changeOffset = (deltaY: number): void => {
@@ -74,7 +65,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
 
         if(index === 0 && deltaY > 0) {
             newOffset = Math.min(deltaY, deltaSwipeY.current);
-        } else if (index === data.length - 1 && deltaY < 0) {
+        } else if (index === videos.length - 1 && deltaY < 0) {
             newOffset = Math.max(deltaY, -deltaSwipeY.current);
         } else {
             newOffset = deltaY;
@@ -87,7 +78,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
         if(!isSwiped && !isWheeled.current) {
             if(index === 0 && event.deltaY < 0) {
                 animeVoidWheel(deltaSwipeY.current);
-            } else if (index === data.length - 1 && event.deltaY > 0) {
+            } else if (index === videos.length - 1 && event.deltaY > 0) {
                 animeVoidWheel(-deltaSwipeY.current);
             } else {
 
@@ -150,11 +141,45 @@ const ShortsCtxCarusel = (): JSX.Element => {
     });
 
     useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if((Object.values(EShortsCaruselKey) as string[]).includes(e.code)) {
+                setKeyCode(e.code as EShortsCaruselKey);
+            };
+
+            if(isSwiped) return;
+
+            let goSwipe: boolean = false;
+
+            if (e.key === "ArrowUp") {
+                if(index === 0) return;
+                setIndex(prev => prev - 1);
+                goSwipe = true;
+            };
+
+            if (e.key === "ArrowDown") {
+                if(index >= videos.length - 1) return;
+                setIndex(prev => prev + 1);
+                goSwipe = true;
+            };
+
+            if(goSwipe) {
+                setIsSwiped(true);
+
+                setTimeout(() => {
+                    setIsSwiped(false);
+                }, CARUSEL_ANIME_MS + 5);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [index, isSwiped]);
+
+    useEffect(() => {
         const slideHTML = document.getElementById('shorts-carusel-slide');
 
-        if(!slideHTML) return;
-
-        deltaSwipeY.current = slideHTML.clientHeight / 4;
+        if(slideHTML) deltaSwipeY.current = slideHTML.clientHeight / 4;
     }, []);
 
     return (
@@ -178,21 +203,18 @@ const ShortsCtxCarusel = (): JSX.Element => {
                         }}
                     >
                         {
-                            data.map((_, indx) => (
-                                <div
-                                    className="shorts-carusel-slide"
-                                    id="shorts-carusel-slide"
-                                    key={`shorts-carusel-slide-${ indx }`}
-                                >
-                                    <ShortsCtxCaruselItem
-                                        indx={index}
-                                        selfIndx={indx}
-                                        item={{
-                                            previewUrl: 'https://image.winudf.com/v2/image/bW9iaS5hbmRyb2FwcC5wcm9zcGVyaXR5YXBwcy5jNTExMV9zY3JlZW5fN18xNTI0MDQxMDUwXzAyMQ/screen-7.jpg?fakeurl=1&type=.jpg',
-                                            videoUrl: FQ_MEDIA_LINK,
-                                        }}
-                                    />
-                                </div>
+                            videos.map((item, indx) => (
+                                <ShortsCtxCaruselItem
+                                    key={`shorts-carusel-slide-${indx}`}
+                                    indx={index}
+                                    selfIndx={indx}
+                                    item={{
+                                        previewUrl: 'https://image.winudf.com/v2/image/bW9iaS5hbmRyb2FwcC5wcm9zcGVyaXR5YXBwcy5jNTExMV9zY3JlZW5fN18xNTI0MDQxMDUwXzAyMQ/screen-7.jpg?fakeurl=1&type=.jpg',
+                                        videoUrl: FQ_MEDIA_LINK,
+                                    }}
+                                    keyCode={keyCode}
+                                    setKeyKode={setKeyCode}
+                                />
                             ))
                         }
                     </div>
@@ -206,7 +228,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
                     <ArrowUpwardIcon />
                 </IconButton>
                 <IconButton
-                    disabled={isSwiped || index >= data.length - 1}
+                    disabled={isSwiped || index >= videos.length - 1}
                     onClick={() => changeSlide(index + 1)}
                 >
                     <ArrowDownwardIcon />

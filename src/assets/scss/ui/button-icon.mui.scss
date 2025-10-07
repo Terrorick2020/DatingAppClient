@@ -53,5 +53,23 @@
                 filter: drop-shadow(0 0 0.8rem rgb(209, 209, 209));
             }
         }
+
+        &.link-btn {
+            padding: 10px;
+            border-radius: 50%;
+            background: #00000047;
+
+            path {
+                fill: #FFFFFF;
+            }
+
+            &.active {
+                background: #FFFFFF;
+
+                path {
+                    fill: #FF4365;
+                }
+            }
+        }
     }
 }

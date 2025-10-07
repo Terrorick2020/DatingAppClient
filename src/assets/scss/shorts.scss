@@ -58,6 +58,82 @@
                         &:active {
                             cursor: grabbing;
                         }
+
+                        &__children {
+                            width: 100%;
+                            height: 100%;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            z-index: 5;
+                            display: flex;
+                            align-items: end;
+                            pointer-events: none;
+
+                            .cldrn-box {
+                                width: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                padding-inline: 1rem;
+                                background: linear-gradient(to top, #000000e7, transparent);
+
+                                @media (max-width: 380px) {
+                                    padding-inline: 0.5rem;
+                                }
+
+                                &__btns {
+                                    width: 100%;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: end;
+                                    
+                                    .btns-right {
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 0.5rem;
+                                        pointer-events: auto;
+                                    }
+                                }
+
+                                &__info {
+                                    width: 100%;
+                                    padding-bottom: 1rem;
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 0.5rem;
+
+                                    .psych {
+                                        width: 100%;
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: start;
+                                        align-items: center;
+                                        gap: 0.5rem;
+
+
+                                        .name {
+                                            font-weight: 900;
+                                            font-size: clamp(1rem, 4vw, 1.2rem);
+                                        }
+
+                                        .date {
+                                            opacity: 0.5;
+                                            margin-top: 0.25rem;
+                                            font-size: clamp(0.9rem, 4vw, 1.1rem);
+                                        }
+                                    }
+
+                                    .short-name {
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 3;
+                                        line-clamp: 3;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

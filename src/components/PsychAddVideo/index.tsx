@@ -1,7 +1,9 @@
-import { type JSX, useState, useEffect, useRef } from 'react';
+import { type JSX, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { getTargetPsychVideoAsync } from '@/store/slices/videosSlice';
 import { toNotFoud } from '@/config/routes.config';
+import { PSYCH_VIDEO_ADD_MARK } from '@/constant/quest';
 import { resetTargetPsychVideo } from '@/store/slices/videosSlice';
 import { warningAlert } from '@/funcs/alert.funcs';
 import { URL_MARK } from '@/config/env.config';
@@ -17,25 +19,25 @@ import PsychAddVideoFooter from './Footer';
 const PsychAddVideoContent = (): JSX.Element => {
     const isLoad = useSelector((state: IState) => state.settings.load);
 
-    const [loadVideo, setLoadVideo] = useState<boolean>(false);
-
-    const needReset = useRef<boolean>(false);
+    const [id, setId] = useState<string>('');
 
     const dispatch = useDispatch<RootDispatch>(); 
     const navigate = useNavigate();   
     const params = useParams();
 
-    const id = params[URL_MARK];
-
-    const setNeedReset = (value: boolean): void => {
-        needReset.current = value;
-    };
+    const mark = params[URL_MARK];
 
     useEffect(() => {
+        if(mark && mark !== PSYCH_VIDEO_ADD_MARK) {
+            getTargetPsychVideoAsync(+mark);
+        };
+
+        setId(mark || '');
+
         return () => { dispatch(resetTargetPsychVideo()) };
     }, []);
 
-    if(!id) {
+    if(!mark) {
         warningAlert( dispatch, 'Не удалось получить информацию о видео' );
         navigate(toNotFoud);
 
@@ -51,7 +53,7 @@ const PsychAddVideoContent = (): JSX.Element => {
     return (
         <div className="psych-add-video__ctx">
             <PsychAddVideoMain id={id} />
-            <PsychAddVideoFooter />
+            <PsychAddVideoFooter id={id} setId={setId} />
         </div>
     );
 };

@@ -22,7 +22,6 @@ import {
 } from '@/types/tg.types';
 
 import { delay } from './general.funcs';
-import { setTgId } from '@/config/fetch.config';
 import { EProfileRoles } from '@/types/store.types';
 
 
@@ -127,8 +126,6 @@ export function getTgID(): string | null {
   const user = initData.user();
 
   if(!user) return null;
-
-  setTgId('' + user.id);
 
   return '' + user.id;
 };

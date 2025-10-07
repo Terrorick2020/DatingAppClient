@@ -1,4 +1,4 @@
-import { JSX, useState, useRef, useEffect } from 'react';
+import { type JSX, type ReactNode, useState, useRef, useEffect } from 'react';
 import { EMyPlayertxType } from '.';
 import type { OnProgressProps } from 'react-player/base';
 
@@ -11,6 +11,7 @@ interface PropsMyPlayerMain {
     playing: boolean
     setPlaying: (value: boolean) => void
     setCtxType: (value: EMyPlayertxType) => void
+    children?: ReactNode
 }
 const MyPlayerMain = (props: PropsMyPlayerMain): JSX.Element => {
     const [showBg, setShowBg] = useState<boolean>(false);
@@ -178,6 +179,7 @@ const MyPlayerMain = (props: PropsMyPlayerMain): JSX.Element => {
                 setPlaying={props.setPlaying}
                 setSeek={setSeek}
             />
+            { props.children }
         </div>
     )
 };

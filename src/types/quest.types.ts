@@ -14,10 +14,6 @@ export interface SliderItem {
     photos: string[]
 }
 
-export interface PsychVideoItem {
-    id: number
-}
-
 export interface InitSliderResData {
     isPush: boolean
     slides: SliderItem[]
@@ -49,7 +45,6 @@ export interface DetailsTargetUser {
 
 export interface QuestState {
     sliderList: SliderItem[]
-    psychVideosList: PsychVideoItem[]
     targetUser: DetailsTargetUser | null
 }
 
@@ -88,4 +83,10 @@ export interface PlansLabelsState {
 
 export interface PropsDetailsFixed {
     id: string
+}
+
+export enum EShortsCaruselKey {
+    Space = 'Space',
+    ArrowRight = 'ArrowRight',
+    ArrowLeft = 'ArrowLeft',
 }

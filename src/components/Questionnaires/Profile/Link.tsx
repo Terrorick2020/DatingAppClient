@@ -23,7 +23,7 @@ const ProfileLink = (): JSX.Element => {
                 </div>
                 <IconButton>
                     <img
-                        src={SvgLink}
+                        src={ SvgLink }
                         alt="link"
                         loading="lazy"
                         decoding="async"

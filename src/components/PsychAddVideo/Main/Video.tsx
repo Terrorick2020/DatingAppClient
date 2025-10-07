@@ -1,5 +1,6 @@
 import { JSX, ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { resetTargetPsychVideo } from '@/store/slices/videosSlice';
 import { MAX_VIDEO_SIZE } from '@/constant/video';
 import { psychAddVideoAsync } from '@/store/slices/videosSlice';
 import { getPreviewVideo } from '@/funcs/img.funcs';
@@ -26,6 +27,7 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
         setThumbnail(null)
         setLoadFetch(false);
         setProgress(0);
+        dispatch(resetTargetPsychVideo());
     };
 
     const handleDelete = async (): Promise<void> => clearMeta();
@@ -48,6 +50,7 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
             return;
         };
 
+        setLoadFetch(false);
         successAlert(dispatch, 'Видео успешно загрузилось')
     };
 

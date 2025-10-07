@@ -170,8 +170,6 @@ const FillingQuestContent = (): JSX.Element => {
                 ? signUpPsychAsync(btnCtx.mark)
                 : signUpProfileAsync(btnCtx.mark)
         ).unwrap();
-
-        console.log(response)
         
         if( response && response !== 'error') {
             infoCache.current = JSON.stringify(profileInfo);

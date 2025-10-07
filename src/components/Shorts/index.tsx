@@ -1,12 +1,17 @@
 import { JSX, useEffect, useState } from 'react';
 import { createSelector } from 'reselect';
-import { useSelector } from 'react-redux';
+import { errorAlert } from '@/funcs/alert.funcs';
+import { useNavigate } from 'react-router-dom';
+import { toNotFoud } from '@/config/routes.config';
+import { getShortsAsync } from '@/store/slices/videosSlice';
+import { initialQuery } from '@/constant/chats';
+import { useDispatch, useSelector } from 'react-redux';
 import type { IState } from '@/types/store.types';
+import type { RootDispatch } from '@/store';
 
 import MyLoader from '@/components/UI/MyLoader';
 import ShortsBackDrop from './BackDrop';
 import ShortsCtxCarusel from './Carusel';
-import { delay } from '@/funcs/general.funcs';
 
 
 const selectSettings = (state: IState) => state.settings;
@@ -23,8 +28,16 @@ const ShortsContent = (): JSX.Element => {
 
     const [open, setOpen] = useState<boolean>(false);
 
+    const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
+
     const showBackDrop = async (): Promise<void> => {
-        await delay(10);
+        const response = await dispatch(getShortsAsync(initialQuery)).unwrap();
+
+        if(!response || response === 'error') {
+            errorAlert(dispatch, 'Не удалось получить ленту новостей');
+            navigate(toNotFoud);
+        };
 
         setOpen(true);
     };
@@ -37,7 +50,7 @@ const ShortsContent = (): JSX.Element => {
         <div className="loader">
             <MyLoader />
         </div>
-    )
+    );
 
     return (
         <div className="shorts__ctx">

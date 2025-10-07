@@ -255,3 +255,12 @@ export interface SelfPsychPhotoItem {
 export interface SelfPsychRes extends Omit<TargetPsychologistRes, 'photos'> {
 	photos: SelfPsychPhotoItem[]
 }
+
+export interface ToggleShortsLikeRes {
+	isLiked: boolean
+	likesCount: number
+}
+
+export interface ShortsViewRes {
+	viewsCount: number
+}
