@@ -70,6 +70,7 @@ export const initialState: SettingsState = {
         cityErr: dfltErrItem,
         ageErr: dfltErrItem,
         bioErr: dfltErrItem,
+        captchaErr: dfltErrItem,
     },
     fEPErrors: {
         descPlanErr: dfltErrItem,
@@ -102,6 +103,7 @@ export const initialState: SettingsState = {
     },
     photosCashe: [],
     likeBtnType: ELikeBtnType.Accepted,
+    captchaToken: '',
 };
 
 export const initFillingQuestAsync = createAsyncThunk(
@@ -494,6 +496,9 @@ const settingsSlice = createSlice({
         setLikeTypeBtn: (state, action: PayloadAction<ELikeBtnType>): void => {
             state.likeBtnType = action.payload;
         },
+        setCaptcaToken: (state, action: PayloadAction<string>): void => {
+            state.captchaToken = action.payload;
+        }
     },
     extraReducers: builder => {
         // Получение варианетов интересов
@@ -641,5 +646,6 @@ export const {
     setBadge,
     resetBadge,
     setLikeTypeBtn,
+    setCaptcaToken,
 } = settingsSlice.actions;
 export default settingsSlice.reducer;

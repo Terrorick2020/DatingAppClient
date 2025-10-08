@@ -1,4 +1,4 @@
-import { JSX, useEffect } from 'react';
+import { type JSX, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toNotFoud } from '@/config/routes.config';
@@ -15,11 +15,11 @@ const AdminLayout = (): JSX.Element => {
         document.title = "Администратор";
     }, []);
 
-    // if( role !== EProfileRoles.Admin) {
-    //     navigate(toNotFoud);
+    if( role !== EProfileRoles.Admin) {
+        navigate(toNotFoud);
 
-    //     return (<></>);
-    // }
+        return (<></>);
+    };
 
     return (
         <div className="admin-layout">

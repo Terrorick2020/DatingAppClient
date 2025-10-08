@@ -6,7 +6,10 @@ import MyPlayerError from './Error';
 
 
 interface PropsMyPlayer {
+    videoId: number
     previewUrl: string
+    isViewed: boolean
+    isLiked: boolean
     videoUrl: string
     playing: boolean
     timeToStart: boolean
@@ -46,13 +49,15 @@ const MyPlayer = (props: PropsMyPlayer): JSX.Element => {
             
             default:
                 return <MyPlayerMain
+                    videoId={props.videoId}
                     videoUrl={props.videoUrl}
+                    isViewed={props.isViewed}
                     playing={props.playing}
                     setPlaying={props.setPlaying}
                     setCtxType={setCtxType}
                 >{ props.children }</MyPlayerMain>
         }
-    }, [ctxType, props.playing]);
+    }, [ctxType, props.playing, props.isLiked]);
 
     return (
         <div className="my-player">

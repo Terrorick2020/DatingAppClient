@@ -6,11 +6,11 @@ export async function fadeOutPreloader() {
 	const preloader = document.getElementById( 'preloader' );
 
 	if ( preloader ) {
-		preloader.style.animation = "fadeOut 2s ease-in-out forwards";
+		preloader.style.animation = 'fadeOut 2s ease-in-out forwards';
 
 		await delay(2000);
 
-		preloader.style.display = "none";
+		preloader.style.display = 'none';
 	}
 }
 
@@ -75,3 +75,21 @@ export function formatTimestamp(createdAt: number): string {
 		hour12: false,
 	}).replace(',', '');
 }
+
+export function formatDate(dateString: Date, withTime = true): string {
+    const date = new Date(dateString);
+
+    const options: Intl.DateTimeFormatOptions = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        ...(withTime && {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }),
+    };
+
+    const formatted = new Intl.DateTimeFormat('ru-RU', options).format(date);
+    return formatted.replace(',', ' ');
+};

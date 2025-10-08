@@ -37,9 +37,9 @@ const ShortsContent = (): JSX.Element => {
         if(!response || response === 'error') {
             errorAlert(dispatch, 'Не удалось получить ленту новостей');
             navigate(toNotFoud);
+        } else {
+            setOpen(!response.isChecked);
         };
-
-        setOpen(true);
     };
 
     useEffect(() => {

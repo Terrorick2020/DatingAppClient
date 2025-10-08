@@ -9,7 +9,7 @@ export const targetPsychVideoBase: TargetPsychVideo = {
     preview: '',
     title: '',
     description: '',
-    url: '',
+    url: ''
 };
 
 export const selfPsychVideosBase: SelfPsychVideos = {
@@ -17,4 +17,4 @@ export const selfPsychVideosBase: SelfPsychVideos = {
     total: null,
 };
 
-export const shortsListBase = selfPsychVideosBase as VideoShortsList;
+export const shortsListBase = { isChecked: false, ...selfPsychVideosBase } as VideoShortsList;

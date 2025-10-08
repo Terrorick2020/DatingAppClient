@@ -4,12 +4,9 @@ import {
 } from '@/store/slices/settingsSlice';
 
 import { JSX, memo, useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { errorAlert } from '@/funcs/alert.funcs';
 import { useSnackbar } from 'notistack';
-import { load, BotKind } from '@fingerprintjs/botd';
-import { toBlocked } from '@/config/routes.config';
 import { EApiStatus } from '@/types/settings.type';
 import { SNACK_TIMEOUT } from '@/constant/settings';
 import { connectToNamespace, disconnectFromNamespace } from '@/config/socket.config';
@@ -28,7 +25,6 @@ const DefaultLayout = memo((): JSX.Element => {
     const apiRes = useSelector((state: IState) => state.settings.apiRes);
 
     const dispatch = useDispatch<RootDispatch>();
-    const navigate = useNavigate();
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -72,34 +68,7 @@ const DefaultLayout = memo((): JSX.Element => {
         } catch {}
     };
 
-    const handleBotd = async (): Promise<void> => {
-        const botdPromise = load();
-
-        const res = await (await botdPromise).detect();
-
-        const highRiskKinds = new Set<BotKind>([
-            BotKind.HeadlessChrome,
-            BotKind.Selenium,
-            BotKind.NightmareJS,
-            BotKind.PhantomJS,
-            BotKind.SlimerJS,
-            BotKind.FMiner,
-            BotKind.WebDriver,
-            BotKind.WebDriverIO,
-        ]);
-
-        if(res.bot && highRiskKinds.has(res.botKind)) {
-            // navigate(toBlocked);
-            
-            errorAlert(
-                dispatch,
-                'Есть подозрения, что ваш аккаунт используется ботом',
-            );
-        };
-    };
-
     useEffect( () => {
-        handleBotd();
         handleSocketConnect();
         setHomeScreen();
 

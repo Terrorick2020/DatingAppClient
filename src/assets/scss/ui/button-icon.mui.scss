@@ -57,7 +57,11 @@
         &.link-btn {
             padding: 10px;
             border-radius: 50%;
-            background: #00000047;
+            background: #0000006f;
+
+            .MuiCircularProgress-root {
+                color: #FFFFFF;
+            }
 
             path {
                 fill: #FFFFFF;

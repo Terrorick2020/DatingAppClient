@@ -206,9 +206,7 @@ export interface AdminGenLinkRes {
 
 export interface PsychListPhotoRes {
 	id: number
-	key: string
-	tempTgId: string | null
-	telegramId: string | null
+	url: string
 }
 
 export interface InitPsychListResPsych {
@@ -222,7 +220,7 @@ export interface InitPsychListResPsych {
 export interface InitPsychListRes {
 	psychologists: InitPsychListResPsych[]
 	total: number
-}
+};
 
 export interface TargetPsychologistRes {
 	id: number
@@ -263,4 +261,8 @@ export interface ToggleShortsLikeRes {
 
 export interface ShortsViewRes {
 	viewsCount: number
+}
+
+export interface UserSelfPsychRes {
+	psychologistId: string | null
 }

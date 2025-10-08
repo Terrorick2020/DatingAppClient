@@ -2,7 +2,6 @@ import { JSX, useState, useRef, useEffect, WheelEvent } from 'react';
 import { useSwipeable, SwipeEventData } from 'react-swipeable';
 import { EShortsCaruselKey } from '@/types/quest.types';
 import { CARUSEL_ANIME_MS } from '@/constant/quest';
-import { FQ_MEDIA_LINK } from '@/config/env.config';
 
 import ShortsCtxCaruselItem from './Item';
 import IconButton from '@mui/joy/IconButton';
@@ -13,7 +12,7 @@ import { IState } from '@/types/store.types';
 
 
 const ShortsCtxCarusel = (): JSX.Element => {
-    const { videos, total } = useSelector((state: IState) => state.videos.shortsList);
+    const shortsList = useSelector((state: IState) => state.videos.shortsList);
 
     const [isSwiped, setIsSwiped] = useState<boolean>(false);
     const [index, setIndex] = useState<number>(0);
@@ -44,7 +43,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
         if(
             isSwiped     ||
             newIndex < 0 ||
-            newIndex >= videos.length
+            newIndex >= shortsList.videos.length
         ) return;
 
         setIsSwiped(true);
@@ -65,7 +64,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
 
         if(index === 0 && deltaY > 0) {
             newOffset = Math.min(deltaY, deltaSwipeY.current);
-        } else if (index === videos.length - 1 && deltaY < 0) {
+        } else if (index === shortsList.videos.length - 1 && deltaY < 0) {
             newOffset = Math.max(deltaY, -deltaSwipeY.current);
         } else {
             newOffset = deltaY;
@@ -78,7 +77,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
         if(!isSwiped && !isWheeled.current) {
             if(index === 0 && event.deltaY < 0) {
                 animeVoidWheel(deltaSwipeY.current);
-            } else if (index === videos.length - 1 && event.deltaY > 0) {
+            } else if (index === shortsList.videos.length - 1 && event.deltaY > 0) {
                 animeVoidWheel(-deltaSwipeY.current);
             } else {
 
@@ -157,7 +156,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
             };
 
             if (e.key === "ArrowDown") {
-                if(index >= videos.length - 1) return;
+                if(index >= shortsList.videos.length - 1) return;
                 setIndex(prev => prev + 1);
                 goSwipe = true;
             };
@@ -203,15 +202,12 @@ const ShortsCtxCarusel = (): JSX.Element => {
                         }}
                     >
                         {
-                            videos.map((item, indx) => (
+                            shortsList.videos.map((item, indx) => (
                                 <ShortsCtxCaruselItem
                                     key={`shorts-carusel-slide-${indx}`}
                                     indx={index}
                                     selfIndx={indx}
-                                    item={{
-                                        previewUrl: 'https://image.winudf.com/v2/image/bW9iaS5hbmRyb2FwcC5wcm9zcGVyaXR5YXBwcy5jNTExMV9zY3JlZW5fN18xNTI0MDQxMDUwXzAyMQ/screen-7.jpg?fakeurl=1&type=.jpg',
-                                        videoUrl: FQ_MEDIA_LINK,
-                                    }}
+                                    item={item}
                                     keyCode={keyCode}
                                     setKeyKode={setKeyCode}
                                 />
@@ -228,7 +224,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
                     <ArrowUpwardIcon />
                 </IconButton>
                 <IconButton
-                    disabled={isSwiped || index >= videos.length - 1}
+                    disabled={isSwiped || index >= shortsList.videos.length - 1}
                     onClick={() => changeSlide(index + 1)}
                 >
                     <ArrowDownwardIcon />

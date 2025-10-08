@@ -1,4 +1,4 @@
-import { JSX, useEffect } from 'react';
+import { type JSX, useEffect } from 'react';
 import { SUPPORT_EMAIL, BOT_LINK } from '@/config/env.config';
 
 

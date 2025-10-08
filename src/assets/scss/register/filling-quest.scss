@@ -247,6 +247,10 @@
 
             &__captcha {
                 width: 100%;
+
+                @media (max-width: 360px) {
+                    transform: translateX(calc((100% - 320px) / 4 ));
+                }
             }
         }
     }

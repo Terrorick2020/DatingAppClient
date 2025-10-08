@@ -1,15 +1,22 @@
 import { JSX } from 'react';
 import { SmartCaptcha } from '@yandex/smart-captcha';
+import { useDispatch } from 'react-redux';
+import { dfltErrItem } from '@/constant/settings';
+import { setFQErrors } from '@/store/slices/settingsSlice';
+import { setCaptcaToken } from '@/store/slices/settingsSlice';
 import { CAPTURE_KEY, CAPTURE_MODE } from '@/config/env.config';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toError } from '@/config/routes.config';
+import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 
 export const FillingQuestCaptcha = (): JSX.Element => {
     const lang = useSelector((state: IState) => state.settings.lang);
+    const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
 
+    const disatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
 
     const handleNetworkError = (): void => {
@@ -17,11 +24,16 @@ export const FillingQuestCaptcha = (): JSX.Element => {
     };
 
     const handleSuccess = (token: string): void => {
-        console.log(token)
+        disatch(setCaptcaToken(token));
+
+        disatch(setFQErrors({
+            ...fQErrors,
+            captchaErr: dfltErrItem,
+        }));
     };
 
     const handleTokenExpired = (): void => {
-        console.log('Время жизни токена истекло');
+        disatch(setCaptcaToken(''));
     };
 
     return (
@@ -35,7 +47,9 @@ export const FillingQuestCaptcha = (): JSX.Element => {
                 onSuccess={handleSuccess}
                 onTokenExpired={handleTokenExpired}
             />
-            <p className="captcha-msg-err">Проверка не пройдена</p>
+            { fQErrors.captchaErr.value
+                && <p className="captcha-msg-err">{ fQErrors.captchaErr.msg }</p>
+            }
         </div>
     )
 }

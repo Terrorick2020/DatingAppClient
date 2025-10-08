@@ -14,6 +14,7 @@ import type {
     VideoShortsList,
     VideoItemWithPsych,
     VideoItem,
+    EditVideoData,
 } from '@/types/videos.types';
 
 import {
@@ -154,22 +155,17 @@ export const publishPsychVideoAsync = createAsyncThunk(
 
 export const editPsychVideoAsync = createAsyncThunk(
     'videos/edit-psych-video',
-    async (videoId: number, { getState }): Promise<AsyncThunkRes<VideoItem[]>> => {
+    async (editData: EditVideoData, { getState }): Promise<AsyncThunkRes<VideoItem[]>> => {
         try {
             const rootState = getState() as IState;
+            const {videoId, ...data} = editData;
             const url = `${VIDEO_ENDPOIN}/${videoId}`;
-
-            const data = {
-                title: "Новое название",
-                description: "Новое описание",
-                isPublished: true,
-            };
 
             const response: AxiosResponse<FetchResponse<Omit<VideoItemWithPsych, 'isLiked'>>> =
                 await api.patch(url, data);
 
             if(
-                response.status !== 201 ||
+                response.status !== 200 ||
                 !response.data.success  ||
                 !response.data.data     ||
                 response.data.data === 'None'
@@ -193,9 +189,7 @@ export const editPsychVideoAsync = createAsyncThunk(
 
 export const getTargetPsychVideoAsync = createAsyncThunk(
     'videos/get-target-psych-video',
-    async (id: number, { dispatch, getState }): Promise<TargetPsychVideo | null> => {
-        dispatch(setLoad(true));
-
+    async (id: number, { getState }): Promise<TargetPsychVideo | null> => {
         const rootState = getState() as IState;
         const selfVideos = rootState.videos.selfPsychVideos.videos;
 
@@ -209,13 +203,11 @@ export const getTargetPsychVideoAsync = createAsyncThunk(
             url: targetItem.url,
             title: targetItem.title,
             description: targetItem.description,
-            preview: '',
+            preview: targetItem.previewUrl,
         };
 
-        dispatch(setLoad(false));
-
         return response;
-    }
+    },
 );
 
 export const deletePsychVideoAsync = createAsyncThunk(
@@ -254,8 +246,6 @@ export const getSelfPsychVideosAsync = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<SelfPsychVideos>> = await api.get(url);
 
-            console.log(response);
-
             if(
                 response.status !== 200 ||
                 !response.data.success  ||
@@ -284,6 +274,8 @@ export const getShortsAsync = createAsyncThunk(
             const url = VIDEO_SHORTS_ENDPOINT(telegramId, data.offset, data.limit);
 
             const response: AxiosResponse<FetchResponse<VideoShortsList>> = await api.get(url);
+
+            console.log(response);
 
             if(
                 response.status !== 200 ||
@@ -332,7 +324,7 @@ export const toggleShortsLikeAsync = createAsyncThunk(
                     : item
             );
         } catch {
-            return 'error'
+            return 'error';
         };
     },
 );
@@ -363,9 +355,9 @@ export const viewShortsAsync = createAsyncThunk(
                     ? {
                         ...item,
                         viewsCount: dataRes.viewsCount,
+                        isViewed: true,
                     }
                     : item
-
             );
         } catch {
             return 'error';
@@ -561,7 +553,7 @@ const videosSlice = createSlice({
                     console.log("Шортсы не получены");
                     break;
                 default:
-                    state.selfPsychVideos = action.payload;
+                    state.shortsList = action.payload;
                     console.log("Шортсы успешно получены");
                     break;
             }
@@ -572,7 +564,7 @@ const videosSlice = createSlice({
 
         // Изменение лайка шортса
         builder.addCase(toggleShortsLikeAsync.pending, _ => {
-            console.log("Получение шортсов");
+            console.log("Изменение лайка шортса");
         })
         builder.addCase(toggleShortsLikeAsync.fulfilled, (
             state,

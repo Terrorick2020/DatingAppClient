@@ -14,9 +14,10 @@ export interface TargetPsychVideo extends PsychAddVideoRes {
 }
 
 export interface VideoItemPsych {
-    id: number
+    id: string
     name: string
     about: string
+    photoUrl: string
 }
 
 export interface VideoItem {
@@ -24,7 +25,7 @@ export interface VideoItem {
     createdAt: Date
     updatedAt: Date
     key: string
-    previewKey: string
+    previewUrl: string
     telegramId: string
     title: string
     description: string
@@ -42,10 +43,12 @@ export interface SelfPsychVideos {
 
 export interface VideoItemWithPsych extends VideoItem {
     isLiked: boolean
+    isViewed: boolean
 }
 
 export interface VideoShortsList extends Omit<SelfPsychVideos, 'videos'> {
     videos: VideoItemWithPsych[]
+    isChecked: boolean
 }
 
 export interface VideosState {
@@ -61,6 +64,14 @@ export interface PsychAddVideoParams {
 
 export interface PropsVideoMainItem {
     item: VideoItem
+    setSelId: (value: number | null) => void
     setDialogType: (value: VideoConfDType) => void
     setOpenConf: (value: boolean) => void
+}
+
+export interface EditVideoData {
+    videoId: number
+    title: string
+    description: string
+    isPublished: boolean
 }

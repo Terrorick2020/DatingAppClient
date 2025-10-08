@@ -1,8 +1,9 @@
 import { type JSX, useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { PSYCH_VIDEO_ADD_MARK } from '@/constant/quest';
-import { publishPsychVideoAsync } from '@/store/slices/videosSlice';
+import { publishPsychVideoAsync, editPsychVideoAsync } from '@/store/slices/videosSlice';
 import { successAlert, warningAlert } from '@/funcs/alert.funcs';
+import type { EditVideoData } from '@/types/videos.types';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -27,16 +28,39 @@ const PsychAddVideoFooter = (props: PropsPsychAddVideoFooter): JSX.Element => {
 
     const dispatch = useDispatch<RootDispatch>();
 
-    const handlePublished = async (): Promise<void> => {
+    const handleClick = async (): Promise<void> => {
         setIsLoad(true);
 
-        const response = await dispatch(publishPsychVideoAsync()).unwrap();
+        let response = null;
+        let errText = '';
+        let infoText = '';
+
+        if(props.id === PSYCH_VIDEO_ADD_MARK) {
+            errText = 'Не удалось опубликовать видео! Попробуйте позже';
+            infoText= 'Видео успешно опубликовано';
+            response = await dispatch(publishPsychVideoAsync()).unwrap();
+        } else {
+            errText = 'Не удалось изменить видео! Попробуйте позже';
+            infoText= 'Видео успешно изменено';
+
+            if(targetPsychVideo.videoId) {
+                const data: EditVideoData = {
+                    videoId: targetPsychVideo.videoId,
+                    title: targetPsychVideo.title,
+                    description: targetPsychVideo.description,
+                    isPublished: true,
+                };
+
+                response = await dispatch(editPsychVideoAsync(data)).unwrap();  
+            };
+        };
 
         if(!response || response === 'error') {
-            warningAlert(dispatch, 'Не удалось опубликовать видео! Попробуйте позже');
+            warningAlert(dispatch, errText);
         } else {
-            successAlert(dispatch, 'Видео успешно опубликовано');
+            successAlert(dispatch, infoText);
             cacheData.current = JSON.stringify(targetPsychVideo);
+            props.setId(''+targetPsychVideo.videoId);
         };
 
         setIsLoad(false);
@@ -58,7 +82,7 @@ const PsychAddVideoFooter = (props: PropsPsychAddVideoFooter): JSX.Element => {
                     loadingPosition="start"
                     loading={isLoad}
                     disabled={isDisabled}
-                    onClick={handlePublished}
+                    onClick={handleClick}
                 >
                     { btnText[+(props.id === PSYCH_VIDEO_ADD_MARK)][+isLoad] }
                 </Button>

@@ -16,7 +16,7 @@ interface PropsPsychAddVideoMain {
     id: string
 }
 const PsychAddVideoMain = (props: PropsPsychAddVideoMain): JSX.Element => {
-    const targetVideoTitle = useSelector((state: IState) => state.videos.targetPsychVideo.title);
+    const targetPsychVideo = useSelector((state: IState) => state.videos.targetPsychVideo);
     const titleError = useSelector((state: IState) => state.settings.fAVErrors.titleErr);
 
     const dispatch = useDispatch<RootDispatch>();
@@ -38,18 +38,29 @@ const PsychAddVideoMain = (props: PropsPsychAddVideoMain): JSX.Element => {
     const VideoHTML = useMemo((): JSX.Element => {
         return props.id === PSYCH_VIDEO_ADD_MARK
             ? <PsychAddVideoMainVideo />
-            : <PlayerBtn urlImg='dvsdvsd' urlVideo='xdvsd' />
+            : <PlayerBtn
+                urlImg={targetPsychVideo.preview}
+                urlVideo={targetPsychVideo.url}
+            />
     }, [props.id]);
 
     return (
         <div className="content">
             <header className="header">
-                <h3 className="headline">Загрузить видео</h3>
-                <p className="description">Поделитесь опытом с другими</p>
+                <h3 className="headline">
+                    {
+                        props.id === PSYCH_VIDEO_ADD_MARK
+                            ? 'Загрузить видео'
+                            : 'Редактировать видео'
+                    }
+                </h3>
+                { props.id === PSYCH_VIDEO_ADD_MARK
+                        && <p className="description">Поделитесь опытом с другими</p> }
             </header>
             <main className="main">
                 <div className="main__item">
-                    <h4 className="sub-headline">Прикрепите видео</h4>
+                    { props.id === PSYCH_VIDEO_ADD_MARK
+                        && <h4 className="sub-headline">Прикрепите видео</h4> }
                     <div className="video-box">
                         <div className='video-box__ctx'>
                             { VideoHTML }
@@ -63,7 +74,7 @@ const PsychAddVideoMain = (props: PropsPsychAddVideoMain): JSX.Element => {
                         id="video-name"
                         fullWidth
                         placeholder="Название"
-                        value={targetVideoTitle}
+                        value={targetPsychVideo.title}
                         helperText={titleError.msg}
                         error={titleError.value}
                         onChange={handleChange}

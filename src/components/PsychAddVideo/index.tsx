@@ -29,7 +29,7 @@ const PsychAddVideoContent = (): JSX.Element => {
 
     useEffect(() => {
         if(mark && mark !== PSYCH_VIDEO_ADD_MARK) {
-            getTargetPsychVideoAsync(+mark);
+            dispatch(getTargetPsychVideoAsync(+mark));
         };
 
         setId(mark || '');

@@ -14,7 +14,7 @@ const RulesContent = (): JSX.Element => {
     return (
         <div className="rules__ctx">
             <div className="shadow"></div>
-            <h4 className="headline">Правила использования приложения 3date</h4>
+            <h4 className="headline">Правила использования приложения `3Вместе`</h4>
             <h5 className="sub-headline">Дата вступления в силу: 20.07.2025</h5>
             <div className="text">
                 <h6 className="title">1. Общие положения</h6>

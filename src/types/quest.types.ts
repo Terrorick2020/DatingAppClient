@@ -1,3 +1,6 @@
+import type { VideoItemWithPsych } from './videos.types';
+
+
 export interface PlansObj {
     date: string
     content: string
@@ -89,4 +92,23 @@ export enum EShortsCaruselKey {
     Space = 'Space',
     ArrowRight = 'ArrowRight',
     ArrowLeft = 'ArrowLeft',
+}
+
+
+export interface PropsShortsCtxCaruselItem {
+    indx: number
+    selfIndx: number
+    item: VideoItemWithPsych
+    keyCode: EShortsCaruselKey | null
+    setKeyKode: (value: EShortsCaruselKey | null) => void
+}
+
+export interface PropsShortsCtxCaruselChildren {
+    id: string
+    videoId: number
+    avatar: string
+    name: string
+    text: string
+    uptAt: Date
+    isLiked: boolean
 }

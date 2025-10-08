@@ -1,7 +1,10 @@
 import { JSX, useState, MouseEvent, useMemo, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { URL_MARK } from '@/config/env.config';
+import { formatDate } from '@/funcs/general.funcs';
+import { addRoute } from '@/store/slices/settingsSlice';
+import { warningAlert } from '@/funcs/alert.funcs';
 import { getTargetPsychVideoAsync } from '@/store/slices/videosSlice';
 import { toPsychAddVideo } from '@/config/routes.config';
 import { type PropsVideoMainItem, VideoConfDType } from '@/types/videos.types';
@@ -14,7 +17,6 @@ import SvgMoreCircle from '@/assets/icon/more-circle.svg';
 import SvgChatTrash from '@/assets/icon/chat-trash.svg?react';
 import SvgEdit from '@/assets/icon/edit.svg?react';
 import SvgCross from '@/assets/icon/cross.svg?react';
-import PngLeady from '@/assets/img/leady.png';
 
 
 const VideoMainItem = (props: PropsVideoMainItem): JSX.Element => {
@@ -22,8 +24,9 @@ const VideoMainItem = (props: PropsVideoMainItem): JSX.Element => {
     
     const ref = useRef<HTMLDivElement | null>(null);
 
-    const navigate = useNavigate();
     const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleClose = (event: MouseEvent<HTMLLIElement>): void => {
         event.stopPropagation();
@@ -33,35 +36,34 @@ const VideoMainItem = (props: PropsVideoMainItem): JSX.Element => {
     const handleRemovePublication = (event: MouseEvent<HTMLLIElement>): void => {
         props.setDialogType(VideoConfDType.Revoke);
         handleClose(event);
+        props.setSelId(props.item.id);
         props.setOpenConf(true);
     };
 
-    const handleEdit = (event: MouseEvent<HTMLLIElement>): void => {
-        dispatch(getTargetPsychVideoAsync(props.item.id));
-        navigate(toPsychAddVideo.replace(`:${URL_MARK}`, ''+props.item.id));
+    const handleEdit = async (event: MouseEvent<HTMLLIElement>): Promise<void> => {
+        const response = await dispatch(getTargetPsychVideoAsync(props.item.id)).unwrap();
+        
+        if(!response) {
+            warningAlert(dispatch, 'Не удалось получить информации о видео');
+        } else {
+            dispatch(addRoute(location.pathname));
+            navigate(toPsychAddVideo.replace(`:${URL_MARK}`, ''+props.item.id));
+        };
+
         handleClose(event);
     };
 
     const handleDelete = (event: MouseEvent<HTMLLIElement>): void => {
         props.setDialogType(VideoConfDType.Delete);
         handleClose(event);
+        props.setSelId(props.item.id);
         props.setOpenConf(true);
     };
 
-    const formatedDate = useMemo((): string => {
-        const date = new Date(props.item.updatedAt);
-
-        const formatted = new Intl.DateTimeFormat("ru-RU", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false
-        }).format(date);
-
-        return formatted.replace(',', ' ');
-    }, [props.item.updatedAt]);
+    const formatedDate = useMemo(
+        (): string => formatDate(props.item.updatedAt),
+        [props.item.updatedAt],
+    );
 
     useEffect(() => {
         if (!ref.current) return;
@@ -94,7 +96,7 @@ const VideoMainItem = (props: PropsVideoMainItem): JSX.Element => {
                     alt="preiew"
                     loading="lazy"
                     decoding="async"
-                    src={ PngLeady }
+                    src={ props.item.previewUrl }
                 />
             </div>
             <div className="info">

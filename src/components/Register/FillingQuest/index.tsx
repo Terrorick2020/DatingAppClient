@@ -4,6 +4,7 @@ import {
     setLoad,
     setFQErrors,
     resetRoutes,
+    setCaptcaToken,
 } from '@/store/slices/settingsSlice';
 
 import {
@@ -12,7 +13,7 @@ import {
     setInfo,
 } from '@/store/slices/profileSlice';
 
-import { JSX, useEffect, useRef, useState, } from 'react';
+import { type JSX, useEffect, useRef, useState, } from 'react';
 import { createSelector } from 'reselect';
 import { useSelector, useDispatch } from 'react-redux';
 import { toPlans, toProfile } from '@/config/routes.config';
@@ -47,13 +48,14 @@ const selectRegisterFQ = createSelector(
     (settings, profile) => ({
       isFirstly: settings.isFirstly,
       isLoad: settings.load,
+      captchaToken: settings.captchaToken,
       fQErrors: settings.fQErrors,
       profileInfo: profile.info,
     })
 );
 
 const FillingQuestContent = (): JSX.Element => {
-    const { isFirstly, isLoad, fQErrors, profileInfo } = useSelector(selectRegisterFQ);
+    const { isFirstly, isLoad, fQErrors, profileInfo, captchaToken } = useSelector(selectRegisterFQ);
     
     const [regLoad, setRegLoad] = useState<boolean>(false);
     const [btnCtx, setBtnCtx] = useState<FQBtnTextItem>(fQBtnText[KeyFQBtnText.First]);
@@ -94,7 +96,9 @@ const FillingQuestContent = (): JSX.Element => {
                 cityErr: dfltErrItem,
                 ageErr: dfltErrItem,
                 bioErr: dfltErrItem,
+                captchaErr: dfltErrItem,
             }));
+            dispatch(setCaptcaToken(''));
         }
     }, [] );
 
@@ -151,6 +155,13 @@ const FillingQuestContent = (): JSX.Element => {
                 }
             }
         });
+
+        if(!captchaToken || fQErrors.captchaErr.value) {
+            errObj.captchaErr = {
+                value: true,
+                msg: 'Проверка не пройдена',
+            };
+        };
 
         const hasErrors = Object.values(errObj).some(item => item.value);
         
@@ -230,7 +241,7 @@ const FillingQuestContent = (): JSX.Element => {
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
 export default FillingQuestContent;

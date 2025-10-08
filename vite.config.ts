@@ -154,7 +154,7 @@ export default defineConfig(({ mode }) => {
                 return 'utils';
               };
 
-              if (id.includes('@telegram-apps') || id.includes('@fingerprintjs/botd')) {
+              if (id.includes('@telegram-apps')) {
                 return 'web-sdk';
               };
 

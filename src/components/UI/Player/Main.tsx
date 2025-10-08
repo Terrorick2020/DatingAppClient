@@ -1,14 +1,19 @@
 import { type JSX, type ReactNode, useState, useRef, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { EMyPlayertxType } from '.';
+import { viewShortsAsync } from '@/store/slices/videosSlice';
 import type { OnProgressProps } from 'react-player/base';
+import type { RootDispatch } from '@/store';
 
 import MyPlayerNav from './Nav';
 import ReactPlayer from 'react-player';
 
 
 interface PropsMyPlayerMain {
+    videoId: number
     videoUrl: string
     playing: boolean
+    isViewed: boolean
     setPlaying: (value: boolean) => void
     setCtxType: (value: EMyPlayertxType) => void
     children?: ReactNode
@@ -18,13 +23,14 @@ const MyPlayerMain = (props: PropsMyPlayerMain): JSX.Element => {
     const [isLoad, setIsLoad] = useState<boolean>(true);
     const [muted, setMuted] = useState<boolean>(true);
     const [duration, setDuration] = useState<number>(0);
-    const [buffered, setBuffered] = useState<number>(0);
+    const [_, setBuffered] = useState<number>(0);
     const [currentTime, setCurrentTime] = useState<number>(0);
 
-    const hideTimer = useRef<NodeJS.Timeout | null>(null);
     const playerRef = useRef<ReactPlayer | null>(null);
     const isWaiting = useRef<boolean>(false);
     const isError = useRef<boolean>(false);
+
+    const dispatch = useDispatch<RootDispatch>();
 
     const handleToggleBg = (): void => {
         setShowBg(prevent => !prevent);
@@ -110,43 +116,15 @@ const MyPlayerMain = (props: PropsMyPlayerMain): JSX.Element => {
         props.setPlaying(true);
     };
 
-    // useEffect(() => {
-    //     if(props.playing) {
-    //         hideTimer.current = setTimeout(() => {
-    //             setShowBg(false);
-    //         }, 1000);
-    //     } else {
-    //         if(hideTimer.current) {
-    //             clearTimeout(hideTimer.current);
-    //             hideTimer.current = null;
-    //         };
-    //     }
-    // }, [props.playing]);
-
-    // useEffect(() => {
-    //     const handleGlobalKeyDown = (event: KeyboardEvent) => {
-    //         switch(event.code) {
-    //             case "Space":
-    //                 props.setPlaying(!props.playing);
-    //                 setShowBg(props.playing);
-    //                 break;
-
-    //             case "ArrowRight":
-    //                 setSeek(10);
-    //                 break;
-
-    //             case "ArrowLeft":
-    //                 setSeek(-10);
-    //                 break;
-    //         };
-    //     };
-
-    //     window.addEventListener("keydown", handleGlobalKeyDown);
-
-    //     return () => {
-    //         window.removeEventListener("keydown", handleGlobalKeyDown);
-    //     }; 
-    // }, [props.playing]);
+    useEffect(() => {
+        if(
+            !props.playing    ||
+            props.isViewed    ||
+            currentTime < 2
+        ) return;
+        
+        dispatch(viewShortsAsync(props.videoId));
+    }, [currentTime]);
 
     return (
         <div

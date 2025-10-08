@@ -54,6 +54,7 @@ export interface FQErrors {
     cityErr: FQErrorsItem
     ageErr: FQErrorsItem
     bioErr: FQErrorsItem
+    captchaErr: FQErrorsItem
 }
 
 export type FQErrorKeys = keyof FQErrors;
@@ -156,6 +157,7 @@ export interface SettingsState {
     badge: BadgeBlock
     photosCashe: string[]
     likeBtnType: ELikeBtnType
+    captchaToken: string
 }
 
 export interface PropsLocationDistrict {

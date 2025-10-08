@@ -30,5 +30,11 @@ export interface TargerPsych {
 export interface PsychState {
     serchPsychQuery: string
     psychList: PsychListItem[]
+    totalPsychCount: number | null
     targetPsych: TargerPsych | null
+}
+
+export interface PsychListResult {
+    psych: PsychListItem[]
+    total: number
 }

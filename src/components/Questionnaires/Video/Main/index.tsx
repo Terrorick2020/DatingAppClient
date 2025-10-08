@@ -1,8 +1,10 @@
-import { type JSX, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { initialQuery } from '@/constant/chats';
+import { type JSX, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { errorAlert, successAlert, warningAlert } from '@/funcs/alert.funcs';
 import { VideoConfDType } from '@/types/videos.types';
-import type { InitSliderData } from '@/types/quest.types';
+import { deletePsychVideoAsync, editPsychVideoAsync } from '@/store/slices/videosSlice';
+import type { EditVideoData } from '@/types/videos.types';
+import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import VideoMainItem from './Item';
@@ -15,12 +17,58 @@ const VideoMain = (): JSX.Element => {
 
     const [open, setOpen] = useState<boolean>(false);
     const [dialogType, setDialogType] = useState<VideoConfDType>(VideoConfDType.Revoke);
+    const [selId, setSelId] = useState<number | null>(null);
 
-    const lastIndx = useRef<number | null>(null);
-    const initQuery = useRef<InitSliderData>(initialQuery);
+    const dispatch = useDispatch<RootDispatch>();
 
-    const handleRemovePublication = async (): Promise<void> => {};
-    const handleDelete = async (): Promise<void> => {};
+    const handleTogglePublication = async (): Promise<void> => {
+        const text = 'Ошибка измения статуса публикации видео';
+
+        if(!selId) {
+            errorAlert(dispatch, text);
+            return;
+        };
+
+        const targetVideo = selfPsychVideos.videos.find(
+            item => item.id === selId
+        );
+
+        if(!targetVideo) {
+            errorAlert(dispatch, text);
+            return;
+        };
+
+        const data: EditVideoData = {
+            videoId: targetVideo.id,
+            title: targetVideo.title,
+            description: targetVideo.description,
+            isPublished: !targetVideo.isPublished
+        };
+
+        const response = await dispatch(editPsychVideoAsync(data)).unwrap();
+
+        if(!response || response === 'error') {
+            warningAlert(dispatch, text);
+            return;
+        };
+
+        successAlert(dispatch, 'Статус публицаии видео успешно изменён')
+    };
+
+    const handleDelete = async (): Promise<void> => {
+        if(!selId) {
+            errorAlert(dispatch, 'Ошибка удаления видео');
+            return;
+        };
+
+        const response = await dispatch(deletePsychVideoAsync(selId)).unwrap();
+
+        if(!response || response === 'error') {
+            errorAlert(dispatch, 'Ошибка удаления видео');
+        } else {
+            successAlert(dispatch, 'Видео успешно удалено')
+        };
+    };
 
     if(!selfPsychVideos.total || !selfPsychVideos.videos.length) return (
         <div className="empty">
@@ -46,6 +94,7 @@ const VideoMain = (): JSX.Element => {
                         <VideoMainItem
                             key={`video-main-item-${item.id}`}
                             item={item}
+                            setSelId={setSelId}
                             setDialogType={setDialogType}
                             setOpenConf={setOpen}
                         />
@@ -66,7 +115,7 @@ const VideoMain = (): JSX.Element => {
                 open={open}
                 btnFunc={
                     dialogType === VideoConfDType.Revoke
-                        ? handleRemovePublication
+                        ? handleTogglePublication
                         : handleDelete
                 }
                 setOpen={setOpen}

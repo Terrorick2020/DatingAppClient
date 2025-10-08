@@ -8,6 +8,7 @@ import type {
     EveningPlansMeta,
     SavePhotoAsyncThuncData,
     ProfileSelfGeo,
+    InitUsetResult,
 } from '@/types/profile.types';
 
 import type {
@@ -18,6 +19,7 @@ import type {
     GetSelfEndpointRes,
     ValidetePsychCodeRes,
     SelfPsychRes,
+    UserSelfPsychRes,
 } from '@/types/fetch.type';
 
 import {
@@ -39,6 +41,8 @@ import {
     PSYCH_VALID_TOKEN_ENDPOINT,
     PSYCH_UPL_PHOTO_ENDPOINT,
     PSYCH_DEL_PHOTO_ENDPOINT,
+    CHATS_ASSIGN_PSYCH_ENDPOINT,
+    YC_HEADER,
 } from '@/config/env.config';
 
 import {
@@ -101,14 +105,14 @@ const initialState: ProfileState = {
             description: '',
         },
     },
-    selPsych: ''
-}
+    selPsych: null,
+};
 
 export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
-    async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<EProfileStatus>> => {
+    async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<InitUsetResult>> => {
         try {
-            const telegramId = getTgID() || 'browser30';
+            const telegramId = getTgID() || 'browser399';
             
             if(!telegramId) return 'error';
 
@@ -207,7 +211,22 @@ export const initProfileAsync = createAsyncThunk(
                     }
 
                     break;
-            }
+            };
+
+            let selPsych: string | null = null;
+
+            if(profileRole !== EProfileRoles.Psych) {
+                const psychUrl = CHATS_ASSIGN_PSYCH_ENDPOINT(telegramId);
+
+                const psychRes: AxiosResponse<FetchResponse<UserSelfPsychRes>> =
+                    await api.get(psychUrl);
+
+                const psychResult = validResResult(psychRes);
+
+                if (!psychResult && psychRes.data.data && psychRes.data.data !== 'None') {
+                    selPsych = (psychRes.data.data as UserSelfPsychRes).psychologistId;
+                };
+            };
 
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
@@ -227,8 +246,13 @@ export const initProfileAsync = createAsyncThunk(
 
             dispatch(setIsFirstly(false));
 
-            return profileStatus;
+            return {
+                status: profileStatus,
+                psych: selPsych,
+            };
         } catch (error) {
+            console.log(error);
+
             dispatch(setIsFirstly(true));
 
             return 'error';
@@ -384,6 +408,7 @@ export const signUpProfileAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
             const lang = rootState.settings.lang;
+            const captchaToken = rootState.settings.captchaToken;
 
             const interestsVars = rootState.settings.interestsVars;
 
@@ -418,17 +443,25 @@ export const signUpProfileAsync = createAsyncThunk(
                 interestId,
             };
 
+            const localApi = api.create({
+                ...api.defaults,
+                headers: {
+                    ...api.defaults.headers.common,
+                    [YC_HEADER]: captchaToken,
+                },
+            });
+
             let response: any = null;
             let msg: string = '';
 
             switch(mark) {
                 case KeyFQBtnText.First:
-                    response = await api.post(REG_ENDPOINT, data) as
+                    response = await localApi.post(REG_ENDPOINT, data) as
                         AxiosResponse<FetchResponse<RegEndpointRes>>;
                     msg = 'Регистрация пользователя прошла успешно';
                     break;
                 case KeyFQBtnText.Other:
-                    response = await api.patch(`${USER_ENDPOINT}/${profileInfo.id}`, data) as
+                    response = await localApi.patch(`${USER_ENDPOINT}/${profileInfo.id}`, data) as
                         AxiosResponse<FetchResponse<null>>;
                     msg = 'Профиль обновлён успешно';
                     break;
@@ -469,6 +502,8 @@ export const signUpProfileAsync = createAsyncThunk(
     
             return 'success';
         } catch ( error: any ) {
+            console.log(error);
+            
             let msg = 'Произошла ошибка сервера';
 
             if (
@@ -496,6 +531,7 @@ export const signUpPsychAsync = createAsyncThunk(
         try {
             const rootState = getState() as IState;
             const profileInfo = rootState.profile.info;
+            const captchaToken = rootState.settings.captchaToken;
 
             const photoIds = rootState.profile.info.photos.map(item => +item.id);
 
@@ -508,22 +544,30 @@ export const signUpPsychAsync = createAsyncThunk(
                 photoIds,
             };
 
+            const localApi = api.create({
+                ...api.defaults,
+                headers: {
+                    ...api.defaults.headers.common,
+                    [YC_HEADER]: captchaToken,
+                },
+            });
+
             let response: any = null;
             let msg: string = '';
 
             switch(mark) {
                 case KeyFQBtnText.First:
-                    response = await api.post(PSYCH_ENDPOINT, data) as
+                    response = await localApi.post(PSYCH_ENDPOINT, data) as
                         AxiosResponse<FetchResponse<any>>;
                     msg = 'Регистрация прошла успешно';
                     break;
                 case KeyFQBtnText.Other:
                     const url = PSYCH_BY_MARK_ENDPOINT(profileInfo.id);
-                    response = await api.put(url, data) as
+                    response = await localApi.put(url, data) as
                         AxiosResponse<FetchResponse<any>>;
                     msg = 'Профиль обновлён успешно';
                     break;
-            }
+            };
 
             if(
                 !response ||
@@ -745,9 +789,15 @@ export const saveSelfPlansAsync = createAsyncThunk(
 
 export const selectSelfPsychAsync = createAsyncThunk(
     'profile/select-self-psych',
-    async (id: string): Promise<AsyncThunkRes<string>> => {
+    async (id: string, { getState }): Promise<AsyncThunkRes<string>> => {
         try {
-            const data = { id };
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+
+            const data = {
+                telegramId: telegramId,
+	            psychologistId: id,
+            };
 
             const response: AxiosResponse<FetchResponse<any>> =
                 await api.post(CHATS_CRT_WITH_PSYC_ENDPOINT, data);
@@ -759,7 +809,7 @@ export const selectSelfPsychAsync = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            return null;
+            return id;
         } catch (error) {
             return 'error';
         }
@@ -830,7 +880,7 @@ const profileSlice = createSlice({
         builder.addCase(initProfileAsync.pending, _ => {
             console.log("Первичная проверка пользователя");
         })
-        builder.addCase(initProfileAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<EProfileStatus>> ) => {
+        builder.addCase(initProfileAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<InitUsetResult>> ) => {
             switch (action.payload) {
                 case 'error':
                     console.log("Ошибка при первичной проверки пользователя");
@@ -839,7 +889,8 @@ const profileSlice = createSlice({
                     console.log("Первичная проверка пользователя не проведена");
                     break;
                 default:
-                    state.info.status = action.payload;
+                    state.info.status = action.payload.status;
+                    state.selPsych = action.payload.psych;
                     console.log("Успешная первичная проверка пользователя");
                     break;
             }

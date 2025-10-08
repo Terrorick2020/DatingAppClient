@@ -1,6 +1,5 @@
 import { JSX, useState, useMemo, useEffect } from 'react';
 import { toMedia } from '@/config/routes.config';
-import { warningAlert } from '@/funcs/alert.funcs';
 import { setMedaiLink, addRoute } from '@/store/slices/settingsSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -32,12 +31,6 @@ const PlayerBtn = (props: PropsPlayerBtn): JSX.Element => {
     };
 
     useEffect(() => {
-        if (!props.urlImg || !props.urlVideo) {
-            warningAlert(dispatch, 'Видео не доступно для проигрывания');
-            setIsErr(true);
-            return;
-        };
-
         const img = new Image();
         img.src = props.urlImg;
 
@@ -75,7 +68,7 @@ const PlayerBtn = (props: PropsPlayerBtn): JSX.Element => {
             className={`player-btn ${isLoaded ? 'activeted' : 'disabled'}`}
             style={{
                 backgroundImage: isLoaded ? `url(${props.urlImg})` : '',
-                background: isErr ? '#FFFFFF1F' : '',
+                backgroundColor: isErr ? '#FFFFFF1F' : '',
             }}
             onClick={handleRoute}
         >{ CtxHTML }</div>

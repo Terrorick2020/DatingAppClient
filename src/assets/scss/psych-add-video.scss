@@ -97,6 +97,8 @@
                                 opacity: 0;
                                 top: 0;
                                 left: 0;
+                                user-select: none;
+                                -webkit-tap-highlight-color: transparent;
                             }
 
                             .MuiCircularProgress-svg {

@@ -54,6 +54,7 @@ export const CHATS_READ_ENDPOINT    = import.meta.env.VITE_CHATS_READ_ENDPOINT |
 export const CHATS_TYPING_ENDPOINT  = import.meta.env.VITE_CHATS_TYPING_ENDPOINT || '';
 export const CHATS_UNREAD           = import.meta.env.VITE_CHATS_UNREAD || '';
 export const CHATS_CRT_WITH_PSYC    = import.meta.env.VITE_CHATS_CREATE_WITH_PSYCH || '';
+export const CHATS_ASSIGN_PSYCH     = import.meta.env.VITE_CHATS_ASSIGN_PSYCH || '';
 
 export const PSYCH_ENDPOINT    = import.meta.env.VITE_PSYCH_ENDPOINT || '';
 export const PSYCH_CHECK       = import.meta.env.VITE_PSYCH_CHECK || '';
@@ -175,6 +176,7 @@ if(
   !CHATS_TYPING_ENDPOINT ||
   !CHATS_UNREAD          ||
   !CHATS_CRT_WITH_PSYC   ||
+  !CHATS_ASSIGN_PSYCH    ||
 
   !REDIS               ||
   !REDIS_KEY_ENDPOINT  ||
@@ -227,6 +229,7 @@ export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`;
 export const LIKES_UNREADED_ENDPOINT = (tgId: string) => `${LIKES_ENDPOINT}${LIKES_UNREAD}/${tgId}`;
 
 export const CHATS_METADATA_ENDPOINT = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_METADATA}`;
+export const CHATS_ASSIGN_PSYCH_ENDPOINT = (tgId: string): string => `${CHATS_ENDPOINT}${CHATS_ASSIGN_PSYCH}?telegramId=${tgId}`;
 export const CHATS_CRT_WITH_PSYC_ENDPOINT = `${CHATS_ENDPOINT}${CHATS_CRT_WITH_PSYC}`;
 
 export const CHATS_MSG_ENDPOINT = (

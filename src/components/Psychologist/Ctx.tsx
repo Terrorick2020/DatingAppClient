@@ -1,5 +1,8 @@
 import { JSX, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { Slide } from 'react-awesome-reveal';
+import { ANIME_DURATION } from '@/constant/settings';
+import { EAnimeDirection } from '@/types/settings.type';
 import { useNavigate } from 'react-router-dom';
 import { appRoutes } from '@/config/routes.config';
 import { ageToStr } from '@/funcs/general.funcs';
@@ -50,15 +53,21 @@ const PsychologistCtx = (): JSX.Element => {
             <div className="exp">
                 <h5 className="headline">Опыт работы</h5>
                 <div className="exp__list">
-                    {targerPsych.expList.map(item => (
-                        <div className="item" key={`psych-exp-item-${item.id}`}>
-                            <div className="head">
-                                <h6 className="title">{ item.title }</h6>
-                                <p className="desc">{ item.desc }</p>
-                            </div>
-                            <p className="label">{ item.expGap }</p>
-                        </div>
-                    ))}
+                        <Slide
+                            triggerOnce
+                            direction={EAnimeDirection.Left}
+                            duration={ANIME_DURATION}
+                        >
+                            {targerPsych.expList.map(item => (
+                                <div className="item" key={`psych-exp-item-${item.id}`}>
+                                    <div className="head">
+                                        <h6 className="title">{ item.title }</h6>
+                                        <p className="desc">{ item.desc }</p>
+                                    </div>
+                                    <p className="label">{ item.expGap }</p>
+                                </div>
+                            ))}
+                        </Slide>
                 </div>
             </div>
         </>

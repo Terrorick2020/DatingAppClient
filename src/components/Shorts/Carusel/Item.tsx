@@ -1,23 +1,11 @@
 import { JSX, useState, useEffect } from 'react';
 import { CARUSEL_ANIME_MS } from '@/constant/quest';
 import { EShortsCaruselKey } from '@/types/quest.types';
+import type { PropsShortsCtxCaruselItem } from '@/types/quest.types';
 
 import MyPlayer from '@/components/UI/Player';
 import ShortsCtxCaruselChildren from './Children';
 
-
-interface ShortsItem {
-    previewUrl: string
-    videoUrl: string
-}
-
-interface PropsShortsCtxCaruselItem {
-    indx: number
-    selfIndx: number
-    item: ShortsItem
-    keyCode: EShortsCaruselKey | null
-    setKeyKode: (value: EShortsCaruselKey | null) => void
-}
 
 const ShortsCtxCaruselItem = (props: PropsShortsCtxCaruselItem): JSX.Element => {
     const [playing, setPlaying] = useState<boolean>(true);
@@ -50,13 +38,24 @@ const ShortsCtxCaruselItem = (props: PropsShortsCtxCaruselItem): JSX.Element => 
     return (
         <div className="shorts-carusel-slide" id={`shorts-carusel-slide`} >
             <MyPlayer
+                videoId={props.item.id}
                 previewUrl={props.item.previewUrl}
-                videoUrl={props.item.videoUrl}
+                videoUrl={props.item.url}
                 playing={playing}
+                isViewed={props.item.isViewed}
+                isLiked={props.item.isLiked}
                 timeToStart={timeToStart}
                 setPlaying={setPlaying}
             >
-                <ShortsCtxCaruselChildren />
+                <ShortsCtxCaruselChildren
+                    id={props.item.psychologist.id}
+                    videoId={props.item.id}
+                    avatar={props.item.psychologist.photoUrl}
+                    name={props.item.psychologist.name}
+                    text={props.item.title}
+                    uptAt={props.item.updatedAt}
+                    isLiked={props.item.isLiked}
+                />
             </MyPlayer>
         </div>
     );

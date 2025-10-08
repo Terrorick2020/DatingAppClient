@@ -51,7 +51,7 @@ export interface ProfileState {
     info: ProfileSelf
     addLink: string
     eveningPlans: EveningPlans
-    selPsych: string
+    selPsych: string | null
 }
 
 export interface SendGeoData {
@@ -68,4 +68,9 @@ export interface SavePhotoAsyncThuncData {
 export interface PropsDeleteSelfDialog {
     open: boolean
     setOpen: (value: boolean) => void
+}
+
+export interface InitUsetResult {
+    status: EProfileStatus,
+    psych: string | null
 }
