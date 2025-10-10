@@ -250,8 +250,6 @@ export const initProfileAsync = createAsyncThunk(
                 psych: selPsych,
             };
         } catch (error) {
-            console.log(error);
-
             dispatch(setIsFirstly(true));
 
             return 'error';
@@ -495,8 +493,6 @@ export const signUpProfileAsync = createAsyncThunk(
     
             return 'success';
         } catch ( error: any ) {
-            console.log(error);
-
             let msg = 'Произошла ошибка сервера';
 
             if(error.name === 'AxiosError') {
@@ -584,8 +580,6 @@ export const signUpPsychAsync = createAsyncThunk(
 
             return 'success';
         } catch (error: any) {
-            console.log(error);
-
             let msg = 'Произошла ошибка сервера';
 
             if(error.name === 'AxiosError') {

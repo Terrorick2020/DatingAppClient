@@ -80,51 +80,68 @@ export const getProfilesListAsync = createAsyncThunk(
             const type = rootState.admin.searchType;
 
             let url: string | null = null;
+            let result: ProfilesListItem[] = [];
+
+            let response: AxiosResponse<FetchResponse<any>> | null = null;
 
             switch(type) {
                 case EProfileRoles.User:
                     url = query
                         ? USERS_SEARCH(query, realArgs.offset, realArgs.limit)
                         : USERS_ENDPOINT({page: realArgs.offset + 1, limit: realArgs.limit});
-                    break;
+
+                    response = await api.get(url);
+
+                    if(
+                        !response               ||
+                        response.status !== 200 ||
+                        !response.data.success  ||
+                        !response.data.data     ||
+                        response.data.data === 'None'
+                    ) return result;
+
+                    for(let item of response.data.data) {
+                        result.push({
+                            id: item.telegramId,
+                            role: EProfileRoles.User,
+                            avatar: item.photos[0].url,
+                            name: item.name,
+                            status: item.status
+                        })
+                    };
+
+                    return result;
 
                 case EProfileRoles.Psych:
-                    const isNumeric = /^\d+$/.test(query);
+                    url = PSYCH_ADMIN_ENDPOINT(query, realArgs.offset, realArgs.limit);
+                    
+                    response = await api.get(url);
 
-                    url = query && !isNumeric
-                        ? null
-                        : PSYCH_ADMIN_ENDPOINT(query, realArgs.offset, realArgs.limit);
+                    if(
+                        !response               ||
+                        response.status !== 200 ||
+                        !response.data.success  ||
+                        !response.data.data     ||
+                        response.data.data === 'None'
+                    ) return result;
 
-                    break;
-            }
+                    for(let item of response.data.data.psychologists) {
+                        result.push({
+                            id: item.telegramId,
+                            role: EProfileRoles.Psych,
+                            avatar: item.photos[0].url,
+                            name: item.name,
+                            status: EProfileStatus.Noob
+                        })
+                    };
 
-            if(!url) return null;
-
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
-
-            if(
-                response.status === 200 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
-                response.data.success
-            ) {
-                let result: ProfilesListItem[] = [];
-
-                for(let item of response.data.data) {
-                    result.push({
-                        id: item.telegramId,
-                        role: item.role,
-                        avatar: item.photos[0].url,
-                        name: item.name,
-                        status: item.status
-                    })
-                }
-
-                return result;
-            }
+                    return result;
+            };
 
             return null;
         } catch ( error ) {
+            console.log(error);
+
             return 'error';
         } finally {
             dispatch(setLoad(false));

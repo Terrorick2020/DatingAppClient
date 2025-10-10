@@ -289,7 +289,7 @@ export const USERS_SEARCH = (
 
   params.push(`query=${query}`);
   
-  if(offset) params.push(`page=${offset}`);
+  if(offset !== undefined) params.push(`page=${offset}`);
   if(limit) params.push(`limit=${limit}`);
 
   return `${USER_ENDPOINT}${USER_SEARCH}?${params.join('&')}`;

@@ -86,7 +86,7 @@ const UsersListMain = (): JSX.Element => {
         <>
             <div className="search-list">
                 {
-                    (adminState.profilesList.map((item, index) => (
+                    adminState.profilesList.map((item, index) => (
                         <ListBlock
                             img={item.avatar}
                             route={`${toUserInfo.replace(`:${URL_MARK}`, `${item.id}`)}`}
@@ -104,7 +104,7 @@ const UsersListMain = (): JSX.Element => {
                                 setOpenDel={setOpenDel}
                             />
                         </ListBlock>
-                    )))
+                    ))
                 }
             </div>
             <UsersListDialog open={openDel} hadleClose={() => setOpenDel(false)} />
