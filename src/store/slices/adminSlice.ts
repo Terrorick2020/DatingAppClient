@@ -94,9 +94,6 @@ export const getProfilesListAsync = createAsyncThunk(
                     url = query && !isNumeric
                         ? null
                         : PSYCH_ADMIN_ENDPOINT(query, realArgs.offset, realArgs.limit);
-                    
-                    // TODO: Убрать потом!    
-                    url = null;
 
                     break;
             }

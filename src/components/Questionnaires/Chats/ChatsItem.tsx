@@ -43,7 +43,7 @@ const ChatsListItem = memo((props: PropsChatsListItem): JSX.Element => {
         <div className="inner">
             <div className="inner__text">
                 <h6 className="headline">
-                    {`${props.item.name}, ${props.item.age}`}
+                    {`${props.item.name} ${props.item.age ? ', ' + props.item.age : ''}`}
                 </h6>
                 <p className="msg">{props.item.lastMsg}</p>
             </div>

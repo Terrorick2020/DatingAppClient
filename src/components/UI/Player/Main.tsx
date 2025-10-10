@@ -156,6 +156,7 @@ const MyPlayerMain = (props: PropsMyPlayerMain): JSX.Element => {
                 addClass={ showBg || isLoad ? 'show' : 'hide' }
                 setPlaying={props.setPlaying}
                 setSeek={setSeek}
+                setShowBg={setShowBg}
             />
             { props.children }
         </div>

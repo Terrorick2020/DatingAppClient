@@ -105,7 +105,7 @@ export const EP_MEDIA_LINK     = import.meta.env.VITE_EP_MEDIA_LINK || '';
 
 export const USER_STATUS  = import.meta.env.VITE_USER_STATUS || '';
 export const CAPTURE_KEY  = import.meta.env.VITE_CAPTURE_KEY || '';
-export const CAPTURE_MODE = import.meta.env.VITE_CAPTURE_MODE || '';
+export const CAPTURE_MODE = import.meta.env.VITE_CAPTURE_MODE || 'test';
 
 if(
   !BASE_URL      ||

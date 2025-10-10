@@ -13,12 +13,17 @@ interface PropsMyPlayerNav {
     addClass: string
     setPlaying: (value: boolean) => void
     setSeek: (seconds: number) => void
+    setShowBg: (value: boolean) => void
 }
 const MyPlayerNav = (props: PropsMyPlayerNav): JSX.Element => {
     const handleNav = (event: MouseEvent) => event.stopPropagation();
 
     const handleTogglePlay = (): void => {
-        props.setPlaying(!props.playing);
+        const newValue = !props.playing;
+
+        props.setPlaying(newValue);
+
+        if(newValue) setTimeout(() => props.setShowBg(false), 2000);
     };
 
     const playerIcon: PlayingSvgVars = playingSvgVars[+props.playing];

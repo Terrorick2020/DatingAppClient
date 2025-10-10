@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { URL_MARK } from '@/config/env.config';
 import { createSelector } from 'reselect';
 import { getPsycByIdhAsync } from '@/store/slices/psychSlice';
-import { infoAlert, warningAlert } from '@/funcs/alert.funcs';
+import { infoAlert, successAlert, warningAlert } from '@/funcs/alert.funcs';
 import { toNotFoud } from '@/config/routes.config';
 import { selectSelfPsychAsync } from '@/store/slices/profileSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -78,6 +78,11 @@ const PsychologistContent = (): JSX.Element => {
             warningAlert(
                 dispatch,
                 'Не удалось прикрепить выбранного специолиста к Вам! Попробуйте повторить запрос позже',
+            );
+        } else {
+            successAlert(
+                dispatch,
+                'Специалист успешно прикреплён к Вам! Перейдите в раздел чатов, чтобы начать общение с ним',
             );
         };
 

@@ -231,4 +231,4 @@ export function isTgMobile(): boolean {
       && !isDesktop;
   
   return isTgMobile;
-}
+};

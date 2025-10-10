@@ -355,7 +355,7 @@ export const viewShortsAsync = createAsyncThunk(
                     ? {
                         ...item,
                         viewsCount: dataRes.viewsCount,
-                        isViewed: true,
+                        isView: true,
                     }
                     : item
             );
