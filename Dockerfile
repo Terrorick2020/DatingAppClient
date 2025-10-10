@@ -7,7 +7,7 @@ COPY package.json .
 
 RUN npm install --legacy-peer-deps
 
-COPY . .
+COPY . . 
 RUN npm run build
 RUN npm run minify
 
