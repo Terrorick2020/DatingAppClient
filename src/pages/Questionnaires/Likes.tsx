@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import LikesContent from '@/components/Questionnaires/Likes';
 
 
-const QuestLikesPage = () => {
+const QuestLikesPage = (): JSX.Element => {
     return (
-        <>
-            <div className="likes" id="likes">
-                <LikesContent />
-            </div>
-        </>
+        <div className="likes" id="likes">
+            <LikesContent />
+        </div>
     )
 }
 

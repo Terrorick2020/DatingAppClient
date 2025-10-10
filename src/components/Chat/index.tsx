@@ -40,7 +40,7 @@ import { toChats, toNotFoud } from '@/config/routes.config';
 import { infoAlert, warningAlert } from '@/funcs/alert.funcs';
 import { createSelector } from 'reselect';
 import { useDispatch, useSelector } from 'react-redux';
-import { WS_MSGS, WS_CHATS } from '@/config/env.config';
+import { WS_MSGS, WS_CHATS, URL_MARK } from '@/config/env.config';
 import type { InitSliderData } from '@/types/quest.types';
 import type { Socket } from 'socket.io-client';
 import type { IncomingMsg, GetChatByIdArgs } from '@/types/chats.types';
@@ -70,7 +70,8 @@ const selectTargetChat = createSelector(
 );
 
 const ChatContent = (): JSX.Element => {
-    const { id } = useParams();
+    const params = useParams();
+    const id = params[URL_MARK];
 
     const { isLoad, setRoutes, seconds } = useSelector(selectTargetChat);
 

@@ -76,14 +76,14 @@
 
         .MuiDialogActions-root {
             .MuiButtonBase-root {
+                color: #FFFFFF;
+
                 &:first-of-type {
                     border: 1px solid #BC96FF;
-                    color: #FFFFFF;
                 }
 
                 &:last-of-type {
                     background: #FF4365;
-                    color: #121112;
                 }
             }
         }
@@ -100,7 +100,7 @@
             .headline {
                 font-weight: 900;
                 text-align: center;
-                font-size: clamp(1.5rem, 5.5vw, 1.9rem);
+                font-size: clamp(1.2rem, 5.5vw, 1.4rem);
             }
 
             .text {

@@ -40,14 +40,14 @@ const LangContent = (): JSX.Element => {
                 <RadioGroup
                     className="radio-group"
                     aria-labelledby="radio-buttons-lang-group-lable"
-                    defaultValue={ ELanguage.Russian }
+                    defaultValue={ ELanguage.Russia }
                     name="radio-buttons-lang-group"
                     onChange={handleLanguageChange}
                 >
                     <FormControlLabel value={ ELanguage.English } control={ <Radio /> } label="English" />
-                    <FormControlLabel value={ ELanguage.Russian } control={ <Radio /> } label="Русский" />
-                    <FormControlLabel value={ ELanguage.Ukrainian } control={ <Radio /> } label="Український" />
-                    <FormControlLabel value={ ELanguage.Spanish } control={ <Radio /> } label="Español" />
+                    <FormControlLabel value={ ELanguage.Russia } control={ <Radio /> } label="Русский" />
+                    <FormControlLabel value={ ELanguage.Ukraine } control={ <Radio /> } label="Український" />
+                    <FormControlLabel value={ ELanguage.Uzbekistan } control={ <Radio /> } label="Oʻzbek" />
                 </RadioGroup>
             </div>
             <div className="lang__btn">

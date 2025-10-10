@@ -3,6 +3,7 @@ import {
   isTMA,
   initData,
   viewport,
+  backButton,
   cloudStorage,
   swipeBehavior,
   closingBehavior,
@@ -21,7 +22,6 @@ import {
 } from '@/types/tg.types';
 
 import { delay } from './general.funcs';
-import { setTgId } from '@/config/fetch.config';
 import { EProfileRoles } from '@/types/store.types';
 
 
@@ -127,8 +127,6 @@ export function getTgID(): string | null {
 
   if(!user) return null;
 
-  setTgId('' + user.id);
-
   return '' + user.id;
 };
 
@@ -220,3 +218,17 @@ export async function setHomeScreen(): Promise<void> {
     }
   }, 5000);
 };
+
+export function isTgMobile(): boolean {
+  const userAgent = navigator.userAgent.toLowerCase();
+  const predDesktop = userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('win');
+  const predMobile  = userAgent.includes('iphone') || userAgent.includes('android');
+
+  const isDesktop  = !predMobile || predDesktop;
+  const isTgMobile = !!closingBehavior.mount.isAvailable()
+      && !!backButton.mount.isAvailable()
+      && predMobile
+      && !isDesktop;
+  
+  return isTgMobile;
+}

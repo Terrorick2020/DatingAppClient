@@ -1,11 +1,11 @@
 import {
 	EApiStatus,
 	ELanguage,
-	InterestsVarsItem,
-	CityesVarsItem
+	type InterestsVarsItem,
+	type CityesVarsItem
 } from './settings.type';
 
-import { ELineStatus, EProfileRoles, EProfileStatus, ESex } from './store.types';
+import { ELineStatus, EProfileRoles, EProfileStatus, ESex, EPsychStatus } from './store.types';
 
 
 export interface FetchResBase {
@@ -206,9 +206,7 @@ export interface AdminGenLinkRes {
 
 export interface PsychListPhotoRes {
 	id: number
-	key: string
-	tempTgId: string | null
-	telegramId: string | null
+	url: string
 }
 
 export interface InitPsychListResPsych {
@@ -222,15 +220,49 @@ export interface InitPsychListResPsych {
 export interface InitPsychListRes {
 	psychologists: InitPsychListResPsych[]
 	total: number
-}
+};
 
 export interface TargetPsychologistRes {
 	id: number
 	telegramId: string
 	name: string
 	about: string
-	status: 'Active' | 'Inactive' | 'Blocked'
+	status: EPsychStatus
 	createdAt: Date
 	updatedAt: Date
 	photos: PsychListPhotoRes[]
+}
+
+export interface PsychAddVideoRes {
+	videoId: number | null
+	key: string
+}
+
+export interface PsychPublishVideoRes {
+	key: string
+	telegramId: string
+	title: string
+	description: string
+}
+
+export interface SelfPsychPhotoItem {
+	id: number;
+  	url: string;
+}
+
+export interface SelfPsychRes extends Omit<TargetPsychologistRes, 'photos'> {
+	photos: SelfPsychPhotoItem[]
+}
+
+export interface ToggleShortsLikeRes {
+	isLiked: boolean
+	likesCount: number
+}
+
+export interface ShortsViewRes {
+	viewsCount: number
+}
+
+export interface UserSelfPsychRes {
+	psychologistId: string | null
 }

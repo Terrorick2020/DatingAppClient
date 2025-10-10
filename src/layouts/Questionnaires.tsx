@@ -111,10 +111,6 @@ const QuestLayout = (): JSX.Element => {
         pathname.current = location.pathname;
     }, [location.pathname]);
 
-    useEffect(() => {
-        dispatch(setMedaiLink(EP_MEDIA_LINK));
-    }, []);
-
     const handleLikesNotify = (data: OnResNewLike | null): void => {
         if(!data || lastLikeId.current == data.fromUserId) return;
 
@@ -247,6 +243,11 @@ const QuestLayout = (): JSX.Element => {
     };
 
     useEffect(() => {
+        document.title = "3Вместе";
+
+        if(isPsych) return;
+
+        dispatch(setMedaiLink(EP_MEDIA_LINK));
         dispatch(setLikeTypeBtn(ELikeBtnType.Accepted));
 
         handleUnreadChats();

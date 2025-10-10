@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import UsersListContent from '@/components/Admin/UsersList';
 
 
-const AdminUsersListPage = () => {
+const AdminUsersListPage = (): JSX.Element => {
     return (
-        <>
-            <div className="users-list" id="users-list">
-                <UsersListContent />
-            </div>
-        </>
+        <div className="users-list" id="users-list">
+            <UsersListContent />
+        </div>
     )
 }
 

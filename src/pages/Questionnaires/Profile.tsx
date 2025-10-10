@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import ProfileContent from '@/components/Questionnaires/Profile';
 
 
-const QuestProfilePage = () => {
+const QuestProfilePage = (): JSX.Element => {
     return (
-        <>
-            <div className="profile" id="profile">
-                <ProfileContent />
-            </div>
-        </>
+        <div className="profile" id="profile">
+            <ProfileContent />
+        </div>
     )
 }
 

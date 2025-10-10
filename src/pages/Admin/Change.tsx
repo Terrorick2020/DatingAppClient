@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import ChangeContent from '@/components/Admin/Change';
 
 
-const AdminChangePage = () => {
+const AdminChangePage = (): JSX.Element => {
     return (
-        <>
-            <div className="change" id="change">
-                <ChangeContent />
-            </div>
-        </>
+        <div className="change" id="change">
+            <ChangeContent />
+        </div>
     )
 }
 

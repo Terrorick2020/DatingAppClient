@@ -6,6 +6,9 @@ export const BASE_URL      = import.meta.env.VITE_BASE_URL || '';
 export const WS_URL        = import.meta.env.VITE_WS_URL || '';
 export const BOT_LINK      = import.meta.env.VITE_BOT_LINK || '';
 export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || '';
+export const URL_MARK      = import.meta.env.VITE_URL_MARK || 'id';
+export const TG_HEADER      = import.meta.env.VITE_TG_HEADER || '';
+export const YC_HEADER      = import.meta.env.VITE_YC_HEADER || '';
 
 export const WS_CHATS   = import.meta.env.VITE_WS_CHATS || '';
 export const WS_COMPL   = import.meta.env.VITE_WS_COMPL || '';
@@ -51,6 +54,7 @@ export const CHATS_READ_ENDPOINT    = import.meta.env.VITE_CHATS_READ_ENDPOINT |
 export const CHATS_TYPING_ENDPOINT  = import.meta.env.VITE_CHATS_TYPING_ENDPOINT || '';
 export const CHATS_UNREAD           = import.meta.env.VITE_CHATS_UNREAD || '';
 export const CHATS_CRT_WITH_PSYC    = import.meta.env.VITE_CHATS_CREATE_WITH_PSYCH || '';
+export const CHATS_ASSIGN_PSYCH     = import.meta.env.VITE_CHATS_ASSIGN_PSYCH || '';
 
 export const PSYCH_ENDPOINT    = import.meta.env.VITE_PSYCH_ENDPOINT || '';
 export const PSYCH_CHECK       = import.meta.env.VITE_PSYCH_CHECK || '';
@@ -60,6 +64,14 @@ export const PSYCH_GEN_TOKEN   = import.meta.env.VITE_PSYCH_GEN_TOKEN || '';
 export const PSYCH_VALID_TOKEN = import.meta.env.VITE_PSYCH_VALID_TOKEN || '';
 export const PSYCH_UPL_PHOTO   = import.meta.env.VITE_PSYCH_UPL_PHOTO || '';
 export const PSYCH_DEL_PHOTO   = import.meta.env.VITE_PSYCH_DEL_PHOTO || '';
+
+export const VIDEO_ENDPOIN = import.meta.env.VITE_VIDEO_ENDPOINT || '';
+export const VIDEO_UPL    = import.meta.env.VITE_VIDEO_UPL || '';
+export const VIDEO_SAVE   = import.meta.env.VITE_VIDEO_SAVE || '';
+export const VIDEO_MY     = import.meta.env.VITE_VIDEO_MY || '';
+export const VIDEO_FEED   = import.meta.env.VITE_VIDEO_SHORTS_FEED || '';
+export const VIDEO_LIKE   = import.meta.env.VITE_VIDEO_SHORTS_LIKE || '';
+export const VIDEO_VIEW   = import.meta.env.VITE_VIDEO_SHORTS_VIEW || '';
 
 export const REDIS               = import.meta.env.VITE_REDIS || '';
 export const REDIS_KEY_ENDPOINT  = import.meta.env.VITE_REDIS_KEY_ENDPOINT || '';
@@ -91,13 +103,17 @@ export const COMPLS_STATS        = import.meta.env.VITE_COMPLS_STATS || '';
 export const FQ_MEDIA_LINK     = import.meta.env.VITE_FQ_MEDIA_LINK || '';
 export const EP_MEDIA_LINK     = import.meta.env.VITE_EP_MEDIA_LINK || '';
 
-export const USER_STATUS = import.meta.env. VITE_USER_STATUS || '';
+export const USER_STATUS  = import.meta.env.VITE_USER_STATUS || '';
+export const CAPTURE_KEY  = import.meta.env.VITE_CAPTURE_KEY || '';
+export const CAPTURE_MODE = import.meta.env.VITE_CAPTURE_MODE || '';
 
 if(
   !BASE_URL      ||
   !WS_URL        ||
   !BOT_LINK      ||
   !SUPPORT_EMAIL ||
+  !TG_HEADER     ||
+  !YC_HEADER     ||
 
   !WS_CHATS ||
   !WS_COMPL ||
@@ -120,6 +136,14 @@ if(
   !PSYCH_VALID_TOKEN ||
   !PSYCH_UPL_PHOTO   ||
   !PSYCH_DEL_PHOTO   ||
+
+  !VIDEO_ENDPOIN ||
+  !VIDEO_UPL     ||
+  !VIDEO_SAVE    ||
+  !VIDEO_MY      ||
+  !VIDEO_FEED    ||
+  !VIDEO_LIKE    ||
+  !VIDEO_VIEW    ||
 
   !PLANS_GET_ENDPOINT ||
   !PLANS_SET_ENDPOINT ||
@@ -152,6 +176,7 @@ if(
   !CHATS_TYPING_ENDPOINT ||
   !CHATS_UNREAD          ||
   !CHATS_CRT_WITH_PSYC   ||
+  !CHATS_ASSIGN_PSYCH    ||
 
   !REDIS               ||
   !REDIS_KEY_ENDPOINT  ||
@@ -182,7 +207,9 @@ if(
   !FQ_MEDIA_LINK ||
   !EP_MEDIA_LINK ||
 
-  !USER_STATUS
+  !USER_STATUS ||
+  !CAPTURE_KEY ||
+  !CAPTURE_MODE
 ) {
   throw Error('Hasn`t someone environments!');
 };
@@ -202,6 +229,7 @@ export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`;
 export const LIKES_UNREADED_ENDPOINT = (tgId: string) => `${LIKES_ENDPOINT}${LIKES_UNREAD}/${tgId}`;
 
 export const CHATS_METADATA_ENDPOINT = (chatId: string): string => `${CHATS_ENDPOINT}/${chatId}${CHATS_METADATA}`;
+export const CHATS_ASSIGN_PSYCH_ENDPOINT = (tgId: string): string => `${CHATS_ENDPOINT}${CHATS_ASSIGN_PSYCH}?telegramId=${tgId}`;
 export const CHATS_CRT_WITH_PSYC_ENDPOINT = `${CHATS_ENDPOINT}${CHATS_CRT_WITH_PSYC}`;
 
 export const CHATS_MSG_ENDPOINT = (
@@ -312,3 +340,52 @@ export const PSYCH_ADMIN_ENDPOINT = (
 
   return `${PSYCH_ENDPOINT}${queryString}`;
 }
+
+export const VIDEO_UPL_ENDPOINT = `${VIDEO_ENDPOIN}${VIDEO_UPL}`;
+export const VIDEO_SAVE_ENDPOINT = `${VIDEO_ENDPOIN}${VIDEO_SAVE}`;
+
+export const getVideoMark = (videoId: number): string =>
+    `${VIDEO_ENDPOIN}/${videoId}`;
+
+export const VIDEO_LIKE_ENDPOINT = (videoId: number): string =>
+    `${getVideoMark(videoId)}${VIDEO_LIKE}`;
+
+export const VIDEO_VIEW_ENDPOINT = (videoId: number): string =>
+    `${getVideoMark(videoId)}${VIDEO_VIEW}`;
+
+const getBaseVideoParams = (
+    telegramId: string,
+    offset?: number,
+    limit?: number,
+): string => {
+    const params: string[] = [];
+
+    params.push(`telegramId=${telegramId}`);
+
+    if(limit && limit >= 0) params.push(`limit=${limit}`);
+    if(offset && offset >= 0) params.push(`offset=${offset}`);
+
+    const queryString = `?${params.join('&')}`;
+
+    return queryString;
+};
+
+export const VIDEO_SELF_ENDPOINT = (
+    telegramId: string,
+    offset?: number,
+    limit?: number,
+): string => {
+    const queryString = getBaseVideoParams(telegramId, offset, limit);
+
+    return `${VIDEO_ENDPOIN}${VIDEO_MY}${queryString}`;
+};
+
+export const VIDEO_SHORTS_ENDPOINT = (
+  telegramId: string,
+  offset?: number,
+  limit?: number,
+): string => {
+    const queryString = getBaseVideoParams(telegramId, offset, limit);
+
+    return `${VIDEO_ENDPOIN}${VIDEO_FEED}${queryString}`;
+};

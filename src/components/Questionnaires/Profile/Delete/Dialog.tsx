@@ -1,6 +1,9 @@
 import { JSX, useState } from 'react';
 import { deleteSelfAsync } from '@/store/slices/profileSlice';
-import { warningAlert } from '@/funcs/alert.funcs';
+import { successAlert, warningAlert } from '@/funcs/alert.funcs';
+import { useNavigate } from 'react-router-dom';
+import { toPreview } from '@/config/routes.config';
+import { ETypeDispatch } from '@/types/store.types';
 import { useDispatch } from 'react-redux';
 import type { PropsDeleteSelfDialog } from '@/types/profile.types';
 import type { RootDispatch } from '@/store';
@@ -16,6 +19,7 @@ const DeleteSelfDialog = (props: PropsDeleteSelfDialog): JSX.Element => {
     const [dLoading, setDLoading] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
+    const navigate = useNavigate();
 
     const handleDeleteUser = async (): Promise<void> => {
         setDLoading(true);
@@ -27,6 +31,10 @@ const DeleteSelfDialog = (props: PropsDeleteSelfDialog): JSX.Element => {
                 dispatch,
                 'Не удалось удалить профиль! Попробуйте позже'
             );
+        } else {
+            navigate(toPreview);
+            successAlert(dispatch, 'Аккаунт успешно удалён');
+            dispatch({ type: ETypeDispatch.ResetStore });
         };
 
         setDLoading(false);

@@ -1,5 +1,5 @@
 import { JSX, memo, useMemo } from 'react';
-import { PlayingSvgVars } from '@/constant/register';
+import { playingSvgVars } from '@/constant/register';
 import type { PropsMediaContentBg } from '@/types/register.typs';
 
 import SvgMediaBack from '@/assets/icon/media-back.svg';
@@ -9,7 +9,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 
 
 const MediaContentBg = memo((props: PropsMediaContentBg): JSX.Element => {
-    const varianPlaySvg = useMemo(() => PlayingSvgVars[+props.isPlaying], [props.isPlaying]);
+    const varianPlaySvg = useMemo(() => playingSvgVars[+props.isPlaying], [props.isPlaying]);
 
     if(props.isError) return (
         <div className="player__bg">

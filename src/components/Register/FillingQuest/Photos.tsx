@@ -2,6 +2,7 @@ import { JSX, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFQErrors } from '@/store/slices/settingsSlice';
+import { toError } from '@/config/routes.config';
 import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { saveSelfPhotoAsync, deleteSelfPhotoAsync } from '@/store/slices/profileSlice';
 import { warningAlert, errorAlert } from '@/funcs/alert.funcs';
@@ -34,7 +35,7 @@ const FillingQuestPhotos = (): JSX.Element => {
             return;
         } else if (response === 'error') {
             errorAlert(dispatch, 'Произошла ошибка при загрузке фотографии');
-            navigate('/error');
+            navigate(toError);
         } else {
             dispatch(setFQErrors({
                 ...fqErrors,

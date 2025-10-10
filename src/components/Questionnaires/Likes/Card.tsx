@@ -16,6 +16,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { appRoutes } from '@/config/routes.config';
+import { URL_MARK } from '@/config/env.config';
 import { ageToStr, formatTimeLeftOther } from '@/funcs/general.funcs';
 import { useDispatch } from 'react-redux';
 import { deleteById } from '@/store/slices/likesSlice';
@@ -98,7 +99,7 @@ const LikesCard= memo((props: PropsLikesCard): JSX.Element => {
     const handleNavToDetails = (): void => {
         if(isDisabled) return;
 
-        const toDetails = appRoutes.details.replace(':id', props.likesItem.id);
+        const toDetails = appRoutes.details.replace(`:${URL_MARK}`, props.likesItem.id);
 
         dispatch(addRoute(location.pathname));
         navigate(toDetails);

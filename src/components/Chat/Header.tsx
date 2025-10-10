@@ -7,7 +7,7 @@ import { setComplOpen, addRoute } from '@/store/slices/settingsSlice';
 import { getNamespaceSocket, handleSocket } from '@/config/socket.config';
 import { setInterLineStatus } from '@/store/slices/chatsSlice';
 import { MsgsCltOnMeths, ChtasCltMethods } from '@/types/socket.types';
-import { WS_MSGS, WS_CHATS } from '@/config/env.config';
+import { WS_MSGS, WS_CHATS, URL_MARK } from '@/config/env.config';
 import type { OnResTyping, OnResInterLineStat } from '@/types/socket.types';
 import type { PropsChatHeader } from '@/types/chats.types';
 import type { RootDispatch } from '@/store';
@@ -77,7 +77,7 @@ const ChatHeader = memo((props: PropsChatHeader): JSX.Element => {
     
     const handleNavToDetails = (): void => {
         if( chatInterlocutor?.id ) {
-            const toDetails = appRoutes.details.replace(':id', chatInterlocutor.id);
+            const toDetails = appRoutes.details.replace(`:${URL_MARK}`, chatInterlocutor.id);
 
             dispatch(addRoute(location.pathname));
             navigate(toDetails);

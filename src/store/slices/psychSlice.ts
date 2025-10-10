@@ -7,7 +7,7 @@ import { ELineStatus} from '@/types/store.types';
 import type { InitSliderData } from '@/types/quest.types';
 import type { FetchResponse, InitPsychListRes, TargetPsychologistRes } from '@/types/fetch.type';
 import type { AxiosResponse } from 'axios';
-import type { PsychState, PsychListItem, TargerPsych } from '@/types/psych.types';
+import type { PsychState, PsychListItem, TargerPsych, PsychListResult } from '@/types/psych.types';
 
 import api from '@/config/fetch.config';
 
@@ -15,6 +15,7 @@ import api from '@/config/fetch.config';
 const initialState: PsychState = {
     serchPsychQuery: '',
     psychList: [],
+    totalPsychCount: null,
     targetPsych: {
         id: '',
         photo: null,
@@ -25,14 +26,14 @@ const initialState: PsychState = {
         desc: '',
         expList: []
     },
-}
+};
 
 export const initPsychList = createAsyncThunk(
     'psychologists/init-psych-list',
     async (
         args: InitSliderData | undefined,
         { dispatch, getState }
-    ): Promise<AsyncThunkRes<PsychListItem[]>> => {
+    ): Promise<AsyncThunkRes<PsychListResult>> => {
         try {
             dispatch(setLoad(true));
 
@@ -58,7 +59,23 @@ export const initPsychList = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            return [];
+            const dataRes = response.data.data;
+
+            const result: PsychListItem[] = dataRes.psychologists.map(
+                item => ({
+                    id: item.telegramId,
+                    avatar: item.photos[0].url,
+                    name: item.name,
+                    spec: 'Психоаналитик',
+                    lineStat: ELineStatus.Online,
+                    exp: 5,
+                }),
+            );
+
+            return {
+                psych: result,
+                total: dataRes.total,
+            };
         } catch {
             return 'error';
         } finally {
@@ -69,7 +86,7 @@ export const initPsychList = createAsyncThunk(
 
 export const getPsycByIdhAsync = createAsyncThunk(
     'psychologists/get-target-psych',
-    async (id: string, {dispatch}): Promise<AsyncThunkRes<TargerPsych>> => {
+    async (id: string, { dispatch }): Promise<AsyncThunkRes<TargerPsych>> => {
         try {
             dispatch(setLoad(true));
 
@@ -86,8 +103,36 @@ export const getPsycByIdhAsync = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            return null;
-        } catch {
+            const dataRes = response.data.data;
+
+            const result: TargerPsych = {
+                id: ''+dataRes.id,
+                photo: dataRes.photos[0].url,
+                name: dataRes.name,
+                exp: 5,
+                spec: 'Психоаналитик',
+                lineStat: ELineStatus.Online,
+                desc: dataRes.about,
+                expList: [
+                    {
+                        id: '0.0',
+                        title: 'Частная практика',
+                        desc: 'Психоаналитик',
+                        expGap: '2015-н.в.'
+                    },
+                    {
+                        id: '0.1',
+                        title: 'Курсы психологии',
+                        desc: 'Психология',
+                        expGap: '2013-2015'
+                    },
+                ],
+            };
+
+            return result;
+        } catch (error) {
+            console.log(error)
+
             return 'error';
         } finally {
             dispatch(setLoad(false));
@@ -108,7 +153,7 @@ const psychSlice = createSlice({
         builder.addCase(initPsychList.pending, _ => {
             console.log("Получние списка психологов");
         })
-        builder.addCase(initPsychList.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<PsychListItem[]>> ) => {
+        builder.addCase(initPsychList.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<PsychListResult>> ) => {
             switch (action.payload) {
                 case 'error':
                     console.log("Ошибка получния списка психологов");
@@ -117,8 +162,9 @@ const psychSlice = createSlice({
                     console.log("Список психологов не получен");
                     break;
                 default:
+                    state.psychList = action.payload.psych;
+                    state.totalPsychCount = action.payload.total;
                     console.log("Успешное получние списка психологов");
-                    state.psychList = action.payload;
                     break;
             }
         })

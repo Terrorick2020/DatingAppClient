@@ -40,6 +40,17 @@ export default defineConfig(({ mode }) => {
       react(),
       svgr(),
       preload(),
+      ...(isProd || isAnalyze
+          ? [ VitePWA({
+            disable: !isProd,
+            registerType: 'autoUpdate',
+            workbox: {
+              globPatterns: ['**/*.{html,css,js,png,jpg,svg,ico}'],
+              maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+            }
+          }) ]
+          : []
+      ),
       VitePWA({
         disable: !isProd,
         registerType: 'autoUpdate',
@@ -143,7 +154,7 @@ export default defineConfig(({ mode }) => {
                 return 'utils';
               };
 
-              if (id.includes('@telegram-apps') || id.includes('@fingerprintjs/botd')) {
+              if (id.includes('@telegram-apps')) {
                 return 'web-sdk';
               };
 

@@ -1,6 +1,11 @@
 import { EProfileRoles, EProfileStatus } from './store.types';
-import { PhotoItem } from './profile.types';
+import type { PhotoItem } from './profile.types';
 
+
+export enum ESearchComplType {
+    Complaint = 'Complaint',
+    Video = 'Video',
+}
 
 export interface ProfilesListItem {
     id: string
@@ -43,6 +48,8 @@ export interface ComplaintListItem extends BaseComplaintItem {
 export interface AdminState {
     searchType: EProfileRoles
     searchId: string
+    searchComplType: ESearchComplType
+    searchComplId: string
     password: string
     link: string
     profilesList: ProfilesListItem[]
@@ -80,7 +87,7 @@ export interface UserItemActivCtx {
 }
 
 export interface PropsComplaintsListHeader {
-    handleSearch: () => void
+    handleSearch: () => Promise<void>
 }
 
 export interface PropsComplaintsListCtxItem {

@@ -1,0 +1,133 @@
+@use "../components/mixins";
+
+
+:root {
+    .my-player {
+        --box-color: #FFFFFF1F;
+
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &__box {
+            width: 100%;
+            max-width: 410px;
+            height: 100%;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            background: var(--box-color);
+            border: 1px solid var(--box-color);
+
+            .my-player-preview,
+            .my-player-main,
+            .my-player-error {
+                width: 100%;
+                height: 100%;
+                @include mixins.fadeIn(1s, ease-in-out, 0s, forwards);
+            }
+
+            .my-player-preview {
+                background: var(--box-color);
+
+                .MuiSkeleton-root {
+                    width: 100%;
+                    height: 100%;
+                    background: var(--box-color);
+                }
+
+                &__bg {
+                    width: 100%;
+                    height: 100%;
+                    background-position: center;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                }
+            }
+
+            .my-player-main {
+                position: relative;
+
+                &__video, &__nav {
+                    width: 100%;
+                    height: 100%;
+                }
+
+                &__video {
+
+                    video {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+
+                &__nav {
+                    --nav-anime-delay: 0.5s;
+
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background: #00000067;
+                    z-index: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &.show {
+                        @include mixins.fadeIn(var(--nav-anime-delay), ease-in-out, 0s, forwards);
+                    }
+
+                    &.hide {
+                        @include mixins.fadeOut(var(--nav-anime-delay), ease-in-out, 0s, forwards);
+
+                        .nav-btns {
+                            display: none;
+                        }
+                    }
+
+                    .MuiCircularProgress-svg {
+                        color: #BC96FF;
+                    }
+
+                    .nav-btns {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 1.5rem;
+
+                        &__item {
+                            user-select: none;
+                            -webkit-tap-highlight-color: transparent;
+                            cursor: pointer;
+                            background: transparent;
+                            transition: scale 0.1s ease;
+                            border: none;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            &:active {
+                                scale: 0.95;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .my-player-error {
+                background: var(--box-color);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                &__ctx {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+            }
+        }
+    }
+}

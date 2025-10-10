@@ -1,5 +1,5 @@
-import { ReactNode, MouseEvent, HTMLAttributes } from 'react';
-import { PhotoItem } from './profile.types';
+import type { ReactNode, MouseEvent, HTMLAttributes } from 'react';
+import type { PhotoItem } from './profile.types';
 
 
 export enum EPopOrigHor {
@@ -164,4 +164,18 @@ export interface PropsAvatarWithPreload {
     size?: number
     addClass?: string
     handleClick: () => void
+}
+
+export interface PropsPlayerBtn {
+    urlImg: string
+    urlVideo: string
+}
+
+
+export interface PropsBrochPatternDialog {
+    title: string
+    btnTxt: string
+    open: boolean
+    btnFunc: () => Promise<void>
+    setOpen: (value: boolean) => void
 }

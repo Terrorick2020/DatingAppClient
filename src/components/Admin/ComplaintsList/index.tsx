@@ -1,4 +1,4 @@
-import { JSX, useEffect, useCallback } from 'react';
+import { JSX, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { initComplaintListAsync } from '@/store/slices/adminSlice';
 import type { RootDispatch } from '@/store';
@@ -13,9 +13,9 @@ const ComplaintsListConstent = (): JSX.Element => {
 
     useEffect(() => { dispatch(initComplaintListAsync()) }, []);
 
-    const handleSearch = useCallback(async (): Promise<void> => {
+    const handleSearch = async (): Promise<void> => {
         await dispatch(initComplaintListAsync());
-    }, [dispatch]);
+    };
 
     return (
         <>

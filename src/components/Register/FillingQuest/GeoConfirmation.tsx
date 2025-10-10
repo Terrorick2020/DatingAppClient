@@ -68,7 +68,7 @@ const GeoConfirmation = (): JSX.Element => {
             setLoad(null);
             setOpen(false);
             return;
-        }
+        };
         
         const response = await dispatch(sendSelfGeoAsync(geo)).unwrap();
 

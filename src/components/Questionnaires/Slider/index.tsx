@@ -5,7 +5,7 @@ import { initialArgs } from '@/constant/quest';
 import { initSliderListAsync } from '@/store/slices/questionnairesSlice';
 import type { IState } from '@/types/store.types';
 
-import SliderPoster from './SliderPoster';
+import SliderPoster from './Poster/SliderPoster';
 import MyLoader from '@/components/UI/MyLoader';
 
 

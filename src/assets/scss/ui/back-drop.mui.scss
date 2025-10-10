@@ -1,0 +1,52 @@
+.MuiBackdrop-root {
+    &.back-drop-shorts {
+        cursor: pointer;
+
+        .colba {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.25rem;
+
+            .anime {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+
+                @keyframes upDown {
+                    0% {
+                        transform: translateY(0) rotate(-18deg);
+                    }
+
+                    25% {
+                        transform: translateY(-15px) rotate(0);
+                    }
+
+                    50% {
+                        transform: translateY(0) rotate(-18deg);
+                    }
+
+                    75% {
+                        transform: translateY(15px) rotate(-36deg);
+                    }
+
+                    100% {
+                        transform: translateY(0) rotate(-18deg);
+                    }
+                }
+
+                .finger {
+                    animation: upDown 1.5s linear infinite;
+                }
+            }
+
+            .text {
+                user-select: none;
+            }
+        }
+    }
+}

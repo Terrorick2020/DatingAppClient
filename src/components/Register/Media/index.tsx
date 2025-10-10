@@ -72,21 +72,17 @@ const MediaContent = (): JSX.Element => {
     const handleBuffer = (): void => {    
         setIsLoading(true);
         setIsPlaying(false);
-        console.log( 'handleBuffer' )
-        console.log( currentTime, buffered )
     };
 
     const handleWaiting = (): void => {
         setIsLoading(true);
         setIsPlaying(false);
         isWaiting.current = true;
-        console.log( 'handleWaiting' )
     };
 
     const handleBufferEnd = (): void => {
         setIsLoading(false);
         setIsPlaying(true);
-        console.log( 'handleBufferEnd' )
     };
 
     const handleProgress = (state: MediaProgressState): void => {
@@ -258,6 +254,6 @@ const MediaContent = (): JSX.Element => {
             </footer>
         </>
     )
-}
+};
 
 export default MediaContent;

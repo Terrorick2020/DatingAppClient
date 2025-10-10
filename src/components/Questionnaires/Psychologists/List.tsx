@@ -2,6 +2,7 @@ import { JSX, memo, useMemo, useRef, UIEvent } from 'react';
 import { toTargetPsych } from '@/config/routes.config';
 import { useSelector } from 'react-redux';
 import { ageToStr } from '@/funcs/general.funcs';
+import { URL_MARK } from '@/config/env.config';
 import { lineStatusAttr } from '@/constant/settings';
 import type { PropsPsychList } from '@/types/quest.types';
 import type { IState } from '@/types/store.types';
@@ -55,7 +56,7 @@ const PsychList = memo((props: PropsPsychList): JSX.Element => {
                 {psychList.map((item, index) =>(
                     <ListBlock
                         img={item.avatar}
-                        route={toTargetPsych.replace(':id', `${item.id}`)}
+                        route={toTargetPsych.replace(`:${URL_MARK}`, `${item.id}`)}
                         key={`psych-list-item-${item.id}`}
                         prefAlt={item.name}
                         data-indx={index}

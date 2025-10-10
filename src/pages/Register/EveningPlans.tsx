@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import EveningPlansContent from '@/components/Register/EveningPlans';
 
 
-const RegEveningPlansPage = () => {
+const RegEveningPlansPage = (): JSX.Element => {
     return (
-        <>
-            <div className="evening-plans" id="evening-plans">
-                <EveningPlansContent />
-            </div>
-        </>
+        <div className="evening-plans" id="evening-plans">
+            <EveningPlansContent />
+        </div>
     )
 }
 

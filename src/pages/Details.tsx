@@ -1,12 +1,13 @@
+import { JSX } from 'react';
+
 import DetailsContent from '@/components/Details';
 
-const QuestDetailsPage = () => {
+
+const QuestDetailsPage = (): JSX.Element => {
     return (
-        <>
-            <div className="details" id="details">
-                <DetailsContent />
-            </div>
-        </>
+        <div className="details" id="details">
+            <DetailsContent />
+        </div>
     )
 }
 

@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import PreviewContent from '@/components/Register/Preview';
 
 
-const RegPreviewPage = () => {
+const RegPreviewPage = (): JSX.Element => {
     return (
-        <>
-            <div className="preview" id="preview">
-                <PreviewContent />
-            </div>
-        </>
+        <div className="preview" id="preview">
+            <PreviewContent />
+        </div>
     )
 }
 

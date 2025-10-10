@@ -1,10 +1,11 @@
-import type {
-    AdminState,
-    ProfilesListItem,
-    TargetProfile,
-    DataSerchProfStat,
-    ComplaintListItem,
-    TargetProfileCompalint,
+import {
+    ESearchComplType,
+    type AdminState,
+    type ProfilesListItem,
+    type TargetProfile,
+    type DataSerchProfStat,
+    type ComplaintListItem,
+    type TargetProfileCompalint,
 } from '@/types/admin.types';
 
 import {
@@ -44,6 +45,8 @@ import api from '@/config/fetch.config';
 const initialState: AdminState = {
     searchType: EProfileRoles.User,
     searchId: '',
+    searchComplType: ESearchComplType.Complaint,
+    searchComplId: '',
     password: '',
     link: '',
     profilesList: [],
@@ -453,7 +456,13 @@ const adminSlice = createSlice({
         },
         resetTargetUserCmpl: state => {
             state.targetProfile.complaint = null;
-        }
+        },
+        setSearchComplId: (state, action: PayloadAction<string>): void => {
+            state.searchComplId = action.payload;
+        },
+        setSearchComplType: (state, action: PayloadAction<ESearchComplType>): void => {
+            state.searchComplType = action.payload;
+        },
     },
     extraReducers: builder => {
         // Получение списка пользователей
@@ -644,5 +653,7 @@ export const {
     setNewProfilesList,
     setTargetProfileId,
     resetTargetUserCmpl,
+    setSearchComplId,
+    setSearchComplType,
 } = adminSlice.actions;
 export default adminSlice.reducer;

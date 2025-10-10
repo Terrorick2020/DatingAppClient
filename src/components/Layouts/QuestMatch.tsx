@@ -1,6 +1,7 @@
 import { JSX, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { acceptMatchAsync, setMatch } from '@/store/slices/likesSlice';
+import { URL_MARK } from '@/config/env.config';
 import { createSelector } from 'reselect';
 import { addRoute, setBadge } from '@/store/slices/settingsSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -69,7 +70,7 @@ const QuestMatch = (): JSX.Element => {
                 }));
             }
 
-            handleNav(toTargetChat.replace(':id', match.from!.chatId));
+            handleNav(toTargetChat.replace(`:${URL_MARK}`, match.from!.chatId));
         }
 
         handleClose();
@@ -101,7 +102,7 @@ const QuestMatch = (): JSX.Element => {
                                 backgroundImage: `url(${match.from.avatar})`
                             }}
                             onClick={
-                                () => handleNav(toDetails.replace(':id', match.from!.id))
+                                () => handleNav(toDetails.replace(`:${URL_MARK}`, match.from!.id))
                             }
                         />
                     </div>

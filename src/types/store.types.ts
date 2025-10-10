@@ -1,11 +1,16 @@
-import { AdminState } from './admin.types';
-import { SettingsState, InterestsVarsItem, CityesVarsItem } from './settings.type';
-import { PsychState } from './psych.types';
-import { ChatsState } from './chats.types';
-import { LikesState } from './likes.types';
-import { ProfileState } from './profile.types';
-import { QuestState } from './quest.types';
+import type { AdminState } from './admin.types';
+import type { SettingsState, InterestsVarsItem, CityesVarsItem } from './settings.type';
+import type { PsychState } from './psych.types';
+import type { ChatsState } from './chats.types';
+import type { LikesState } from './likes.types';
+import type { ProfileState } from './profile.types';
+import type { QuestState } from './quest.types';
+import type { VideosState } from './videos.types';
 
+
+export enum ETypeDispatch {
+    ResetStore = 'ResetStore',
+}
 
 export enum EProfileRoles {
     User  = 'User',
@@ -22,6 +27,7 @@ export enum EProfileStatus {
 export enum EPsychStatus {
     Active = 'Active',
     Inactive = 'Inactive',
+    Blocked = 'Blocked',
 }
 
 export enum ESex {
@@ -54,6 +60,7 @@ export interface IState {
     questionnaires: QuestState
     psych:          PsychState
     settings:       SettingsState
+    videos:         VideosState
 }
 
 export type AsyncThunkRes<T> = T | null | 'error'

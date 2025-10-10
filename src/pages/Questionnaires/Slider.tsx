@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import SliderContent from '@/components/Questionnaires/Slider';
 
 
-const QuestSliderPage = () => {
+const QuestSliderPage = (): JSX.Element => {
     return (
-        <>
-            <div className="slider" id="slider">
-                <SliderContent />
-            </div>
-        </>
+        <div className="slider" id="slider">
+            <SliderContent />
+        </div>
     )
 }
 

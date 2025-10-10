@@ -2,10 +2,14 @@ import { ESex, ELineStatus, ETypingStatus } from './store.types';
 
 
 export enum ELanguage {
-    English   = 'en',
-    Russian   = 'ru',
-    Ukrainian = 'ukr',
-    Spanish   = 'esp',
+    Russia = "ru",
+    English = "en",
+    Belarus = "be",
+    Kazakhstan = "kk",
+    Tatarstan = "tt",
+    Ukraine = "uk",
+    Uzbekistan = "uz",
+    Turkey = "tr"
 }
 
 export enum EApiStatus {
@@ -50,6 +54,7 @@ export interface FQErrors {
     cityErr: FQErrorsItem
     ageErr: FQErrorsItem
     bioErr: FQErrorsItem
+    captchaErr: FQErrorsItem
 }
 
 export type FQErrorKeys = keyof FQErrors;
@@ -64,6 +69,11 @@ export interface FEPHasErrors {
     descPlanErr?: FQErrorsItem
     districtErr?: FQErrorsItem
     descDistErr?: FQErrorsItem
+}
+
+export interface FAVErrors {
+    videoErr: FQErrorsItem
+    titleErr: FQErrorsItem
 }
 
 export interface AbstractVarsItem {
@@ -136,6 +146,7 @@ export interface SettingsState {
     apiRes: SetApiRes
     fQErrors: FQErrors
     fEPErrors: FEPErrors
+    fAVErrors: FAVErrors
     cityesVars: CityesVarsItem[]
     interestsVars: InterestsVarsItem[]
     selSexVars: SelSexVarsItem[]
@@ -146,6 +157,7 @@ export interface SettingsState {
     badge: BadgeBlock
     photosCashe: string[]
     likeBtnType: ELikeBtnType
+    captchaToken: string
 }
 
 export interface PropsLocationDistrict {

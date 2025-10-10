@@ -2,6 +2,7 @@
     .MuiChip-root {
         border-radius: 3.75rem;
         height: clamp(1.5rem, 4vh, 1.8rem);
+        font-weight: 600;
 
         &.purple {
             background: #BC96FF;
@@ -14,8 +15,8 @@
         }
 
         &.crimson {
-            background: #FF4365;
-            color: #FFFFFF;
+            background: #FF43651A;
+            color: #FF4365;
         }
 
         &.black {
@@ -25,6 +26,11 @@
             &.opacity {
                 background: #2c2b2bd6;
             }
+        }
+
+        &.lemon {
+            background: #D7FF8133;
+            color: #D7FF81;
         }
 
         &.plans-timeout {

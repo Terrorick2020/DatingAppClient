@@ -59,15 +59,15 @@ const UsersListHeader = (): JSX.Element => {
 
     return (
         <>
-            <h2 className="headline">Админ-панель</h2>
+            <h2 className="headline">Пользователи</h2>
             <ToggleButtonGroup
-                className="person-type"
+                className="search-type"
                 spacing={2}
                 value={adminState.searchType}
                 onChange={handleChangeRole}
             >
-                <IconButton className="person-type__item" value={EProfileRoles.User}>Пользователи</IconButton>
-                <IconButton className="person-type__item" value={EProfileRoles.Psych}>Пси-специалисты</IconButton>
+                <IconButton className="search-type__item" value={EProfileRoles.User}>Пользователи</IconButton>
+                <IconButton className="search-type__item" value={EProfileRoles.Psych}>Пси-специалисты</IconButton>
             </ToggleButtonGroup>
             <div className="persone-inp-conteiner">
                 <SearchInput

@@ -2,10 +2,12 @@
 
 
 .slider {
+    --slider-p-inline: 1rem;
+
     width: 100%;
     max-width: 800px;
     height: 100%;
-    padding-inline: 1rem;
+    padding-inline: var(--slider-p-inline);
 
     &__poster {
         width: 100%;

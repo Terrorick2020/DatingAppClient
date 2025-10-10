@@ -36,7 +36,7 @@ async function delayForLazy( promise: Promise<any> ) {
             navigate(toError);
         } else if (!checkRes) {
             navigate(toPreview);
-        } else if (checkRes === EProfileStatus.Blocked) {
+        } else if (checkRes.status === EProfileStatus.Blocked) {
             navigate(toBlocked);
         } else {
 

@@ -1,13 +1,13 @@
+import { JSX } from 'react';
+
 import PsychologistsContent from '@/components/Questionnaires/Psychologists';
 
 
-const QuestPsychologistsPage = () => {
+const QuestPsychologistsPage = (): JSX.Element => {
     return (
-        <>
-            <div className="psychologists" id="psychologists">
-                <PsychologistsContent />
-            </div>
-        </>
+        <div className="psychologists" id="psychologists">
+            <PsychologistsContent />
+        </div>
     )
 }
 

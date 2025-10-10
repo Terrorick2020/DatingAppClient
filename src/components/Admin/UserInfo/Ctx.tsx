@@ -43,7 +43,7 @@ const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
 
     return (
         <>
-            <h3 className="headline">{`ID${id}`}</h3>
+            <h3 className="headline">{`ID ${id}`}</h3>
             <Carousel
                 className="complaints-slider"
                 animation="slide"

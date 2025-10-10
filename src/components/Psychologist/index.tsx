@@ -1,5 +1,7 @@
 import { JSX, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { URL_MARK } from '@/config/env.config';
+import { createSelector } from 'reselect';
 import { getPsycByIdhAsync } from '@/store/slices/psychSlice';
 import { infoAlert, warningAlert } from '@/funcs/alert.funcs';
 import { toNotFoud } from '@/config/routes.config';
@@ -13,22 +15,35 @@ import Button from '@mui/material/Button';
 import PsychologistCtx from './Ctx';
 
 
+const selectSettings = (state: IState) => state.settings;
+const selectProfile = (state: IState) => state.profile;
+
+const selectPsychContent  = createSelector(
+    [selectSettings, selectProfile],
+    (settings, profile) => ({
+      isLoad: settings.load,
+      selPsych: profile.selPsych
+    })
+);
+
+const btnText = [
+    [ 'Выбрать специалиста', 'Загрузка...' ],
+    [ 'Специалист уже выбран Вами', '' ]
+];
+
 const PsychologistContent = (): JSX.Element => {
-    const isLoad = useSelector((state: IState) => state.settings.load);
+    const { isLoad, selPsych } = useSelector(selectPsychContent);
 
     const [isSelLoad, setIsSelLoad] = useState<boolean>(false);
 
-    const { id } = useParams();
+    const params = useParams();
+    const id = params[URL_MARK];
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
 
-    const goBack = (): void => {
-        infoAlert(
-            dispatch,
-            'Не удалось получить информацию о специолист',
-        );
-
+    const goBack = async (): Promise<void> => {
+        infoAlert(dispatch, 'Не удалось получить информацию о специолист');
         navigate(toNotFoud);
     };
 
@@ -36,7 +51,7 @@ const PsychologistContent = (): JSX.Element => {
         goBack();
 
         return (<></>);
-    }
+    };
 
     const initPsych = async (): Promise<void> => {
         const response = await dispatch(getPsycByIdhAsync(id)).unwrap();
@@ -62,7 +77,7 @@ const PsychologistContent = (): JSX.Element => {
         if(!response || response === 'error') {
             warningAlert(
                 dispatch,
-                'Не удалось прикреить выбранного специолиста к Вам! Попробуйте повторить запрос позже',
+                'Не удалось прикрепить выбранного специолиста к Вам! Попробуйте повторить запрос позже',
             );
         };
 
@@ -86,9 +101,10 @@ const PsychologistContent = (): JSX.Element => {
                     variant="contained"
                     loadingPosition="start"
                     loading={isSelLoad}
+                    disabled={isSelLoad || id === selPsych}
                     onClick={selectSelfPsych}
                 >
-                    { isSelLoad ? 'Загрузка...' : 'Выбрать специалиста'}
+                    { btnText[+(id === selPsych)][+isSelLoad] }
                 </Button>
             </div>       
         </>
