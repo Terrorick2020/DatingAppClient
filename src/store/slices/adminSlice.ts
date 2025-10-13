@@ -35,6 +35,7 @@ import { setLoad } from './settingsSlice';
 import { formatTimestamp } from '@/funcs/general.funcs';
 import { initialArgs } from '@/constant/quest';
 import type { InitSliderData } from '@/types/quest.types';
+import type { VideoItemWithPsych } from '@/types/videos.types';
 import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
 import type { FetchResponse, FetchSavePhotoRes, AdminGenLinkRes } from '@/types/fetch.type';
 import type { AxiosResponse, AxiosProgressEvent } from 'axios';
@@ -62,6 +63,7 @@ const initialState: AdminState = {
         complaint: null
     },
     complaintsList: [],
+    targetVideo: null,
 };
 
 export const getProfilesListAsync = createAsyncThunk(
@@ -427,7 +429,7 @@ export const deleteUserAsync = createAsyncThunk(
 
 export const initComplaintListAsync = createAsyncThunk(
     'admin/init-complaint-list',
-    async (_, { dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
+    async (_data: InitSliderData, { dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
         try {
             dispatch(setLoad(true));
 
@@ -446,7 +448,29 @@ export const initComplaintListAsync = createAsyncThunk(
         } finally {
             dispatch(setLoad(false));
         }
-    }
+    },
+);
+
+export const getTargetVideoInfoAsync = createAsyncThunk(
+    'admin/get-target-video-info',
+    async (id: number, { getState, dispatch }): Promise<AsyncThunkRes<VideoItemWithPsych>> => {
+        try {
+            dispatch(setLoad(true));
+
+            const rootState = getState() as IState;
+            const videosList = rootState.videos.shortsList.videos;
+
+            const result = videosList.find(
+                item => item.id === id
+            );
+
+            return result || null;
+        } catch (error) {
+            return 'error';
+        } finally {
+            dispatch(setLoad(false));
+        }
+    },
 );
 
 const adminSlice = createSlice({
@@ -656,6 +680,29 @@ const adminSlice = createSlice({
         }),
         builder.addCase(initComplaintListAsync.rejected, _ => {
             console.log("Ошибка получения списка жалоб");
+        })
+
+        // Получение видео психолога
+        builder.addCase(getTargetVideoInfoAsync.pending, _ => {
+            console.log("Получение видео психолога");
+        })
+        builder.addCase(getTargetVideoInfoAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<VideoItemWithPsych>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения видео психолога");
+                    break;
+                case null:
+                    state.targetVideo = action.payload;
+                    console.log("Видео психолога не получено");
+                    break;
+                default:
+                    state.targetVideo = action.payload;
+                    console.log("Успешное получение видео психолога");
+                    break;
+            }
+        }),
+        builder.addCase(getTargetVideoInfoAsync.rejected, _ => {
+            console.log("Ошибка получения видео психологаб");
         })
     }
 })

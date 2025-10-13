@@ -66,12 +66,13 @@ export const PSYCH_UPL_PHOTO   = import.meta.env.VITE_PSYCH_UPL_PHOTO || '';
 export const PSYCH_DEL_PHOTO   = import.meta.env.VITE_PSYCH_DEL_PHOTO || '';
 
 export const VIDEO_ENDPOIN = import.meta.env.VITE_VIDEO_ENDPOINT || '';
-export const VIDEO_UPL    = import.meta.env.VITE_VIDEO_UPL || '';
-export const VIDEO_SAVE   = import.meta.env.VITE_VIDEO_SAVE || '';
-export const VIDEO_MY     = import.meta.env.VITE_VIDEO_MY || '';
-export const VIDEO_FEED   = import.meta.env.VITE_VIDEO_SHORTS_FEED || '';
-export const VIDEO_LIKE   = import.meta.env.VITE_VIDEO_SHORTS_LIKE || '';
-export const VIDEO_VIEW   = import.meta.env.VITE_VIDEO_SHORTS_VIEW || '';
+export const VIDEO_UPL     = import.meta.env.VITE_VIDEO_UPL || '';
+export const VIDEO_SAVE    = import.meta.env.VITE_VIDEO_SAVE || '';
+export const VIDEO_MY      = import.meta.env.VITE_VIDEO_MY || '';
+export const VIDEO_FEED    = import.meta.env.VITE_VIDEO_SHORTS_FEED || '';
+export const VIDEO_LIKE    = import.meta.env.VITE_VIDEO_SHORTS_LIKE || '';
+export const VIDEO_VIEW    = import.meta.env.VITE_VIDEO_SHORTS_VIEW || '';
+export const VIDEO_SERCH   = import.meta.env.VITE_VIDEO_SHORTS_SERCH || '';
 
 export const REDIS               = import.meta.env.VITE_REDIS || '';
 export const REDIS_KEY_ENDPOINT  = import.meta.env.VITE_REDIS_KEY_ENDPOINT || '';
@@ -144,6 +145,7 @@ if(
   !VIDEO_FEED    ||
   !VIDEO_LIKE    ||
   !VIDEO_VIEW    ||
+  !VIDEO_SERCH   ||
 
   !PLANS_GET_ENDPOINT ||
   !PLANS_SET_ENDPOINT ||
@@ -381,11 +383,26 @@ export const VIDEO_SELF_ENDPOINT = (
 };
 
 export const VIDEO_SHORTS_ENDPOINT = (
-  telegramId: string,
-  offset?: number,
-  limit?: number,
+    telegramId: string,
+    offset?: number,
+    limit?: number,
 ): string => {
     const queryString = getBaseVideoParams(telegramId, offset, limit);
 
     return `${VIDEO_ENDPOIN}${VIDEO_FEED}${queryString}`;
+};
+
+export const VIDEO_ADMIN_ENDPOINT = (
+    telegramId: string,
+    offset?: number,
+    limit?: number,
+    serch?: string
+): string => {
+    let queryString = getBaseVideoParams(telegramId, offset, limit);
+
+    if(serch) {
+       queryString = `${queryString}&search=${serch}`;
+    }
+
+    return `${VIDEO_ENDPOIN}${VIDEO_SERCH}${queryString}`;
 };

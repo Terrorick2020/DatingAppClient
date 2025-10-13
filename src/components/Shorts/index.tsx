@@ -12,19 +12,23 @@ import type { RootDispatch } from '@/store';
 import MyLoader from '@/components/UI/MyLoader';
 import ShortsBackDrop from './BackDrop';
 import ShortsCtxCarusel from './Carusel';
+import SvgEmptyVideoPsych from '@/assets/icon/empty-psych-video.svg';
 
 
 const selectSettings = (state: IState) => state.settings;
+const selectVideos = (state: IState) => state.videos;
 
 const selectShorts = createSelector(
-    [selectSettings],
-    (settings) => ({
+    [selectSettings, selectVideos],
+    (settings, videos) => ({
       isLoad: settings.load,
+      videoTotal: videos.shortsList.total,
+      shortsLen: videos.shortsList.videos.length,
     })
 );
 
 const ShortsContent = (): JSX.Element => {
-    const { isLoad } = useSelector(selectShorts);
+    const { isLoad, videoTotal, shortsLen } = useSelector(selectShorts);
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -49,6 +53,24 @@ const ShortsContent = (): JSX.Element => {
     if(isLoad) return (
         <div className="loader">
             <MyLoader />
+        </div>
+    );
+
+    if(!videoTotal || !shortsLen) return (
+        <div className="shorts__ctx">
+            <div className="empty">
+                <img
+                    src={ SvgEmptyVideoPsych }
+                    alt="quests-empty"
+                    loading="lazy"
+                    decoding="async"
+                />
+                <h4 className="headline">У нас пока нет видео для Вас</h4>
+                <p className="text">
+                    Скорее всего специалисты еще не подготовили их.
+                    Попробуйсе вернуться сюда чуть позже.
+                </p>
+            </div>
         </div>
     );
 

@@ -1,5 +1,6 @@
 import { EProfileRoles, EProfileStatus } from './store.types';
 import type { PhotoItem } from './profile.types';
+import type { VideoItemWithPsych } from './videos.types';
 
 
 export enum ESearchComplType {
@@ -55,6 +56,7 @@ export interface AdminState {
     profilesList: ProfilesListItem[]
     targetProfile: TargetProfile
     complaintsList: ComplaintListItem[]
+    targetVideo: VideoItemWithPsych | null
 }
 
 export interface StatusData {
@@ -109,4 +111,16 @@ export interface PropsUserListItem {
     item: ProfilesListItem
     toUserInfo: string
     setOpenDel: (value: boolean) => void
+}
+
+export interface PropsVideosLiatItem {
+    item: VideoItemWithPsych
+}
+
+export interface PropsVideoInfoContentMainInfo {
+    id: string
+    url: string
+    name: string
+    date: Date
+    isPublished: boolean
 }

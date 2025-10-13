@@ -31,6 +31,7 @@ import {
     VIDEO_LIKE_ENDPOINT,
     VIDEO_VIEW_ENDPOINT,
     VIDEO_ENDPOIN,
+    VIDEO_ADMIN_ENDPOINT,
 } from '@/config/env.config';
 
 import { hasAllKeys } from '@/funcs/utels';
@@ -272,6 +273,36 @@ export const getShortsAsync = createAsyncThunk(
             const telegramId = rootState.profile.info.id;
 
             const url = VIDEO_SHORTS_ENDPOINT(telegramId, data.offset, data.limit);
+
+            const response: AxiosResponse<FetchResponse<VideoShortsList>> = await api.get(url);
+
+            if(
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+            
+            return response.data.data;
+        } catch {
+            return 'error';
+        } finally {
+            dispatch(setLoad(false));
+        };
+    },
+);
+
+export const getAdminShorrtsAsync = createAsyncThunk(
+    'videos/get-admin-shorts',
+    async (data: InitSliderData, { dispatch, getState }): Promise<AsyncThunkRes<VideoShortsList>> => {
+        try {
+            dispatch(setLoad(true));
+
+            const rootState = getState() as IState;
+            const search = rootState.admin.searchId;
+            const telegramId = rootState.profile.info.id;
+
+            const url = VIDEO_ADMIN_ENDPOINT(telegramId, data.offset, data.limit, search);
 
             const response: AxiosResponse<FetchResponse<VideoShortsList>> = await api.get(url);
 
@@ -558,6 +589,31 @@ const videosSlice = createSlice({
         })
         builder.addCase(getShortsAsync.rejected, _ => {
             console.log("Ошибка получения шортсов");
+        })
+
+        // Получение видео админом
+        builder.addCase(getAdminShorrtsAsync.pending, _ => {
+            console.log("Получение видео админом");
+        })
+        builder.addCase(getAdminShorrtsAsync.fulfilled, (
+            state,
+            action: PayloadAction<AsyncThunkRes<VideoShortsList>>,
+        ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения видео админом");
+                    break;
+                case null:
+                    console.log("Видео админом не получены");
+                    break;
+                default:
+                    state.shortsList = action.payload;
+                    console.log("Видео админом успешно получены");
+                    break;
+            }
+        })
+        builder.addCase(getAdminShorrtsAsync.rejected, _ => {
+            console.log("Ошибка получения видео админом");
         })
 
         // Изменение лайка шортса

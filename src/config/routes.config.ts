@@ -108,8 +108,10 @@ const changeRoute     = adminRoutes.inner.nav;
 const usersListRoute  = adminRoutes.inner.usersList;
 const userInfoRoute   = adminRoutes.inner.userInfo;
 const complsListRoute = adminRoutes.inner.compalintsList;
+const videoInfoRoute  = adminRoutes.inner.videoInfo;
 
 export const toChange     = `${adminGlobRoute}/${changeRoute}`;
 export const toUsersList  = `${adminGlobRoute}/${usersListRoute}`;
 export const toUserInfo   = `${adminGlobRoute}/${userInfoRoute}`;
 export const toComplsList = `${adminGlobRoute}/${complsListRoute}`;
+export const toVideoInfo  = `${adminGlobRoute}/${videoInfoRoute}`;

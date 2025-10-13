@@ -64,8 +64,13 @@
             background: #2B2B2B;
             padding: 0.75rem;
             display: grid;
+            cursor: pointer;
             grid-template-rows: 1fr auto;
             gap: var(--video-list-block-gap);
+
+            &:active {
+                scale: 0.98;
+            }
 
             &__info, &__author {
                 width: 100%;

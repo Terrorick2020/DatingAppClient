@@ -6,6 +6,18 @@ declare module '*.svg' {
     export default src
 };
 
+declare module 'virtual:pwa-register' {
+  type RegisterSWOptions = {
+    onNeedRefresh?: (sw: any) => void;
+    onOfflineReady?: () => void;
+  };
+
+  function registerSW(options?: RegisterSWOptions): () => void;
+
+  export { registerSW };
+  export default registerSW;
+};
+
 declare global {
   interface Window {
     Telegram: {

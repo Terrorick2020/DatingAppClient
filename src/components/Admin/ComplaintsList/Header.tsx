@@ -53,7 +53,7 @@ const ComplaintsListHeader = memo((props: PropsComplaintsListHeader): JSX.Elemen
                 handleInputKeyDown={props.handleSearch}
             />
         </>
-    )
-})
+    );
+});
 
 export default ComplaintsListHeader;

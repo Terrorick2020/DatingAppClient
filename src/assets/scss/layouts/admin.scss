@@ -84,6 +84,10 @@
         flex-direction: column;
         gap: 1rem;
         @include mixins.fadeIn(1.2s, ease-in-out, 0s, forwards);
+
+        &:has(.not-found) {
+            height: 100%;
+        }
     }
 
     .admine-footer {

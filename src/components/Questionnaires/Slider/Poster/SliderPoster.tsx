@@ -157,7 +157,7 @@ const SliderPoster = (): JSX.Element => {
         <Button variant="contained">Изменить настройки</Button>
       </NavLink>
     </div>
-  )
+  );
 
   return (
     <div className="poster__ctx">
