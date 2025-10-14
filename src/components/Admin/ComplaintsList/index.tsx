@@ -4,6 +4,7 @@ import { ESearchComplType } from '@/types/admin.types';
 import { getAdminShorrtsAsync } from '@/store/slices/videosSlice';
 import { initComplaintListAsync } from '@/store/slices/adminSlice';
 import { initialQuery } from '@/constant/chats';
+import { errorAlert } from '@/funcs/alert.funcs';
 import type { InitSliderData } from '@/types/quest.types';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -22,14 +23,21 @@ const ComplaintsListConstent = (): JSX.Element => {
 
     const handleSearch = async (): Promise<void> => {
         let response;
+        let text;
 
         switch (searchComplType) {
             case ESearchComplType.Complaint:
                 response = await dispatch(initComplaintListAsync(initData.current)).unwrap();
+                text = 'Не удалось получить жалобы';
                 break;
             case ESearchComplType.Video:
                 response = await dispatch(getAdminShorrtsAsync(initData.current)).unwrap();
+                text = 'Не удалось получить короткие видео';
                 break;
+        };
+
+        if(!response || response === 'error') {
+            errorAlert(dispatch, text);
         };
     };
 
