@@ -2,6 +2,7 @@ import { type JSX, useState, useRef, useEffect, WheelEvent } from 'react';
 import { useSwipeable, SwipeEventData } from 'react-swipeable';
 import { useSelector } from 'react-redux';
 import { EShortsCaruselKey } from '@/types/quest.types';
+import { CARUSEL_ANIME_MS } from '@/constant/quest';
 import type { IState } from '@/types/store.types';
 
 import ShortsCtxCaruselItem from './Item';
@@ -9,7 +10,6 @@ import IconButton from '@mui/joy/IconButton';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-export const CARUSEL_ANIME_MS: number = 500;
 
 const ShortsCtxCarusel = (): JSX.Element => {
     const shortsList = useSelector((state: IState) => state.videos.shortsList);

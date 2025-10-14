@@ -147,48 +147,48 @@ export default defineConfig(({ mode }) => {
           comments: false,
         },
       },
-      rollupOptions: {
-        output: {
-          manualChunks(id: string) {
-            if (id.includes('node_modules')) {
+      // rollupOptions: {
+      //   output: {
+      //     manualChunks(id: string) {
+      //       // if (id.includes('node_modules')) {
 
-              if (id.includes('react-router-dom') || id.includes('react-router')) {
-                return 'react-router';
-              };
+      //       //   if (id.includes('react-router-dom') || id.includes('react-router')) {
+      //       //     return 'react-router';
+      //       //   };
  
-              if (
-                id.includes('@reduxjs/toolkit') ||
-                id.includes('react-redux')      ||
-                id.includes('reselect')
-              ) {
-                return 'redux';
-              };
+      //       //   if (
+      //       //     id.includes('@reduxjs/toolkit') ||
+      //       //     id.includes('react-redux')      ||
+      //       //     id.includes('reselect')
+      //       //   ) {
+      //       //     return 'redux';
+      //       //   };
 
-              if (id.includes('socket.io-client')) {
-                return 'socket';
-              };
+      //       //   if (id.includes('socket.io-client')) {
+      //       //     return 'socket';
+      //       //   };
 
-              if (
-                id.includes('axios') ||
-                id.includes('dayjs') ||
-                id.includes('uuid')
-              ) {
-                return 'utils';
-              };
+      //       //   if (
+      //       //     id.includes('axios') ||
+      //       //     id.includes('dayjs') ||
+      //       //     id.includes('uuid')
+      //       //   ) {
+      //       //     return 'utils';
+      //       //   };
 
-              if (id.includes('@telegram-apps')) {
-                return 'web-sdk';
-              };
+      //       //   if (id.includes('@telegram-apps')) {
+      //       //     return 'web-sdk';
+      //       //   };
 
-              if (id.includes('emoji-mart') || id.includes('@emoji-mart')) {
-                return 'emoji';
-              };
+      //       //   if (id.includes('emoji-mart') || id.includes('@emoji-mart')) {
+      //       //     return 'emoji';
+      //       //   };
 
-              return 'vendor';
-            }
-          }
-        }
-      }
+      //       //   return 'vendor';
+      //       // }
+      //     }
+      //   }
+      // }
     }
   }
 })

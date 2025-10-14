@@ -1,5 +1,5 @@
 import { JSX, useState, useEffect } from 'react';
-import { CARUSEL_ANIME_MS } from '.';
+import { CARUSEL_ANIME_MS } from '@/constant/quest';
 import { EShortsCaruselKey } from '@/types/quest.types';
 import type { PropsShortsCtxCaruselItem } from '@/types/quest.types';
 
