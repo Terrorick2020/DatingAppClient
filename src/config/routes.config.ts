@@ -52,36 +52,36 @@ export const appRoutes = {
     },
 }
 
-export const regRoutes   = appRoutes.register;
-export const epRoutes    = appRoutes.eveningPlans;
-export const questRoutes = appRoutes.questionnaires;
-export const adminRoutes = appRoutes.admin;
+export const regRoutes = appRoutes.register
+export const epRoutes = appRoutes.eveningPlans
+export const questRoutes = appRoutes.questionnaires
+export const adminRoutes = appRoutes.admin
 
 export const toNotFoud = appRoutes.notFound;
 export const toBlocked = appRoutes.blocked;
 export const toError   = appRoutes.error;
 
-const regGlobRoute   = regRoutes.global;
-const previewRoute   = regRoutes.inner.preview;
-const policyRoute    = regRoutes.inner.policy;
-const rulesRoute     = regRoutes.inner.rules;
-const langRoute      = regRoutes.inner.lang;
-const fillQuestRoute = regRoutes.inner.fillQuest;
-const mediaRoute     = regRoutes.inner.media;
+const regGlobRoute = regRoutes.global
+const previewRoute = regRoutes.inner.preview
+const policyRoute = regRoutes.inner.policy
+const rulesRoute = regRoutes.inner.rules
+const langRoute = regRoutes.inner.lang
+const fillQuestRoute = regRoutes.inner.fillQuest
+const mediaRoute = regRoutes.inner.media
 
-export const toPreview   = `${regGlobRoute}/${previewRoute}`;
-export const toPolicy    = `${regGlobRoute}/${policyRoute}`;
-export const toRules     = `${regGlobRoute}/${rulesRoute}`;
-export const toLang      = `${regGlobRoute}/${langRoute}`;
-export const toFillQuest = `${regGlobRoute}/${fillQuestRoute}`;
-export const toMedia     = `${regGlobRoute}/${mediaRoute}`;
+export const toPreview = `${regGlobRoute}/${previewRoute}`
+export const toPolicy = `${regGlobRoute}/${policyRoute}`
+export const toRules = `${regGlobRoute}/${rulesRoute}`
+export const toLang = `${regGlobRoute}/${langRoute}`
+export const toFillQuest = `${regGlobRoute}/${fillQuestRoute}`
+export const toMedia = `${regGlobRoute}/${mediaRoute}`
 
-const evePlansGlobRoute = epRoutes.global;
-const plansRoute        = epRoutes.inner.plans;
-const locationRoute     = epRoutes.inner.location;
+const evePlansGlobRoute = epRoutes.global
+const plansRoute = epRoutes.inner.plans
+const locationRoute = epRoutes.inner.location
 
-export const toPlans    = `${evePlansGlobRoute}/${plansRoute}`;
-export const toLocation = `${evePlansGlobRoute}/${locationRoute}`;
+export const toPlans = `${evePlansGlobRoute}/${plansRoute}`
+export const toLocation = `${evePlansGlobRoute}/${locationRoute}`
 
 const questGlobRoute = questRoutes.global;
 const chatsRoute     = questRoutes.inner.chats;

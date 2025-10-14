@@ -34,7 +34,7 @@ export const FillingQuestCaptcha = (): JSX.Element => {
 
     const handleTokenExpired = (): void => {
         disatch(setCaptcaToken(''));
-    };
+    }; 
 
     return (
         <div className="widgets__captcha">
