@@ -37,3 +37,5 @@ RUN npm run minify || echo "minify skipped"
 EXPOSE 4178
 
 CMD ["npm", "run", "preview"]
+
+cd client && git pull && cd ../ && docker build -t ta1kin77/client:latest ./client && docker push ta1kin77/client:latest && docker compose down -v client && docker compose up -d client
