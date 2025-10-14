@@ -21,3 +21,19 @@
 // "react": "^18.3.1",
 // "react-awesome-reveal": "^4.3.1",
 // "react-dom": "^18.3.1",
+
+
+FROM node:22-alpine
+
+WORKDIR /client
+
+COPY package.json .
+RUN npm install --legacy-peer-deps
+
+COPY . .
+RUN npm run build
+RUN npm run minify || echo "minify skipped"
+
+EXPOSE 4178
+
+CMD ["npm", "run", "preview"]
