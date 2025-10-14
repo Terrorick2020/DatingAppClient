@@ -42,7 +42,7 @@ const ShortsCtxCaruselItem = (props: PropsShortsCtxCaruselItem): JSX.Element => 
                 previewUrl={props.item.previewUrl}
                 videoUrl={props.item.url}
                 playing={playing}
-                isViewed={props.item.isViewed}
+                isViewed={props.item.isView}
                 isLiked={props.item.isLiked}
                 timeToStart={timeToStart}
                 setPlaying={setPlaying}

@@ -30,7 +30,7 @@ import api from '@/config/fetch.config';
 const initialState: QuestState = {
     sliderList: [],
     targetUser: null,
-}
+};
 
 export const initSliderListAsync = createAsyncThunk(
     'questionnaires/init-slider-list',

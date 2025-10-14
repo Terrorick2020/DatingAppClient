@@ -43,7 +43,7 @@ export interface SelfPsychVideos {
 
 export interface VideoItemWithPsych extends VideoItem {
     isLiked: boolean
-    isViewed: boolean
+    isView: boolean
 }
 
 export interface VideoShortsList extends Omit<SelfPsychVideos, 'videos'> {

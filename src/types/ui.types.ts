@@ -179,3 +179,9 @@ export interface PropsBrochPatternDialog {
     btnFunc: () => Promise<void>
     setOpen: (value: boolean) => void
 }
+
+
+export interface UseShareLinkOptions {
+  text?: string;
+  title?: string;
+}

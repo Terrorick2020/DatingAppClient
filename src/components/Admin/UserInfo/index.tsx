@@ -1,5 +1,5 @@
 import { JSX, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { URL_MARK } from '@/config/env.config';
 import { warningAlert } from '@/funcs/alert.funcs';
 import { toNotFoud } from '@/config/routes.config';
@@ -29,12 +29,15 @@ const UserInfoContent = (): JSX.Element => {
     const params = useParams();
     const id = params[URL_MARK];
 
+    const [searchParams] = useSearchParams();
+    const type = searchParams.get('type');
+
     const { isLoad, targetProfile } = useSelector(selectComplListState);
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
 
-    if(!id) {
+    if(!id || !type) {
         navigate(toNotFoud);
 
         return (<></>);
@@ -64,7 +67,7 @@ const UserInfoContent = (): JSX.Element => {
         <div className="loader">
             <MyLoader />
         </div>
-    )
+    );
 
     return (
         <>

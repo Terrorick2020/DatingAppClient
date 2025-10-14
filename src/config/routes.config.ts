@@ -1,4 +1,5 @@
 import { URL_MARK } from './env.config';
+import { EProfileRoles } from '@/types/store.types';
 
 
 export const appRoutes = {
@@ -44,7 +45,7 @@ export const appRoutes = {
         inner: {
             nav: 'change',
             usersList: 'users-list',
-            userInfo: `user-info/:${URL_MARK}`,
+            userInfo: `user-info/:${URL_MARK}?type=${EProfileRoles.User}`,
             compalintsList: 'complaints-list',
             videoInfo: `video-info/:${URL_MARK}`
         },
@@ -103,13 +104,15 @@ export const toTargetPsych   = appRoutes.targetPsych;
 export const toPsychAddVideo = appRoutes.psychAddVideo;
 export const toShorts        = appRoutes.shorts;
 
-const adminGlobRoute = adminRoutes.global
-const changeRoute = adminRoutes.inner.nav
-const usersListRoute = adminRoutes.inner.usersList
-const userInfoRoute = adminRoutes.inner.userInfo
-const complsListRoute = adminRoutes.inner.compalintsList
+const adminGlobRoute  = adminRoutes.global;
+const changeRoute     = adminRoutes.inner.nav;
+const usersListRoute  = adminRoutes.inner.usersList;
+const userInfoRoute   = adminRoutes.inner.userInfo;
+const complsListRoute = adminRoutes.inner.compalintsList;
+const videoInfoRoute  = adminRoutes.inner.videoInfo;
 
-export const toChange = `${adminGlobRoute}/${changeRoute}`
-export const toUsersList = `${adminGlobRoute}/${usersListRoute}`
-export const toUserInfo = `${adminGlobRoute}/${userInfoRoute}`
-export const toComplsList = `${adminGlobRoute}/${complsListRoute}`
+export const toChange     = `${adminGlobRoute}/${changeRoute}`;
+export const toUsersList  = `${adminGlobRoute}/${usersListRoute}`;
+export const toUserInfo   = `${adminGlobRoute}/${userInfoRoute}`;
+export const toComplsList = `${adminGlobRoute}/${complsListRoute}`;
+export const toVideoInfo  = `${adminGlobRoute}/${videoInfoRoute}`;

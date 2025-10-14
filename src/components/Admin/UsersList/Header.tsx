@@ -73,7 +73,7 @@ const UsersListHeader = (): JSX.Element => {
                 <SearchInput
                     value={adminState.searchId}
                     placeholder="Поиск пользователя по ID..."
-                    inpType='number'
+                    inpType="string"
                     handleInputChange={handleInputChange}
                     handleClearInput={handleSearch}
                     handleInputKeyDown={handleSearch}

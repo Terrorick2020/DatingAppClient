@@ -40,23 +40,45 @@ export default defineConfig(({ mode }) => {
       react(),
       svgr(),
       preload(),
-      ...(isProd || isAnalyze
-          ? [ VitePWA({
-            disable: !isProd,
-            registerType: 'autoUpdate',
-            workbox: {
-              globPatterns: ['**/*.{html,css,js,png,jpg,svg,ico}'],
-              maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
-            }
-          }) ]
-          : []
-      ),
       VitePWA({
         disable: !isProd,
+        selfDestroying: true,
         registerType: 'autoUpdate',
+        srcDir: 'src',
         workbox: {
           globPatterns: ['**/*.{html,css,js,png,jpg,svg,ico}'],
           maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+          runtimeCaching: [
+            {
+              urlPattern: ({ request }) => request.mode === 'navigate',
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'html-cache',
+              },
+            },
+            {
+              urlPattern: /\/api\/helpers\/.*$/,
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'api-cache',
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 6 * 60 * 60,
+                },
+              },
+            },
+            {
+              urlPattern: /.*\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'image-cache',
+                expiration: {
+                  maxEntries: 100,
+                  maxAgeSeconds: 7 * 24 * 60 * 60,
+                },
+              },
+            },
+          ]
         }
       }),
       ViteImageOptimizer({

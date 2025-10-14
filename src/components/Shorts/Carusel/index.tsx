@@ -1,14 +1,14 @@
-import { JSX, useState, useRef, useEffect, WheelEvent } from 'react';
+import { type JSX, useState, useRef, useEffect, WheelEvent } from 'react';
 import { useSwipeable, SwipeEventData } from 'react-swipeable';
+import { useSelector } from 'react-redux';
 import { EShortsCaruselKey } from '@/types/quest.types';
 import { CARUSEL_ANIME_MS } from '@/constant/quest';
+import type { IState } from '@/types/store.types';
 
 import ShortsCtxCaruselItem from './Item';
 import IconButton from '@mui/joy/IconButton';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { useSelector } from 'react-redux';
-import { IState } from '@/types/store.types';
 
 
 const ShortsCtxCarusel = (): JSX.Element => {

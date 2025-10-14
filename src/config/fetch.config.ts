@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { getTgID } from '@/funcs/tg.funcs';
 import { toError } from './routes.config';
-import { BASE_URL, TG_HEADER } from './env.config';
+import { BASE_URL, TG_HEADER, YC_HEADER } from './env.config';
 
 import axios from 'axios';
 
@@ -9,6 +9,7 @@ import axios from 'axios';
 export let navigate: ReturnType<typeof useNavigate> | null = null;
 export let isNetworkListenerActive: boolean = false;
 export let tgId: string | null = null;
+export let capTok: string | null = null
 
 export const setNavigate = (nav: ReturnType<typeof useNavigate>): void => {
   navigate = nav;
@@ -16,6 +17,10 @@ export const setNavigate = (nav: ReturnType<typeof useNavigate>): void => {
 
 export const setTgId = (value: string): void => {
   tgId = value;
+};
+
+export const setCapTok = (token: string | null): void => {
+  capTok = token;
 };
 
 const api = axios.create({
@@ -28,7 +33,11 @@ api.interceptors.request.use(
     const telegramId = tgId || getTgID() || 'None';
 
     config.headers.set(TG_HEADER, telegramId);
-    
+
+    if(capTok) {
+      config.headers.set(YC_HEADER, capTok);
+    }
+
     return config
   },
   error => Promise.reject(error)

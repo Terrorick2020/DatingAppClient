@@ -42,7 +42,6 @@ import {
     PSYCH_UPL_PHOTO_ENDPOINT,
     PSYCH_DEL_PHOTO_ENDPOINT,
     CHATS_ASSIGN_PSYCH_ENDPOINT,
-    YC_HEADER,
 } from '@/config/env.config';
 
 import {
@@ -70,7 +69,7 @@ import { ETgCloudeStore } from '@/types/tg.types';
 import { KeyFQBtnText } from '@/types/register.typs';
 import type { AxiosResponse, AxiosProgressEvent  } from 'axios';
 
-import api, { setTgId } from '@/config/fetch.config';
+import api, { setTgId, setCapTok } from '@/config/fetch.config';
 
 
 const initialState: ProfileState = {
@@ -112,8 +111,8 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<InitUsetResult>> => {
         try {
-            const telegramId = getTgID() || 'browser399';
-            
+            const telegramId = getTgID();
+
             if(!telegramId) return 'error';
 
             setTgId(telegramId);
@@ -159,7 +158,7 @@ export const initProfileAsync = createAsyncThunk(
                     if(!resResult && psychRes && psychRes !== 'error') {
                         profileRole = EProfileRoles.Psych;
                         profileStatus = psychRes.status;
-                    }
+                    };
 
                     break;
                 case EProfileRoles.Psych:
@@ -252,7 +251,6 @@ export const initProfileAsync = createAsyncThunk(
             };
         } catch (error) {
             console.log(error);
-
             dispatch(setIsFirstly(true));
 
             return 'error';
@@ -410,6 +408,8 @@ export const signUpProfileAsync = createAsyncThunk(
             const lang = rootState.settings.lang;
             const captchaToken = rootState.settings.captchaToken;
 
+            setCapTok(captchaToken);
+
             const interestsVars = rootState.settings.interestsVars;
 
             const interestId = interestsVars.find(
@@ -443,25 +443,17 @@ export const signUpProfileAsync = createAsyncThunk(
                 interestId,
             };
 
-            const localApi = api.create({
-                ...api.defaults,
-                headers: {
-                    ...api.defaults.headers.common,
-                    [YC_HEADER]: captchaToken,
-                },
-            });
-
             let response: any = null;
             let msg: string = '';
 
             switch(mark) {
                 case KeyFQBtnText.First:
-                    response = await localApi.post(REG_ENDPOINT, data) as
+                    response = await api.post(REG_ENDPOINT, data) as
                         AxiosResponse<FetchResponse<RegEndpointRes>>;
                     msg = 'Регистрация пользователя прошла успешно';
                     break;
                 case KeyFQBtnText.Other:
-                    response = await localApi.patch(`${USER_ENDPOINT}/${profileInfo.id}`, data) as
+                    response = await api.patch(`${USER_ENDPOINT}/${profileInfo.id}`, data) as
                         AxiosResponse<FetchResponse<null>>;
                     msg = 'Профиль обновлён успешно';
                     break;
@@ -502,15 +494,15 @@ export const signUpProfileAsync = createAsyncThunk(
     
             return 'success';
         } catch ( error: any ) {
-            console.log(error);
-            
             let msg = 'Произошла ошибка сервера';
 
-            if (
-                error.name === "AxiosError" &&
-                error.status === 429
-            ) {
-                msg = 'Превышен лимит попыток регистрации, попробуйте позже';
+            if(error.name === 'AxiosError') {
+                if(error.status === 403 && error.response.data.message.error === "CAPTCHA_VALIDATION_FAILED") {
+                    setInfoStatus(EProfileStatus.Blocked);
+                    msg = 'Есть подозрения, что ваш аккаунт используется ботом';
+                } else if (error.status === 429) {
+                    msg = 'Превышен лимит попыток регистрации, попробуйте позже';
+                };
             };
 
             dispatch(setApiRes({
@@ -521,6 +513,8 @@ export const signUpProfileAsync = createAsyncThunk(
             }));
 
             return 'error';
+        } finally {
+            setCapTok(null);
         }
     }
 );
@@ -533,6 +527,8 @@ export const signUpPsychAsync = createAsyncThunk(
             const profileInfo = rootState.profile.info;
             const captchaToken = rootState.settings.captchaToken;
 
+            setCapTok(captchaToken);
+
             const photoIds = rootState.profile.info.photos.map(item => +item.id);
 
             const data = {
@@ -544,26 +540,18 @@ export const signUpPsychAsync = createAsyncThunk(
                 photoIds,
             };
 
-            const localApi = api.create({
-                ...api.defaults,
-                headers: {
-                    ...api.defaults.headers.common,
-                    [YC_HEADER]: captchaToken,
-                },
-            });
-
             let response: any = null;
             let msg: string = '';
 
             switch(mark) {
                 case KeyFQBtnText.First:
-                    response = await localApi.post(PSYCH_ENDPOINT, data) as
+                    response = await api.post(PSYCH_ENDPOINT, data) as
                         AxiosResponse<FetchResponse<any>>;
                     msg = 'Регистрация прошла успешно';
                     break;
                 case KeyFQBtnText.Other:
                     const url = PSYCH_BY_MARK_ENDPOINT(profileInfo.id);
-                    response = await localApi.put(url, data) as
+                    response = await api.put(url, data) as
                         AxiosResponse<FetchResponse<any>>;
                     msg = 'Профиль обновлён успешно';
                     break;
@@ -595,11 +583,13 @@ export const signUpPsychAsync = createAsyncThunk(
         } catch (error: any) {
             let msg = 'Произошла ошибка сервера';
 
-            if (
-                error.name === "AxiosError" &&
-                error.status === 429
-            ) {
-                msg = 'Превышен лимит попыток регистрации, попробуйте позже';
+            if(error.name === 'AxiosError') {
+                if(error.status === 403 && error.response.data.message.error === "CAPTCHA_VALIDATION_FAILED") {
+                    setInfoStatus(EProfileStatus.Blocked);
+                    msg = 'Есть подозрения, что ваш аккаунт используется ботом';
+                } else if (error.status === 429) {
+                    msg = 'Превышен лимит попыток регистрации, попробуйте позже';
+                };
             };
 
             dispatch(setApiRes({
@@ -610,6 +600,8 @@ export const signUpPsychAsync = createAsyncThunk(
             }));
 
             return 'error';
+        } finally {
+            setCapTok(null);
         }
     }
 );
@@ -853,6 +845,9 @@ const profileSlice = createSlice({
     reducers: {
         setInfo: (state, action: PayloadAction<ProfileSelf>): void => {
             state.info = action.payload;
+        },
+        setInfoStatus: (state, action: PayloadAction<EProfileStatus>): void => {
+            state.info.status = action.payload;
         },
         setGeoCoords: (state, action: PayloadAction<ProfileSelfGeo>): void => {
             state.info.latitude = action.payload.latitude;
@@ -1144,6 +1139,7 @@ const profileSlice = createSlice({
 
 export const {
     setInfo,
+    setInfoStatus,
     setGeoCoords,
     setPlan,
     setPlanMeta,

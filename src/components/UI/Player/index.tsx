@@ -57,7 +57,7 @@ const MyPlayer = (props: PropsMyPlayer): JSX.Element => {
                     setCtxType={setCtxType}
                 >{ props.children }</MyPlayerMain>
         }
-    }, [ctxType, props.playing, props.isLiked]);
+    }, [ctxType, props.playing, props.isLiked, props.isViewed]);
 
     return (
         <div className="my-player">

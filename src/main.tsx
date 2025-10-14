@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import { Provider } from 'react-redux';
 import { initTg } from './funcs/tg.funcs';
+import { updateSW } from './funcs/sw.funcs';
 
 import AppSuspense from './AppSuspese';
 import store from './store';
@@ -26,3 +27,5 @@ createRoot(document.getElementById('root')!).render(
     </Provider>
   </StrictMode>
 );
+
+updateSW();

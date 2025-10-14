@@ -246,8 +246,6 @@ export const rejectLikingAsync = createAsyncThunk(
                 timestamp: Date.now(),
             }));
 
-            console.log(error)
-
             return 'error';
         }
     }

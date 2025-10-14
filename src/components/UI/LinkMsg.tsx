@@ -1,10 +1,7 @@
 import { JSX, memo, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { warningAlert } from '@/funcs/alert.funcs';
+import { useShareLink } from '@/funcs/hooks';
 import { shareURL } from '@telegram-apps/sdk';
 import type { PropsLinkMsg } from '@/types/ui.types';
-import type { RootDispatch } from '@/store';
-
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -21,9 +18,10 @@ import CheckIcon from '@mui/icons-material/Check';
 
 const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
     const [copied, setCopied] = useState<boolean>(false);
-    const [loadSend, setLoadSend] = useState<boolean>(false);
-
-    const dispatch = useDispatch<RootDispatch>();
+    const { shareLink, isSharing } = useShareLink({
+        text: 'Начни общение с интересными людьми здесь!',
+        title: 'Приглашение',
+    });
 
     const handleClose = (): void => props.setOpen(false);
 
@@ -36,29 +34,8 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
     };
 
     const handleShare = async (): Promise<void> => {
-        try {
-            setLoadSend(true);
-
-            const text = 'Начни общение с интересными людьми здесь!';
-
-            if(shareURL.isAvailable()) {
-                await shareURL(props.link, text);
-            } else if (navigator.share) {
-                const shareData = {
-                    title: 'Приглашение.',
-                    text,
-                    url: props.link,
-                };
-
-                await navigator.share(shareData);
-            }
-
-            handleClose();
-        } catch (error: any) {
-            warningAlert(dispatch, 'Не удалось отправить ссылку! Попробуйте позже');
-        } finally {
-            setLoadSend(false);
-        }
+        await shareLink(props.link);
+        handleClose();
     };
 
     const shareIsWorked = useMemo(() => shareURL.isAvailable() || navigator.share, []);
@@ -69,8 +46,8 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
     );
 
     const sendSvg = useMemo(
-        () => loadSend ? <CircularProgress size="1.2rem" /> : <img src={SvgLink} alt="link" loading="lazy" decoding="async" />,
-        [loadSend],
+        () => isSharing ? <CircularProgress size="1.2rem" /> : <img src={SvgLink} alt="link" loading="lazy" decoding="async" />,
+        [isSharing],
     );
 
     return (
@@ -117,7 +94,7 @@ const LinkMsg = memo((props: PropsLinkMsg): JSX.Element => {
                     shareIsWorked && <Button
                         className="send-btn"
                         startIcon={ sendSvg }
-                        disabled={ loadSend }
+                        disabled={ isSharing }
                         onClick={ handleShare }
                     >Отправить</Button>
                 }

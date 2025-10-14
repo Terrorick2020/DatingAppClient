@@ -35,6 +35,7 @@ import { setLoad } from './settingsSlice';
 import { formatTimestamp } from '@/funcs/general.funcs';
 import { initialArgs } from '@/constant/quest';
 import type { InitSliderData } from '@/types/quest.types';
+import type { VideoItemWithPsych } from '@/types/videos.types';
 import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
 import type { FetchResponse, FetchSavePhotoRes, AdminGenLinkRes } from '@/types/fetch.type';
 import type { AxiosResponse, AxiosProgressEvent } from 'axios';
@@ -62,6 +63,7 @@ const initialState: AdminState = {
         complaint: null
     },
     complaintsList: [],
+    targetVideo: null,
 };
 
 export const getProfilesListAsync = createAsyncThunk(
@@ -80,54 +82,68 @@ export const getProfilesListAsync = createAsyncThunk(
             const type = rootState.admin.searchType;
 
             let url: string | null = null;
+            let result: ProfilesListItem[] = [];
+
+            let response: AxiosResponse<FetchResponse<any>> | null = null;
 
             switch(type) {
                 case EProfileRoles.User:
                     url = query
                         ? USERS_SEARCH(query, realArgs.offset, realArgs.limit)
                         : USERS_ENDPOINT({page: realArgs.offset + 1, limit: realArgs.limit});
-                    break;
+
+                    response = await api.get(url);
+
+                    if(
+                        !response               ||
+                        response.status !== 200 ||
+                        !response.data.success  ||
+                        !response.data.data     ||
+                        response.data.data === 'None'
+                    ) return result;
+
+                    for(let item of response.data.data) {
+                        result.push({
+                            id: item.telegramId,
+                            role: EProfileRoles.User,
+                            avatar: item.photos[0].url,
+                            name: item.name,
+                            status: item.status
+                        })
+                    };
+
+                    return result;
 
                 case EProfileRoles.Psych:
-                    const isNumeric = /^\d+$/.test(query);
-
-                    url = query && !isNumeric
-                        ? null
-                        : PSYCH_ADMIN_ENDPOINT(query, realArgs.offset, realArgs.limit);
+                    url = PSYCH_ADMIN_ENDPOINT(query, realArgs.offset, realArgs.limit);
                     
-                    // TODO: Убрать потом!    
-                    url = null;
+                    response = await api.get(url);
 
-                    break;
-            }
+                    if(
+                        !response               ||
+                        response.status !== 200 ||
+                        !response.data.success  ||
+                        !response.data.data     ||
+                        response.data.data === 'None'
+                    ) return result;
 
-            if(!url) return null;
+                    for(let item of response.data.data.psychologists) {
+                        result.push({
+                            id: item.telegramId,
+                            role: EProfileRoles.Psych,
+                            avatar: item.photos[0].url,
+                            name: item.name,
+                            status: EProfileStatus.Noob
+                        })
+                    };
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.get(url);
-
-            if(
-                response.status === 200 &&
-                response.data.data &&
-                response.data.data !== 'None' &&
-                response.data.success
-            ) {
-                let result: ProfilesListItem[] = [];
-
-                for(let item of response.data.data) {
-                    result.push({
-                        id: item.telegramId,
-                        role: item.role,
-                        avatar: item.photos[0].url,
-                        name: item.name,
-                        status: item.status
-                    })
-                }
-
-                return result;
-            }
+                    return result;
+            };
 
             return null;
         } catch ( error ) {
+            console.log(error);
+
             return 'error';
         } finally {
             dispatch(setLoad(false));
@@ -413,11 +429,13 @@ export const deleteUserAsync = createAsyncThunk(
 
 export const initComplaintListAsync = createAsyncThunk(
     'admin/init-complaint-list',
-    async (_, { dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
+    async (_data: InitSliderData, { dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
         try {
             dispatch(setLoad(true));
 
             const response: AxiosResponse<FetchResponse<ComplaintListItem[]>> = await api.get(ADMINE_CMPLS_ENDPOINT);
+
+            console.log(response);
 
             if (
                 response.status === 200 &&
@@ -428,11 +446,35 @@ export const initComplaintListAsync = createAsyncThunk(
 
             return null;
         } catch (error) {
+            console.log(error);
+            
             return 'error';
         } finally {
             dispatch(setLoad(false));
         }
-    }
+    },
+);
+
+export const getTargetVideoInfoAsync = createAsyncThunk(
+    'admin/get-target-video-info',
+    async (id: number, { getState, dispatch }): Promise<AsyncThunkRes<VideoItemWithPsych>> => {
+        try {
+            dispatch(setLoad(true));
+
+            const rootState = getState() as IState;
+            const videosList = rootState.videos.shortsList.videos;
+
+            const result = videosList.find(
+                item => item.id === id
+            );
+
+            return result || null;
+        } catch (error) {
+            return 'error';
+        } finally {
+            dispatch(setLoad(false));
+        }
+    },
 );
 
 const adminSlice = createSlice({
@@ -642,6 +684,29 @@ const adminSlice = createSlice({
         }),
         builder.addCase(initComplaintListAsync.rejected, _ => {
             console.log("Ошибка получения списка жалоб");
+        })
+
+        // Получение видео психолога
+        builder.addCase(getTargetVideoInfoAsync.pending, _ => {
+            console.log("Получение видео психолога");
+        })
+        builder.addCase(getTargetVideoInfoAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<VideoItemWithPsych>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения видео психолога");
+                    break;
+                case null:
+                    state.targetVideo = action.payload;
+                    console.log("Видео психолога не получено");
+                    break;
+                default:
+                    state.targetVideo = action.payload;
+                    console.log("Успешное получение видео психолога");
+                    break;
+            }
+        }),
+        builder.addCase(getTargetVideoInfoAsync.rejected, _ => {
+            console.log("Ошибка получения видео психологаб");
         })
     }
 })

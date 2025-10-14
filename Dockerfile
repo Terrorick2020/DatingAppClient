@@ -1,4 +1,3 @@
-# Сборочный этап
 FROM node:22-alpine AS builder
 
 WORKDIR /client
@@ -7,18 +6,22 @@ COPY package.json .
 
 RUN npm install --legacy-peer-deps
 
-COPY . . 
+COPY . .
+
 RUN npm run build
-RUN npm run minify
+RUN npm run minify || echo "minify skipped"
 
-# # Этап продакшена — через nginx
-# FROM nginx:stable-alpine
-# COPY --from=builder /client/node_modules ./node_modules
-# COPY --from=builder /client/dist /usr/share/nginx/html
-# EXPOSE 4173
-# CMD ["nginx", "-g", "daemon off;"]
 
-# Пробная версия
+FROM node:22-alpine AS production
+
+WORKDIR /client
+
+COPY package.json .
+
+RUN npm install --omit=dev --legacy-peer-deps
+
+COPY --from=builder /client/dist ./dist
+
 EXPOSE 4173
 
 CMD ["npm", "run", "preview"]
