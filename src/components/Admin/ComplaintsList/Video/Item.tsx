@@ -1,19 +1,35 @@
 import { type JSX, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addRoute } from '@/store/slices/settingsSlice';
 import { URL_MARK } from '@/config/env.config';
-import { toVideoInfo } from '@/config/routes.config';
+import { EProfileRoles } from '@/types/store.types';
+import { toVideoInfo, toUserInfo } from '@/config/routes.config';
 import { formatDate } from '@/funcs/general.funcs';
 import type { PropsVideosLiatItem } from '@/types/admin.types';
+import type { RootDispatch } from '@/store';
 
 import Chip from '@mui/material/Chip';
 import AvatarWithPreload from '@/components/UI/AvatarWithPreload';
 
 
 const VideosListCtxItem = (props: PropsVideosLiatItem): JSX.Element => {
+    const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleClick = (): void => {
+        dispatch(addRoute(location.pathname));
         navigate(toVideoInfo.replace(`:${URL_MARK}`, ''+props.item.id));
+    };
+
+    const handleRouteToPsych = (): void => {
+        dispatch(addRoute(location.pathname));
+        navigate(
+            toUserInfo
+                .replace(`:${URL_MARK}`, ''+props.item.psychologist.id)
+                .replace(EProfileRoles.User, EProfileRoles.Psych)
+        );
     };
     
     const { dateStr, isPubls } = useMemo(() => {
@@ -48,7 +64,7 @@ const VideosListCtxItem = (props: PropsVideosLiatItem): JSX.Element => {
                     avatarUrl={ props.item.psychologist.photoUrl }
                     prefAlt={ props.item.psychologist.name }
                     size={ 30 }
-                    handleClick={() => {}}
+                    handleClick={handleRouteToPsych}
                 />
                 <div className="text">
                     <h6 className="name">{ props.item.psychologist.name }</h6>

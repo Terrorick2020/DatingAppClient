@@ -435,6 +435,8 @@ export const initComplaintListAsync = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<ComplaintListItem[]>> = await api.get(ADMINE_CMPLS_ENDPOINT);
 
+            console.log(response);
+
             if (
                 response.status === 200 &&
                 response.data.success   &&
@@ -444,6 +446,8 @@ export const initComplaintListAsync = createAsyncThunk(
 
             return null;
         } catch (error) {
+            console.log(error);
+            
             return 'error';
         } finally {
             dispatch(setLoad(false));

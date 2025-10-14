@@ -1,4 +1,5 @@
 import { URL_MARK } from './env.config';
+import { EProfileRoles } from '@/types/store.types';
 
 
 export const appRoutes = {
@@ -44,7 +45,7 @@ export const appRoutes = {
         inner: {
             nav: 'change',
             usersList: 'users-list',
-            userInfo: `user-info/:${URL_MARK}`,
+            userInfo: `user-info/:${URL_MARK}?type=${EProfileRoles.User}`,
             compalintsList: 'complaints-list',
             videoInfo: `video-info/:${URL_MARK}`
         },

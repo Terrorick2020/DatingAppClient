@@ -306,6 +306,8 @@ export const getAdminShorrtsAsync = createAsyncThunk(
 
             const response: AxiosResponse<FetchResponse<VideoShortsList>> = await api.get(url);
 
+            console.log(response)
+
             if(
                 response.status !== 200 ||
                 !response.data.success  ||

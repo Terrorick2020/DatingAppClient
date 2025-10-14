@@ -1,4 +1,4 @@
-import { JSX, memo, useCallback, MouseEvent } from 'react';
+import { type JSX, memo, useCallback, useEffect, type MouseEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchComplType } from '@/store/slices/adminSlice';
 import { setSearchComplId } from '@/store/slices/adminSlice';
@@ -17,20 +17,21 @@ const ComplaintsListHeader = memo((props: PropsComplaintsListHeader): JSX.Elemen
     
     const dispatch = useDispatch<RootDispatch>();
 
-    const handleChangeSearchType = useCallback(
-        async (_: MouseEvent<HTMLElement>, newValue: ESearchComplType | null): Promise<void> => {
-            if (!newValue) return;
-            dispatch(setSearchComplType( newValue ));
-            await props.handleSearch();
-        },
-        [dispatch]
-    );
+    const handleChangeSearchType = async (_: MouseEvent<HTMLElement>, newValue: ESearchComplType | null): Promise<void> => {
+        if (!newValue) return;
+
+        dispatch(setSearchComplType( newValue ));
+    };
 
     const handleChange = useCallback(async (newValue: string) => {
         dispatch(setSearchComplId(newValue));
 
         !newValue && props.handleSearch();
     }, [props.handleSearch]);
+
+    useEffect(() => {
+        props.handleSearch();
+    }, [searchComplType]);
 
     return (
         <>

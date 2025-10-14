@@ -7,7 +7,7 @@ import { createSelector } from 'reselect';
 import { getProfilesListAsync } from '@/store/slices/adminSlice';
 import type { InitSliderData } from '@/types/quest.types';
 import type { RootDispatch } from '@/store';
-import type { IState } from '@/types/store.types';
+import { EProfileRoles, type IState } from '@/types/store.types';
 
 import ListBlock from '@/components/UI/ListBlock';
 import UsersListDialog from './Dialog';
@@ -89,7 +89,11 @@ const UsersListMain = (): JSX.Element => {
                     adminState.profilesList.map((item, index) => (
                         <ListBlock
                             img={item.avatar}
-                            route={`${toUserInfo.replace(`:${URL_MARK}`, `${item.id}`)}`}
+                            route={
+                                toUserInfo
+                                    .replace(`:${URL_MARK}`, `${item.id}`)
+                                    .replace(EProfileRoles.User, adminState.searchType)
+                            }
                             key={`admin-profile-${item.id}`}
                             data-id={index}
                             prefAlt={item.name}
@@ -100,7 +104,11 @@ const UsersListMain = (): JSX.Element => {
                         >
                             <UserListItem
                                 item={item}
-                                toUserInfo={`${toUserInfo.replace(`:${URL_MARK}`, `${item.id}`)}`}
+                                toUserInfo={
+                                    toUserInfo
+                                        .replace(`:${URL_MARK}`, `${item.id}`)
+                                        .replace(EProfileRoles.User, adminState.searchType)
+                                }
                                 setOpenDel={setOpenDel}
                             />
                         </ListBlock>

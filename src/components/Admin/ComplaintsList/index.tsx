@@ -30,7 +30,7 @@ const ComplaintsListConstent = (): JSX.Element => {
             case ESearchComplType.Video:
                 response = await dispatch(getAdminShorrtsAsync(initData.current)).unwrap();
                 break;
-        }
+        };
     };
 
     useEffect(() => { handleSearch(); }, []);
