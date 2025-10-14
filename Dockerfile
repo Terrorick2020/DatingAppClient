@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:22-alpine
 
 WORKDIR /client
 
@@ -10,17 +10,6 @@ COPY . .
 
 RUN npm run build
 RUN npm run minify || echo "minify skipped"
-
-
-FROM node:22-alpine AS production
-
-WORKDIR /client
-
-COPY package.json .
-
-RUN npm install --omit=dev --legacy-peer-deps
-
-COPY --from=builder /client/dist ./dist
 
 EXPOSE 4173
 
