@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "npx tsc -b && npx vite build",
     "minify": "npx postcss dist/main.css -o dist/main.css && npx html-minifier-terser dist/index.html --collapse-whitespace --remove-comments --remove-optional-tags --minify-css true --minify-js true -o dist/index.html",
-    "preview": "npx vite preview",
+    "preview": "npx vite preview --host 0.0.0.0",
     "analyze": "npm run vite build --mode analyze --config vite.config.ts"
   },
   "dependencies": {
