@@ -8,7 +8,7 @@
     "build": "npx tsc -b && npx vite build",
     "minify": "npx postcss dist/main.css -o dist/main.css && npx html-minifier-terser dist/index.html --collapse-whitespace --remove-comments --remove-optional-tags --minify-css true --minify-js true -o dist/index.html && node optimize-icons.js",
     "preview": "npx vite preview --host 0.0.0.0",
-    "analyze": "npm run vite build --mode analyze --config vite.config.ts"
+    "analyze": "npx vite build --mode analyze --config vite.config.ts"
   },
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-alpha.6",

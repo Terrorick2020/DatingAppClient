@@ -274,7 +274,7 @@ export const USERS_ENDPOINT = ({
   return `${USER_ENDPOINT}${queryString}`;
 }
 
-export const USER_SELF_DELETE_ENDPOINT = `${USER_ENDPOINT}${USER_DEL_SELF}`;
+export const USER_SELF_DELETE_ENDPOINT =  (tgId: string): string => `${USER_ENDPOINT}${USER_DEL_SELF}/${tgId}`;
 export const USER_STATUS_ENDPOINT = (tgId: string): string => `${REDIS}/${USER_STATUS.replace('{telegramId}', tgId)}`;
 export const USERS_QUESTS_ENDPOINT = (
   telegramId: string,

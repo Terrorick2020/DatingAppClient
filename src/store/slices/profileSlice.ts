@@ -111,7 +111,7 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<InitUsetResult>> => {
         try {
-            const telegramId = getTgID();
+            const telegramId = getTgID() || 'psych_001';
 
             if(!telegramId) return 'error';
 
@@ -716,7 +716,7 @@ export const getSelfPlansAsync = createAsyncThunk(
         try {
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
-            
+
             const response: AxiosResponse<FetchResponse<EveningPlans>> = 
                 await api.get(`${PLANS_GET_ENDPOINT}/${telegramId}`);
 
@@ -813,19 +813,25 @@ export const deleteSelfAsync = createAsyncThunk(
     async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
         try {
             const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id
             const profileRole = rootState.profile.info.role;
 
-            const url = profileRole === EProfileRoles.User
-                ? USER_SELF_DELETE_ENDPOINT
-                : PSYCH_ENDPOINT;
+            let data = null;
 
-            const response: AxiosResponse<FetchResponse<any>> = await api.delete(url);
+            const url = profileRole === EProfileRoles.User
+                ? USER_SELF_DELETE_ENDPOINT(telegramId)
+                : PSYCH_ENDPOINT;
+            
+            if(profileRole === EProfileRoles.Psych) {
+                data = { telegramId };
+            };
+
+            const response: AxiosResponse<FetchResponse<any>> =
+                await api.delete(url, { data });
 
             if (
                 response.status !== 200 ||
-                !response.data.success  ||
-                !response.data.data     ||
-                response.data.data === 'None'
+                !response.data.success
             ) return null;
 
             for (const key of Object.values(ETgCloudeStore)) {
@@ -834,9 +840,10 @@ export const deleteSelfAsync = createAsyncThunk(
 
             return 'success';
         } catch (error) {
+            console.log( error )
             return 'error';
         }
-    }
+    },
 );
 
 const profileSlice = createSlice({

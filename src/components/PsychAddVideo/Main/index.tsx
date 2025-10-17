@@ -1,9 +1,9 @@
-import { type JSX, type ChangeEvent, useMemo  } from 'react';
 import { PSYCH_VIDEO_ADD_MARK } from '@/constant/quest';
 import { EMPTY_INPUT_ERR_MSG } from '@/constant/settings';
 import { setFAVErrors } from '@/store/slices/settingsSlice';
 import { setTargetPsychVideo } from '@/store/slices/videosSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import type { JSX, ChangeEvent } from 'react';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -35,15 +35,6 @@ const PsychAddVideoMain = (props: PropsPsychAddVideoMain): JSX.Element => {
         }));
     };
 
-    const VideoHTML = useMemo((): JSX.Element => {
-        return props.id === PSYCH_VIDEO_ADD_MARK
-            ? <PsychAddVideoMainVideo />
-            : <PlayerBtn
-                urlImg={targetPsychVideo.preview}
-                urlVideo={targetPsychVideo.url}
-            />
-    }, [props.id]);
-
     return (
         <div className="content">
             <header className="header">
@@ -63,7 +54,13 @@ const PsychAddVideoMain = (props: PropsPsychAddVideoMain): JSX.Element => {
                         && <h4 className="sub-headline">Прикрепите видео</h4> }
                     <div className="video-box">
                         <div className='video-box__ctx'>
-                            { VideoHTML }
+                            { props.id === PSYCH_VIDEO_ADD_MARK
+                                ? <PsychAddVideoMainVideo />
+                                : <PlayerBtn
+                                    urlImg={targetPsychVideo.preview}
+                                    urlVideo={targetPsychVideo.url}
+                                />
+                            }
                         </div>
                     </div>
                 </div>

@@ -78,6 +78,7 @@ export const psychAddVideoAsync = createAsyncThunk(
                                 }
                             }
                         });
+                    console.log( response )
 
                     if(
                         response.status !== 201 ||
