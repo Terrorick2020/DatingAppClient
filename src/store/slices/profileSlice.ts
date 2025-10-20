@@ -111,7 +111,7 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<InitUsetResult>> => {
         try {
-            const telegramId = getTgID() || '1000000001';
+            const telegramId = getTgID();
 
             if(!telegramId) return 'error';
 
