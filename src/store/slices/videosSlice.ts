@@ -125,7 +125,7 @@ export const psychAddVideoAsync = createAsyncThunk(
 
 export const publishPsychVideoAsync = createAsyncThunk(
     'videos/publish-psych-video',
-    async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
+    async (_, { getState }): Promise<AsyncThunkRes<TargetPsychVideo>> => {
         try {
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
@@ -141,6 +141,8 @@ export const publishPsychVideoAsync = createAsyncThunk(
             const response: AxiosResponse<FetchResponse<PsychPublishVideoRes>> =
                 await api.post(VIDEO_SAVE_ENDPOINT, data);
 
+            console.log( response )
+
             if(
                 response.status !== 201 ||
                 !response.data.success  ||
@@ -148,7 +150,13 @@ export const publishPsychVideoAsync = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            return 'success'
+            const result: TargetPsychVideo = {
+                ...targetPsychVideo,
+                videoId: response.data.data.videoId,
+                key: response.data.data.key,
+            };
+
+            return result;
         } catch {
             return 'error'
         };
@@ -452,8 +460,8 @@ const videosSlice = createSlice({
             console.log("Публикация видео психолога");
         })
         builder.addCase(publishPsychVideoAsync.fulfilled, (
-            _,
-            action: PayloadAction<AsyncThunkRes<'success'>>,
+            state,
+            action: PayloadAction<AsyncThunkRes<TargetPsychVideo>>,
         ) => {
             switch(action.payload) {
                 case 'error':
@@ -463,6 +471,7 @@ const videosSlice = createSlice({
                     console.log("Видео психолога не опубликовано");
                     break;
                 default:
+                    state.targetPsychVideo = action.payload;
                     console.log("Видео психолога успешно опубликовано");
                     break;
             }

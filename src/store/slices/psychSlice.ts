@@ -52,6 +52,8 @@ export const initPsychList = createAsyncThunk(
             const response: AxiosResponse<FetchResponse<InitPsychListRes>> =
                 await api.post(PSYCH_FOR_USER_ENDPOINT, data);
 
+            console.log( response )
+
             if(
                 response.status !== 201 ||
                 !response.data.success  ||
@@ -64,7 +66,7 @@ export const initPsychList = createAsyncThunk(
             const result: PsychListItem[] = dataRes.psychologists.map(
                 item => ({
                     id: item.telegramId,
-                    avatar: item.photos[0].url,
+                    avatar: item.photos[0]?.url,
                     name: item.name,
                     spec: 'Психоаналитик',
                     lineStat: ELineStatus.Online,
