@@ -241,6 +241,8 @@ export interface PsychAddVideoRes {
 export interface PsychPublishVideoRes {
 	key: string
 	videoId: number
+	previewUrl: string
+	url: string
 }
 
 export interface SelfPsychPhotoItem {

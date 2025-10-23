@@ -52,8 +52,6 @@ export const initPsychList = createAsyncThunk(
             const response: AxiosResponse<FetchResponse<InitPsychListRes>> =
                 await api.post(PSYCH_FOR_USER_ENDPOINT, data);
 
-            console.log( response )
-
             if(
                 response.status !== 201 ||
                 !response.data.success  ||
@@ -133,8 +131,6 @@ export const getPsycByIdhAsync = createAsyncThunk(
 
             return result;
         } catch (error) {
-            console.log(error)
-
             return 'error';
         } finally {
             dispatch(setLoad(false));

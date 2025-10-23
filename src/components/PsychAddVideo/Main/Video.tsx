@@ -2,7 +2,7 @@ import { JSX, ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setTargetPsychVideo } from '@/store/slices/videosSlice';
 import { resetTargetPsychVideo } from '@/store/slices/videosSlice';
-import { MAX_VIDEO_SIZE } from '@/constant/video';
+import { MAX_VIDEO_SIZE, ALLOWED_VIDEO_TYPES } from '@/constant/video';
 import { psychAddVideoAsync } from '@/store/slices/videosSlice';
 import { getPreviewVideo } from '@/funcs/img.funcs';
 import { errorAlert, successAlert, warningAlert } from '@/funcs/alert.funcs';
@@ -77,9 +77,20 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
                 dispatch,
                 `Нельзя загрузить видео больше ${MAX_VIDEO_SIZE / 1024 / 1024}Мбайт!`
             );
+
             setLoadingPreview(false);
             return;
         };
+
+        if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
+            warningAlert(
+                dispatch,
+                `Недопустимый формат видео! Разрешённые форматы: ${ALLOWED_VIDEO_TYPES.join(' ').replace('video/', '.')}`
+            );
+
+            setLoadingPreview(false);
+            return;
+        }
 
         getPreviewVideo(file, setThumbnail, setLoadingPreview, fetchVideo);
 

@@ -111,7 +111,8 @@ export const initProfileAsync = createAsyncThunk(
     'profile/init-profile',
     async ( _, { getState, dispatch } ): Promise<AsyncThunkRes<InitUsetResult>> => {
         try {
-            const telegramId = getTgID();
+            // const telegramId = getTgID() || 'Admin1-123';
+            const telegramId = getTgID() || 'pchys14567';
 
             if(!telegramId) return 'error';
 
@@ -250,7 +251,6 @@ export const initProfileAsync = createAsyncThunk(
                 psych: selPsych,
             };
         } catch (error) {
-            console.log(error);
             dispatch(setIsFirstly(true));
 
             return 'error';
@@ -840,7 +840,6 @@ export const deleteSelfAsync = createAsyncThunk(
 
             return 'success';
         } catch (error) {
-            console.log( error )
             return 'error';
         }
     },

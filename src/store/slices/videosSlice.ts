@@ -78,7 +78,6 @@ export const psychAddVideoAsync = createAsyncThunk(
                                 }
                             }
                         });
-                    console.log( response )
 
                     if(
                         response.status !== 201 ||
@@ -141,8 +140,6 @@ export const publishPsychVideoAsync = createAsyncThunk(
             const response: AxiosResponse<FetchResponse<PsychPublishVideoRes>> =
                 await api.post(VIDEO_SAVE_ENDPOINT, data);
 
-            console.log( response )
-
             if(
                 response.status !== 201 ||
                 !response.data.success  ||
@@ -154,6 +151,8 @@ export const publishPsychVideoAsync = createAsyncThunk(
                 ...targetPsychVideo,
                 videoId: response.data.data.videoId,
                 key: response.data.data.key,
+                preview: response.data.data.previewUrl,
+                url: response.data.data.url,
             };
 
             return result;
@@ -314,8 +313,6 @@ export const getAdminShorrtsAsync = createAsyncThunk(
             const url = VIDEO_ADMIN_ENDPOINT(telegramId, data.offset, data.limit, search);
 
             const response: AxiosResponse<FetchResponse<VideoShortsList>> = await api.get(url);
-
-            console.log(response)
 
             if(
                 response.status !== 200 ||
