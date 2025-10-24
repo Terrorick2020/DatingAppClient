@@ -782,9 +782,6 @@ export const getSelfPlansAsync = createAsyncThunk(
 			const response: AxiosResponse<FetchResponse<EveningPlans>> =
 				await api.get(`${PLANS_GET_ENDPOINT}/${telegramId}`)
 
-			const response: AxiosResponse<FetchResponse<EveningPlans>> =
-				await api.get(`${PLANS_GET_ENDPOINT}/${telegramId}`)
-
 			if (
 				response.status === 200 &&
 				response.data.data &&
