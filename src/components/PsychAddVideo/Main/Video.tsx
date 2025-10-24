@@ -85,7 +85,7 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
         if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
             warningAlert(
                 dispatch,
-                `Недопустимый формат видео! Разрешённые форматы: ${ALLOWED_VIDEO_TYPES.join(' ').replace('video/', '.')}`
+                `Недопустимый формат видео! Разрешённые форматы: ${ALLOWED_VIDEO_TYPES.join(' ')}`
             );
 
             setLoadingPreview(false);
