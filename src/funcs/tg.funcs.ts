@@ -174,15 +174,6 @@ export async function getRefParams(): Promise<GetParamsRes | null> {
 	}
 }
 
-export function getPsychologistRegistrationCode(): string | null {
-	try {
-		const urlParams = new URLSearchParams(window.location.search)
-		return urlParams.get('psychologist_registration')
-	} catch {
-		return null
-	}
-}
-
 async function checkInstallHomeScreen(): Promise<InitHomeScreenRes> {
 	if (!checkHomeScreenStatus.isAvailable()) return null
 

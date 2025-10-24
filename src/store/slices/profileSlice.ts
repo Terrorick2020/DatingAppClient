@@ -62,15 +62,9 @@ import {
 	setLoad,
 } from './settingsSlice'
 
-import {
-	getPsychologistRegistrationCode,
-	getRefParams,
-	getTgID,
-	tgCloudStore,
-} from '@/funcs/tg.funcs'
+import { getRefParams, getTgID } from '@/funcs/tg.funcs'
 import { KeyFQBtnText } from '@/types/register.typs'
 import { EApiStatus } from '@/types/settings.type'
-import { ETgCloudeStore } from '@/types/tg.types'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 
@@ -122,18 +116,12 @@ export const initProfileAsync = createAsyncThunk(
 			setTgId(telegramId)
 
 			const params = await getRefParams()
-			const psychologistCode = getPsychologistRegistrationCode()
 
 			let profileRole: EProfileRoles = EProfileRoles.User
 
 			if (params) {
 				profileRole = params.type
 				dispatch(setFromRefCode(params.code))
-			} else if (psychologistCode) {
-				// Если есть код регистрации психолога, устанавливаем роль психолога
-				profileRole = EProfileRoles.Psychologist
-				// Сохраняем код для дальнейшего использования
-				dispatch(setFromRefCode(psychologistCode))
 			}
 
 			const data = { telegramId }
@@ -263,12 +251,12 @@ export const initProfileAsync = createAsyncThunk(
 
 			dispatch(setIsFirstly(false))
 
-            return {
-                status: profileStatus,
-                psych: selPsych,
-            };
-        } catch (error) {
-            dispatch(setIsFirstly(true));
+			return {
+				status: profileStatus,
+				psych: selPsych,
+			}
+		} catch (error) {
+			dispatch(setIsFirstly(true))
 
 			return 'error'
 		}
@@ -785,14 +773,14 @@ export const getSelfPsychProfile = createAsyncThunk(
 )
 
 export const getSelfPlansAsync = createAsyncThunk(
-    'profile/get-self-plans',
-    async (_, { getState }): Promise<AsyncThunkRes<EveningPlans>> => {
-        try {
-            const rootState = getState() as IState;
-            const telegramId = rootState.profile.info.id;
+	'profile/get-self-plans',
+	async (_, { getState }): Promise<AsyncThunkRes<EveningPlans>> => {
+		try {
+			const rootState = getState() as IState
+			const telegramId = rootState.profile.info.id
 
-            const response: AxiosResponse<FetchResponse<EveningPlans>> = 
-                await api.get(`${PLANS_GET_ENDPOINT}/${telegramId}`);
+			const response: AxiosResponse<FetchResponse<EveningPlans>> =
+				await api.get(`${PLANS_GET_ENDPOINT}/${telegramId}`)
 
 			const response: AxiosResponse<FetchResponse<EveningPlans>> =
 				await api.get(`${PLANS_GET_ENDPOINT}/${telegramId}`)
@@ -891,30 +879,30 @@ export const selectSelfPsychAsync = createAsyncThunk(
 )
 
 export const deleteSelfAsync = createAsyncThunk(
-    'profile/delete-self',
-    async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
-        try {
-            const rootState = getState() as IState;
-            const telegramId = rootState.profile.info.id
-            const profileRole = rootState.profile.info.role;
+	'profile/delete-self',
+	async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
+		try {
+			const rootState = getState() as IState
+			const telegramId = rootState.profile.info.id
+			const profileRole = rootState.profile.info.role
 
-            let data = null;
+			let data = null
 
-            const url = profileRole === EProfileRoles.User
-                ? USER_SELF_DELETE_ENDPOINT(telegramId)
-                : PSYCH_ENDPOINT;
-            
-            if(profileRole === EProfileRoles.Psych) {
-                data = { telegramId };
-            };
+			const url =
+				profileRole === EProfileRoles.User
+					? USER_SELF_DELETE_ENDPOINT(telegramId)
+					: PSYCH_ENDPOINT
 
-            const response: AxiosResponse<FetchResponse<any>> =
-                await api.delete(url, { data });
+			if (profileRole === EProfileRoles.Psych) {
+				data = { telegramId }
+			}
 
-            if (
-                response.status !== 200 ||
-                !response.data.success
-            ) return null;
+			const response: AxiosResponse<FetchResponse<any>> = await api.delete(
+				url,
+				{ data }
+			)
+
+			if (response.status !== 200 || !response.data.success) return null
 
 			if (
 				response.status !== 200 ||
@@ -924,12 +912,12 @@ export const deleteSelfAsync = createAsyncThunk(
 			)
 				return null
 
-            return 'success';
-        } catch (error) {
-            return 'error';
-        }
-    },
-);
+			return 'success'
+		} catch (error) {
+			return 'error'
+		}
+	}
+)
 
 const profileSlice = createSlice({
 	name: 'profile',

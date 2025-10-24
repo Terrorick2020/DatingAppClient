@@ -226,7 +226,7 @@ export const REFERAL_LINK = (code: string, type: EProfileRoles): string => {
 
 	const finalEncoded = btoa(paramsString)
 
-	return `${BOT_LINK}?start=ref_${finalEncoded}`
+	return `${BOT_LINK}?startapp=${finalEncoded}`
 }
 
 export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`
@@ -282,8 +282,10 @@ export const USERS_ENDPOINT = ({
 	return `${USER_ENDPOINT}${queryString}`
 }
 
-export const USER_SELF_DELETE_ENDPOINT =  (tgId: string): string => `${USER_ENDPOINT}${USER_DEL_SELF}/${tgId}`;
-export const USER_STATUS_ENDPOINT = (tgId: string): string => `${REDIS}/${USER_STATUS.replace('{telegramId}', tgId)}`;
+export const USER_SELF_DELETE_ENDPOINT = (tgId: string): string =>
+	`${USER_ENDPOINT}${USER_DEL_SELF}/${tgId}`
+export const USER_STATUS_ENDPOINT = (tgId: string): string =>
+	`${REDIS}/${USER_STATUS.replace('{telegramId}', tgId)}`
 export const USERS_QUESTS_ENDPOINT = (
 	telegramId: string,
 	limit: number,
