@@ -15,7 +15,7 @@ const LogoHeader = (): JSX.Element => {
             <SvgLogo
                 className="logo"
                 style={{
-                    marginTop: isMobile ? '3.5vh' : '0.2vh',
+                    marginTop: isMobile ? '3.75vh' : '0.2vh',
                 }}
             />
         </div>
