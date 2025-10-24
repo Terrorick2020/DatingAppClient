@@ -39,7 +39,7 @@ const initialState: LikesState = {
     match: {
         value: false,
         from: null
-    }
+    },
 }
 
 export const getUnreadLikesAsync = createAsyncThunk(
@@ -357,7 +357,7 @@ export const addLikeInRealTimeAsync = createAsyncThunk(
             return 'error';
         }
     }
-)
+);
 
 const likesSlice = createSlice({
     name: 'likes',

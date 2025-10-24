@@ -107,7 +107,7 @@ export default defineConfig(({ mode }) => {
         gzipSize: true,
         brotliSize: true,
       })] : []),
-    ],
+    ] as any,
     server: {
       host: isProd ? PROD_HOST : DEV_HOST,
       port: PORT,
@@ -136,59 +136,22 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, 'src'),
       },
     },
-    // build: {
-    //   minify: 'terser',
-    //   terserOptions: {
-    //     compress: {
-    //       drop_console: true,
-    //       drop_debugger: true,
-    //     },
-    //     format: {
-    //       comments: false,
-    //     },
-    //   },
-    //   // rollupOptions: {
-    //   //   output: {
-    //   //     manualChunks(id: string) {
-    //   //       // if (id.includes('node_modules')) {
-
-    //   //       //   if (id.includes('react-router-dom') || id.includes('react-router')) {
-    //   //       //     return 'react-router';
-    //   //       //   };
- 
-    //   //       //   if (
-    //   //       //     id.includes('@reduxjs/toolkit') ||
-    //   //       //     id.includes('react-redux')      ||
-    //   //       //     id.includes('reselect')
-    //   //       //   ) {
-    //   //       //     return 'redux';
-    //   //       //   };
-
-    //   //       //   if (id.includes('socket.io-client')) {
-    //   //       //     return 'socket';
-    //   //       //   };
-
-    //   //       //   if (
-    //   //       //     id.includes('axios') ||
-    //   //       //     id.includes('dayjs') ||
-    //   //       //     id.includes('uuid')
-    //   //       //   ) {
-    //   //       //     return 'utils';
-    //   //       //   };
-
-    //   //       //   if (id.includes('@telegram-apps')) {
-    //   //       //     return 'web-sdk';
-    //   //       //   };
-
-    //   //       //   if (id.includes('emoji-mart') || id.includes('@emoji-mart')) {
-    //   //       //     return 'emoji';
-    //   //       //   };
-
-    //   //       //   return 'vendor';
-    //   //       // }
-    //   //     }
-    //   //   }
-    //   // }
-    // }
+    build: {
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
+        format: {
+          comments: false,
+        },
+      },
+      output: {
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+      },
+    },
   }
 })

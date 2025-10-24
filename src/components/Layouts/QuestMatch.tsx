@@ -107,7 +107,7 @@ const QuestMatch = (): JSX.Element => {
                         />
                     </div>
                     <h6 className="text">
-                        <span className="caps">Вы</span> и <span className="caps">Виктория</span> 
+                        <span className="caps">Вы</span> и <span className="caps">{ match.from.name }</span> 
                         <span className="no-wrap">понравились друг другу</span>
                     </h6>
                     <ChatInput
