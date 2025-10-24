@@ -240,9 +240,9 @@ export interface PsychAddVideoRes {
 
 export interface PsychPublishVideoRes {
 	key: string
-	telegramId: string
-	title: string
-	description: string
+	videoId: number
+	previewUrl: string
+	url: string
 }
 
 export interface SelfPsychPhotoItem {

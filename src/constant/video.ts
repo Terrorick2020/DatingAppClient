@@ -18,3 +18,16 @@ export const selfPsychVideosBase: SelfPsychVideos = {
 };
 
 export const shortsListBase = { isChecked: false, ...selfPsychVideosBase } as VideoShortsList;
+
+export const ALLOWED_VIDEO_TYPES = [
+    'video/mp4',
+    'video/webm',
+    'video/ogg',
+    'video/ogv',
+    'video/avi',
+    'video/quicktime',
+    'video/x-ms-wmv',
+    'video/3gpp',
+    'video/x-flv',
+    'video/x-ms-asf',
+];

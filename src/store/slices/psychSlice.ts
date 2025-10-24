@@ -64,7 +64,7 @@ export const initPsychList = createAsyncThunk(
             const result: PsychListItem[] = dataRes.psychologists.map(
                 item => ({
                     id: item.telegramId,
-                    avatar: item.photos[0].url,
+                    avatar: item.photos[0]?.url,
                     name: item.name,
                     spec: 'Психоаналитик',
                     lineStat: ELineStatus.Online,
@@ -131,8 +131,6 @@ export const getPsycByIdhAsync = createAsyncThunk(
 
             return result;
         } catch (error) {
-            console.log(error)
-
             return 'error';
         } finally {
             dispatch(setLoad(false));

@@ -5,6 +5,7 @@ dist/
 ssl/
 
 .env.example
+.dockerignore
 .gitignore
 
 bun.lock

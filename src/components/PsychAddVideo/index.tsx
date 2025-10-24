@@ -32,9 +32,11 @@ const PsychAddVideoContent = (): JSX.Element => {
             dispatch(getTargetPsychVideoAsync(+mark));
         };
 
-        setId(mark || '');
+        if(mark === PSYCH_VIDEO_ADD_MARK) {
+            dispatch(resetTargetPsychVideo());
+        };
 
-        return () => { dispatch(resetTargetPsychVideo()) };
+        setId(mark || '');
     }, []);
 
     if(!mark) {

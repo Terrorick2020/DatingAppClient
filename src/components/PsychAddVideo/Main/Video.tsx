@@ -1,13 +1,17 @@
-import { MAX_VIDEO_SIZE } from '@/constant/video'
-import { errorAlert, successAlert, warningAlert } from '@/funcs/alert.funcs'
-import { getPreviewVideo } from '@/funcs/img.funcs'
-import type { RootDispatch } from '@/store'
-import {
-	psychAddVideoAsync,
-	resetTargetPsychVideo,
-} from '@/store/slices/videosSlice'
-import { ChangeEvent, JSX, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { JSX, ChangeEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setTargetPsychVideo } from '@/store/slices/videosSlice';
+import { resetTargetPsychVideo } from '@/store/slices/videosSlice';
+import { MAX_VIDEO_SIZE, ALLOWED_VIDEO_TYPES } from '@/constant/video';
+import { psychAddVideoAsync } from '@/store/slices/videosSlice';
+import { getPreviewVideo } from '@/funcs/img.funcs';
+import { errorAlert, successAlert, warningAlert } from '@/funcs/alert.funcs';
+import type { RootDispatch } from '@/store';
+
+import CircularProgress from '@mui/material/CircularProgress';
+import BrochPatternDialog from '@/components/UI/BrochPatternDialog';
+import SvgClose from '@/assets/icon/close.svg?react';
+import SvgAdd from '@/assets/icon/add.svg';
 
 import SvgAdd from '@/assets/icon/add.svg'
 import SvgClose from '@/assets/icon/close.svg?react'
@@ -23,13 +27,13 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
 
 	const dispatch = useDispatch<RootDispatch>()
 
-	const clearMeta = (): void => {
-		setLoadingPreview(false)
-		setThumbnail(null)
-		setLoadFetch(false)
-		setProgress(0)
-		dispatch(resetTargetPsychVideo())
-	}
+    const clearMeta = (): void => {
+        setLoadingPreview(false);
+        setThumbnail(null);
+        setLoadFetch(false);
+        setProgress(0);
+        dispatch(resetTargetPsychVideo());
+    };
 
 	const handleDelete = async (): Promise<void> => clearMeta()
 
@@ -50,8 +54,10 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
 			warningAlert(dispatch, 'Не удалось сохранить видео! Попробуйте позже.')
 			clearMeta()
 
-			return
-		}
+            return;
+        } else {
+            dispatch(setTargetPsychVideo({ preview: thumbnail || '' }));
+        };
 
 		setLoadFetch(false)
 		successAlert(dispatch, 'Видео успешно загрузилось')
@@ -72,16 +78,27 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
 
 		const file = files[0]
 
-		if (file.size > MAX_VIDEO_SIZE) {
-			warningAlert(
-				dispatch,
-				`Нельзя загрузить видео больше ${MAX_VIDEO_SIZE / 1024 / 1024}Мбайт!`
-			)
-			setLoadingPreview(false)
-			return
-		}
+        if(file.size > MAX_VIDEO_SIZE) {
+            warningAlert(
+                dispatch,
+                `Нельзя загрузить видео больше ${MAX_VIDEO_SIZE / 1024 / 1024}Мбайт!`
+            );
 
-		getPreviewVideo(file, setThumbnail, setLoadingPreview, fetchVideo)
+            setLoadingPreview(false);
+            return;
+        };
+
+        if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
+            warningAlert(
+                dispatch,
+                `Недопустимый формат видео! Разрешённые форматы: ${ALLOWED_VIDEO_TYPES.join(' ')}`
+            );
+
+            setLoadingPreview(false);
+            return;
+        }
+
+        getPreviewVideo(file, setThumbnail, setLoadingPreview, fetchVideo);
 
 		event.target.value = ''
 	}

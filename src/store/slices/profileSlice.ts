@@ -263,13 +263,12 @@ export const initProfileAsync = createAsyncThunk(
 
 			dispatch(setIsFirstly(false))
 
-			return {
-				status: profileStatus,
-				psych: selPsych,
-			}
-		} catch (error) {
-			console.log(error)
-			dispatch(setIsFirstly(true))
+            return {
+                status: profileStatus,
+                psych: selPsych,
+            };
+        } catch (error) {
+            dispatch(setIsFirstly(true));
 
 			return 'error'
 		}
@@ -786,11 +785,14 @@ export const getSelfPsychProfile = createAsyncThunk(
 )
 
 export const getSelfPlansAsync = createAsyncThunk(
-	'profile/get-self-plans',
-	async (_, { getState }): Promise<AsyncThunkRes<EveningPlans>> => {
-		try {
-			const rootState = getState() as IState
-			const telegramId = rootState.profile.info.id
+    'profile/get-self-plans',
+    async (_, { getState }): Promise<AsyncThunkRes<EveningPlans>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+
+            const response: AxiosResponse<FetchResponse<EveningPlans>> = 
+                await api.get(`${PLANS_GET_ENDPOINT}/${telegramId}`);
 
 			const response: AxiosResponse<FetchResponse<EveningPlans>> =
 				await api.get(`${PLANS_GET_ENDPOINT}/${telegramId}`)
@@ -889,23 +891,30 @@ export const selectSelfPsychAsync = createAsyncThunk(
 )
 
 export const deleteSelfAsync = createAsyncThunk(
-	'profile/delete-self',
-	async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
-		try {
-			const rootState = getState() as IState
-			const profileRole = rootState.profile.info.role
-			const telegramId = rootState.profile.info.id
+    'profile/delete-self',
+    async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id
+            const profileRole = rootState.profile.info.role;
 
-			if (!telegramId) {
-				return 'error'
-			}
+            let data = null;
 
-			const url =
-				profileRole === EProfileRoles.User
-					? `${USER_SELF_DELETE_ENDPOINT}/${telegramId}`
-					: PSYCH_ENDPOINT
+            const url = profileRole === EProfileRoles.User
+                ? USER_SELF_DELETE_ENDPOINT(telegramId)
+                : PSYCH_ENDPOINT;
+            
+            if(profileRole === EProfileRoles.Psych) {
+                data = { telegramId };
+            };
 
-			const response: AxiosResponse<FetchResponse<any>> = await api.delete(url)
+            const response: AxiosResponse<FetchResponse<any>> =
+                await api.delete(url, { data });
+
+            if (
+                response.status !== 200 ||
+                !response.data.success
+            ) return null;
 
 			if (
 				response.status !== 200 ||
@@ -915,16 +924,12 @@ export const deleteSelfAsync = createAsyncThunk(
 			)
 				return null
 
-			for (const key of Object.values(ETgCloudeStore)) {
-				await tgCloudStore.delete(key)
-			}
-
-			return 'success'
-		} catch (error) {
-			return 'error'
-		}
-	}
-)
+            return 'success';
+        } catch (error) {
+            return 'error';
+        }
+    },
+);
 
 const profileSlice = createSlice({
 	name: 'profile',

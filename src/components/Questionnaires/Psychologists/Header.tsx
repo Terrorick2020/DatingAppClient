@@ -1,4 +1,4 @@
-import { JSX, memo, useEffect } from 'react';
+import { JSX, memo, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toShorts } from '@/config/routes.config';
@@ -17,14 +17,19 @@ import SvgShrtsBtn from '@/assets/icon/shorts-btn.svg';
 const PsychHeader = memo((props: PropsPsychHeader): JSX.Element => {
     const serchPsychQuery = useSelector((state: IState) => state.psych.serchPsychQuery);
 
+    const newSearch = useRef<string>('');
+    const oldSearch = useRef<string>('');
+
     const dispatch = useDispatch<RootDispatch>();
     const location = useLocation();
     const navigate = useNavigate();
 
     const handleSearch = async (): Promise<void> => {
+        if(oldSearch.current === newSearch.current) return;
         dispatch(initPsychList());
         delay(10);
         props.setPreText(!!serchPsychQuery ? 'Найденные специалисты' : 'Все специалисты');
+        oldSearch.current = newSearch.current;
     };
 
     const handleRoute = async (): Promise<void> => {
@@ -42,10 +47,11 @@ const PsychHeader = memo((props: PropsPsychHeader): JSX.Element => {
         return () => {
             clearTimeout(handler);
         };
-    }, [serchPsychQuery, dispatch]);
+    }, [serchPsychQuery]);
 
     const handleInputChange = (newValue: string) => {
         dispatch(setSerchPsychQuery(newValue));
+        newSearch.current = newValue;
     };
 
     return (
