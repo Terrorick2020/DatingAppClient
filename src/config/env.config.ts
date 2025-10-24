@@ -224,7 +224,7 @@ export const REFERAL_LINK = (code: string, type: EProfileRoles): string => {
 
   const finalEncoded = btoa(paramsString);
 
-  return `${BOT_LINK}?startapp=${finalEncoded}`;
+  return `${window.location.origin}/?startapp=${finalEncoded}`;
 }
 
 export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`;
