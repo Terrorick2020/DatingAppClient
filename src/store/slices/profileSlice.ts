@@ -109,7 +109,7 @@ export const initProfileAsync = createAsyncThunk(
 	'profile/init-profile',
 	async (_, { getState, dispatch }): Promise<AsyncThunkRes<InitUsetResult>> => {
 		try {
-			const telegramId = getTgID()
+			const telegramId = getTgID() || 'error'
 
 			if (!telegramId) return 'error'
 
@@ -120,13 +120,13 @@ export const initProfileAsync = createAsyncThunk(
 			let profileRole: EProfileRoles = EProfileRoles.User
 
 			if (params) {
-				profileRole = params.type
+				profileRole = params.type;
 				dispatch(setFromRefCode(params.code))
 			}
 
 			const data = { telegramId }
 
-			type TInit = AxiosResponse<FetchResponse<any>>
+			type TInit = AxiosResponse<FetchResponse<any>>;
 			type TEPSInit = AxiosResponse<FetchResponse<EProfileStatus>>
 			let profileStatus: EProfileStatus = EProfileStatus.Noob
 			let resResult: boolean = false
@@ -907,14 +907,6 @@ export const deleteSelfAsync = createAsyncThunk(
 			)
 
 			if (response.status !== 200 || !response.data.success) return null
-
-			if (
-				response.status !== 200 ||
-				!response.data.success ||
-				!response.data.data ||
-				response.data.data === 'None'
-			)
-				return null
 
 			return 'success'
 		} catch (error) {
