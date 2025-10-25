@@ -143,6 +143,10 @@ export async function getRefParams(): Promise<GetParamsRes | null> {
 
 		if (isTg) {
 			param = initData.startParam()
+			console.log(param)
+			const urlParams = new URLSearchParams(window.location.search)
+			param = urlParams.get('startapp')
+			console.log(param)
 		} else {
 			const urlParams = new URLSearchParams(window.location.search)
 			param = urlParams.get('startapp')
