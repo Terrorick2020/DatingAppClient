@@ -143,16 +143,20 @@ export async function getRefParams(): Promise<GetParamsRes | null> {
 
 		if (isTg) {
 			param = initData.startParam()
-			console.log(param)
+			console.log('🔍 Telegram startParam:', param)
 			const urlParams = new URLSearchParams(window.location.search)
 			param = urlParams.get('startapp')
-			console.log(param)
+			console.log('🔍 URL startapp param:', param)
 		} else {
 			const urlParams = new URLSearchParams(window.location.search)
 			param = urlParams.get('startapp')
+			console.log('🔍 Browser startapp param:', param)
 		}
 
-		if (!param || param === undefined) return null
+		if (!param || param === undefined) {
+			console.log('🔍 Нет параметра startapp')
+			return null
+		}
 
 		const decodedString = atob(decodeURIComponent(param))
 		const searchParams = new URLSearchParams(decodedString)

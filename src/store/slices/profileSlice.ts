@@ -454,6 +454,13 @@ export const signUpProfileAsync = createAsyncThunk(
 				!!profileInfo.fromRefCode &&
 				profileInfo.fromRefCode !== undefined
 
+			console.log('🔍 Отладка реферального кода:', {
+				mark,
+				fromRefCode: profileInfo.fromRefCode,
+				needRefCode,
+				profileInfo,
+			})
+
 			const data = {
 				telegramId: profileInfo.id,
 				name: profileInfo.name.trim(),
@@ -944,6 +951,7 @@ const profileSlice = createSlice({
 			state.addLink = action.payload
 		},
 		setFromRefCode: (state, action: PayloadAction<string>): void => {
+			console.log('🔍 Установка реферального кода:', action.payload)
 			state.info.fromRefCode = action.payload
 		},
 	},
