@@ -137,8 +137,12 @@ export const publishPsychVideoAsync = createAsyncThunk(
                 telegramId,
             };
 
+            console.log( data )
+
             const response: AxiosResponse<FetchResponse<PsychPublishVideoRes>> =
                 await api.post(VIDEO_SAVE_ENDPOINT, data);
+
+            console.log( response )
 
             if(
                 response.status !== 201 ||

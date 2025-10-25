@@ -5,7 +5,7 @@ import { getTargetPsychVideoAsync } from '@/store/slices/videosSlice';
 import { toNotFoud } from '@/config/routes.config';
 import { PSYCH_VIDEO_ADD_MARK } from '@/constant/quest';
 import { resetTargetPsychVideo } from '@/store/slices/videosSlice';
-import { warningAlert } from '@/funcs/alert.funcs';
+import { infoAlert, warningAlert } from '@/funcs/alert.funcs';
 import { URL_MARK } from '@/config/env.config';
 import { useSelector } from 'react-redux';
 import type { RootDispatch } from '@/store';
@@ -34,6 +34,11 @@ const PsychAddVideoContent = (): JSX.Element => {
 
         if(mark === PSYCH_VIDEO_ADD_MARK) {
             dispatch(resetTargetPsychVideo());
+
+            infoAlert(
+                dispatch,
+                'Для более быстрой публикации видео, рекомендуется загружать видео формата .mp4'
+            );
         };
 
         setId(mark || '');
