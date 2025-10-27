@@ -100,7 +100,7 @@ export const psychAddVideoAsync = createAsyncThunk(
 					dispatch(
 						setTargetPsychVideo({
 							key: data.key,
-							previewKey: data.previewKey,
+							previewKey: data.previewKey || undefined,
 							videoId: data.videoId,
 						})
 					)
@@ -213,7 +213,7 @@ export const editPsychVideoAsync = createAsyncThunk(
 					? {
 							...item,
 							...dataRes,
-					  }
+						}
 					: item
 			)
 		} catch {
@@ -406,7 +406,7 @@ export const toggleShortsLikeAsync = createAsyncThunk(
 							...item,
 							likesCount: dataRes.likesCount,
 							isLiked: dataRes.isLiked,
-					  }
+						}
 					: item
 			)
 		} catch {
@@ -446,7 +446,7 @@ export const viewShortsAsync = createAsyncThunk(
 							...item,
 							viewsCount: dataRes.viewsCount,
 							isView: true,
-					  }
+						}
 					: item
 			)
 		} catch {

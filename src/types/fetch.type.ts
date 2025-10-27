@@ -241,7 +241,7 @@ export interface TargetPsychologistRes {
 export interface PsychAddVideoRes {
 	videoId: number | null
 	key: string
-	previewKey?: string | null
+	previewKey?: string
 }
 
 export interface PsychPublishVideoRes {
