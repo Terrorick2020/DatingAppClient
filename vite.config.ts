@@ -3,7 +3,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
-import removeConsole from 'vite-plugin-remove-console';
+// import removeConsole from 'vite-plugin-remove-console';
 import preload from 'vite-plugin-preload';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
@@ -96,9 +96,9 @@ export default defineConfig(({ mode }) => {
         svg: { multipass: true },
       }),
       checker({ typescript: true }),
-      removeConsole({
-        includes: ['error', 'warn', 'log', 'info', 'debug'],
-      }),
+      // removeConsole({
+      //   includes: ['error', 'warn', 'log', 'info', 'debug'],
+      // }),
       ...(isAnalyze ? [visualizer({
         filename: './dist/stats.html',
         title: 'Vite Bundle Analysis',
@@ -139,10 +139,10 @@ export default defineConfig(({ mode }) => {
     build: {
       minify: 'terser',
       terserOptions: {
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
-        },
+        // compress: {
+        //   drop_console: true,
+        //   drop_debugger: true,
+        // },
         format: {
           comments: false,
         },

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { toPreview, toUsersList, toComplsList } from '@/config/routes.config';
+import { toProfile, toUsersList, toComplsList } from '@/config/routes.config';
 import { addRoute } from '@/store/slices/settingsSlice';
 import { NavLink, useLocation } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ const ChangeContent = () => {
         <div className="change__ctx">
             <h3 className="headline">Выбор режима</h3>
             <div className="links">
-                <NavLink className="link" to={ toPreview } onClick={ handleRoute }>
+                <NavLink className="link" to={ toProfile } onClick={ handleRoute }>
                     <Button className="link__btn crimson" variant="contained">Приложение</Button>
                 </NavLink>
                 <NavLink className="link" to={ toUsersList } onClick={ handleRoute }>
