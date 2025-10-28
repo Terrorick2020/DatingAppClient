@@ -4,6 +4,7 @@ import { EProfileRoles, EProfileStatus } from '@/types/store.types'
 export const BASE_URL = import.meta.env.VITE_BASE_URL || ''
 export const WS_URL = import.meta.env.VITE_WS_URL || ''
 export const BOT_LINK = import.meta.env.VITE_BOT_LINK || ''
+export const BOT_URL = import.meta.env. VITE_BOT_URL || ''
 export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || ''
 export const URL_MARK = import.meta.env.VITE_URL_MARK || 'id'
 export const TG_HEADER = import.meta.env.VITE_TG_HEADER || ''
@@ -128,6 +129,7 @@ if (
 	!BASE_URL ||
 	!WS_URL ||
 	!BOT_LINK ||
+	!BOT_URL ||
 	!SUPPORT_EMAIL ||
 	!TG_HEADER ||
 	!YC_HEADER ||
@@ -226,7 +228,7 @@ export const REFERAL_LINK = (code: string, type: EProfileRoles): string => {
 
 	const finalEncoded = btoa(paramsString)
 
-	return `${BOT_LINK}?startapp=${finalEncoded}`
+	return `${BOT_LINK.replace(BOT_URL, '')}?startapp=${finalEncoded}`
 }
 
 export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`

@@ -135,7 +135,6 @@ const ChatInput = memo((props: PropsChatInput): JSX.Element => {
             />
             <Popover
                 id={id}
-                className="emoji"
                 open={open}
                 anchorEl={anchorEl}
                 anchorOrigin={{
