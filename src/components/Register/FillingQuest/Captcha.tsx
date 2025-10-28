@@ -1,5 +1,6 @@
 import { JSX } from 'react';
 import { SmartCaptcha } from '@yandex/smart-captcha';
+import { createSelector } from 'reselect';
 import { useDispatch } from 'react-redux';
 import { dfltErrItem } from '@/constant/settings';
 import { setFQErrors } from '@/store/slices/settingsSlice';
@@ -12,9 +13,19 @@ import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 
+const selectSettings = (state: IState) => state.settings;
+
+const selectRegisterCaptcha = createSelector(
+    [selectSettings],
+    (settings) => ({
+        lang: settings.lang,
+        captchaToken: settings.captchaToken,
+        fQErrors: settings.fQErrors,
+    })
+);
+
 export const FillingQuestCaptcha = (): JSX.Element => {
-    const lang = useSelector((state: IState) => state.settings.lang);
-    const fQErrors = useSelector((state: IState) => state.settings.fQErrors);
+    const { lang, captchaToken, fQErrors } = useSelector(selectRegisterCaptcha);
 
     const disatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
@@ -39,6 +50,7 @@ export const FillingQuestCaptcha = (): JSX.Element => {
     return (
         <div className="widgets__captcha">
             <SmartCaptcha
+                key={captchaToken}
                 sitekey={CAPTURE_KEY}
                 test={CAPTURE_MODE === 'test'}
                 language={lang}

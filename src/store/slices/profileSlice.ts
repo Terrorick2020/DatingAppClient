@@ -35,6 +35,7 @@ import {
 	PSYCH_ENDPOINT,
 	PSYCH_INITIAL_ENDPOINT,
 	PSYCH_UPL_PHOTO_ENDPOINT,
+	PSYCH_VALID_TOKEN_ENDPOINT,
 	REFERAL_LINK,
 	REG_ENDPOINT,
 	SET_GEO_ENDPOINT,
@@ -59,6 +60,7 @@ import {
 	setApiRes,
 	setIsFirstly,
 	setLoad,
+	setCaptcaToken,
 } from './settingsSlice'
 
 import { getRefParams, getTgID } from '@/funcs/tg.funcs'
@@ -115,24 +117,17 @@ export const initProfileAsync = createAsyncThunk(
 			setTgId(telegramId)
 
 			const params = await getRefParams()
-			console.log('🔍 ProfileSlice: Получены параметры:', params)
 
 			let profileRole: EProfileRoles = EProfileRoles.User
 
 			if (params) {
-				console.log('🔍 ProfileSlice: Устанавливаем роль:', params.type)
-				console.log('🔍 ProfileSlice: Устанавливаем код:', params.code)
-				profileRole = params.type
+				profileRole = params.type;
 				dispatch(setFromRefCode(params.code))
-			} else {
-				console.log(
-					'🔍 ProfileSlice: Параметры не найдены, используем роль User'
-				)
 			}
 
 			const data = { telegramId }
 
-			type TInit = AxiosResponse<FetchResponse<any>>
+			type TInit = AxiosResponse<FetchResponse<any>>;
 			type TEPSInit = AxiosResponse<FetchResponse<EProfileStatus>>
 			let profileStatus: EProfileStatus = EProfileStatus.Noob
 			let resResult: boolean = false
@@ -174,10 +169,10 @@ export const initProfileAsync = createAsyncThunk(
 
 					const [endPsychRes, codePsychRes]: [
 						AsyncThunkRes<ProfileSelf>,
-						AxiosResponse<FetchResponse<ValidetePsychCodeRes>>,
+						AxiosResponse<FetchResponse<ValidetePsychCodeRes>>
 					] = await Promise.all([
 						dispatch(getSelfPsychProfile()).unwrap(),
-						api.post(`${PSYCH_ENDPOINT}/validate-invite-code`, validData),
+						api.post(PSYCH_VALID_TOKEN_ENDPOINT, validData),
 					])
 
 					resResult = !endPsychRes || endPsychRes === 'error'
@@ -507,6 +502,8 @@ export const signUpProfileAsync = createAsyncThunk(
 					break
 			}
 
+			console.log( response )
+
 			if (
 				!response ||
 				![200, 201].includes(response.status) ||
@@ -552,7 +549,7 @@ export const signUpProfileAsync = createAsyncThunk(
 					error.status === 403 &&
 					error.response.data.message.error === 'CAPTCHA_VALIDATION_FAILED'
 				) {
-					setInfoStatus(EProfileStatus.Blocked)
+					dispatch(setCaptcaToken(''));
 					msg = 'Есть подозрения, что ваш аккаунт используется ботом'
 				} else if (error.status === 429) {
 					msg = 'Превышен лимит попыток регистрации, попробуйте позже'
@@ -593,7 +590,6 @@ export const signUpPsychAsync = createAsyncThunk(
 			const data = {
 				...(mark === KeyFQBtnText.First && {
 					telegramId: profileInfo.id,
-					code: profileInfo.fromRefCode, // Добавляем код приглашения
 				}),
 				name: profileInfo.name,
 				about: profileInfo.bio,
@@ -605,10 +601,9 @@ export const signUpPsychAsync = createAsyncThunk(
 
 			switch (mark) {
 				case KeyFQBtnText.First:
-					response = (await api.post(
-						`${PSYCH_ENDPOINT}/register-by-invite`,
-						data
-					)) as AxiosResponse<FetchResponse<any>>
+					response = (await api.post(PSYCH_ENDPOINT, data)) as AxiosResponse<
+						FetchResponse<any>
+					>
 					msg = 'Регистрация прошла успешно'
 					break
 				case KeyFQBtnText.Other:
@@ -655,7 +650,7 @@ export const signUpPsychAsync = createAsyncThunk(
 					error.status === 403 &&
 					error.response.data.message.error === 'CAPTCHA_VALIDATION_FAILED'
 				) {
-					setInfoStatus(EProfileStatus.Blocked)
+					dispatch(setCaptcaToken(''));
 					msg = 'Есть подозрения, что ваш аккаунт используется ботом'
 				} else if (error.status === 429) {
 					msg = 'Превышен лимит попыток регистрации, попробуйте позже'
