@@ -137,6 +137,10 @@ export function getTgID(): string | null {
 
 export async function getRefParams(): Promise<GetParamsRes | null> {
 	try {
+		console.log('🔍 === НАЧАЛО ОБРАБОТКИ ПАРАМЕТРОВ ===')
+		console.log('🔍 window.location.href:', window.location.href)
+		console.log('🔍 window.location.search:', window.location.search)
+
 		const isTg = await isTMA()
 		console.log('🔍 isTMA():', isTg)
 
@@ -160,6 +164,7 @@ export async function getRefParams(): Promise<GetParamsRes | null> {
 
 		if (!param || param === undefined) {
 			console.log('🔍 Нет параметра startapp')
+			console.log('🔍 === КОНЕЦ ОБРАБОТКИ ПАРАМЕТРОВ (НЕТ ПАРАМЕТРА) ===')
 			return null
 		}
 
@@ -198,11 +203,18 @@ export async function getRefParams(): Promise<GetParamsRes | null> {
 		const finalCode = atob(decodeURIComponent(encodedCode))
 		console.log('🔍 Финальный код:', finalCode)
 
-		return {
+		const result = {
 			code: finalCode,
 			type: typeValue as EProfileRoles,
 		}
-	} catch {
+
+		console.log('🔍 === УСПЕШНО ОБРАБОТАНЫ ПАРАМЕТРЫ ===')
+		console.log('🔍 Результат:', result)
+
+		return result
+	} catch (error) {
+		console.error('🔍 === ОШИБКА ПРИ ОБРАБОТКЕ ПАРАМЕТРОВ ===')
+		console.error('🔍 Ошибка:', error)
 		return null
 	}
 }

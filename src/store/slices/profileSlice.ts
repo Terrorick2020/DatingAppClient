@@ -115,17 +115,24 @@ export const initProfileAsync = createAsyncThunk(
 			setTgId(telegramId)
 
 			const params = await getRefParams()
+			console.log('🔍 ProfileSlice: Получены параметры:', params)
 
 			let profileRole: EProfileRoles = EProfileRoles.User
 
 			if (params) {
-				profileRole = params.type;
+				console.log('🔍 ProfileSlice: Устанавливаем роль:', params.type)
+				console.log('🔍 ProfileSlice: Устанавливаем код:', params.code)
+				profileRole = params.type
 				dispatch(setFromRefCode(params.code))
+			} else {
+				console.log(
+					'🔍 ProfileSlice: Параметры не найдены, используем роль User'
+				)
 			}
 
 			const data = { telegramId }
 
-			type TInit = AxiosResponse<FetchResponse<any>>;
+			type TInit = AxiosResponse<FetchResponse<any>>
 			type TEPSInit = AxiosResponse<FetchResponse<EProfileStatus>>
 			let profileStatus: EProfileStatus = EProfileStatus.Noob
 			let resResult: boolean = false
@@ -167,7 +174,7 @@ export const initProfileAsync = createAsyncThunk(
 
 					const [endPsychRes, codePsychRes]: [
 						AsyncThunkRes<ProfileSelf>,
-						AxiosResponse<FetchResponse<ValidetePsychCodeRes>>
+						AxiosResponse<FetchResponse<ValidetePsychCodeRes>>,
 					] = await Promise.all([
 						dispatch(getSelfPsychProfile()).unwrap(),
 						api.post(`${PSYCH_ENDPOINT}/validate-invite-code`, validData),
