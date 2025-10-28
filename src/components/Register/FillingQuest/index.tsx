@@ -22,6 +22,7 @@ import { RootDispatch } from '@/store';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { fQBtnText } from '@/constant/register';
 import { Slide } from 'react-awesome-reveal';
+import { v4 as uuidv4 } from 'uuid';
 import { type FQBtnTextItem, type ValidationField, KeyFQBtnText } from '@/types/register.typs';
 import { type FQErrorsItem, type FQErrorKeys, EAnimeDirection } from '@/types/settings.type';
 import { type IState, EProfileRoles } from '@/types/store.types';
@@ -60,6 +61,7 @@ const FillingQuestContent = (): JSX.Element => {
     const [regLoad, setRegLoad] = useState<boolean>(false);
     const [btnCtx, setBtnCtx] = useState<FQBtnTextItem>(fQBtnText[KeyFQBtnText.First]);
     const [isDis, setIsDis] = useState<boolean>(true);
+    const [captchaKey, setCaptchaKey] = useState<string>(uuidv4());
 
     const infoCache = useRef<string>('');
 
@@ -193,6 +195,8 @@ const FillingQuestContent = (): JSX.Element => {
                 dispatch(resetRoutes());
                 navigate(toProfile);
             };
+        } else {
+            setCaptchaKey(uuidv4());
         };
 
         setRegLoad(false);
@@ -224,7 +228,10 @@ const FillingQuestContent = (): JSX.Element => {
                         <FillingQuestBio />
                         { !isPsych && <FillingQuestInterests /> }
                         { !isPsych && <FillingQuestSelectionSex /> }
-                        <FillingQuestCaptcha />
+                        <FillingQuestCaptcha
+                            key={ captchaKey }
+                            setKey={ setCaptchaKey }
+                        />
                     </Slide>
                 </div>
                 <div className="link">
