@@ -137,16 +137,25 @@ export function getTgID(): string | null {
 
 export async function getRefParams(): Promise<GetParamsRes | null> {
 	try {
+		console.log('🔍 === НАЧАЛО ОБРАБОТКИ ПАРАМЕТРОВ ===')
+		console.log('🔍 window.location.href:', window.location.href)
+		console.log('🔍 window.location.search:', window.location.search)
+
 		const isTg = await isTMA()
+		console.log('🔍 isTMA():', isTg)
 
 		let param: string | null | undefined = null
 
 		if (isTg) {
 			param = initData.startParam()
 			console.log('🔍 Telegram startParam:', param)
-			const urlParams = new URLSearchParams(window.location.search)
-			param = urlParams.get('startapp')
-			console.log('🔍 URL startapp param:', param)
+
+			// Если startParam пустой, пробуем получить из URL (для отладки)
+			if (!param) {
+				const urlParams = new URLSearchParams(window.location.search)
+				param = urlParams.get('startapp')
+				console.log('🔍 URL startapp param (fallback):', param)
+			}
 		} else {
 			const urlParams = new URLSearchParams(window.location.search)
 			param = urlParams.get('startapp')
@@ -155,29 +164,57 @@ export async function getRefParams(): Promise<GetParamsRes | null> {
 
 		if (!param || param === undefined) {
 			console.log('🔍 Нет параметра startapp')
+			console.log('🔍 === КОНЕЦ ОБРАБОТКИ ПАРАМЕТРОВ (НЕТ ПАРАМЕТРА) ===')
 			return null
 		}
 
+		console.log('🔍 Исходный параметр:', param)
+
 		const decodedString = atob(decodeURIComponent(param))
+		console.log('🔍 Декодированная строка:', decodedString)
+
 		const searchParams = new URLSearchParams(decodedString)
+		console.log('🔍 Параметры поиска:', Object.fromEntries(searchParams))
 
 		const encodedCode = searchParams.get('code')
 		const encodedType = searchParams.get('type')
 
-		if (!encodedCode || !encodedType) return null
+		console.log('🔍 encodedCode:', encodedCode)
+		console.log('🔍 encodedType:', encodedType)
+
+		if (!encodedCode || !encodedType) {
+			console.log('🔍 Отсутствуют обязательные параметры')
+			return null
+		}
 
 		const typeValue = atob(decodeURIComponent(encodedType))
+		console.log('🔍 Декодированный тип:', typeValue)
+
 		const isValidType = Object.values(EProfileRoles).includes(
 			typeValue as EProfileRoles
 		)
+		console.log('🔍 Валидный тип:', isValidType)
 
-		if (!isValidType || typeValue === EProfileRoles.Admin) return null
+		if (!isValidType || typeValue === EProfileRoles.Admin) {
+			console.log('🔍 Невалидный тип или админ')
+			return null
+		}
 
-		return {
-			code: atob(decodeURIComponent(encodedCode)),
+		const finalCode = atob(decodeURIComponent(encodedCode))
+		console.log('🔍 Финальный код:', finalCode)
+
+		const result = {
+			code: finalCode,
 			type: typeValue as EProfileRoles,
 		}
-	} catch {
+
+		console.log('🔍 === УСПЕШНО ОБРАБОТАНЫ ПАРАМЕТРЫ ===')
+		console.log('🔍 Результат:', result)
+
+		return result
+	} catch (error) {
+		console.error('🔍 === ОШИБКА ПРИ ОБРАБОТКЕ ПАРАМЕТРОВ ===')
+		console.error('🔍 Ошибка:', error)
 		return null
 	}
 }

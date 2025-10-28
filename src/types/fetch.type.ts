@@ -1,12 +1,17 @@
 import {
 	EApiStatus,
 	ELanguage,
+	type CityesVarsItem,
 	type InterestsVarsItem,
-	type CityesVarsItem
-} from './settings.type';
+} from './settings.type'
 
-import { ELineStatus, EProfileRoles, EProfileStatus, ESex, EPsychStatus } from './store.types';
-
+import {
+	ELineStatus,
+	EProfileRoles,
+	EProfileStatus,
+	EPsychStatus,
+	ESex,
+} from './store.types'
 
 export interface FetchResBase {
 	success: boolean
@@ -30,17 +35,17 @@ export interface FetchResError extends FetchResBase {
 export type FetchResponse<T = any> = FetchResSuccess<T> | FetchResError
 
 export interface RejectRes {
-    isCritical: boolean
-    status: EApiStatus
-    msg: string
+	isCritical: boolean
+	status: EApiStatus
+	msg: string
 }
 
 export interface FetchGeoRes {
-    city: string
+	city: string
 }
 
 export interface FetchSavePhotoRes {
-    photoId: number
+	photoId: number
 }
 
 export enum EFetchLikesTProps {
@@ -61,16 +66,16 @@ export enum UsersEndpointSortDir {
 }
 
 export interface UsersEndpointParams {
-  page?: number | string | null
-  limit?: number | string | null
-  sortBy?: UsersEndpointSotrBy | null
-  sortDirection?: UsersEndpointSortDir | null
-  name?: string | null
-  town?: string | null
-  ageMin?: number | string | null
-  ageMax?: number | string | null
-  sex?: ESex | null
-  interestId?: number | string | null
+	page?: number | string | null
+	limit?: number | string | null
+	sortBy?: UsersEndpointSotrBy | null
+	sortDirection?: UsersEndpointSortDir | null
+	name?: string | null
+	town?: string | null
+	ageMin?: number | string | null
+	ageMax?: number | string | null
+	sex?: ESex | null
+	interestId?: number | string | null
 }
 
 export interface RegEndpointResUser {
@@ -91,13 +96,13 @@ export interface PhotoItemRes {
 
 export interface UserProfileResBase {
 	telegramId: string
-  	name: string
-  	town: string
+	name: string
+	town: string
 	sex: ESex.All | ESex.Male
 	selSex: ESex
 	age: number
-  	bio: string
-  	lang: ELanguage
+	bio: string
+	lang: ELanguage
 	enableGeo: boolean
 	isVerify: boolean
 	latitude?: number
@@ -148,23 +153,23 @@ export interface ChatMsgRes {
 }
 
 export interface ChatUserRes {
-  id: string
-  name: string
-  age: number
-  avatarKey: string
-  avatarUrl: string
+	id: string
+	name: string
+	age: number
+	avatarKey: string
+	avatarUrl: string
 }
 
 export interface ChatItemRes {
-  chatId: string
-  created_at: number
-  lastMsg: string
-  toUser: ChatUserRes
-  unread_count: number
+	chatId: string
+	created_at: number
+	lastMsg: string
+	toUser: ChatUserRes
+	unread_count: number
 }
 
 export interface UnreadLikesRes {
-  count: number
+	count: number
 }
 
 export interface MarkReadLikesRes {
@@ -172,26 +177,26 @@ export interface MarkReadLikesRes {
 }
 
 export interface LikesListResUserPhoto {
-  key: string
+	key: string
 }
 
 export interface LikesListResUser {
-  telegramId: string
-  name: string
-  age: number
-  town: string
-  photoUrl: string
-  photos: LikesListResUserPhoto[]
+	telegramId: string
+	name: string
+	age: number
+	town: string
+	photoUrl: string
+	photos: LikesListResUserPhoto[]
 }
 
 export interface LikesListRes {
-  id: number
-  fromUserId: string
-  toUserId: string
-  isMatch: boolean
-  isRead: boolean
-  createdAt: string
-  fromUser: LikesListResUser
+	id: number
+	fromUserId: string
+	toUserId: string
+	isMatch: boolean
+	isRead: boolean
+	createdAt: string
+	fromUser: LikesListResUser
 }
 
 export interface ValidetePsychCodeRes {
@@ -220,7 +225,7 @@ export interface InitPsychListResPsych {
 export interface InitPsychListRes {
 	psychologists: InitPsychListResPsych[]
 	total: number
-};
+}
 
 export interface TargetPsychologistRes {
 	id: number
@@ -236,6 +241,7 @@ export interface TargetPsychologistRes {
 export interface PsychAddVideoRes {
 	videoId: number | null
 	key: string
+	previewKey?: string
 }
 
 export interface PsychPublishVideoRes {
@@ -246,8 +252,8 @@ export interface PsychPublishVideoRes {
 }
 
 export interface SelfPsychPhotoItem {
-	id: number;
-  	url: string;
+	id: number
+	url: string
 }
 
 export interface SelfPsychRes extends Omit<TargetPsychologistRes, 'photos'> {
