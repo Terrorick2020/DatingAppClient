@@ -98,6 +98,7 @@ export interface PropsCustomSelIcon {
 
 export interface PropsAdmineFotter {
     handleSearch: () => void
+    disable: boolean
 }
 
 export interface PropsPhotosLoadItem {

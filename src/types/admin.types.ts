@@ -1,4 +1,4 @@
-import { EProfileRoles, EProfileStatus } from './store.types';
+import { EProfileRoles, EProfileStatus, EPsychStatus } from './store.types';
 import type { PhotoItem } from './profile.types';
 import type { VideoItemWithPsych } from './videos.types';
 
@@ -13,7 +13,7 @@ export interface ProfilesListItem {
     role: EProfileRoles
     avatar: string
     name: string
-    status: EProfileStatus
+    status: EProfileStatus | EPsychStatus
 }
 
 export interface BaseComplaintItem {
@@ -86,6 +86,7 @@ export enum UserInfoBtnId {
 export interface UserItemActivCtx {
     text: string
     targetStat: EProfileStatus
+    type: EProfileRoles.User | EProfileRoles.Psych
 }
 
 export interface PropsComplaintsListHeader {
@@ -123,4 +124,10 @@ export interface PropsVideoInfoContentMainInfo {
     name: string
     date: Date
     isPublished: boolean
+}
+
+
+export interface DataGetProfileByIdAsync {
+    id: string
+    type: EProfileRoles
 }

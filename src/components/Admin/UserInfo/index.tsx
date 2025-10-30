@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 import { RootDispatch } from '@/store';
 import { getProfileByIdAsync } from '@/store/slices/adminSlice';
-import { type IState } from '@/types/store.types';
+import { EProfileRoles, type IState } from '@/types/store.types';
 
 import MyLoader from '@/components/UI/MyLoader';
 import UserInfoCtx from './Ctx';
@@ -44,7 +44,12 @@ const UserInfoContent = (): JSX.Element => {
     }
 
     const initUserInfo = async (): Promise<void> => {
-        const response = await dispatch(getProfileByIdAsync(id)).unwrap();
+        const data = {
+            id,
+            type: type as EProfileRoles
+        };
+
+        const response = await dispatch(getProfileByIdAsync(data)).unwrap();
 
         if(!response || response === 'error') {
             warningAlert(

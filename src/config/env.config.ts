@@ -265,6 +265,7 @@ export const USERS_ENDPOINT = ({
 	ageMax = null,
 	sex = null,
 	interestId = null,
+	telegramId = null,
 }: UsersEndpointParams = {}): string => {
 	const params: string[] = []
 
@@ -278,6 +279,7 @@ export const USERS_ENDPOINT = ({
 	if (ageMax !== null) params.push(`ageMax=${ageMax}`)
 	if (sex !== null) params.push(`sex=${sex}`)
 	if (interestId != null) params.push(`interestId=${interestId}`)
+	if (telegramId != null) params.push(`telegramId=${telegramId}`)
 
 	const queryString = params.length ? `?${params.join('&')}` : ''
 
@@ -310,7 +312,21 @@ export const USERS_SEARCH = (
 	return `${USER_ENDPOINT}${USER_SEARCH}?${params.join('&')}`
 }
 
-export const ADMINE_CMPLS_ENDPOINT = `${ADMINE_ENDPOINT}${ADMINE_CMPLS}`
+export const ADMINE_CMPLS_ENDPOINT = (
+	telegramId?: string,
+	type?: string,
+	status?: string,
+): string => {
+	const params: string[] = []
+
+	if (telegramId) params.push(`telegramId=${telegramId}`)
+	if (type) params.push(`type=${type}`)
+	if (status) params.push(`status=${status}`)
+
+	const queryStr = params.length ? `?${params.join('&')}` : '';
+
+	return `${ADMINE_CMPLS}${queryStr}`
+};
 export const ADMINE_SERCH_STATUS_ENDPOINT = (
 	tgId: string,
 	type: EProfileStatus

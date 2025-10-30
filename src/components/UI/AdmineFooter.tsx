@@ -11,6 +11,7 @@ const AdmineFooter = memo((props: PropsAdmineFotter): JSX.Element => {
                 <Button
                     className="link__btn"
                     variant="contained"
+                    disabled={ props.disable }
                     onClick={ props.handleSearch }
                 >Найти</Button>
             </div>

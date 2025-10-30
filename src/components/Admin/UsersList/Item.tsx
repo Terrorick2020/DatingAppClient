@@ -19,6 +19,7 @@ import MenuBtn from '@/components/UI/MenuBtn';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import SvgMoreCircle from '@/assets/icon/more-circle.svg';
+import { errorAlert } from '@/funcs/alert.funcs';
 
 
 const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
@@ -42,16 +43,19 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
     const sendBlockReq = useCallback(async (): Promise<void> => {
         setLoading(true);
 
-        try {
-            await dispatch(serchProfileStatusAsync({
-                id: props.item.id,
-                targetValue: activeCtx.targetStat,
-                delComplaint: false,
-                isDisp: true,
-            }));
-        } finally {
-            setLoading(false);
-        }
+        const response = await dispatch(serchProfileStatusAsync({
+            id: props.item.id,
+            targetValue: activeCtx.targetStat,
+            delComplaint: false,
+            isDisp: true,
+        })).unwrap();
+
+        if(!response || response === 'error') {
+            errorAlert(dispatch, 'Ошибка изменение статуса пользователя')
+        };
+
+        setLoading(false);
+
     }, [dispatch, props.item.id, activeCtx.targetStat]);
 
     const hadleBlock = useCallback((event: MouseEvent<HTMLLIElement>): void => {
@@ -77,6 +81,7 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
                 <h3 className="name">{props.item.name}</h3>
                 <span className={`label ${statusTextMap[props.item.status].addClass}`}>
                     {loading && <CircularProgress />}
+                    {statusTextMap[props.item.status].text}
                     {statusTextMap[props.item.status].status}
                 </span>
             </div>

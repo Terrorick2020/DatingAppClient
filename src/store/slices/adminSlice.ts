@@ -1,3 +1,10 @@
+import type {
+    FetchResponse,
+    FetchSavePhotoRes,
+    AdminGenLinkRes,
+    TargetPsychologistRes,
+} from '@/types/fetch.type';
+
 import {
     ESearchComplType,
     type AdminState,
@@ -6,11 +13,13 @@ import {
     type DataSerchProfStat,
     type ComplaintListItem,
     type TargetProfileCompalint,
+    type DataGetProfileByIdAsync,
 } from '@/types/admin.types';
 
 import {
     EProfileRoles,
     EProfileStatus,
+    EPsychStatus,
     type AsyncThunkRes,
     type IState,
 } from '@/types/store.types';
@@ -28,6 +37,7 @@ import {
     REFERAL_LINK,
     PSYCH_GEN_TOKEN_ENDPOINT,
     PSYCH_ADMIN_ENDPOINT,
+    PSYCH_BY_MARK_ENDPOINT,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -37,7 +47,6 @@ import { initialArgs } from '@/constant/quest';
 import type { InitSliderData } from '@/types/quest.types';
 import type { VideoItemWithPsych } from '@/types/videos.types';
 import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
-import type { FetchResponse, FetchSavePhotoRes, AdminGenLinkRes } from '@/types/fetch.type';
 import type { AxiosResponse, AxiosProgressEvent } from 'axios';
 
 import api from '@/config/fetch.config';
@@ -92,7 +101,7 @@ export const getProfilesListAsync = createAsyncThunk(
                         ? USERS_SEARCH(query, realArgs.offset, realArgs.limit)
                         : USERS_ENDPOINT({page: realArgs.offset + 1, limit: realArgs.limit});
 
-                    response = await api.get(url);
+                    response =  await api.get(url)
 
                     if(
                         !response               ||
@@ -127,20 +136,22 @@ export const getProfilesListAsync = createAsyncThunk(
                         response.data.data === 'None'
                     ) return result;
 
+                    console.log( response )
+
                     for(let item of response.data.data.psychologists) {
                         result.push({
                             id: item.telegramId,
                             role: EProfileRoles.Psych,
                             avatar: item.photos[0].url,
                             name: item.name,
-                            status: EProfileStatus.Noob
+                            status: EPsychStatus.Active
                         })
                     };
 
                     return result;
             };
 
-            return null;
+            return  null;
         } catch ( error ) {
             console.log(error);
 
@@ -157,7 +168,8 @@ export const getUniqueLinkAsync = createAsyncThunk(
         try {
             const data = {};
 
-            const respose: AxiosResponse<FetchResponse<AdminGenLinkRes>> = await api.post(PSYCH_GEN_TOKEN_ENDPOINT, data);
+            const respose: AxiosResponse<FetchResponse<AdminGenLinkRes>> =
+                await api.post(PSYCH_GEN_TOKEN_ENDPOINT, data);
 
             if(
                 respose.status !== 201 ||
@@ -178,65 +190,98 @@ export const getUniqueLinkAsync = createAsyncThunk(
 
 export const getProfileByIdAsync = createAsyncThunk(
     'admin/get-profile-by-id',
-    async (id: string, { dispatch }): Promise<AsyncThunkRes<TargetProfile>> => {
+    async (data: DataGetProfileByIdAsync, { dispatch }): Promise<AsyncThunkRes<TargetProfile>> => {
         try {
             dispatch(setLoad(true));
 
-            const [userRes, cmplRes]: [
-                AxiosResponse<FetchResponse<any>>,
-                AxiosResponse<FetchResponse<any>>,
-            ] = await Promise.all([
-                api.get(`${USER_ENDPOINT}/${id}`),
-                api.get(`${COMPLS_ENDPOINT}?telegramId=${id}&type=received&status=UNDER_REVIEW`),
-            ]);
+            switch(data.type) {
+                case EProfileRoles.User:
+                    const [userRes, cmplRes]: [
+                        AxiosResponse<FetchResponse<any>>,
+                        AxiosResponse<FetchResponse<any>>,
+                    ] = await Promise.all([
+                        api.get(`${USER_ENDPOINT}/${data.id}`),
+                        api.get(`${COMPLS_ENDPOINT}?telegramId=${data.id}&type=received&status=UNDER_REVIEW`),
+                    ]);
 
-            if(
-                userRes.status !== 200 ||
-                !userRes.data.success  ||
-                !userRes.data.data     ||
-                userRes.data.data === 'None' ||
+                    if(
+                        userRes.status !== 200 ||
+                        !userRes.data.success  ||
+                        !userRes.data.data     ||
+                        userRes.data.data === 'None' ||
 
-                cmplRes.status !== 200 ||
-                !cmplRes.data.success  ||
-                !cmplRes.data.data     ||
-                cmplRes.data.data === 'None'
-            ) return null;
+                        cmplRes.status !== 200 ||
+                        !cmplRes.data.success  ||
+                        !cmplRes.data.data     ||
+                        cmplRes.data.data === 'None'
+                    ) return null;
 
-            const userData = userRes.data.data;
-            const cmplData = cmplRes.data.data;
+                    const userData = userRes.data.data;
+                    const cmplData = cmplRes.data.data;
 
-            const photos = userData.photos.map((item: any) => ({id: item.id, photo: item.url}));
+                    const photos = userData.photos.map((item: any) => ({id: item.id, photo: item.url}));
 
-            let complaintList: TargetProfileCompalint[] = cmplData.map(
-                (item: any) => {
+                    let complaintList: TargetProfileCompalint[] = cmplData.map(
+                        (item: any) => {
 
-                    const [date, time] = formatTimestamp(item.createdAt).split(' ');
+                            const [date, time] = formatTimestamp(item.createdAt).split(' ');
 
-                    return {
-                        id: item.id,
-                        date,
-                        complGlob: item.globComplRes.label,
-                        complTarget: item.targetComplRes.label,
-                        from: item.fromUser.telegramId,
-                        time,
-                        msg: item.description,
-                    }
-                }
-            );
+                            return {
+                                id: item.id,
+                                date,
+                                complGlob: item.globComplRes.label,
+                                complTarget: item.targetComplRes.label,
+                                from: item.fromUser.telegramId,
+                                time,
+                                msg: item.description,
+                            }
+                        }
+                    );
 
-            const result: TargetProfile = {
-                id: userData.telegramId,
-                role: userData.role,
-                photos,
-                name: userData.name,
-                age: userData.age,
-                city: userData.city.label,
-                status: userData.status,
-                description: userData.bio,
-                complaint: complaintList.length ? complaintList : null,
+                    const result: TargetProfile = {
+                        id: userData.telegramId,
+                        role: userData.role,
+                        photos,
+                        name: userData.name,
+                        age: userData.age,
+                        city: userData.city.label,
+                        status: userData.status,
+                        description: userData.bio,
+                        complaint: complaintList.length ? complaintList : null,
+                    };
+
+                    return result;
+                case EProfileRoles.Psych:
+                    const url = PSYCH_BY_MARK_ENDPOINT(data.id);
+
+                    const response: AxiosResponse<FetchResponse<TargetPsychologistRes>> = await api.get(url);
+                    console.log( response );
+
+                    if(
+                        response.status !== 200 ||
+                        !response.data.success  ||
+                        !response.data.data     ||
+                        response.data.data === 'None'
+                    ) return null;
+
+                    const dataRes = response.data.data;
+
+                    const psychRes: TargetProfile = {
+                        id: ''+dataRes.id,
+                        role: EProfileRoles.Psych,
+                        photos: dataRes.photos.map(item => ({id: ''+item.id, photo: item.url})),
+                        name: dataRes.name,
+                        age: null,
+                        city: '',
+                        status: EProfileStatus.Noob,
+                        description: dataRes.about,
+                        complaint: null,
+                    };
+
+                    return psychRes;
             };
 
-            return result;
+            return null;
         } catch (error) {
             return 'error';
         } finally {
@@ -391,6 +436,8 @@ export const serchProfileStatusAsync = createAsyncThunk(
 
             return targetValue;
         } catch (error) {
+            console.log( error )
+
             return 'error';
         }
     }
@@ -429,11 +476,17 @@ export const deleteUserAsync = createAsyncThunk(
 
 export const initComplaintListAsync = createAsyncThunk(
     'admin/init-complaint-list',
-    async (_data: InitSliderData, { dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
+    async (_data: InitSliderData, { getState, dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
         try {
             dispatch(setLoad(true));
 
-            const response: AxiosResponse<FetchResponse<ComplaintListItem[]>> = await api.get(ADMINE_CMPLS_ENDPOINT);
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+
+            const url = ADMINE_CMPLS_ENDPOINT(telegramId, EProfileRoles.Admin.toLocaleLowerCase());
+
+            const response: AxiosResponse<FetchResponse<ComplaintListItem[]>> =
+                await api.get(url);
 
             console.log(response);
 
@@ -514,9 +567,11 @@ const adminSlice = createSlice({
         builder.addCase(getProfilesListAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<ProfilesListItem[]>> ) => {
             switch(action.payload) {
                 case 'error':
+                    state.profilesList = [];
                     console.log("Ошибка получения списка пользователей");
                     break;
                 case null:
+                    state.profilesList = [];
                     console.log("Список пользователей не получен");
                     break;
                 default:

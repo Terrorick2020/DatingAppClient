@@ -1,8 +1,12 @@
-import { JSX, useEffect } from 'react';
+import {
+    getProfilesListAsync,
+    setSearchId,
+    getUniqueLinkAsync,
+} from '@/store/slices/adminSlice';
+
+import { JSX, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { warningAlert } from '@/funcs/alert.funcs';
-import { getProfilesListAsync } from '@/store/slices/adminSlice';
-import { getUniqueLinkAsync } from '@/store/slices/adminSlice';
 import { type RootDispatch } from '@/store';
 
 import AdmineFooter from '@/components/UI/AdmineFooter';
@@ -13,7 +17,13 @@ import UsersListMain from './Main';
 const UsersListContent = (): JSX.Element => {
     const dispatch = useDispatch<RootDispatch>();
 
+    const [dis, setDis] = useState<boolean>(false);
+
     const initUsersList = async (): Promise<void> => {
+        if(dis) return;
+        
+        setDis(true);
+
         const [_, linkRes] = await Promise.all([
             dispatch(getProfilesListAsync()),
             dispatch(getUniqueLinkAsync()).unwrap(),
@@ -25,9 +35,17 @@ const UsersListContent = (): JSX.Element => {
                 'Не удалось создать ссылку регистрации специалиста'
             );
         }
+
+        setDis(false);
     }
 
-    useEffect(() => { initUsersList() }, []);
+    useEffect(() => {
+        initUsersList();
+
+        return () => {
+            dispatch( setSearchId( '' ) );
+        };
+    }, []);
 
     const handleSearch = async (): Promise<void> => {
         await dispatch( getProfilesListAsync() )
@@ -41,7 +59,7 @@ const UsersListContent = (): JSX.Element => {
             <main className="users-list__main">
                 <UsersListMain />
             </main>
-            <AdmineFooter handleSearch={handleSearch} />
+            <AdmineFooter disable={dis} handleSearch={handleSearch} />
         </>
     )
 }

@@ -24,6 +24,7 @@ const UsersListHeader = (): JSX.Element => {
     const handleChangeRole = useCallback(
         async (_: MouseEvent<HTMLElement>, newValue: EProfileRoles | null): Promise<void> => {
             if (!newValue) return;
+            dispatch( setSearchId( '' ) );
             dispatch(setSearchType( newValue ));
             await dispatch( getProfilesListAsync() );
         },

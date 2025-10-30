@@ -76,6 +76,7 @@ export interface UsersEndpointParams {
 	ageMax?: number | string | null
 	sex?: ESex | null
 	interestId?: number | string | null
+	telegramId?: number | string | null
 }
 
 export interface RegEndpointResUser {
