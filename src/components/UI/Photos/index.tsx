@@ -46,7 +46,7 @@ const Photos = memo((props: PropsPhotos): JSX.Element => {
                 />
             ))}
 
-            {props.photos.length < 3 && (
+            {props.photos.length < (props.maxPhotos || 3) && (
                 <>
                     {loading && <PhotosLoadItem photo={photo} progress={progress} setProgress={setProgress} />}
                     {!photo && <PhotosAddItem handleAdd={handleAdd} />}

@@ -273,3 +273,25 @@ export interface ShortsViewRes {
 export interface UserSelfPsychRes {
 	psychologistId: string | null
 }
+
+export interface ComplaintsListRes {
+  id: string;
+  description: string;
+  type: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | string; 
+  createdAt: number;
+  globComplRes: string;
+  targetComplRes: string;
+
+  fromUser: {
+    name: string;
+    avatar: string;
+    telegramId: string;
+  };
+
+  reportedUser: {
+    name: string;
+    avatar: string;
+    telegramId: string;
+  };
+}

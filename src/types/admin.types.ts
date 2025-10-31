@@ -36,7 +36,7 @@ export interface TargetProfile {
     name: string
     age: number | null
     city: string
-    status: EProfileStatus
+    status: EProfileStatus | EPsychStatus
     description: string
     complaint: TargetProfileCompalint[] | null
 }
@@ -85,7 +85,7 @@ export enum UserInfoBtnId {
 
 export interface UserItemActivCtx {
     text: string
-    targetStat: EProfileStatus
+    targetStat: EProfileStatus | EPsychStatus
     type: EProfileRoles.User | EProfileRoles.Psych
 }
 
@@ -131,3 +131,9 @@ export interface DataGetProfileByIdAsync {
     id: string
     type: EProfileRoles
 }
+
+export interface DataSelPS {
+    id: string | number
+    isDisp: boolean
+    targetValue: EPsychStatus
+};

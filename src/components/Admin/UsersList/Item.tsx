@@ -7,10 +7,16 @@ import {
     useCallback,
 } from 'react';
 
+import { 
+    serchProfileStatusAsync,
+    setTargetProfileId,
+    selectPsychStatusAsync,
+} from '@/store/slices/adminSlice';
+
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { serchProfileStatusAsync, setTargetProfileId } from '@/store/slices/adminSlice';
 import { statusTextMap, userItemActivCtx } from '@/constant/admin';
+import { EProfileRoles, EProfileStatus, EPsychStatus } from '@/types/store.types';
 import { addRoute } from '@/store/slices/settingsSlice';
 import type { PropsUserListItem, UserItemActivCtx } from '@/types/admin.types';
 import type { RootDispatch } from '@/store';
@@ -45,7 +51,7 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
 
         const response = await dispatch(serchProfileStatusAsync({
             id: props.item.id,
-            targetValue: activeCtx.targetStat,
+            targetValue: activeCtx.targetStat as EProfileStatus,
             delComplaint: false,
             isDisp: true,
         })).unwrap();
@@ -58,8 +64,31 @@ const UserListItem = memo((props: PropsUserListItem): JSX.Element => {
 
     }, [dispatch, props.item.id, activeCtx.targetStat]);
 
+    const sendPsychBlockReq = async (): Promise<void> => {
+        setLoading(true);
+
+        const response = await dispatch(selectPsychStatusAsync({
+            id: props.item.id,
+            targetValue: activeCtx.targetStat as EPsychStatus,
+            isDisp: true,
+        })).unwrap();
+
+        if(!response || response === 'error') {
+            errorAlert(dispatch, 'Ошибка изменение статуса специалиста')
+        };
+
+        setLoading(false);
+    };
+
     const hadleBlock = useCallback((event: MouseEvent<HTMLLIElement>): void => {
-        sendBlockReq();
+        switch(props.item.role) {
+            case EProfileRoles.Psych:
+                sendPsychBlockReq();
+                break;
+            default:
+                sendBlockReq();
+                break;
+        };
         handleClose(event);
     }, [sendBlockReq, handleClose]);
 

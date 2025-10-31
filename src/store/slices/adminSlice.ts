@@ -3,6 +3,7 @@ import type {
     FetchSavePhotoRes,
     AdminGenLinkRes,
     TargetPsychologistRes,
+    ComplaintsListRes,
 } from '@/types/fetch.type';
 
 import {
@@ -14,6 +15,7 @@ import {
     type ComplaintListItem,
     type TargetProfileCompalint,
     type DataGetProfileByIdAsync,
+    type DataSelPS,
 } from '@/types/admin.types';
 
 import {
@@ -38,6 +40,7 @@ import {
     PSYCH_GEN_TOKEN_ENDPOINT,
     PSYCH_ADMIN_ENDPOINT,
     PSYCH_BY_MARK_ENDPOINT,
+    PSYCH_CHANGE_STATUS_ENDPOINT,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -135,8 +138,6 @@ export const getProfilesListAsync = createAsyncThunk(
                         !response.data.data     ||
                         response.data.data === 'None'
                     ) return result;
-
-                    console.log( response )
 
                     for(let item of response.data.data.psychologists) {
                         result.push({
@@ -255,7 +256,6 @@ export const getProfileByIdAsync = createAsyncThunk(
                     const url = PSYCH_BY_MARK_ENDPOINT(data.id);
 
                     const response: AxiosResponse<FetchResponse<TargetPsychologistRes>> = await api.get(url);
-                    console.log( response );
 
                     if(
                         response.status !== 200 ||
@@ -273,7 +273,7 @@ export const getProfileByIdAsync = createAsyncThunk(
                         name: dataRes.name,
                         age: null,
                         city: '',
-                        status: EProfileStatus.Noob,
+                        status: dataRes.status,
                         description: dataRes.about,
                         complaint: null,
                     };
@@ -443,6 +443,40 @@ export const serchProfileStatusAsync = createAsyncThunk(
     }
 );
 
+export const selectPsychStatusAsync = createAsyncThunk(
+    'admin/select-psych-status',
+    async (data: DataSelPS, { dispatch, getState }): Promise<AsyncThunkRes<EPsychStatus>> => {
+        try {
+            const url = PSYCH_CHANGE_STATUS_ENDPOINT(data.id, data.targetValue);
+            const response: AxiosResponse<FetchResponse<any>> = await api.patch(url);
+
+            if (
+                response.status !== 200 ||
+                !response.data.success
+            ) return null;
+
+            if( data.isDisp ) {
+                const rootState = getState() as IState;
+                const profilesList = rootState.admin.profilesList;
+
+                const newProfilesList = profilesList.map(
+                    item => ({
+                        ...item,
+                        status: item.id === data.id ? data.targetValue : item.status,
+                    })
+                );
+
+                dispatch(setNewProfilesList(newProfilesList));
+            };
+
+            return data.targetValue;
+        } catch (error) {
+            console.log(error);
+            return 'error';
+        }
+    },
+);
+
 export const deleteUserAsync = createAsyncThunk(
     'admin/delete-user',
     async (_, { getState }): Promise<AsyncThunkRes<ProfilesListItem[]>> => {
@@ -485,19 +519,34 @@ export const initComplaintListAsync = createAsyncThunk(
 
             const url = ADMINE_CMPLS_ENDPOINT(telegramId, EProfileRoles.Admin.toLocaleLowerCase());
 
-            const response: AxiosResponse<FetchResponse<ComplaintListItem[]>> =
+            const response: AxiosResponse<FetchResponse<ComplaintsListRes[]>> =
                 await api.get(url);
+            
+            console.log( response )
+            
+            if(
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
 
-            console.log(response);
+            const result: ComplaintListItem[] = [];
 
-            if (
-                response.status === 200 &&
-                response.data.success   &&
-                response.data.data      &&
-                response.data.data !== 'None'
-            ) return response.data.data;
+            for(let item of response.data.data) {
+                result.push({
+                    id: item.id,
+                    date: ''+item.createdAt,
+                    complGlob: item.description,
+                    complTarget: 'jkjhjj',
+                    avatar: item.reportedUser.avatar,
+                    name: item.reportedUser.name,
+                });
+            };
 
-            return null;
+            console.log( result )
+
+            return result;
         } catch (error) {
             console.log(error);
             
@@ -582,6 +631,28 @@ const adminSlice = createSlice({
         }),
         builder.addCase(getProfilesListAsync.rejected, _ => {
             console.log("Ошибка получения списка пользователей");
+        })
+
+        // Изменение статуса специолиста
+        builder.addCase(selectPsychStatusAsync.pending, _ => {
+            console.log("Изменение статуса специалиста");
+        })
+        builder.addCase(selectPsychStatusAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<EPsychStatus>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка изменения статуса специалиста");
+                    break;
+                case null:
+                    console.log("Статус специалиста не изменён");
+                    break;
+                default:
+                    state.targetProfile.status = action.payload;
+                    console.log("Успешное изменение статуса специалиста");
+                    break;
+            }
+        }),
+        builder.addCase(selectPsychStatusAsync.rejected, _ => {
+            console.log("Ошибка изменения статуса специалиста");
         })
 
         // Добавление фотографии пользователю

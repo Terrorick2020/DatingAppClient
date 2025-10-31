@@ -12,6 +12,7 @@ import { EProfileRoles, type IState } from '@/types/store.types';
 import MyLoader from '@/components/UI/MyLoader';
 import UserInfoCtx from './Ctx';
 import UserInfoBtns from './Btns';
+import PsychBtn from './PsychBtn';
 
 
 const selectSettings = (state: IState) => state.settings;
@@ -33,6 +34,8 @@ const UserInfoContent = (): JSX.Element => {
     const type = searchParams.get('type');
 
     const { isLoad, targetProfile } = useSelector(selectComplListState);
+
+    console.log( targetProfile.role )
 
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
@@ -80,7 +83,10 @@ const UserInfoContent = (): JSX.Element => {
                 <UserInfoCtx targetProfile={targetProfile} />
             </div>
             <div className="user-info__btns">
-                <UserInfoBtns targetProfile={targetProfile} />
+                { targetProfile.role === EProfileRoles.Psych
+                    ? <PsychBtn targetProfile={targetProfile} />
+                    : <UserInfoBtns targetProfile={targetProfile} />
+                }
             </div>       
         </>
     )
