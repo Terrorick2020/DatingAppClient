@@ -29,9 +29,10 @@ export function ageToStr(age: number | null): string {
 		} else {
 			txt = 'лет';
 		}
-	}
+	};
+
 	return `${age} ${txt}`;
-}
+};
 
 export function formatDateToUser(dateStr: string): string {
 	const date = new Date(dateStr);

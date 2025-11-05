@@ -561,6 +561,8 @@ export const getTargetVideoInfoAsync = createAsyncThunk(
     'admin/get-target-video-info',
     async (id: number, { getState, dispatch }): Promise<AsyncThunkRes<VideoItemWithPsych>> => {
         try {
+            if(isNaN(id)) return null;
+
             dispatch(setLoad(true));
 
             const rootState = getState() as IState;
@@ -835,7 +837,7 @@ const adminSlice = createSlice({
             console.log("Ошибка получения видео психологаб");
         })
     }
-})
+});
 
 export const {
     setSearchType,
