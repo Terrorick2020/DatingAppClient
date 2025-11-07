@@ -41,6 +41,7 @@ import {
     PSYCH_ADMIN_ENDPOINT,
     PSYCH_BY_MARK_ENDPOINT,
     PSYCH_CHANGE_STATUS_ENDPOINT,
+    VIDEO_ENDPOIN,
 } from '@/config/env.config';
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -48,7 +49,7 @@ import { setLoad } from './settingsSlice';
 import { formatTimestamp } from '@/funcs/general.funcs';
 import { initialArgs } from '@/constant/quest';
 import type { InitSliderData } from '@/types/quest.types';
-import type { VideoItemWithPsych } from '@/types/videos.types';
+import type { VideoItemWithPsych, EditVideoData } from '@/types/videos.types';
 import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
 import type { AxiosResponse, AxiosProgressEvent } from 'axios';
 
@@ -202,8 +203,10 @@ export const getProfileByIdAsync = createAsyncThunk(
                         AxiosResponse<FetchResponse<any>>,
                     ] = await Promise.all([
                         api.get(`${USER_ENDPOINT}/${data.id}`),
-                        api.get(`${COMPLS_ENDPOINT}?telegramId=${data.id}&type=received&status=UNDER_REVIEW`),
+                        api.get(`${COMPLS_ENDPOINT}?telegramId=${data.id}&type=received&status=PENDING`),
                     ]);
+
+                    console.log( cmplRes )
 
                     if(
                         userRes.status !== 200 ||
@@ -230,8 +233,8 @@ export const getProfileByIdAsync = createAsyncThunk(
                             return {
                                 id: item.id,
                                 date,
-                                complGlob: item.globComplRes.label,
-                                complTarget: item.targetComplRes.label,
+                                complGlob: item.globComplRes,
+                                complTarget: item.targetComplRes,
                                 from: item.fromUser.telegramId,
                                 time,
                                 msg: item.description,
@@ -534,17 +537,18 @@ export const initComplaintListAsync = createAsyncThunk(
             const result: ComplaintListItem[] = [];
 
             for(let item of response.data.data) {
+                const date = new Date(item.createdAt);
+                const formatted = date.toLocaleDateString('ru-RU'); 
+
                 result.push({
-                    id: item.id,
-                    date: ''+item.createdAt,
-                    complGlob: item.description,
-                    complTarget: 'jkjhjj',
+                    id: item.reportedUser.telegramId,
+                    date: formatted,
+                    complGlob: item.globComplRes,
+                    complTarget: item.targetComplRes,
                     avatar: item.reportedUser.avatar,
                     name: item.reportedUser.name,
                 });
             };
-
-            console.log( result )
 
             return result;
         } catch (error) {
@@ -579,6 +583,64 @@ export const getTargetVideoInfoAsync = createAsyncThunk(
             dispatch(setLoad(false));
         }
     },
+);
+
+export const deletePsychVideoAsync = createAsyncThunk(
+    'admin/delete-psych-video',
+    async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const rootState = getState() as IState;
+            const videoId = rootState.admin.targetVideo?.id;
+            
+            if(!videoId) return 'error';
+
+            const url = `${VIDEO_ENDPOIN}/${videoId}`;
+
+            const response: AxiosResponse<FetchResponse<null>> = await api.delete(url)
+
+			if (response.status !== 200 || !response.data.success) return null
+
+            return 'success';
+        } catch (error) {
+            console.log( error );
+            return 'error';
+        };
+    },
+);
+
+export const toggleVideoPublishedAsync = createAsyncThunk(
+    'admin/toggle-video-published',
+    async (_, { getState }): Promise<AsyncThunkRes<boolean>> => {
+        try {
+            const rootState = getState() as IState;
+            const targetVideo = rootState.admin.targetVideo;
+
+            if(!targetVideo) return 'error';
+
+            const data: EditVideoData = {
+                videoId: targetVideo.id,
+                title: targetVideo.title,
+                description: targetVideo.description,
+                isPublished: !targetVideo.isPublished,
+            };
+
+			const url = `${VIDEO_ENDPOIN}/${targetVideo.id}`;
+
+			const response: AxiosResponse<FetchResponse<Omit<VideoItemWithPsych, 'isLiked'>>> =
+                await api.patch(url, data);
+
+            if (
+				response.status !== 200 ||
+				!response.data.success ||
+				!response.data.data ||
+				response.data.data === 'None'
+			) return null;
+
+            return !targetVideo.isPublished;
+        } catch (error) {
+            return 'error';
+        };
+    }
 );
 
 const adminSlice = createSlice({
@@ -834,8 +896,51 @@ const adminSlice = createSlice({
             }
         }),
         builder.addCase(getTargetVideoInfoAsync.rejected, _ => {
-            console.log("Ошибка получения видео психологаб");
+            console.log("Ошибка получения видео психолога");
         })
+
+        // Удаление видео психолога
+        builder.addCase(deletePsychVideoAsync.pending, _ => {
+            console.log("Удаление видео психолога");
+        })
+        builder.addCase(deletePsychVideoAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка удаления видео психолога");
+                    break;
+                case null:
+                    console.log("Видео психолога не удалено");
+                    break;
+                default:
+                    console.log("Успешное удаление видео психолога");
+                    break;
+            }
+        }),
+        builder.addCase(deletePsychVideoAsync.rejected, _ => {
+            console.log("Ошибка удаления видео психолога");
+        })
+
+        // Изменение статуса видео
+        builder.addCase(toggleVideoPublishedAsync.pending, _ => {
+            console.log("Изменение статуса видео");
+        })
+        builder.addCase(toggleVideoPublishedAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<boolean>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка изменения статуса видео");
+                    break;
+                case null:
+                    console.log("Статус видео не изменён");
+                    break;
+                default:
+                    console.log("Успешное изменение статуса видео");
+                    break;
+            }
+        }),
+        builder.addCase(toggleVideoPublishedAsync.rejected, _ => {
+            console.log("Ошибка изменения статуса видео");
+        })
+
     }
 });
 

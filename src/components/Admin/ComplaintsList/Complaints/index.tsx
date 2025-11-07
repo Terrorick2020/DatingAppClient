@@ -2,7 +2,7 @@ import { JSX } from 'react';
 import { useSelector } from 'react-redux';
 import { URL_MARK } from '@/config/env.config';
 import { toUserInfo } from '@/config/routes.config';
-import type { IState } from '@/types/store.types';
+import { EProfileRoles, type IState } from '@/types/store.types';
 
 import ComplaintsListCtxItem from './Item';
 import ListBlock from '@/components/UI/ListBlock';
@@ -22,7 +22,7 @@ const ComplaintsList = (): JSX.Element => {
             {complaintsList.map(item => (
                 <ListBlock
                     img={item.avatar}
-                    route={`${toUserInfo.replace(`:${URL_MARK}`, `${item.id}`)}`}
+                    route={`${toUserInfo.replace(`:${URL_MARK}`, `${item.id}`)}?type=${EProfileRoles.User}`}
                     key={`complaints-list__item-${item.id}`}
                     prefAlt={item.name}
                 >

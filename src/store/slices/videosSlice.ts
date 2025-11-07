@@ -203,8 +203,7 @@ export const editPsychVideoAsync = createAsyncThunk(
 				!response.data.success ||
 				!response.data.data ||
 				response.data.data === 'None'
-			)
-				return null
+			) return null
 
 			const { psychologist, id, ...dataRes } = response.data.data
 

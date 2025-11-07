@@ -35,18 +35,12 @@ const UserInfoContent = (): JSX.Element => {
 
     const { isLoad, targetProfile } = useSelector(selectComplListState);
 
-    console.log( targetProfile.role )
-
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
 
-    if(!id || !type) {
-        navigate(toNotFoud);
-
-        return (<></>);
-    }
-
     const initUserInfo = async (): Promise<void> => {
+        if(!id || !type) return;
+
         const data = {
             id,
             type: type as EProfileRoles
@@ -65,11 +59,17 @@ const UserInfoContent = (): JSX.Element => {
     };
 
     useEffect(() => {
+        if(!id || !type) navigate(toNotFoud);
+
         const logoHeader = document.getElementById('logo-header');
         if( logoHeader ) logoHeader.style.display = 'flex';
 
         initUserInfo();
     }, [id] );
+
+    if(!id || !type) return (
+        <></>
+    );
 
     if(isLoad) return (
         <div className="loader">

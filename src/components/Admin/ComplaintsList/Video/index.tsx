@@ -22,6 +22,7 @@ const VideosList = (): JSX.Element => {
             triggerOnce
             direction={ EAnimeDirection.Left }
             duration={ ANIME_DURATION }
+            style={{ width: '100%' }}
         >
             {videosList.videos.map((item, index) => (
                 <VideosListCtxItem
