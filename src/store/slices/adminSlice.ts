@@ -93,6 +93,7 @@ export const getProfilesListAsync = createAsyncThunk(
             const rootState = getState() as IState;
             const query = rootState.admin.searchId;
             const type = rootState.admin.searchType;
+            const profilesList = rootState.admin.profilesList;
 
             let url: string | null = null;
             let result: ProfilesListItem[] = [];
@@ -125,6 +126,10 @@ export const getProfilesListAsync = createAsyncThunk(
                         })
                     };
 
+                    if(args) {
+                        result = [ ...profilesList, ...result ];
+                    }
+
                     return result;
 
                 case EProfileRoles.Psych:
@@ -149,6 +154,10 @@ export const getProfilesListAsync = createAsyncThunk(
                             status: EPsychStatus.Active
                         })
                     };
+
+                    if(args) {
+                        result = [ ...profilesList, ...result ];
+                    }
 
                     return result;
             };
@@ -513,12 +522,15 @@ export const deleteUserAsync = createAsyncThunk(
 
 export const initComplaintListAsync = createAsyncThunk(
     'admin/init-complaint-list',
-    async (_data: InitSliderData, { getState, dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
+    async (data: InitSliderData | undefined, { getState, dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
         try {
             dispatch(setLoad(true));
 
+            // const _resData = data ?? initialArgs;
+
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
+            const complaintsList  = rootState.admin.complaintsList;
 
             const url = ADMINE_CMPLS_ENDPOINT(telegramId, EProfileRoles.Admin.toLocaleLowerCase());
 
@@ -534,7 +546,7 @@ export const initComplaintListAsync = createAsyncThunk(
                 response.data.data === 'None'
             ) return null;
 
-            const result: ComplaintListItem[] = [];
+            let result: ComplaintListItem[] = [];
 
             for(let item of response.data.data) {
                 const date = new Date(item.createdAt);
@@ -549,6 +561,10 @@ export const initComplaintListAsync = createAsyncThunk(
                     name: item.reportedUser.name,
                 });
             };
+
+            if(data) {
+                result = [ ...complaintsList, ...result ];
+            }
 
             return result;
         } catch (error) {

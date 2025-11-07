@@ -86,13 +86,16 @@ const VideoMain = (): JSX.Element => {
             isDopLoad.current      ||
             !selfPsychVideos.total ||
             selfPsychVideos.total <= selfPsychVideos.videos.length ||
-            index + 3 >= initData.current.offset * initData.current.limit
+            index + 3 < selfPsychVideos.videos.length
         )
 
         isDopLoad.current = true;
 
-        const newData = initData.current;
-        newData.offset += 1;
+
+        const newData = {
+            ...initData.current,
+            offset: initData.current.offset + 1
+        };
 
         const response = await dispatch(getSelfPsychVideosAsync(newData)).unwrap();
 

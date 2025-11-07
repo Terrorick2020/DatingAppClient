@@ -152,7 +152,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
             isDopLoad.current ||
             !shortsList.total ||
             shortsList.total <= shortsList.videos.length ||
-            index + 3 >= initData.current.offset * initData.current.limit
+            index + 3 < shortsList.videos.length
         ) return;
 
         isDopLoad.current = true;

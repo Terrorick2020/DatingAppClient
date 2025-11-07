@@ -39,19 +39,23 @@ import {
 	shortsListBase,
 	targetPsychVideoBase,
 } from '@/constant/video'
-import { hasAllKeys } from '@/funcs/utels'
-import type { InitSliderData } from '@/types/quest.types'
-import { EApiStatus } from '@/types/settings.type'
-import type { AsyncThunkRes, IState } from '@/types/store.types'
+
 import {
 	type AxiosProgressEvent,
 	type AxiosResponse,
 	isAxiosError,
 } from 'axios'
+
+import { hasAllKeys } from '@/funcs/utels'
+import { initialQuery } from '@/constant/chats'
+import { EApiStatus } from '@/types/settings.type'
 import { setApiRes, setLoad } from './settingsSlice'
+import type { InitSliderData } from '@/types/quest.types'
+import type { AsyncThunkRes, IState } from '@/types/store.types'
 
 import api from '@/config/fetch.config'
 import isEqual from 'lodash.isequal'
+
 
 const initialState: VideosState = {
 	targetPsychVideo: targetPsychVideoBase,
@@ -336,25 +340,28 @@ export const getShortsAsync = createAsyncThunk(
 export const getAdminShorrtsAsync = createAsyncThunk(
 	'videos/get-admin-shorts',
 	async (
-		data: InitSliderData,
+		data: InitSliderData | undefined,
 		{ dispatch, getState }
 	): Promise<AsyncThunkRes<VideoShortsList>> => {
 		try {
 			dispatch(setLoad(true))
 
+			const resInitial = data ?? initialQuery;
+
 			const rootState = getState() as IState
 			const search = rootState.admin.searchId
 			const telegramId = rootState.profile.info.id
+			const shortsList = rootState.videos.shortsList.videos;
 
 			const url = VIDEO_ADMIN_ENDPOINT(
 				telegramId,
-				data.offset,
-				data.limit,
+				resInitial.offset,
+				resInitial.limit,
 				search
-			)
+			);
 
 			const response: AxiosResponse<FetchResponse<VideoShortsList>> =
-				await api.get(url)
+				await api.get(url);
 
 			if (
 				response.status !== 200 ||
@@ -364,7 +371,13 @@ export const getAdminShorrtsAsync = createAsyncThunk(
 			)
 				return null
 
-			return response.data.data
+			let result = response.data.data;
+
+			if(data) {
+				result.videos = [ ...shortsList, ...result.videos ]
+			}
+
+			return result
 		} catch {
 			return 'error'
 		} finally {

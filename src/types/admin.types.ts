@@ -97,6 +97,8 @@ export interface PropsComplaintsListCtxItem {
     name: string
     date: string
     complText: string
+    index: number
+    dopLoad: (index: number) => Promise<void>
 }
 
 export interface PropsUserInfoComplaint {
@@ -116,6 +118,8 @@ export interface PropsUserListItem {
 
 export interface PropsVideosLiatItem {
     item: VideoItemWithPsych
+    index: number
+    dopLoad: (index: number) => Promise<void>
 }
 
 export interface PropsVideoInfoContentMainInfo {

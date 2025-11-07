@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ESearchComplType } from '@/types/admin.types';
 import { getAdminShorrtsAsync } from '@/store/slices/videosSlice';
 import { initComplaintListAsync } from '@/store/slices/adminSlice';
-import { initialQuery } from '@/constant/chats';
 import { errorAlert } from '@/funcs/alert.funcs';
-import type { InitSliderData } from '@/types/quest.types';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
@@ -18,7 +16,6 @@ const ComplaintsListConstent = (): JSX.Element => {
     const searchComplType = useSelector((state: IState) => state.admin.searchComplType);
     
     const [dis, setDis] = useState<boolean>(false);
-    const initData = useRef<InitSliderData>(initialQuery);
     const isLoad = useRef<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
@@ -34,11 +31,11 @@ const ComplaintsListConstent = (): JSX.Element => {
 
         switch (searchComplType) {
             case ESearchComplType.Complaint:
-                response = await dispatch(initComplaintListAsync(initData.current)).unwrap();
+                response = await dispatch(initComplaintListAsync()).unwrap();
                 text = 'Не удалось получить жалобы';
                 break;
             case ESearchComplType.Video:
-                response = await dispatch(getAdminShorrtsAsync(initData.current)).unwrap();
+                response = await dispatch(getAdminShorrtsAsync()).unwrap();
                 text = 'Не удалось получить короткие видео';
                 break;
         };
