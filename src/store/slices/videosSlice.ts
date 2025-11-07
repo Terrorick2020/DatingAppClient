@@ -288,8 +288,7 @@ export const getSelfPsychVideosAsync = createAsyncThunk(
 				!response.data.success ||
 				!response.data.data ||
 				response.data.data === 'None'
-			)
-				return null
+			) return null
 
 			return response.data.data
 		} catch (error) {
@@ -483,6 +482,16 @@ const videosSlice = createSlice({
 				state.targetPsychVideo = targetPsychVideoBase
 			}
 		},
+		resetSelfPsychsVideos: state => {
+			if (!isEqual(state.selfPsychVideos, selfPsychVideosBase)) {
+				state.selfPsychVideos = selfPsychVideosBase
+			}
+		},
+		resetShorts: state => {
+			if (!isEqual(state.shortsList, shortsListBase)) {
+				state.shortsList = shortsListBase;
+			};
+		},
 	},
 	extraReducers: builder => {
 		// Загрузка видео психолога
@@ -625,7 +634,8 @@ const videosSlice = createSlice({
 						console.log('Личные видео психолога не получены')
 						break
 					default:
-						state.selfPsychVideos = action.payload
+						state.selfPsychVideos.total = action.payload.total;
+						state.selfPsychVideos.videos.push( ...action.payload.videos );
 						console.log('Личные видео психолога успешно получены')
 						break
 				}
@@ -650,7 +660,9 @@ const videosSlice = createSlice({
 						console.log('Шортсы не получены')
 						break
 					default:
-						state.shortsList = action.payload
+						state.shortsList.isChecked = action.payload.isChecked;
+						state.shortsList.total = action.payload.total;
+						state.shortsList.videos.push( ...action.payload.videos );
 						console.log('Шортсы успешно получены')
 						break
 				}
@@ -737,6 +749,10 @@ const videosSlice = createSlice({
 	},
 })
 
-export const { setTargetPsychVideo, resetTargetPsychVideo } =
-	videosSlice.actions
+export const {
+	setTargetPsychVideo,
+	resetTargetPsychVideo,
+	resetSelfPsychsVideos,
+	resetShorts,
+} =	videosSlice.actions
 export default videosSlice.reducer

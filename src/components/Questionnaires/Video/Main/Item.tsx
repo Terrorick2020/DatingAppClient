@@ -1,4 +1,4 @@
-import { JSX, useState, MouseEvent, useMemo, useRef, useEffect } from 'react';
+import { JSX, useState, MouseEvent, useMemo, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { URL_MARK } from '@/config/env.config';
@@ -64,30 +64,6 @@ const VideoMainItem = (props: PropsVideoMainItem): JSX.Element => {
         (): string => formatDate(props.item.updatedAt),
         [props.item.updatedAt],
     );
-
-    useEffect(() => {
-        if (!ref.current) return;
-
-        const scrollParent = ref.current.closest('.video-page');
-
-        if (!scrollParent) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    console.log('Виден элемент id:', props.item.id);
-                }
-            },
-            {
-                root: scrollParent,
-                threshold: 0.5,
-            }
-        );
-
-        observer.observe(ref.current);
-
-        return () => observer.disconnect();
-    }, [props.item.id]);
 
     return (
         <div className="list__item" ref={ref}>

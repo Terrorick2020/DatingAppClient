@@ -1,8 +1,15 @@
-import { type JSX, useState } from 'react';
+import {
+    deletePsychVideoAsync,
+    editPsychVideoAsync,
+    getSelfPsychVideosAsync,
+} from '@/store/slices/videosSlice';
+
+import { type JSX, useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { initialQuery } from '@/constant/chats';
 import { errorAlert, successAlert, warningAlert } from '@/funcs/alert.funcs';
 import { VideoConfDType } from '@/types/videos.types';
-import { deletePsychVideoAsync, editPsychVideoAsync } from '@/store/slices/videosSlice';
+import type { InitSliderData } from '@/types/quest.types';
 import type { EditVideoData } from '@/types/videos.types';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -18,6 +25,10 @@ const VideoMain = (): JSX.Element => {
     const [open, setOpen] = useState<boolean>(false);
     const [dialogType, setDialogType] = useState<VideoConfDType>(VideoConfDType.Revoke);
     const [selId, setSelId] = useState<number | null>(null);
+
+    const containerRef = useRef<HTMLDivElement>(null);
+    const initData = useRef<InitSliderData>(initialQuery);
+    const isDopLoad = useRef<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -70,6 +81,52 @@ const VideoMain = (): JSX.Element => {
         };
     };
 
+    const handleVisible = async (index: number): Promise<void> => {
+        if(
+            isDopLoad.current      ||
+            !selfPsychVideos.total ||
+            selfPsychVideos.total <= selfPsychVideos.videos.length ||
+            index + 3 >= initData.current.offset * initData.current.limit
+        )
+
+        isDopLoad.current = true;
+
+        const newData = initData.current;
+        newData.offset += 1;
+
+        const response = await dispatch(getSelfPsychVideosAsync(newData)).unwrap();
+
+        if(response && response !== 'error') {
+            initData.current = newData;
+        };
+
+        isDopLoad.current = false;
+    };
+
+    useEffect(() => {
+        if (!containerRef.current) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const indexAttr = entry.target.getAttribute('data-index');
+                        const index = indexAttr ? Number(indexAttr) : -1;
+                        if (index >= 0) handleVisible(index);
+                    }
+                });
+            },
+            { threshold: 0.5 }
+        );
+
+        const items = containerRef.current.querySelectorAll('[data-index]');
+        items.forEach((el) => observer.observe(el));
+
+        return () => observer.disconnect();
+    }, [ selfPsychVideos.videos ]);
+
+    useEffect(() => { initData.current.offset += 1 }, []);
+
     if(!selfPsychVideos.total || !selfPsychVideos.videos.length) return (
         <div className="empty">
             <img
@@ -88,11 +145,12 @@ const VideoMain = (): JSX.Element => {
 
     return (
         <>
-            <main className="list">
+            <main className="list" ref={containerRef}>
                 {
-                    selfPsychVideos.videos.map(item => (
+                    selfPsychVideos.videos.map((item, index) => (
                         <VideoMainItem
                             key={`video-main-item-${item.id}`}
+                            data-index={index}
                             item={item}
                             setSelId={setSelId}
                             setDialogType={setDialogType}

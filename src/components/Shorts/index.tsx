@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import { errorAlert } from '@/funcs/alert.funcs';
 import { useNavigate } from 'react-router-dom';
 import { toNotFoud } from '@/config/routes.config';
-import { getShortsAsync } from '@/store/slices/videosSlice';
+import { getShortsAsync, resetShorts } from '@/store/slices/videosSlice';
 import { initialQuery } from '@/constant/chats';
 import { useDispatch, useSelector } from 'react-redux';
 import type { IState } from '@/types/store.types';
@@ -48,6 +48,7 @@ const ShortsContent = (): JSX.Element => {
 
     useEffect(() => {
         showBackDrop();
+        return () => { dispatch(resetShorts()) };
     }, []);
 
     if(isLoad) return (

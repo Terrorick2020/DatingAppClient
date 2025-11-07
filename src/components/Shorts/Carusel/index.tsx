@@ -1,8 +1,12 @@
 import { type JSX, useState, useRef, useEffect, WheelEvent } from 'react';
 import { useSwipeable, SwipeEventData } from 'react-swipeable';
-import { useSelector } from 'react-redux';
+import { initialQuery } from '@/constant/chats';
+import { getShortsAsync } from '@/store/slices/videosSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import { EShortsCaruselKey } from '@/types/quest.types';
 import { CARUSEL_ANIME_MS } from '@/constant/quest';
+import type { InitSliderData } from '@/types/quest.types';
+import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
 
 import ShortsCtxCaruselItem from './Item';
@@ -22,6 +26,10 @@ const ShortsCtxCarusel = (): JSX.Element => {
     const deltaSwipeY = useRef<number>(100);
     const deltaWheelY = useRef<number>(2);
     const isWheeled = useRef<boolean>(false);
+    const initData = useRef<InitSliderData>(initialQuery);
+    const isDopLoad = useRef<boolean>(false);
+
+    const dispatch = useDispatch<RootDispatch>();
 
     const animeVoidWheel = (newOffset: number): void => {
         setIsSwiped(true);
@@ -139,7 +147,33 @@ const ShortsCtxCarusel = (): JSX.Element => {
         delta: 10,
     });
 
+    const getDopLOad = async (): Promise<void> => {
+        if(
+            isDopLoad.current ||
+            !shortsList.total ||
+            shortsList.total <= shortsList.videos.length ||
+            index + 3 >= initData.current.offset * initData.current.limit
+        ) return;
+
+        isDopLoad.current = true;
+
+        const newData = {
+            ...initData.current,
+            offset: initData.current.offset + 1
+        };
+
+        const response = await dispatch((getShortsAsync(newData))).unwrap();
+
+        if(response && response !== 'error') {
+            initData.current.offset += 1;
+        };
+
+        isDopLoad.current = false;
+    };
+
     useEffect(() => {
+        getDopLOad();
+
         const handleKeyDown = (e: KeyboardEvent) => {
             if((Object.values(EShortsCaruselKey) as string[]).includes(e.code)) {
                 setKeyCode(e.code as EShortsCaruselKey);
@@ -177,6 +211,7 @@ const ShortsCtxCarusel = (): JSX.Element => {
 
     useEffect(() => {
         const slideHTML = document.getElementById('shorts-carusel-slide');
+        initData.current.offset += 1;
 
         if(slideHTML) deltaSwipeY.current = slideHTML.clientHeight / 4;
     }, []);
