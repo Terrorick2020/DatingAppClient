@@ -319,13 +319,17 @@ export const USERS_SEARCH = (
 export const ADMINE_CMPLS_ENDPOINT = (
 	telegramId?: string,
 	type?: string,
+	offset?: number,
+	limit?: number,
 	status?: string,
 ): string => {
 	const params: string[] = []
 
-	if (telegramId) params.push(`telegramId=${telegramId}`)
-	if (type) params.push(`type=${type}`)
-	if (status) params.push(`status=${status}`)
+	if (telegramId) params.push(`telegramId=${telegramId}`);
+	if (type) params.push(`type=${type}`);
+	if (status) params.push(`status=${status}`);
+	if (offset) params.push(`offset=${offset}`);
+	if (limit) params.push(`limit=${offset}`);
 
 	const queryStr = params.length ? `?${params.join('&')}` : '';
 

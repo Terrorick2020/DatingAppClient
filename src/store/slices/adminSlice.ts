@@ -526,13 +526,18 @@ export const initComplaintListAsync = createAsyncThunk(
         try {
             dispatch(setLoad(true));
 
-            // const _resData = data ?? initialArgs;
+            const resData = data ?? initialArgs;
 
             const rootState = getState() as IState;
             const telegramId = rootState.profile.info.id;
             const complaintsList  = rootState.admin.complaintsList;
 
-            const url = ADMINE_CMPLS_ENDPOINT(telegramId, EProfileRoles.Admin.toLocaleLowerCase());
+            const url = ADMINE_CMPLS_ENDPOINT(
+                telegramId,
+                EProfileRoles.Admin.toLocaleLowerCase(),
+                resData.offset,
+                resData.limit,
+            );
 
             const response: AxiosResponse<FetchResponse<ComplaintsListRes[]>> =
                 await api.get(url);
