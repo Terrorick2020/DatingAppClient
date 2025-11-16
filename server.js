@@ -25,6 +25,9 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
+	// Логирование запросов для отладки
+	console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
+
 	// CORS headers
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -52,14 +55,17 @@ const server = http.createServer((req, res) => {
 				// Если файл не найден, пробуем index.html (для SPA роутинга)
 				fs.readFile(path.join(DIST_DIR, 'index.html'), (err2, content2) => {
 					if (err2) {
+						console.error(`Error serving ${req.url}: ${err2.message}`);
 						res.writeHead(404);
 						res.end('File not found');
 					} else {
+						console.log(`Serving index.html for ${req.url}`);
 						res.writeHead(200, { 'Content-Type': 'text/html' });
 						res.end(content2, 'utf-8');
 					}
 				});
 			} else {
+				console.error(`Error reading ${req.url}: ${err.message}`);
 				res.writeHead(500);
 				res.end(`Server Error: ${err.code}`);
 			}
