@@ -7,51 +7,6 @@ import type {
 } from '@/types/fetch.type';
 
 import {
-<<<<<<< HEAD
-	ESearchComplType,
-	type AdminState,
-	type ComplaintListItem,
-	type DataSerchProfStat,
-	type ProfilesListItem,
-	type TargetProfile,
-	type TargetProfileCompalint,
-} from '@/types/admin.types'
-
-import {
-	EProfileRoles,
-	EProfileStatus,
-	type AsyncThunkRes,
-	type IState,
-} from '@/types/store.types'
-
-import {
-	ADMINE_CMPLS_ENDPOINT,
-	ADMINE_SERCH_STATUS_ENDPOINT,
-	COMPLS_ENDPOINT,
-	COMPLS_UPT_ENDPOINT,
-	DELETE_PHOTO,
-	PSYCH_ADMIN_ENDPOINT,
-	PSYCH_GEN_TOKEN_ENDPOINT,
-	REFERAL_LINK,
-	UPLOAD_PHOTO,
-	USER_ENDPOINT,
-	USERS_SEARCH,
-} from '@/config/env.config'
-
-import { initialArgs } from '@/constant/quest'
-import { formatTimestamp } from '@/funcs/general.funcs'
-import type {
-	AdminGenLinkRes,
-	FetchResponse,
-	FetchSavePhotoRes,
-} from '@/types/fetch.type'
-import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types'
-import type { InitSliderData } from '@/types/quest.types'
-import type { VideoItemWithPsych } from '@/types/videos.types'
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { AxiosProgressEvent, AxiosResponse } from 'axios'
-import { setLoad } from './settingsSlice'
-=======
     ESearchComplType,
     type AdminState,
     type ProfilesListItem,
@@ -99,7 +54,6 @@ import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
 import type { AxiosResponse, AxiosProgressEvent } from 'axios';
 
 import api from '@/config/fetch.config';
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 import api from '@/config/fetch.config'
 
@@ -137,16 +91,10 @@ export const getProfilesListAsync = createAsyncThunk(
 
 			const realArgs = args || initialArgs
 
-<<<<<<< HEAD
-			const rootState = getState() as IState
-			const query = rootState.admin.searchId
-			const type = rootState.admin.searchType
-=======
             const rootState = getState() as IState;
             const query = rootState.admin.searchId;
             const type = rootState.admin.searchType;
             const profilesList = rootState.admin.profilesList;
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 			let url: string | null = null
 			let result: ProfilesListItem[] = []
@@ -162,11 +110,7 @@ export const getProfilesListAsync = createAsyncThunk(
 								limit: realArgs.limit,
 							})
 
-<<<<<<< HEAD
-					response = await api.get(url)
-=======
                     response =  await api.get(url)
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 					if (
 						!response ||
@@ -187,44 +131,17 @@ export const getProfilesListAsync = createAsyncThunk(
 						})
 					}
 
-<<<<<<< HEAD
-					return result
-=======
                     if(args) {
                         result = [ ...profilesList, ...result ];
                     }
 
                     return result;
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 				case EProfileRoles.Psych:
 					url = PSYCH_ADMIN_ENDPOINT(query, realArgs.offset, realArgs.limit)
 
 					response = await api.get(url)
 
-<<<<<<< HEAD
-					if (
-						!response ||
-						response.status !== 200 ||
-						!response.data.success ||
-						!response.data.data ||
-						response.data.data === 'None'
-					)
-						return result
-
-					for (let item of response.data.data.psychologists) {
-						result.push({
-							id: item.telegramId,
-							role: EProfileRoles.Psych,
-							avatar: item.photos[0].url,
-							name: item.name,
-							status: EProfileStatus.Noob,
-						})
-					}
-
-					return result
-			}
-=======
                     for(let item of response.data.data.psychologists) {
                         result.push({
                             id: item.telegramId,
@@ -245,7 +162,6 @@ export const getProfilesListAsync = createAsyncThunk(
             return  null;
         } catch ( error ) {
             console.log(error);
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 			return null
 		} catch (error) {
@@ -264,13 +180,8 @@ export const getUniqueLinkAsync = createAsyncThunk(
 		try {
 			const data = {}
 
-<<<<<<< HEAD
-			const respose: AxiosResponse<FetchResponse<AdminGenLinkRes>> =
-				await api.post(PSYCH_GEN_TOKEN_ENDPOINT, data)
-=======
             const respose: AxiosResponse<FetchResponse<AdminGenLinkRes>> =
                 await api.post(PSYCH_GEN_TOKEN_ENDPOINT, data);
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 			if (
 				respose.status !== 201 ||
@@ -291,79 +202,6 @@ export const getUniqueLinkAsync = createAsyncThunk(
 )
 
 export const getProfileByIdAsync = createAsyncThunk(
-<<<<<<< HEAD
-	'admin/get-profile-by-id',
-	async (id: string, { dispatch }): Promise<AsyncThunkRes<TargetProfile>> => {
-		try {
-			dispatch(setLoad(true))
-
-			const [userRes, cmplRes]: [
-				AxiosResponse<FetchResponse<any>>,
-				AxiosResponse<FetchResponse<any>>,
-			] = await Promise.all([
-				api.get(`${USER_ENDPOINT}/${id}`),
-				api.get(
-					`${COMPLS_ENDPOINT}?telegramId=${id}&type=received&status=UNDER_REVIEW`
-				),
-			])
-
-			if (
-				userRes.status !== 200 ||
-				!userRes.data.success ||
-				!userRes.data.data ||
-				userRes.data.data === 'None' ||
-				cmplRes.status !== 200 ||
-				!cmplRes.data.success ||
-				!cmplRes.data.data ||
-				cmplRes.data.data === 'None'
-			)
-				return null
-
-			const userData = userRes.data.data
-			const cmplData = cmplRes.data.data
-
-			const photos = userData.photos.map((item: any) => ({
-				id: item.id,
-				photo: item.url,
-			}))
-
-			let complaintList: TargetProfileCompalint[] = cmplData.map(
-				(item: any) => {
-					const [date, time] = formatTimestamp(item.createdAt).split(' ')
-
-					return {
-						id: item.id,
-						date,
-						complGlob: item.globComplRes.label,
-						complTarget: item.targetComplRes.label,
-						from: item.fromUser.telegramId,
-						time,
-						msg: item.description,
-					}
-				}
-			)
-
-			const result: TargetProfile = {
-				id: userData.telegramId,
-				role: userData.role,
-				photos,
-				name: userData.name,
-				age: userData.age,
-				city: userData.city.label,
-				status: userData.status,
-				description: userData.bio,
-				complaint: complaintList.length ? complaintList : null,
-			}
-
-			return result
-		} catch (error) {
-			return 'error'
-		} finally {
-			dispatch(setLoad(false))
-		}
-	}
-)
-=======
     'admin/get-profile-by-id',
     async (data: DataGetProfileByIdAsync, { dispatch }): Promise<AsyncThunkRes<TargetProfile>> => {
         try {
@@ -465,7 +303,6 @@ export const getProfileByIdAsync = createAsyncThunk(
         }
     }
 );
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 export const addPhotoToUserAsync = createAsyncThunk(
 	'admin/add-photo-to-user',
@@ -616,17 +453,6 @@ export const serchProfileStatusAsync = createAsyncThunk(
 					status: item.id === id ? targetValue : item.status,
 				}))
 
-<<<<<<< HEAD
-				dispatch(setNewProfilesList(newProfilesList))
-			}
-
-			return targetValue
-		} catch (error) {
-			return 'error'
-		}
-	}
-)
-=======
             return targetValue;
         } catch (error) {
             console.log( error )
@@ -635,7 +461,6 @@ export const serchProfileStatusAsync = createAsyncThunk(
         }
     }
 );
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 export const selectPsychStatusAsync = createAsyncThunk(
     'admin/select-psych-status',
@@ -703,48 +528,6 @@ export const deleteUserAsync = createAsyncThunk(
 )
 
 export const initComplaintListAsync = createAsyncThunk(
-<<<<<<< HEAD
-	'admin/init-complaint-list',
-	async (
-		_data: InitSliderData,
-		{ dispatch }
-	): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
-		try {
-			dispatch(setLoad(true))
-
-			const response: AxiosResponse<FetchResponse<ComplaintListItem[]>> =
-				await api.get(ADMINE_CMPLS_ENDPOINT)
-
-			console.log(response)
-
-			if (
-				response.status === 200 &&
-				response.data.success &&
-				response.data.data &&
-				response.data.data !== 'None'
-			)
-				return response.data.data
-
-			return null
-		} catch (error) {
-			console.log(error)
-
-			return 'error'
-		} finally {
-			dispatch(setLoad(false))
-		}
-	}
-)
-
-export const getTargetVideoInfoAsync = createAsyncThunk(
-	'admin/get-target-video-info',
-	async (
-		id: number,
-		{ getState, dispatch }
-	): Promise<AsyncThunkRes<VideoItemWithPsych>> => {
-		try {
-			dispatch(setLoad(true))
-=======
     'admin/init-complaint-list',
     async (data: InitSliderData | undefined, { getState, dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
         try {
@@ -813,7 +596,6 @@ export const getTargetVideoInfoAsync = createAsyncThunk(
             if(isNaN(id)) return null;
 
             dispatch(setLoad(true));
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 			const rootState = getState() as IState
 			const videosList = rootState.videos.shortsList.videos
@@ -888,92 +670,6 @@ export const toggleVideoPublishedAsync = createAsyncThunk(
 );
 
 const adminSlice = createSlice({
-<<<<<<< HEAD
-	name: 'admin',
-	initialState,
-	reducers: {
-		setSearchType: (state, action: PayloadAction<EProfileRoles>): void => {
-			state.searchType = action.payload
-		},
-		setSearchId: (state, action: PayloadAction<string>): void => {
-			state.searchId = action.payload
-		},
-		setPassword: (state, action: PayloadAction<string>): void => {
-			state.password = action.payload
-		},
-		setNewProfilesList: (
-			state,
-			action: PayloadAction<ProfilesListItem[]>
-		): void => {
-			state.profilesList = action.payload
-		},
-		setTargetProfileId: (state, action: PayloadAction<string>): void => {
-			state.targetProfile.id = action.payload
-		},
-		resetTargetUserCmpl: state => {
-			state.targetProfile.complaint = null
-		},
-		setSearchComplId: (state, action: PayloadAction<string>): void => {
-			state.searchComplId = action.payload
-		},
-		setSearchComplType: (
-			state,
-			action: PayloadAction<ESearchComplType>
-		): void => {
-			state.searchComplType = action.payload
-		},
-	},
-	extraReducers: builder => {
-		// Получение списка пользователей
-		builder.addCase(getProfilesListAsync.pending, _ => {
-			console.log('Получение списка пользователей')
-		})
-		;(builder.addCase(
-			getProfilesListAsync.fulfilled,
-			(state, action: PayloadAction<AsyncThunkRes<ProfilesListItem[]>>) => {
-				switch (action.payload) {
-					case 'error':
-						console.log('Ошибка получения списка пользователей')
-						break
-					case null:
-						console.log('Список пользователей не получен')
-						break
-					default:
-						state.profilesList = action.payload
-						console.log('Успешное получение списка пользователей')
-						break
-				}
-			}
-		),
-			builder.addCase(getProfilesListAsync.rejected, _ => {
-				console.log('Ошибка получения списка пользователей')
-			}))
-
-		// Добавление фотографии пользователю
-		builder.addCase(addPhotoToUserAsync.pending, _ => {
-			console.log('Добавление фотографии пользователю')
-		})
-		;(builder.addCase(
-			addPhotoToUserAsync.fulfilled,
-			(state, action: PayloadAction<AsyncThunkRes<PhotoItem>>) => {
-				switch (action.payload) {
-					case 'error':
-						console.log('Ошибка добавления фотографии пользователю')
-						break
-					case null:
-						console.log('Фотография пользователю не добавлена')
-						break
-					default:
-						state.targetProfile.photos.push(action.payload)
-						console.log('Успешное добавление фотографии пользователю')
-						break
-				}
-			}
-		),
-			builder.addCase(addPhotoToUserAsync.rejected, _ => {
-				console.log('Ошибка добавления фотографии пользователю')
-			}))
-=======
     name: 'admin',
     initialState,
     reducers: {
@@ -1070,7 +766,6 @@ const adminSlice = createSlice({
         builder.addCase(addPhotoToUserAsync.rejected, _ => {
             console.log("Ошибка добавления фотографии пользователю");
         })
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 		// Удаление фотографии пользователю
 		builder.addCase(delPhotoToUserAsync.pending, _ => {
@@ -1225,35 +920,6 @@ const adminSlice = createSlice({
 				console.log('Ошибка получения списка жалоб')
 			}))
 
-<<<<<<< HEAD
-		// Получение видео психолога
-		builder.addCase(getTargetVideoInfoAsync.pending, _ => {
-			console.log('Получение видео психолога')
-		})
-		;(builder.addCase(
-			getTargetVideoInfoAsync.fulfilled,
-			(state, action: PayloadAction<AsyncThunkRes<VideoItemWithPsych>>) => {
-				switch (action.payload) {
-					case 'error':
-						console.log('Ошибка получения видео психолога')
-						break
-					case null:
-						state.targetVideo = action.payload
-						console.log('Видео психолога не получено')
-						break
-					default:
-						state.targetVideo = action.payload
-						console.log('Успешное получение видео психолога')
-						break
-				}
-			}
-		),
-			builder.addCase(getTargetVideoInfoAsync.rejected, _ => {
-				console.log('Ошибка получения видео психологаб')
-			}))
-	},
-})
-=======
         // Получение видео психолога
         builder.addCase(getTargetVideoInfoAsync.pending, _ => {
             console.log("Получение видео психолога");
@@ -1321,7 +987,6 @@ const adminSlice = createSlice({
 
     }
 });
->>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 export const {
 	setSearchType,
