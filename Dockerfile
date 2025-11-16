@@ -5,23 +5,24 @@ WORKDIR /client
 
 COPY package.json .
 RUN npm install --legacy-peer-deps
+# Устанавливаем http-server глобально для использования в production
+RUN npm install -g http-server
 
 COPY . .
 RUN npm run build
 RUN npm run minify || echo "minify skipped"
 
 # 2 Этап: Запуск сервера
-FROM oven/bun:latest AS product
+FROM node:22-alpine AS product
 
 WORKDIR /client
 
-COPY package.json .
-
-RUN bun install --production
+# Копируем только собранные файлы
 COPY --from=builder /client/dist ./dist
-
-RUN bun install -g http-server
+# Копируем простой Node.js сервер
+COPY server.js ./
 
 EXPOSE 4178
 
-CMD ["http-server", "dist", "-p", "4178", "-a", "0.0.0.0", "--cors"]
+# Запускаем простой Node.js сервер
+CMD ["node", "server.js"]
