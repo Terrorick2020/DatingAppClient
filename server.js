@@ -76,7 +76,28 @@ const server = http.createServer((req, res) => {
 	});
 });
 
+server.on('error', (err) => {
+	console.error('Server error:', err);
+	process.exit(1);
+});
+
 server.listen(PORT, HOST, () => {
 	console.log(`Server running at http://${HOST}:${PORT}/`);
+	console.log(`Listening on all interfaces (0.0.0.0)`);
+	
+	// Проверяем, что сервер действительно слушает
+	const address = server.address();
+	console.log(`Server address: ${JSON.stringify(address)}`);
+});
+
+// Обработка необработанных ошибок
+process.on('uncaughtException', (err) => {
+	console.error('Uncaught Exception:', err);
+	process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+	console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+	process.exit(1);
 });
 
