@@ -1,5 +1,6 @@
-import { JSX } from 'react';
+import { type JSX, useLayoutEffect } from 'react';
 import { URL_MARK } from '@/config/env.config';
+import { getTargetVideoInfoAsync } from '@/store/slices/adminSlice';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toNotFoud } from '@/config/routes.config';
@@ -21,12 +22,23 @@ const VideoInfoContent = (): JSX.Element => {
 
     const id = params[URL_MARK];
 
-    if(id === undefined || !id) {
+    const goBack = (): void => {
         warningAlert( dispatch, 'Не удалось получить информацию о видео' );
         navigate(toNotFoud);
+    };
+
+    if(id === undefined || !id) {
+        goBack();
 
         return (<></>);
     };
+
+    const getTargetVideo = async (): Promise<void> => {
+        const response = await dispatch(getTargetVideoInfoAsync(+id)).unwrap();
+        if(!response || response === 'error') goBack();
+    };
+
+    useLayoutEffect(() => { getTargetVideo() }, [id]);
 
     if(isLoad) return (
         <div className="loader">

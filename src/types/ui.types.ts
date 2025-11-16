@@ -98,6 +98,7 @@ export interface PropsCustomSelIcon {
 
 export interface PropsAdmineFotter {
     handleSearch: () => void
+    disable: boolean
 }
 
 export interface PropsPhotosLoadItem {
@@ -115,6 +116,7 @@ export interface PropsPhotos {
   photos: PhotoItem[]
   handleAdd: (photo: File, setUploadProgress: (value: number) => void) => Promise<void>
   handleDel: (id: string) => void
+  maxPhotos?: number
 }
 
 export interface PropsPhotosItem {

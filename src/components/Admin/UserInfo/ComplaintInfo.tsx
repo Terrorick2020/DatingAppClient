@@ -17,7 +17,7 @@ const UserInfoComplaint = memo(({complaint}: PropsUserInfoComplaint): JSX.Elemen
                         <div className="from-user">
                             <h5 className="sub-headline">От кого:</h5>
                             <NavLink className="user-id" to={`${toUserInfo.replace(`:${URL_MARK}`, `${complaint.id}`)}`}>
-                                <h5 className="sub-headline">{`ID${complaint.from}`}</h5>
+                                <h5 className="sub-headline">{`ID ${complaint.from}`}</h5>
                             </NavLink>
                         </div>
                         <div className="date-user">

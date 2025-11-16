@@ -1,6 +1,6 @@
 import { JSX, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getSelfPsychVideosAsync } from '@/store/slices/videosSlice';
+import { getSelfPsychVideosAsync, resetSelfPsychsVideos } from '@/store/slices/videosSlice';
 import { initialQuery } from '@/constant/chats';
 import type { RootDispatch } from '@/store';
 import type { IState } from '@/types/store.types';
@@ -20,6 +20,8 @@ const VideoContent = (): JSX.Element => {
         if( logoHeader ) logoHeader.style.display = 'flex';
 
         dispatch(getSelfPsychVideosAsync(initialQuery));
+
+        return () => { dispatch(resetSelfPsychsVideos()) };
     }, []);
 
     if(isLoad) return (

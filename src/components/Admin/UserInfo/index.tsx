@@ -7,11 +7,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 import { RootDispatch } from '@/store';
 import { getProfileByIdAsync } from '@/store/slices/adminSlice';
-import { type IState } from '@/types/store.types';
+import { EProfileRoles, type IState } from '@/types/store.types';
 
 import MyLoader from '@/components/UI/MyLoader';
 import UserInfoCtx from './Ctx';
 import UserInfoBtns from './Btns';
+import PsychBtn from './PsychBtn';
 
 
 const selectSettings = (state: IState) => state.settings;
@@ -37,14 +38,15 @@ const UserInfoContent = (): JSX.Element => {
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
 
-    if(!id || !type) {
-        navigate(toNotFoud);
-
-        return (<></>);
-    }
-
     const initUserInfo = async (): Promise<void> => {
-        const response = await dispatch(getProfileByIdAsync(id)).unwrap();
+        if(!id || !type) return;
+
+        const data = {
+            id,
+            type: type as EProfileRoles
+        };
+
+        const response = await dispatch(getProfileByIdAsync(data)).unwrap();
 
         if(!response || response === 'error') {
             warningAlert(
@@ -57,11 +59,17 @@ const UserInfoContent = (): JSX.Element => {
     };
 
     useEffect(() => {
+        if(!id || !type) navigate(toNotFoud);
+
         const logoHeader = document.getElementById('logo-header');
         if( logoHeader ) logoHeader.style.display = 'flex';
 
         initUserInfo();
     }, [id] );
+
+    if(!id || !type) return (
+        <></>
+    );
 
     if(isLoad) return (
         <div className="loader">
@@ -75,7 +83,10 @@ const UserInfoContent = (): JSX.Element => {
                 <UserInfoCtx targetProfile={targetProfile} />
             </div>
             <div className="user-info__btns">
-                <UserInfoBtns targetProfile={targetProfile} />
+                { targetProfile.role === EProfileRoles.Psych
+                    ? <PsychBtn targetProfile={targetProfile} />
+                    : <UserInfoBtns targetProfile={targetProfile} />
+                }
             </div>       
         </>
     )

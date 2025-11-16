@@ -47,3 +47,8 @@ export interface PlayingSvgVars {
     svg: string
     alt: string
 }
+
+export interface ICaptchaWidget {
+    key: string
+    setKey: (value: string) => void
+}

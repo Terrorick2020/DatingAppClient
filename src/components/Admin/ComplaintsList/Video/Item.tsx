@@ -1,4 +1,4 @@
-import { type JSX, useMemo } from 'react';
+import { type JSX, useMemo, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addRoute } from '@/store/slices/settingsSlice';
@@ -14,6 +14,8 @@ import AvatarWithPreload from '@/components/UI/AvatarWithPreload';
 
 
 const VideosListCtxItem = (props: PropsVideosLiatItem): JSX.Element => {
+    const ref = useRef<HTMLDivElement | null>(null);
+
     const dispatch = useDispatch<RootDispatch>();
     const navigate = useNavigate();
     const location = useLocation();
@@ -31,6 +33,22 @@ const VideosListCtxItem = (props: PropsVideosLiatItem): JSX.Element => {
                 .replace(EProfileRoles.User, EProfileRoles.Psych)
         );
     };
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        props.dopLoad(props.index)
+                    }
+                });
+            },
+            { threshold: 0.5 }
+        );
+
+        if (ref.current) observer.observe(ref.current);
+        return () => observer.disconnect();
+    }, [props.item.id]);
     
     const { dateStr, isPubls } = useMemo(() => {
         const dateStr = formatDate( props.item.createdAt, false );
@@ -42,6 +60,7 @@ const VideosListCtxItem = (props: PropsVideosLiatItem): JSX.Element => {
     return (
         <div
             className="video-list-block"
+            ref={ ref }
             onClick={ handleClick }
         >
             <div className="video-list-block__info">

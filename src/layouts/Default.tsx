@@ -3,7 +3,7 @@ import {
     initSocketRoomsDisconnectAsync,
 } from '@/store/slices/settingsSlice';
 
-import { JSX, memo, useEffect } from 'react';
+import { JSX, memo, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
@@ -23,6 +23,7 @@ import LogoHeader from '@/components/Layouts/LogoHeader';
 
 const DefaultLayout = memo((): JSX.Element => {
     const apiRes = useSelector((state: IState) => state.settings.apiRes);
+    const [isIphone, setIsIphone] = useState<boolean>(false);
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -72,6 +73,8 @@ const DefaultLayout = memo((): JSX.Element => {
         handleSocketConnect();
         setHomeScreen();
 
+        setIsIphone(/iPhone/.test(navigator.userAgent));
+
         window.addEventListener('beforeunload', handleSocketDisconnect);
 
         if (typeof window.Telegram?.WebApp?.onEvent === 'function') {
@@ -85,7 +88,12 @@ const DefaultLayout = memo((): JSX.Element => {
     }, [] );
 
     return (
-        <div className="default-layout">
+        <div
+            className="default-layout"
+            style={{
+                marginTop: isIphone ? 10 : 0,
+            }}
+        >
             <div className="box">
                 <HeadNav />
                 <LogoHeader />

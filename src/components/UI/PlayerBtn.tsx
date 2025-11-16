@@ -30,9 +30,7 @@ const PlayerBtn = (props: PropsPlayerBtn): JSX.Element => {
         }, 250);
     };
 
-    useEffect(() => {
-        console.log( props.urlImg, props.urlVideo )
-        
+    useEffect(() => {        
         const img = new Image();
         img.src = props.urlImg;
 

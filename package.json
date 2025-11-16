@@ -59,13 +59,12 @@
     "rollup-plugin-visualizer": "^6.0.3",
     "sass": "^1.85.1",
     "sharp": "^0.34.3",
-    "typescript": "~5.8.2",
+    "typescript": "^5.9.3",
     "vite": "^6.2.3",
     "vite-plugin-checker": "^0.9.0",
     "vite-plugin-image-optimizer": "^1.1.9",
     "vite-plugin-preload": "^0.4.2",
     "vite-plugin-pwa": "^1.0.2",
-    "vite-plugin-remove-console": "^2.2.0",
     "vite-plugin-svgr": "^4.3.0"
   }
 }

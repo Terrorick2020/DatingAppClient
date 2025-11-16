@@ -1,4 +1,4 @@
-import { EProfileRoles, EProfileStatus } from './store.types';
+import { EProfileRoles, EProfileStatus, EPsychStatus } from './store.types';
 import type { PhotoItem } from './profile.types';
 import type { VideoItemWithPsych } from './videos.types';
 
@@ -13,7 +13,7 @@ export interface ProfilesListItem {
     role: EProfileRoles
     avatar: string
     name: string
-    status: EProfileStatus
+    status: EProfileStatus | EPsychStatus
 }
 
 export interface BaseComplaintItem {
@@ -36,7 +36,7 @@ export interface TargetProfile {
     name: string
     age: number | null
     city: string
-    status: EProfileStatus
+    status: EProfileStatus | EPsychStatus
     description: string
     complaint: TargetProfileCompalint[] | null
 }
@@ -85,7 +85,8 @@ export enum UserInfoBtnId {
 
 export interface UserItemActivCtx {
     text: string
-    targetStat: EProfileStatus
+    targetStat: EProfileStatus | EPsychStatus
+    type: EProfileRoles.User | EProfileRoles.Psych
 }
 
 export interface PropsComplaintsListHeader {
@@ -96,6 +97,8 @@ export interface PropsComplaintsListCtxItem {
     name: string
     date: string
     complText: string
+    index: number
+    dopLoad: (index: number) => Promise<void>
 }
 
 export interface PropsUserInfoComplaint {
@@ -115,6 +118,8 @@ export interface PropsUserListItem {
 
 export interface PropsVideosLiatItem {
     item: VideoItemWithPsych
+    index: number
+    dopLoad: (index: number) => Promise<void>
 }
 
 export interface PropsVideoInfoContentMainInfo {
@@ -124,3 +129,15 @@ export interface PropsVideoInfoContentMainInfo {
     date: Date
     isPublished: boolean
 }
+
+
+export interface DataGetProfileByIdAsync {
+    id: string
+    type: EProfileRoles
+}
+
+export interface DataSelPS {
+    id: string | number
+    isDisp: boolean
+    targetValue: EPsychStatus
+};

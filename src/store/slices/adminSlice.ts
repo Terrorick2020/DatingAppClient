@@ -1,4 +1,13 @@
+import type {
+    FetchResponse,
+    FetchSavePhotoRes,
+    AdminGenLinkRes,
+    TargetPsychologistRes,
+    ComplaintsListRes,
+} from '@/types/fetch.type';
+
 import {
+<<<<<<< HEAD
 	ESearchComplType,
 	type AdminState,
 	type ComplaintListItem,
@@ -42,6 +51,55 @@ import type { VideoItemWithPsych } from '@/types/videos.types'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import { setLoad } from './settingsSlice'
+=======
+    ESearchComplType,
+    type AdminState,
+    type ProfilesListItem,
+    type TargetProfile,
+    type DataSerchProfStat,
+    type ComplaintListItem,
+    type TargetProfileCompalint,
+    type DataGetProfileByIdAsync,
+    type DataSelPS,
+} from '@/types/admin.types';
+
+import {
+    EProfileRoles,
+    EProfileStatus,
+    EPsychStatus,
+    type AsyncThunkRes,
+    type IState,
+} from '@/types/store.types';
+
+import {
+    USER_ENDPOINT,
+    COMPLS_ENDPOINT,
+    DELETE_PHOTO,
+    UPLOAD_PHOTO,
+    ADMINE_SERCH_STATUS_ENDPOINT,
+    COMPLS_UPT_ENDPOINT,
+    ADMINE_CMPLS_ENDPOINT,
+    USERS_SEARCH,
+    USERS_ENDPOINT,
+    REFERAL_LINK,
+    PSYCH_GEN_TOKEN_ENDPOINT,
+    PSYCH_ADMIN_ENDPOINT,
+    PSYCH_BY_MARK_ENDPOINT,
+    PSYCH_CHANGE_STATUS_ENDPOINT,
+    VIDEO_ENDPOIN,
+} from '@/config/env.config';
+
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { setLoad } from './settingsSlice';
+import { formatTimestamp } from '@/funcs/general.funcs';
+import { initialArgs } from '@/constant/quest';
+import type { InitSliderData } from '@/types/quest.types';
+import type { VideoItemWithPsych, EditVideoData } from '@/types/videos.types';
+import type { PhotoItem, SavePhotoAsyncThuncData } from '@/types/profile.types';
+import type { AxiosResponse, AxiosProgressEvent } from 'axios';
+
+import api from '@/config/fetch.config';
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 import api from '@/config/fetch.config'
 
@@ -79,9 +137,16 @@ export const getProfilesListAsync = createAsyncThunk(
 
 			const realArgs = args || initialArgs
 
+<<<<<<< HEAD
 			const rootState = getState() as IState
 			const query = rootState.admin.searchId
 			const type = rootState.admin.searchType
+=======
+            const rootState = getState() as IState;
+            const query = rootState.admin.searchId;
+            const type = rootState.admin.searchType;
+            const profilesList = rootState.admin.profilesList;
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 			let url: string | null = null
 			let result: ProfilesListItem[] = []
@@ -97,7 +162,11 @@ export const getProfilesListAsync = createAsyncThunk(
 								limit: realArgs.limit,
 							})
 
+<<<<<<< HEAD
 					response = await api.get(url)
+=======
+                    response =  await api.get(url)
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 					if (
 						!response ||
@@ -118,13 +187,22 @@ export const getProfilesListAsync = createAsyncThunk(
 						})
 					}
 
+<<<<<<< HEAD
 					return result
+=======
+                    if(args) {
+                        result = [ ...profilesList, ...result ];
+                    }
+
+                    return result;
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 				case EProfileRoles.Psych:
 					url = PSYCH_ADMIN_ENDPOINT(query, realArgs.offset, realArgs.limit)
 
 					response = await api.get(url)
 
+<<<<<<< HEAD
 					if (
 						!response ||
 						response.status !== 200 ||
@@ -146,6 +224,28 @@ export const getProfilesListAsync = createAsyncThunk(
 
 					return result
 			}
+=======
+                    for(let item of response.data.data.psychologists) {
+                        result.push({
+                            id: item.telegramId,
+                            role: EProfileRoles.Psych,
+                            avatar: item.photos[0].url,
+                            name: item.name,
+                            status: EPsychStatus.Active
+                        })
+                    };
+
+                    if(args) {
+                        result = [ ...profilesList, ...result ];
+                    }
+
+                    return result;
+            };
+
+            return  null;
+        } catch ( error ) {
+            console.log(error);
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 			return null
 		} catch (error) {
@@ -164,8 +264,13 @@ export const getUniqueLinkAsync = createAsyncThunk(
 		try {
 			const data = {}
 
+<<<<<<< HEAD
 			const respose: AxiosResponse<FetchResponse<AdminGenLinkRes>> =
 				await api.post(PSYCH_GEN_TOKEN_ENDPOINT, data)
+=======
+            const respose: AxiosResponse<FetchResponse<AdminGenLinkRes>> =
+                await api.post(PSYCH_GEN_TOKEN_ENDPOINT, data);
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 			if (
 				respose.status !== 201 ||
@@ -186,6 +291,7 @@ export const getUniqueLinkAsync = createAsyncThunk(
 )
 
 export const getProfileByIdAsync = createAsyncThunk(
+<<<<<<< HEAD
 	'admin/get-profile-by-id',
 	async (id: string, { dispatch }): Promise<AsyncThunkRes<TargetProfile>> => {
 		try {
@@ -257,6 +363,109 @@ export const getProfileByIdAsync = createAsyncThunk(
 		}
 	}
 )
+=======
+    'admin/get-profile-by-id',
+    async (data: DataGetProfileByIdAsync, { dispatch }): Promise<AsyncThunkRes<TargetProfile>> => {
+        try {
+            dispatch(setLoad(true));
+
+            switch(data.type) {
+                case EProfileRoles.User:
+                    const [userRes, cmplRes]: [
+                        AxiosResponse<FetchResponse<any>>,
+                        AxiosResponse<FetchResponse<any>>,
+                    ] = await Promise.all([
+                        api.get(`${USER_ENDPOINT}/${data.id}`),
+                        api.get(`${COMPLS_ENDPOINT}?telegramId=${data.id}&type=received&status=PENDING`),
+                    ]);
+
+                    console.log( cmplRes )
+
+                    if(
+                        userRes.status !== 200 ||
+                        !userRes.data.success  ||
+                        !userRes.data.data     ||
+                        userRes.data.data === 'None' ||
+
+                        cmplRes.status !== 200 ||
+                        !cmplRes.data.success  ||
+                        !cmplRes.data.data     ||
+                        cmplRes.data.data === 'None'
+                    ) return null;
+
+                    const userData = userRes.data.data;
+                    const cmplData = cmplRes.data.data;
+
+                    const photos = userData.photos.map((item: any) => ({id: item.id, photo: item.url}));
+
+                    let complaintList: TargetProfileCompalint[] = cmplData.map(
+                        (item: any) => {
+
+                            const [date, time] = formatTimestamp(item.createdAt).split(' ');
+
+                            return {
+                                id: item.id,
+                                date,
+                                complGlob: item.globComplRes,
+                                complTarget: item.targetComplRes,
+                                from: item.fromUser.telegramId,
+                                time,
+                                msg: item.description,
+                            }
+                        }
+                    );
+
+                    const result: TargetProfile = {
+                        id: userData.telegramId,
+                        role: userData.role,
+                        photos,
+                        name: userData.name,
+                        age: userData.age,
+                        city: userData.city.label,
+                        status: userData.status,
+                        description: userData.bio,
+                        complaint: complaintList.length ? complaintList : null,
+                    };
+
+                    return result;
+                case EProfileRoles.Psych:
+                    const url = PSYCH_BY_MARK_ENDPOINT(data.id);
+
+                    const response: AxiosResponse<FetchResponse<TargetPsychologistRes>> = await api.get(url);
+
+                    if(
+                        response.status !== 200 ||
+                        !response.data.success  ||
+                        !response.data.data     ||
+                        response.data.data === 'None'
+                    ) return null;
+
+                    const dataRes = response.data.data;
+
+                    const psychRes: TargetProfile = {
+                        id: ''+dataRes.id,
+                        role: EProfileRoles.Psych,
+                        photos: dataRes.photos.map(item => ({id: ''+item.id, photo: item.url})),
+                        name: dataRes.name,
+                        age: null,
+                        city: '',
+                        status: dataRes.status,
+                        description: dataRes.about,
+                        complaint: null,
+                    };
+
+                    return psychRes;
+            };
+
+            return null;
+        } catch (error) {
+            return 'error';
+        } finally {
+            dispatch(setLoad(false));
+        }
+    }
+);
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 export const addPhotoToUserAsync = createAsyncThunk(
 	'admin/add-photo-to-user',
@@ -407,6 +616,7 @@ export const serchProfileStatusAsync = createAsyncThunk(
 					status: item.id === id ? targetValue : item.status,
 				}))
 
+<<<<<<< HEAD
 				dispatch(setNewProfilesList(newProfilesList))
 			}
 
@@ -416,6 +626,50 @@ export const serchProfileStatusAsync = createAsyncThunk(
 		}
 	}
 )
+=======
+            return targetValue;
+        } catch (error) {
+            console.log( error )
+
+            return 'error';
+        }
+    }
+);
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
+
+export const selectPsychStatusAsync = createAsyncThunk(
+    'admin/select-psych-status',
+    async (data: DataSelPS, { dispatch, getState }): Promise<AsyncThunkRes<EPsychStatus>> => {
+        try {
+            const url = PSYCH_CHANGE_STATUS_ENDPOINT(data.id, data.targetValue);
+            const response: AxiosResponse<FetchResponse<any>> = await api.patch(url);
+
+            if (
+                response.status !== 200 ||
+                !response.data.success
+            ) return null;
+
+            if( data.isDisp ) {
+                const rootState = getState() as IState;
+                const profilesList = rootState.admin.profilesList;
+
+                const newProfilesList = profilesList.map(
+                    item => ({
+                        ...item,
+                        status: item.id === data.id ? data.targetValue : item.status,
+                    })
+                );
+
+                dispatch(setNewProfilesList(newProfilesList));
+            };
+
+            return data.targetValue;
+        } catch (error) {
+            console.log(error);
+            return 'error';
+        }
+    },
+);
 
 export const deleteUserAsync = createAsyncThunk(
 	'admin/delete-user',
@@ -449,6 +703,7 @@ export const deleteUserAsync = createAsyncThunk(
 )
 
 export const initComplaintListAsync = createAsyncThunk(
+<<<<<<< HEAD
 	'admin/init-complaint-list',
 	async (
 		_data: InitSliderData,
@@ -489,6 +744,76 @@ export const getTargetVideoInfoAsync = createAsyncThunk(
 	): Promise<AsyncThunkRes<VideoItemWithPsych>> => {
 		try {
 			dispatch(setLoad(true))
+=======
+    'admin/init-complaint-list',
+    async (data: InitSliderData | undefined, { getState, dispatch }): Promise<AsyncThunkRes<ComplaintListItem[]>> => {
+        try {
+            dispatch(setLoad(true));
+
+            const resData = data ?? initialArgs;
+
+            const rootState = getState() as IState;
+            const telegramId = rootState.profile.info.id;
+            const complaintsList  = rootState.admin.complaintsList;
+
+            const url = ADMINE_CMPLS_ENDPOINT(
+                telegramId,
+                EProfileRoles.Admin.toLocaleLowerCase(),
+                resData.offset,
+                resData.limit,
+            );
+
+            const response: AxiosResponse<FetchResponse<ComplaintsListRes[]>> =
+                await api.get(url);
+            
+            console.log( response )
+            
+            if(
+                response.status !== 200 ||
+                !response.data.success  ||
+                !response.data.data     ||
+                response.data.data === 'None'
+            ) return null;
+
+            let result: ComplaintListItem[] = [];
+
+            for(let item of response.data.data) {
+                const date = new Date(item.createdAt);
+                const formatted = date.toLocaleDateString('ru-RU'); 
+
+                result.push({
+                    id: item.reportedUser.telegramId,
+                    date: formatted,
+                    complGlob: item.globComplRes,
+                    complTarget: item.targetComplRes,
+                    avatar: item.reportedUser.avatar,
+                    name: item.reportedUser.name,
+                });
+            };
+
+            if(data) {
+                result = [ ...complaintsList, ...result ];
+            }
+
+            return result;
+        } catch (error) {
+            console.log(error);
+            
+            return 'error';
+        } finally {
+            dispatch(setLoad(false));
+        }
+    },
+);
+
+export const getTargetVideoInfoAsync = createAsyncThunk(
+    'admin/get-target-video-info',
+    async (id: number, { getState, dispatch }): Promise<AsyncThunkRes<VideoItemWithPsych>> => {
+        try {
+            if(isNaN(id)) return null;
+
+            dispatch(setLoad(true));
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 			const rootState = getState() as IState
 			const videosList = rootState.videos.shortsList.videos
@@ -504,7 +829,66 @@ export const getTargetVideoInfoAsync = createAsyncThunk(
 	}
 )
 
+export const deletePsychVideoAsync = createAsyncThunk(
+    'admin/delete-psych-video',
+    async (_, { getState }): Promise<AsyncThunkRes<'success'>> => {
+        try {
+            const rootState = getState() as IState;
+            const videoId = rootState.admin.targetVideo?.id;
+            
+            if(!videoId) return 'error';
+
+            const url = `${VIDEO_ENDPOIN}/${videoId}`;
+
+            const response: AxiosResponse<FetchResponse<null>> = await api.delete(url)
+
+			if (response.status !== 200 || !response.data.success) return null
+
+            return 'success';
+        } catch (error) {
+            console.log( error );
+            return 'error';
+        };
+    },
+);
+
+export const toggleVideoPublishedAsync = createAsyncThunk(
+    'admin/toggle-video-published',
+    async (_, { getState }): Promise<AsyncThunkRes<boolean>> => {
+        try {
+            const rootState = getState() as IState;
+            const targetVideo = rootState.admin.targetVideo;
+
+            if(!targetVideo) return 'error';
+
+            const data: EditVideoData = {
+                videoId: targetVideo.id,
+                title: targetVideo.title,
+                description: targetVideo.description,
+                isPublished: !targetVideo.isPublished,
+            };
+
+			const url = `${VIDEO_ENDPOIN}/${targetVideo.id}`;
+
+			const response: AxiosResponse<FetchResponse<Omit<VideoItemWithPsych, 'isLiked'>>> =
+                await api.patch(url, data);
+
+            if (
+				response.status !== 200 ||
+				!response.data.success ||
+				!response.data.data ||
+				response.data.data === 'None'
+			) return null;
+
+            return !targetVideo.isPublished;
+        } catch (error) {
+            return 'error';
+        };
+    }
+);
+
 const adminSlice = createSlice({
+<<<<<<< HEAD
 	name: 'admin',
 	initialState,
 	reducers: {
@@ -589,6 +973,104 @@ const adminSlice = createSlice({
 			builder.addCase(addPhotoToUserAsync.rejected, _ => {
 				console.log('Ошибка добавления фотографии пользователю')
 			}))
+=======
+    name: 'admin',
+    initialState,
+    reducers: {
+        setSearchType: (state, action: PayloadAction<EProfileRoles>): void => {
+            state.searchType = action.payload;
+        },
+        setSearchId: (state, action: PayloadAction<string>): void => {
+            state.searchId = action.payload;
+        },
+        setPassword: (state, action: PayloadAction<string>): void => {
+            state.password = action.payload;
+        },
+        setNewProfilesList: (state, action: PayloadAction<ProfilesListItem[]>): void => {
+            state.profilesList = action.payload;
+        },
+        setTargetProfileId: (state, action: PayloadAction<string>): void => {
+            state.targetProfile.id = action.payload;
+        },
+        resetTargetUserCmpl: state => {
+            state.targetProfile.complaint = null;
+        },
+        setSearchComplId: (state, action: PayloadAction<string>): void => {
+            state.searchComplId = action.payload;
+        },
+        setSearchComplType: (state, action: PayloadAction<ESearchComplType>): void => {
+            state.searchComplType = action.payload;
+        },
+    },
+    extraReducers: builder => {
+        // Получение списка пользователей
+        builder.addCase(getProfilesListAsync.pending, _ => {
+            console.log("Получение списка пользователей");
+        })
+        builder.addCase(getProfilesListAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<ProfilesListItem[]>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    state.profilesList = [];
+                    console.log("Ошибка получения списка пользователей");
+                    break;
+                case null:
+                    state.profilesList = [];
+                    console.log("Список пользователей не получен");
+                    break;
+                default:
+                    state.profilesList = action.payload;
+                    console.log("Успешное получение списка пользователей");
+                    break;
+            }
+        }),
+        builder.addCase(getProfilesListAsync.rejected, _ => {
+            console.log("Ошибка получения списка пользователей");
+        })
+
+        // Изменение статуса специолиста
+        builder.addCase(selectPsychStatusAsync.pending, _ => {
+            console.log("Изменение статуса специалиста");
+        })
+        builder.addCase(selectPsychStatusAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<EPsychStatus>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка изменения статуса специалиста");
+                    break;
+                case null:
+                    console.log("Статус специалиста не изменён");
+                    break;
+                default:
+                    state.targetProfile.status = action.payload;
+                    console.log("Успешное изменение статуса специалиста");
+                    break;
+            }
+        }),
+        builder.addCase(selectPsychStatusAsync.rejected, _ => {
+            console.log("Ошибка изменения статуса специалиста");
+        })
+
+        // Добавление фотографии пользователю
+        builder.addCase(addPhotoToUserAsync.pending, _ => {
+            console.log("Добавление фотографии пользователю");
+        })
+        builder.addCase(addPhotoToUserAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<PhotoItem>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка добавления фотографии пользователю");
+                    break;
+                case null:
+                    console.log("Фотография пользователю не добавлена");
+                    break;
+                default:
+                    state.targetProfile.photos.push(action.payload);
+                    console.log("Успешное добавление фотографии пользователю");
+                    break;
+            }
+        }),
+        builder.addCase(addPhotoToUserAsync.rejected, _ => {
+            console.log("Ошибка добавления фотографии пользователю");
+        })
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 		// Удаление фотографии пользователю
 		builder.addCase(delPhotoToUserAsync.pending, _ => {
@@ -743,6 +1225,7 @@ const adminSlice = createSlice({
 				console.log('Ошибка получения списка жалоб')
 			}))
 
+<<<<<<< HEAD
 		// Получение видео психолога
 		builder.addCase(getTargetVideoInfoAsync.pending, _ => {
 			console.log('Получение видео психолога')
@@ -770,6 +1253,75 @@ const adminSlice = createSlice({
 			}))
 	},
 })
+=======
+        // Получение видео психолога
+        builder.addCase(getTargetVideoInfoAsync.pending, _ => {
+            console.log("Получение видео психолога");
+        })
+        builder.addCase(getTargetVideoInfoAsync.fulfilled, ( state, action: PayloadAction<AsyncThunkRes<VideoItemWithPsych>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка получения видео психолога");
+                    break;
+                case null:
+                    state.targetVideo = action.payload;
+                    console.log("Видео психолога не получено");
+                    break;
+                default:
+                    state.targetVideo = action.payload;
+                    console.log("Успешное получение видео психолога");
+                    break;
+            }
+        }),
+        builder.addCase(getTargetVideoInfoAsync.rejected, _ => {
+            console.log("Ошибка получения видео психолога");
+        })
+
+        // Удаление видео психолога
+        builder.addCase(deletePsychVideoAsync.pending, _ => {
+            console.log("Удаление видео психолога");
+        })
+        builder.addCase(deletePsychVideoAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<'success'>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка удаления видео психолога");
+                    break;
+                case null:
+                    console.log("Видео психолога не удалено");
+                    break;
+                default:
+                    console.log("Успешное удаление видео психолога");
+                    break;
+            }
+        }),
+        builder.addCase(deletePsychVideoAsync.rejected, _ => {
+            console.log("Ошибка удаления видео психолога");
+        })
+
+        // Изменение статуса видео
+        builder.addCase(toggleVideoPublishedAsync.pending, _ => {
+            console.log("Изменение статуса видео");
+        })
+        builder.addCase(toggleVideoPublishedAsync.fulfilled, ( _, action: PayloadAction<AsyncThunkRes<boolean>> ) => {
+            switch(action.payload) {
+                case 'error':
+                    console.log("Ошибка изменения статуса видео");
+                    break;
+                case null:
+                    console.log("Статус видео не изменён");
+                    break;
+                default:
+                    console.log("Успешное изменение статуса видео");
+                    break;
+            }
+        }),
+        builder.addCase(toggleVideoPublishedAsync.rejected, _ => {
+            console.log("Ошибка изменения статуса видео");
+        })
+
+    }
+});
+>>>>>>> 2cacc08f8ce28d16a7420b80fba8dfd14fcc67d1
 
 export const {
 	setSearchType,

@@ -76,6 +76,7 @@ export interface UsersEndpointParams {
 	ageMax?: number | string | null
 	sex?: ESex | null
 	interestId?: number | string | null
+	telegramId?: number | string | null
 }
 
 export interface RegEndpointResUser {
@@ -271,4 +272,22 @@ export interface ShortsViewRes {
 
 export interface UserSelfPsychRes {
 	psychologistId: string | null
+}
+
+export interface ComplaintsListResUserInfo {
+	name: string
+	avatar: string
+	telegramId: string
+}
+
+export interface ComplaintsListRes {
+	id: string
+	description: string
+	createdAt: number
+	type: string
+	status: 'PENDING' | 'APPROVED' | 'REJECTED' | string
+	globComplRes: string
+	targetComplRes: string
+	fromUser: ComplaintsListResUserInfo
+	reportedUser: ComplaintsListResUserInfo
 }

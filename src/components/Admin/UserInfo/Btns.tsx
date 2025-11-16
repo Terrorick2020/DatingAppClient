@@ -3,6 +3,7 @@ import { EProfileStatus } from '@/types/store.types';
 import { useDispatch } from 'react-redux';
 import { serchProfileStatusAsync } from '@/store/slices/adminSlice';
 import { RootDispatch } from '@/store';
+import { successAlert, warningAlert } from '@/funcs/alert.funcs';
 import { type PropsUserInfoComponent, UserInfoBtnId } from '@/types/admin.types';
 
 import Button from '@mui/material/Button';
@@ -20,11 +21,17 @@ const UserInfoBtns = memo((props: PropsUserInfoComponent): JSX.Element => {
     const handleClick = async (targetValue: EProfileStatus, btnId: UserInfoBtnId): Promise<void> => {
         setLoadingButton(btnId);
 
-        await dispatch(serchProfileStatusAsync({
+        const response = await dispatch(serchProfileStatusAsync({
             id: props.targetProfile.id, 
             targetValue,
             delComplaint: btnId === UserInfoBtnId.DelCompl
-        }));
+        })).unwrap();
+
+        if(!response || response === 'error') {
+            warningAlert(dispatch, 'Что-то пошло не так.. Попробуйте чуть позже');
+        } else {
+            successAlert(dispatch, 'Успешное выполнение операции');
+        };
 
         setLoadingButton(null);
     }

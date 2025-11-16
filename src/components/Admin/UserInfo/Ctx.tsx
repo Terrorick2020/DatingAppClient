@@ -11,10 +11,11 @@ import UserInfoComplaint from './ComplaintInfo';
 import SvgMapPin from '@/assets/icon/map-pin.svg?react';
 import Carousel from 'react-material-ui-carousel';
 import Paper from '@mui/material/Paper';
+import { EProfileRoles } from '@/types/store.types';
 
 
 const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
-    const { id, name, age, city, description, status, photos, complaint } = props.targetProfile;
+    const { id, name, age, city, description, status, photos, complaint, role } = props.targetProfile;
     
     const { text, status: statusText, addClass } = useMemo(() => {
         return statusTextMap[status];
@@ -23,7 +24,8 @@ const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
     const [current, setCurrent] = useState<number>(0);
     const [isRet, setIsRet] = useState<boolean>(true);
 
-    const headline = useMemo(() => `${name}, ${ageToStr(age)}`, [name, age]);
+    const headline = useMemo(() => `${name}${age ? ', ' + ageToStr(age) : ''}`, [name, age]);
+    const maxPhotos = useMemo(() => role === EProfileRoles.Psych ? 1 : 3, [role])
 
     const dispatch = useDispatch<RootDispatch>();
 
@@ -45,12 +47,12 @@ const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
         <>
             <h3 className="headline">{`ID ${id}`}</h3>
             <Carousel
+                indicators
                 className="complaints-slider"
                 animation="slide"
-                indicators={true}
-                swipe={true}
-                duration={500}
-                interval={5000}
+                swipe={(complaint?.length || 0) > 1} 
+                duration={complaint ? undefined : 500}
+                interval={complaint ? undefined : 5000}
                 activeIndicatorIconButtonProps={{
                     style: {
                         color: '#2B2B2B',
@@ -61,6 +63,8 @@ const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
                 }}
                 navButtonsAlwaysInvisible={!isDesktop}
                 onChange={(index) => {
+                    if (!complaint || complaint.length <= 1) return;
+
                     setCurrent(index || 0);
                     setIsRet(false);
 
@@ -72,7 +76,9 @@ const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
                         <Paper
                             key={`compl-slider-item-${index}`}
                             sx={{
-                                transform: index === current && isRet ? 'scale(1)' : 'scale(0.8)',
+                                transform: complaint.length > 1
+                                    ? (index === current && isRet ? 'scale(1)' : 'scale(0.8)')
+                                    : 'scale(1)',
                                 transition: 'transform 0.5s ease-in-out',
                             }}
                         >
@@ -81,14 +87,19 @@ const UserInfoCtx = memo((props: PropsUserInfoComponent): JSX.Element => {
                     ))
                 }
             </Carousel>
-            <Photos photos={photos} handleAdd={handleAdd} handleDel={handleDel} />
+            <Photos
+                photos={photos}
+                handleAdd={handleAdd}
+                handleDel={handleDel}
+                maxPhotos={maxPhotos}
+            />
             <div className="description">
                 <h4 className="headline">{headline}</h4>
                 <div className="labels">
-                    <div className="item">
+                    { props.targetProfile.role !== EProfileRoles.Psych && <div className="item">
                         <SvgMapPin />
                         <p className="text">{city}</p>
-                    </div>
+                    </div> }
                     <div className={`item ${addClass}`}>
                         <p className="text">{text}<span>{statusText}</span></p>
                     </div>

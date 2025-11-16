@@ -1,9 +1,10 @@
 import type { UsersEndpointParams } from '@/types/fetch.type'
-import { EProfileRoles, EProfileStatus } from '@/types/store.types'
+import { EProfileRoles, EProfileStatus, EPsychStatus } from '@/types/store.types'
 
 export const BASE_URL = import.meta.env.VITE_BASE_URL || ''
 export const WS_URL = import.meta.env.VITE_WS_URL || ''
 export const BOT_LINK = import.meta.env.VITE_BOT_LINK || ''
+export const BOT_URL = import.meta.env. VITE_BOT_URL || ''
 export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || ''
 export const URL_MARK = import.meta.env.VITE_URL_MARK || 'id'
 export const TG_HEADER = import.meta.env.VITE_TG_HEADER || ''
@@ -73,6 +74,8 @@ export const PSYCH_GEN_TOKEN = import.meta.env.VITE_PSYCH_GEN_TOKEN || ''
 export const PSYCH_VALID_TOKEN = import.meta.env.VITE_PSYCH_VALID_TOKEN || ''
 export const PSYCH_UPL_PHOTO = import.meta.env.VITE_PSYCH_UPL_PHOTO || ''
 export const PSYCH_DEL_PHOTO = import.meta.env.VITE_PSYCH_DEL_PHOTO || ''
+export const PSYCH_ACTIVATE = import.meta.env.VITE_PSYCH_ACTIVATE || ''
+export const PSYCH_DEACTIVATE  = import.meta.env.VITE_PSYCH_DEACTIVATE || ''
 
 export const VIDEO_ENDPOIN = import.meta.env.VITE_VIDEO_ENDPOINT || ''
 export const VIDEO_UPL = import.meta.env.VITE_VIDEO_UPL || ''
@@ -128,6 +131,7 @@ if (
 	!BASE_URL ||
 	!WS_URL ||
 	!BOT_LINK ||
+	!BOT_URL ||
 	!SUPPORT_EMAIL ||
 	!TG_HEADER ||
 	!YC_HEADER ||
@@ -150,6 +154,8 @@ if (
 	!PSYCH_VALID_TOKEN ||
 	!PSYCH_UPL_PHOTO ||
 	!PSYCH_DEL_PHOTO ||
+	!PSYCH_ACTIVATE ||
+	!PSYCH_DEACTIVATE ||
 	!VIDEO_ENDPOIN ||
 	!VIDEO_UPL ||
 	!VIDEO_SAVE ||
@@ -226,7 +232,7 @@ export const REFERAL_LINK = (code: string, type: EProfileRoles): string => {
 
 	const finalEncoded = btoa(paramsString)
 
-	return `${BOT_LINK}?start=${finalEncoded}`
+	return `${BOT_LINK.replace(BOT_URL, '')}?startapp=${finalEncoded}`
 }
 
 export const LIKES_READED_ENDPOINT = `${LIKES_ENDPOINT}${LIKES_READED}`
@@ -263,6 +269,7 @@ export const USERS_ENDPOINT = ({
 	ageMax = null,
 	sex = null,
 	interestId = null,
+	telegramId = null,
 }: UsersEndpointParams = {}): string => {
 	const params: string[] = []
 
@@ -276,6 +283,7 @@ export const USERS_ENDPOINT = ({
 	if (ageMax !== null) params.push(`ageMax=${ageMax}`)
 	if (sex !== null) params.push(`sex=${sex}`)
 	if (interestId != null) params.push(`interestId=${interestId}`)
+	if (telegramId != null) params.push(`telegramId=${telegramId}`)
 
 	const queryString = params.length ? `?${params.join('&')}` : ''
 
@@ -308,7 +316,25 @@ export const USERS_SEARCH = (
 	return `${USER_ENDPOINT}${USER_SEARCH}?${params.join('&')}`
 }
 
-export const ADMINE_CMPLS_ENDPOINT = `${ADMINE_ENDPOINT}${ADMINE_CMPLS}`
+export const ADMINE_CMPLS_ENDPOINT = (
+	telegramId?: string,
+	type?: string,
+	offset?: number,
+	limit?: number,
+	status?: string,
+): string => {
+	const params: string[] = []
+
+	if (telegramId) params.push(`telegramId=${telegramId}`);
+	if (type) params.push(`type=${type}`);
+	if (status) params.push(`status=${status}`);
+	if (offset) params.push(`offset=${offset}`);
+	if (limit) params.push(`limit=${offset}`);
+
+	const queryStr = params.length ? `?${params.join('&')}` : '';
+
+	return `${ADMINE_CMPLS}${queryStr}`
+};
 export const ADMINE_SERCH_STATUS_ENDPOINT = (
 	tgId: string,
 	type: EProfileStatus
@@ -339,6 +365,21 @@ export const PSYCH_GEN_TOKEN_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_GEN_TOKEN}`
 export const PSYCH_VALID_TOKEN_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_VALID_TOKEN}`
 export const PSYCH_UPL_PHOTO_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_UPL_PHOTO}`
 export const PSYCH_DEL_PHOTO_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_DEL_PHOTO}`
+
+export const PSYCH_CHANGE_STATUS_ENDPOINT = (tgId: string | number, type: Omit<EPsychStatus, 'Blocked'>) => {
+	let postfix: string;
+
+	switch(type) {
+		case EPsychStatus.Active:
+			postfix = PSYCH_ACTIVATE
+			break;
+		case EPsychStatus.Inactive:
+		default:
+			postfix = PSYCH_DEACTIVATE
+	};
+
+	return `${ADMINE_ENDPOINT}${PSYCH_ENDPOINT}/${tgId}${postfix}`;
+};
 
 export const PSYCH_BY_MARK_ENDPOINT = (mark: string | number): string =>
 	`${PSYCH_ENDPOINT}/${mark}`

@@ -19,7 +19,7 @@ const ComplaintsListHeader = memo((props: PropsComplaintsListHeader): JSX.Elemen
 
     const handleChangeSearchType = async (_: MouseEvent<HTMLElement>, newValue: ESearchComplType | null): Promise<void> => {
         if (!newValue) return;
-
+        dispatch(setSearchComplId(''));
         dispatch(setSearchComplType( newValue ));
     };
 
