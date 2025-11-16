@@ -13,16 +13,17 @@ RUN npm run build
 RUN npm run minify || echo "minify skipped"
 
 # 2 Этап: Запуск сервера
-FROM node:22-alpine AS product
+FROM oven/bun:latest AS product
 
 WORKDIR /client
 
-# Копируем только собранные файлы
+COPY package.json .
+
+RUN bun install --production
 COPY --from=builder /client/dist ./dist
-# Копируем простой Node.js сервер
-COPY server.js ./
+
+RUN bun install -g http-server
 
 EXPOSE 4178
 
-# Запускаем простой Node.js сервер
-CMD ["node", "server.js"]
+CMD ["http-server", "dist", "-p", "4178", "-a", "0.0.0.0", "--cors"]
