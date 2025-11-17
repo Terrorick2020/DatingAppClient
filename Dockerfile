@@ -5,8 +5,6 @@ WORKDIR /client
 
 COPY package.json .
 RUN npm install --legacy-peer-deps
-# Устанавливаем http-server глобально для использования в production
-RUN npm install -g http-server
 
 COPY . .
 RUN npm run build
