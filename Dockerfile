@@ -20,8 +20,8 @@ COPY package.json .
 RUN bun install --production
 COPY --from=builder /client/dist ./dist
 
-RUN bun install -g http-server
+RUN bun install -g serve
 
 EXPOSE 4178
 
-CMD ["http-server", "dist", "-p", "4178", "-a", "0.0.0.0", "--cors"]
+CMD ["serve", "-s", "dist", "-l", "4178"]
