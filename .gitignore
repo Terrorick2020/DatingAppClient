@@ -17,3 +17,5 @@ ssl/*
 **/*.crt
 **/*.key
 **/*.pem
+
+docker-compose.yml
