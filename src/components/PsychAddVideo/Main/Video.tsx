@@ -1,4 +1,5 @@
-import { ALLOWED_VIDEO_TYPES, MAX_VIDEO_SIZE } from '@/constant/video'
+// import { ALLOWED_VIDEO_TYPES, MAX_VIDEO_SIZE } from '@/constant/video'
+import { MAX_VIDEO_SIZE } from '@/constant/video'
 import { errorAlert, successAlert, warningAlert } from '@/funcs/alert.funcs'
 import { getPreviewVideo } from '@/funcs/img.funcs'
 import type { RootDispatch } from '@/store'
@@ -86,17 +87,17 @@ const PsychAddVideoMainVideo = (): JSX.Element => {
 			return
 		}
 
-		if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
-			warningAlert(
-				dispatch,
-				`Недопустимый формат видео! Разрешённые форматы: ${ALLOWED_VIDEO_TYPES.join(
-					' '
-				)}`
-			)
+		// if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
+		// 	warningAlert(
+		// 		dispatch,
+		// 		`Недопустимый формат видео! Разрешённые форматы: ${ALLOWED_VIDEO_TYPES.join(
+		// 			' '
+		// 		)}`
+		// 	)
 
-			setLoadingPreview(false)
-			return
-		}
+		// 	setLoadingPreview(false)
+		// 	return
+		// }
 
 		getPreviewVideo(file, setThumbnail, setLoadingPreview, fetchVideo)
 
