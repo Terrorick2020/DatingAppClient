@@ -1,10 +1,14 @@
 import type { UsersEndpointParams } from '@/types/fetch.type'
-import { EProfileRoles, EProfileStatus, EPsychStatus } from '@/types/store.types'
+import {
+	EProfileRoles,
+	EProfileStatus,
+	EPsychStatus,
+} from '@/types/store.types'
 
 export const BASE_URL = import.meta.env.VITE_BASE_URL || ''
 export const WS_URL = import.meta.env.VITE_WS_URL || ''
 export const BOT_LINK = import.meta.env.VITE_BOT_LINK || ''
-export const BOT_URL = import.meta.env. VITE_BOT_URL || ''
+export const BOT_URL = import.meta.env.VITE_BOT_URL || ''
 export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || ''
 export const URL_MARK = import.meta.env.VITE_URL_MARK || 'id'
 export const TG_HEADER = import.meta.env.VITE_TG_HEADER || ''
@@ -75,7 +79,7 @@ export const PSYCH_VALID_TOKEN = import.meta.env.VITE_PSYCH_VALID_TOKEN || ''
 export const PSYCH_UPL_PHOTO = import.meta.env.VITE_PSYCH_UPL_PHOTO || ''
 export const PSYCH_DEL_PHOTO = import.meta.env.VITE_PSYCH_DEL_PHOTO || ''
 export const PSYCH_ACTIVATE = import.meta.env.VITE_PSYCH_ACTIVATE || ''
-export const PSYCH_DEACTIVATE  = import.meta.env.VITE_PSYCH_DEACTIVATE || ''
+export const PSYCH_DEACTIVATE = import.meta.env.VITE_PSYCH_DEACTIVATE || ''
 
 export const VIDEO_ENDPOIN = import.meta.env.VITE_VIDEO_ENDPOINT || ''
 export const VIDEO_UPL = import.meta.env.VITE_VIDEO_UPL || ''
@@ -115,6 +119,10 @@ export const USER_PUBLIC = import.meta.env.VITE_USER_PUBLIC || ''
 export const USER_QUESTS = import.meta.env.VITE_USER_QUESTS || ''
 export const USER_SEARCH = import.meta.env.VITE_USER_SEARCH || ''
 
+// Переменные со значениями по умолчанию не требуют проверки
+const USER_ENDPOINT_CHECK = USER_ENDPOINT || '/user'
+const USER_DEL_SELF_CHECK = USER_DEL_SELF || '/delete-self'
+
 export const COMPLS_ENDPOINT = import.meta.env.VITE_COMPLS_ENDPOINT || ''
 export const COMPLS_UPT_ENDPOINT =
 	import.meta.env.VITE_COMPLS_UPT_ENDPOINT || ''
@@ -127,99 +135,111 @@ export const USER_STATUS = import.meta.env.VITE_USER_STATUS || ''
 export const CAPTURE_KEY = import.meta.env.VITE_CAPTURE_KEY || ''
 export const CAPTURE_MODE = import.meta.env.VITE_CAPTURE_MODE || 'test'
 
-if (
-	!BASE_URL ||
-	!WS_URL ||
-	!BOT_LINK ||
-	!BOT_URL ||
-	!SUPPORT_EMAIL ||
-	!TG_HEADER ||
-	!YC_HEADER ||
-	!WS_CHATS ||
-	!WS_COMPL ||
-	!WS_LIKES ||
-	!WS_MATCH ||
-	!WS_MSGS ||
-	!HELP_INTERESTS_ENDPOINT ||
-	!HELP_PLANS_ENDPOINT ||
-	!HELP_CITYES_ENDPOINT ||
-	!HELP_REGIONS_ENDPOINT ||
-	!HELP_GLOB_COMPLAINTS_ENDPOINT ||
-	!HELP_DESC_COMPLAINTS_ENDPOINT ||
-	!PSYCH_ENDPOINT ||
-	!PSYCH_CHECK ||
-	!PSYCH_FIND ||
-	!PSYCH_AVAL ||
-	!PSYCH_GEN_TOKEN ||
-	!PSYCH_VALID_TOKEN ||
-	!PSYCH_UPL_PHOTO ||
-	!PSYCH_DEL_PHOTO ||
-	!PSYCH_ACTIVATE ||
-	!PSYCH_DEACTIVATE ||
-	!VIDEO_ENDPOIN ||
-	!VIDEO_UPL ||
-	!VIDEO_SAVE ||
-	!VIDEO_MY ||
-	!VIDEO_FEED ||
-	!VIDEO_LIKE ||
-	!VIDEO_VIEW ||
-	!VIDEO_SERCH ||
-	!PLANS_GET_ENDPOINT ||
-	!PLANS_SET_ENDPOINT ||
-	!INITIAL_ENDPOINT ||
-	!SET_GEO_ENDPOINT ||
-	!BILLING_ENDPOINT ||
-	!ADMINE_ENDPOINT ||
-	!LIKES_ENDPOINT ||
-	!LIKES_UNREAD ||
-	!LIKES_READED ||
-	!ADMINE_BLOCK ||
-	!ADMINE_UNBLOCK ||
-	!ADMINE_PRO ||
-	!ADMINE_CMPLS ||
-	!UPLOAD_PHOTO ||
-	!DELETE_PHOTO ||
-	!LOG_ENDPOINT ||
-	!REG_ENDPOINT ||
-	!CHATS_ENDPOINT ||
-	!CHATS_METADATA ||
-	!CHATS_MSG ||
-	!CHATS_ADD_MSG ||
-	!CHATS_MEDIA_ENDPOINT ||
-	!CHATS_READ_ENDPOINT ||
-	!CHATS_TYPING_ENDPOINT ||
-	!CHATS_UNREAD ||
-	!CHATS_CRT_WITH_PSYC ||
-	!CHATS_ASSIGN_PSYCH ||
-	!REDIS ||
-	!REDIS_KEY_ENDPOINT ||
-	!REDIS_EXPIRE ||
-	!REDIS_HASH_ENDPOINT ||
-	!REDIS_ZSET_ENDPOINT ||
-	!REDIS_COUNT ||
-	!REDIS_KEYS ||
-	!REDIS_CLEANUP ||
-	!REDIS_TTL ||
-	!MSGS_ENDPOINT ||
-	!MSGS_UPLOAD_ENDPOINT ||
-	!MSGS_MEDIA_ENDPOINT ||
-	!MSGS_TYPING_ENDPOINT ||
-	!MSGS_READ_ENDPOINT ||
-	!USER_ENDPOINT ||
-	!USER_DEL_ENDPOINT ||
-	!USER_DEL_SELF ||
-	!USER_PUBLIC ||
-	!USER_SEARCH ||
-	!COMPLS_ENDPOINT ||
-	!COMPLS_UPT_ENDPOINT ||
-	!COMPLS_STATS ||
-	!FQ_MEDIA_LINK ||
-	!EP_MEDIA_LINK ||
-	!USER_STATUS ||
-	!CAPTURE_KEY ||
-	!CAPTURE_MODE
-) {
-	throw Error('Hasn`t someone environments!')
+// Переменные со значениями по умолчанию не требуют проверки
+const CAPTURE_MODE_CHECK = CAPTURE_MODE || 'test'
+
+// Проверяем наличие всех необходимых переменных окружения
+const envVars = {
+	BASE_URL,
+	WS_URL,
+	BOT_LINK,
+	BOT_URL,
+	SUPPORT_EMAIL,
+	TG_HEADER,
+	YC_HEADER,
+	WS_CHATS,
+	WS_COMPL,
+	WS_LIKES,
+	WS_MATCH,
+	WS_MSGS,
+	HELP_INTERESTS_ENDPOINT,
+	HELP_PLANS_ENDPOINT,
+	HELP_CITYES_ENDPOINT,
+	HELP_REGIONS_ENDPOINT,
+	HELP_GLOB_COMPLAINTS_ENDPOINT,
+	HELP_DESC_COMPLAINTS_ENDPOINT,
+	PSYCH_ENDPOINT,
+	PSYCH_CHECK,
+	PSYCH_FIND,
+	PSYCH_AVAL,
+	PSYCH_GEN_TOKEN,
+	PSYCH_VALID_TOKEN,
+	PSYCH_UPL_PHOTO,
+	PSYCH_DEL_PHOTO,
+	PSYCH_ACTIVATE,
+	PSYCH_DEACTIVATE,
+	VIDEO_ENDPOIN,
+	VIDEO_UPL,
+	VIDEO_SAVE,
+	VIDEO_MY,
+	VIDEO_FEED,
+	VIDEO_LIKE,
+	VIDEO_VIEW,
+	VIDEO_SERCH,
+	PLANS_GET_ENDPOINT,
+	PLANS_SET_ENDPOINT,
+	INITIAL_ENDPOINT,
+	SET_GEO_ENDPOINT,
+	BILLING_ENDPOINT,
+	ADMINE_ENDPOINT,
+	LIKES_ENDPOINT,
+	LIKES_UNREAD,
+	LIKES_READED,
+	ADMINE_BLOCK,
+	ADMINE_UNBLOCK,
+	ADMINE_PRO,
+	ADMINE_CMPLS,
+	UPLOAD_PHOTO,
+	DELETE_PHOTO,
+	LOG_ENDPOINT,
+	REG_ENDPOINT,
+	CHATS_ENDPOINT,
+	CHATS_METADATA,
+	CHATS_MSG,
+	CHATS_ADD_MSG,
+	CHATS_MEDIA_ENDPOINT,
+	CHATS_READ_ENDPOINT,
+	CHATS_TYPING_ENDPOINT,
+	CHATS_UNREAD,
+	CHATS_CRT_WITH_PSYC,
+	CHATS_ASSIGN_PSYCH,
+	REDIS,
+	REDIS_KEY_ENDPOINT,
+	REDIS_EXPIRE,
+	REDIS_HASH_ENDPOINT,
+	REDIS_ZSET_ENDPOINT,
+	REDIS_COUNT,
+	REDIS_KEYS,
+	REDIS_CLEANUP,
+	REDIS_TTL,
+	MSGS_ENDPOINT,
+	MSGS_UPLOAD_ENDPOINT,
+	MSGS_MEDIA_ENDPOINT,
+	MSGS_TYPING_ENDPOINT,
+	MSGS_READ_ENDPOINT,
+	USER_ENDPOINT: USER_ENDPOINT_CHECK,
+	USER_DEL_ENDPOINT,
+	USER_DEL_SELF: USER_DEL_SELF_CHECK,
+	USER_PUBLIC,
+	USER_SEARCH,
+	COMPLS_ENDPOINT,
+	COMPLS_UPT_ENDPOINT,
+	COMPLS_STATS,
+	FQ_MEDIA_LINK,
+	EP_MEDIA_LINK,
+	USER_STATUS,
+	CAPTURE_KEY,
+	CAPTURE_MODE: CAPTURE_MODE_CHECK,
+}
+
+// Находим отсутствующие переменные
+const missingVars = Object.entries(envVars)
+	.filter(([_, value]) => !value)
+	.map(([key]) => key)
+
+if (missingVars.length > 0) {
+	console.error('Отсутствующие переменные окружения:', missingVars)
+	throw Error(`Hasn't someone environments! Missing: ${missingVars.join(', ')}`)
 }
 
 export const REFERAL_LINK = (code: string, type: EProfileRoles): string => {
@@ -321,20 +341,20 @@ export const ADMINE_CMPLS_ENDPOINT = (
 	type?: string,
 	offset?: number,
 	limit?: number,
-	status?: string,
+	status?: string
 ): string => {
 	const params: string[] = []
 
-	if (telegramId) params.push(`telegramId=${telegramId}`);
-	if (type) params.push(`type=${type}`);
-	if (status) params.push(`status=${status}`);
-	if (offset) params.push(`offset=${offset}`);
-	if (limit) params.push(`limit=${offset}`);
+	if (telegramId) params.push(`telegramId=${telegramId}`)
+	if (type) params.push(`type=${type}`)
+	if (status) params.push(`status=${status}`)
+	if (offset) params.push(`offset=${offset}`)
+	if (limit) params.push(`limit=${offset}`)
 
-	const queryStr = params.length ? `?${params.join('&')}` : '';
+	const queryStr = params.length ? `?${params.join('&')}` : ''
 
 	return `${ADMINE_CMPLS}${queryStr}`
-};
+}
 export const ADMINE_SERCH_STATUS_ENDPOINT = (
 	tgId: string,
 	type: EProfileStatus
@@ -366,20 +386,23 @@ export const PSYCH_VALID_TOKEN_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_VALID_TOKEN}
 export const PSYCH_UPL_PHOTO_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_UPL_PHOTO}`
 export const PSYCH_DEL_PHOTO_ENDPOINT = `${PSYCH_ENDPOINT}${PSYCH_DEL_PHOTO}`
 
-export const PSYCH_CHANGE_STATUS_ENDPOINT = (tgId: string | number, type: Omit<EPsychStatus, 'Blocked'>) => {
-	let postfix: string;
+export const PSYCH_CHANGE_STATUS_ENDPOINT = (
+	tgId: string | number,
+	type: Omit<EPsychStatus, 'Blocked'>
+) => {
+	let postfix: string
 
-	switch(type) {
+	switch (type) {
 		case EPsychStatus.Active:
 			postfix = PSYCH_ACTIVATE
-			break;
+			break
 		case EPsychStatus.Inactive:
 		default:
 			postfix = PSYCH_DEACTIVATE
-	};
+	}
 
-	return `${ADMINE_ENDPOINT}${PSYCH_ENDPOINT}/${tgId}${postfix}`;
-};
+	return `${ADMINE_ENDPOINT}${PSYCH_ENDPOINT}/${tgId}${postfix}`
+}
 
 export const PSYCH_BY_MARK_ENDPOINT = (mark: string | number): string =>
 	`${PSYCH_ENDPOINT}/${mark}`

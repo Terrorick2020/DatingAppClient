@@ -7,7 +7,21 @@ COPY package.json .
 
 RUN npm install --legacy-peer-deps
 
+# Копируем .env файл если он существует
+COPY .env* ./
+
+# Копируем остальные файлы
 COPY . .
+
+# Передаем переменные окружения через ARG и ENV
+# Vite использует переменные окружения с префиксом VITE_ во время сборки
+ARG VITE_BASE_URL
+ARG VITE_WS_URL
+ENV VITE_BASE_URL=$VITE_BASE_URL
+ENV VITE_WS_URL=$VITE_WS_URL
+
+# Загружаем все переменные из .env файла если он существует
+# Vite автоматически загрузит переменные из .env файла
 RUN npm run build
 RUN npm run minify || echo "minify skipped"
 
