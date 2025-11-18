@@ -15,6 +15,7 @@ import SvgClose from '@/assets/icon/close.svg?react'
 import BrochPatternDialog from '@/components/UI/BrochPatternDialog'
 import CircularProgress from '@mui/material/CircularProgress'
 
+
 const PsychAddVideoMainVideo = (): JSX.Element => {
 	const [loadPreview, setLoadingPreview] = useState<boolean>(false)
 	const [open, setOpen] = useState<boolean>(false)
