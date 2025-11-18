@@ -1,5 +1,5 @@
 // @ts-nocheck
-// Этот файл имеет side effects - все экспорты должны сохраняться
+
 import type {
 	SelfPsychVideos,
 	TargetPsychVideo,
