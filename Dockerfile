@@ -8,6 +8,7 @@ COPY package.json .
 RUN npm install --legacy-peer-deps
 
 COPY . .
+
 RUN npm run build
 RUN npm run minify || echo "minify skipped"
 
@@ -25,4 +26,4 @@ RUN bun install -g serve
 
 EXPOSE 4177
 
-CMD ["serve", "-s", "dist", "-l", "0.0.0.0:4177"]
+CMD ["serve", "-s", "dist", "-l", "4177"]
