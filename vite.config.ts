@@ -1,38 +1,32 @@
-import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
-import { visualizer } from 'rollup-plugin-visualizer';
-import { defineConfig, loadEnv } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
+import { visualizer } from 'rollup-plugin-visualizer'
+import { defineConfig, loadEnv } from 'vite'
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
+import { VitePWA } from 'vite-plugin-pwa'
 
-import preload from 'vite-plugin-preload';
-import react from '@vitejs/plugin-react';
-import svgr from 'vite-plugin-svgr';
-import checker from 'vite-plugin-checker';
-import path from 'node:path';
-
+import react from '@vitejs/plugin-react'
+import path from 'node:path'
+import checker from 'vite-plugin-checker'
+import preload from 'vite-plugin-preload'
+import svgr from 'vite-plugin-svgr'
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+	const env = loadEnv(mode, process.cwd(), '')
 
-  const PROD_HOST = env.VITE_PROD_HOST;
-  const DEV_HOST  = env.VITE_DEV_HOST;
-  const MODE      = env.VITE_MODE;
-  const DOMAIN    = env.VITE_DOMAIN;
-  const SSL_KEY   = env.VITE_SSL_KEY;
-  const SSL_CRT   = env.VITE_SSL_CRT;
-  const PORT      = Number(env.VITE_PORT);
+	const PROD_HOST = env.VITE_PROD_HOST
+	const DEV_HOST = env.VITE_DEV_HOST
+	const MODE = env.VITE_MODE
+	const DOMAIN = env.VITE_DOMAIN
+	const SSL_KEY = env.VITE_SSL_KEY
+	const SSL_CRT = env.VITE_SSL_CRT
+	const PORT = Number(env.VITE_PORT)
 
-  if (
-    !PROD_HOST ||
-    !DEV_HOST  ||
-    !MODE      ||
-    !DOMAIN    ||
-    isNaN(PORT)
-  ) throw new Error('Hasn`t some environments in vite.config.ts');
+	if (!PROD_HOST || !DEV_HOST || !MODE || !DOMAIN || isNaN(PORT))
+		throw new Error('Hasn`t some environments in vite.config.ts')
 
-  const isProd    = MODE === 'prod';
-  const isAnalyze = MODE === 'analyze';
+	const isProd = MODE === 'prod'
+	const isAnalyze = MODE === 'analyze'
 
-  const allowedHosts = [ DOMAIN, 'client' ];
+	const allowedHosts = [DOMAIN, 'client']
 
   return {
     plugins: [
