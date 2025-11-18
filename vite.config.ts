@@ -138,12 +138,57 @@ export default defineConfig(({ mode }) => {
         compress: {
           drop_console: true,
           drop_debugger: true,
-          pure_funcs: ['console.log', 'debug'],
         },
         format: {
           comments: false,
         },
       },
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+
+              if(
+                id.includes('react-easy-crop')     ||
+                id.includes('notistack')           ||
+                id.includes('react-player')        ||
+                id.includes('react-awesome-reveal')
+              ) return 'vendor-ui';
+
+              if (
+                id.includes('@reduxjs')    ||
+                id.includes('react-redux') ||
+                id.includes('reselect')    ||
+                id.includes('redux')
+              ) return 'vendor-store';
+
+              if (
+                id.includes('uuid')    ||
+                id.includes('axios')   ||
+                id.includes('dayjs')   ||
+                id.includes('install') ||
+                id.includes('lodash.isequal')  ||
+                id.includes('react-swipeable') ||
+                id.includes('socket.io-client')
+              ) return 'vendor-utils';
+
+              if(
+                id.includes('@yandex/smart-captcha') ||
+                id.includes('emoji-mart')            ||
+                id.includes('@emoji-mart/data')      ||
+                id.includes('@emoji-mart/react')     ||
+                id.includes('@telegram-apps/sdk')
+              ) return 'vendor-sdk';
+
+              return 'vendor';
+            }
+
+            if (id.includes('src/components')) return 'components';
+            if (id.includes('src/pages')) return 'pages';
+            if (id.includes('src/layouts')) return 'layouts';
+          }
+        }
+      }
     },
   }
 })
