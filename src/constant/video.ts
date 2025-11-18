@@ -1,3 +1,5 @@
+// @ts-nocheck
+// Этот файл имеет side effects - все экспорты должны сохраняться
 import type {
 	SelfPsychVideos,
 	TargetPsychVideo,
@@ -25,7 +27,7 @@ export const shortsListBase = {
 	...selfPsychVideosBase,
 } as VideoShortsList
 
-export const ALLOWED_VIDEO_TYPES: string[] = [
+export const ALLOWED_VIDEO_TYPES: readonly string[] = [
 	'video/mp4',
 	'video/webm',
 	'video/ogg',

@@ -23,6 +23,6 @@ COPY --from=builder /client/dist ./dist
 
 RUN bun install -g serve
 
-EXPOSE 4188
+EXPOSE 4177
 
-CMD ["serve", "-s", "dist", "-l", "4188"]
+CMD ["serve", "-s", "dist", "-l", "4177"]
