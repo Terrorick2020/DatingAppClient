@@ -1,34 +1,5 @@
-# # 1 Этап: Cборка проекта
-# FROM node:22-alpine AS builder
-
-# WORKDIR /client
-
-# COPY package.json .
-
-# RUN npm install --legacy-peer-deps
-
-# COPY . .
-
-# RUN npm run build
-# RUN npm run minify || echo "minify skipped"
-
-# # 2 Этап: Запуск сервера
-# FROM oven/bun:latest AS product
-
-# WORKDIR /client
-
-# COPY package.json .
-
-# RUN bun install --production
-# COPY --from=builder /client/dist ./dist
-
-# RUN bun install -g serve
-
-# EXPOSE 4177
-
-# CMD ["serve", "-s", "dist", "-l", "4177"]
-
-FROM node:22-alpine
+# 1 Этап: Cборка проекта
+FROM node:22-alpine AS builder
 
 WORKDIR /client
 
@@ -40,6 +11,18 @@ COPY . .
 RUN npm run build
 RUN npm run minify || echo "minify skipped"
 
-EXPOSE 4177
+# 2 Этап: Запуск сервера
+FROM oven/bun:latest AS product
 
-CMD ["npm", "run", "preview"]
+WORKDIR /client
+
+COPY package.json .
+
+RUN bun install --production
+COPY --from=builder /client/dist ./dist
+
+RUN bun install -g serve
+
+EXPOSE 4188
+
+CMD ["serve", "-s", "dist", "-l", "4188"]
