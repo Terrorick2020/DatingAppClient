@@ -138,6 +138,7 @@ export default defineConfig(({ mode }) => {
         compress: {
           drop_console: true,
           drop_debugger: true,
+          pure_funcs: ['console.log', 'debug'],
         },
         format: {
           comments: false,
