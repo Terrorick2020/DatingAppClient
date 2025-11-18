@@ -19,7 +19,7 @@ export const selfPsychVideosBase: SelfPsychVideos = {
 
 export const shortsListBase = { isChecked: false, ...selfPsychVideosBase } as VideoShortsList;
 
-export const ALLOWED_VIDEO_TYPES = [
+export const ALLOWED_VIDEO_TYPES: string[] = [
     'video/mp4',
     'video/webm',
     'video/ogg',
